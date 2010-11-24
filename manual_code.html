@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Code</title>
+        <style>
+            #banner     { margin: 10px; }
+            
+            .codeblock  { margin: 10px; padding: 4px; border: 2px solid #999999; color: #fff; background-color: #000000; }
+            
+            .plain      { color: #ffffff; }
+            .attribute  { color: #9cb4db; }
+            .keyword    { color: #fce700; }
+            .entity     { color: #ff8f00; }
+            .variable   { color: #00fee0; }
+            .function   { color: #9cb4db; }
+            .comment    { color: #bcbcbc; }
+            .superclass { color: #ff8f00; font-style: italic;}
+            .literal    { color: #d5ff00; }
+        </style>
+    </head>
+    <body id="index" class="home">
+        <header id="banner" class="body">
+            Chime
+        </header>
+        <section id="intro" class="body">
+            The idea behind Chime is to provide the following features:
+            <ul>
+                <li>Full support for pointers, value types and structures</li>
+                <li>An object-oriented model for low-level operations</li>
+                <li>High-level object-oriented constructs</li>
+                <li>Meta-data for both compiler hinting and runtime introspection</li>
+                <li>Static dispatch when needed and dynamic dispatch otherwise</li>
+                <li>A consistent syntax for both high- and low-level operations</li>
+            </ul>
+        </section>
+        <section id="content" class="body">
+            <h2>Structures</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// Starting off, we have a tag.  This is some metadata that is passed along to the compiler </span>
+<span class="comment">// and the runtime as well.</span>
+<span class="attribute">&lt;<span class="keyword">@arch</span>:<span class="plain">i386</span>, <span class="keyword">@align</span>:<span class="plain">packed</span>&gt;</span>
+<span class="keyword">structure</span> <span class="entity">MyStructure</span>
+{
+    <span class="comment">// Structures are made up of built-in Types </span>
+    
+    <span class="entity">Integer</span>     default_32_bit_size
+    <span class="entity">Integer</span><span class="attribute">&lt;<span class="literal">3</span>&gt;</span>  three_bit_integer
+    
+    <span class="entity">Integer</span><span class="attribute">[<span class="literal">5</span>]</span>    array_of_five_integers
+    <span class="entity">Integer</span><span class="attribute">&lt;<span class="literal">8</span>&gt;</span><span class="attribute">[<span class="literal">5</span>]</span> array_of_five_8_bit_integers
+    
+    <span class="entity">Natural</span><span class="attribute">&lt;<span class="literal">16</span>&gt;</span> 16_bit_unsigned_integer
+    
+    <span class="entity">Float</span><span class="attribute">&lt;<span class="literal">32</span>&gt;</span>   32_bit_floating_point_number
+}
+
+<span class="comment">// Once defined, structures are Value types themselves</span>
+<span class="keyword">structure</span> <span class="entity">MyNewStructure</span>
+{
+    <span class="entity">MyStructure</span><span class="attribute">[<span class="literal">2</span>]</span> two_structures
+}
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Functions</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// This is the simplest function definition</span>
+<span class="keyword">function</span> <span class="function">function_one</span>()
+{
+}
+
+<span class="comment">// Here's a function that takes one pointer as an argument</span>
+<span class="keyword">function</span> <span class="function">function_two</span>(<span class="entity">Pointer</span> a)
+{
+}
+
+<span class="comment">// Pointers are the default type, so if you omit the type, Pointer is used</span>
+<span class="keyword">function</span> <span class="function">function_three</span>(a)
+{
+}
+
+<span class="comment">// Labels are only optional for the first argument, but are required for all others</span>
+<span class="keyword">function</span> <span class="function">function_four</span>(<span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+{
+}
+
+<span class="comment">// Return types are specified first, followed by a semi-colon</span>
+<span class="keyword">function</span> <span class="function">function_four</span>(<span class="entity">Integer</span>; <span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+{
+    <span class="keyword">return</span> a.<span class="function">value</span> + b
+}
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Blocks</h2>
+            <div class="codeblock">
+                <code>                    
+                    <span class="comment">// Here's a function that accepts a function as one of its arguments</span><br />
+                    <span class="comment">// The Function type is also optional, because it can be </span><br />
+                    <span class="keyword">function</span> <span class="function">use_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span>(<span class="entity">Integer</span>;) block_argument) <br />
+                    {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">block_argument</span>() * <span class="literal">2</span><br />
+                    }<br />
+                    <br />
+                    <span class="comment">// These are some examples of anonymous functions/blocks</span> <br />
+                    <span class="keyword">function</span> <span class="function">more_blocks</span>(<span class="entity">Integer</span> x) <br />
+                    {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="entity">Integer</span> value <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// pass in an anonymous function</span> <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;value = <span class="function">use_block</span>(<span class="keyword">function</span>(<span class="entity">Integer</span>;)<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="literal">5</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;})<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// this notation is equivalent for the <strong>last</strong> argument only</span> <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;value = <span class="function">use_block</span>() <span class="keyword">do</span> (<span class="entity">Integer</span>;) <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="literal">5</span> <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// this can make for a concise inline version</span> <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;value = <span class="function">use_block</span>() <span class="keyword">do</span> (<span class="entity">Integer</span>;) { <span class="keyword">return</span> <span class="literal">5</span> } <br />
+                    }<br />
+                    
+                    <br />
+                    
+                    <span class="comment">// Functions are just another type</span><br />
+                    <span class="keyword">function</span> <span class="function">function_type</span>()<br />
+                    {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="entity">Function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span>, <span class="entity">Integer</span> <span class="function">and:</span>) sum<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;sum = <span class="keyword">function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> x, <span class="entity">Integer</span> <span class="keyword">and:</span>y)<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> x + y<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">sum</span>(<span class="literal">1</span>, <span class="function">and:</span><span class="literal">1</span>)<br />
+                    }<br />
+                </code>
+            </div>
+            
+            <h2>Methods</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// Methods are similar to functions, but are associated to an interface</span>
+<span class="keyword">method</span> <span class="function">a_method</span>(<span class="entity">Integer</span>; <span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+{
+    <span class="keyword">return</span> a.<span class="function">value</span> + b
+}
+                        
+<span class="comment">// Properties are just regular methods but can be called without parentheses. </span>
+<span class="keyword">property</span> <span class="function">my_property</span>(<span class="entity">Integer</span>;)</span>
+{
+    <span class="keyword">return</span> x
+}
+
+<span class="comment">// The '=' after the property name allows for the "self.my_property = foo" syntax </span>
+<span class="keyword">property</span> <span class="function">my_property=</span>(<span class="entity">Integer</span> value)</span>
+{
+    x = value
+}
+
+<span class="comment">// There are a small set of reserved method names.  These provide ways to </span>
+<span class="comment">// hook into other language features </span>
+
+<span class="comment">// The indexer keyword denotes a function that uses the square bracket for calling </span>
+<span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Integer</span>; <span class="entity">Integer</span> x]</span>
+{
+    <span class="keyword">return</span> x
+}
+
+<span class="comment">// Similar to the setter, but for indexers "entity[5] = x" </span>
+<span class="keyword">method</span> <span class="keyword">indexer=</span>[<span class="entity">Integer</span> x, <span class="entity">Integer</span> value]</span>
+{
+    x = value
+}
+
+<span class="comment">// returns (-1,0,1,other) to support &lt;, &lt;=, ==, &gt;=, &gt;, and != </span>
+<span class="keyword">method</span> <span class="keyword">compare</span>(<span class="entity">Integer</span> other)
+{
+    <span class="keyword">return</span> <span class="keyword">self</span>.<span class="function">value</span>.<span class="function">compare</span>(other.<span class="function">value</span>)
+}
+
+<span class="comment">// There are four keywords reserved for supporting the arithmetic operators '+', </span>
+<span class="comment">// '-', '/' and '*'.  These can be mutable, which have no return type, and immutable, which</span>
+<span class="comment">// return a value representing the result of the operation</span>
+
+<span class="keyword">method</span> <span class="keyword">addition</span>(<span class="entity">Entity</span> other)
+{
+    <span class="keyword">self</span>.<span class="function">value</span> += other.<span class="function">value</span>
+}
+
+<span class="keyword">method</span> <span class="keyword">subtraction</span>(<span class="entity">Entity</span> other)
+{
+    <span class="keyword">self</span>.<span class="function">value</span> -= other.<span class="function">value</span>
+}
+
+<span class="keyword">method</span> <span class="keyword">multiplication</span>(<span class="entity">Entity</span> other)
+{
+    <span class="keyword">self</span>.<span class="function">value</span> *= other.<span class="function">value</span>
+}
+
+<span class="keyword">method</span> <span class="keyword">division</span>(<span class="entity">Entity</span> other)
+{
+    <span class="keyword">self</span>.<span class="function">value</span> /= other.<span class="function">value</span>
+}
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Interfaces</h2>
+            <div class="codeblock">
+                <code>
+                        <pre>
+<span class="comment">// An interface is a externally-accessible definition of methods</span>
+<span class="comment">// that a class implements.  Inheritance is also defined, but only via</span>
+<span class="comment">// the other interfaces that the class implements.</span>
+<span class="comment">// </span>
+<span class="comment">// An interface does not define any of the class's internal structure.</span>
+<span class="comment">// By extension, it is not possible to access a super-class's instance variables.</span>
+<span class="comment">// </span>
+<span class="comment">// A subclasser need only know about these methods and those defined by</span>
+<span class="comment">// the Object interface</span>
+<span class="keyword">interface</span> <span class="entity">Array</span> : <span class="superclass">Object</span>
+{
+    <span class="comment">// Length property</span>
+    <span class="keyword">property</span> <span class="function">length</span>(<span class="entity">Natural</span>;)
+    
+    <span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Object</span>; <span class="entity">Natural</span> index]</span>
+    <span class="keyword">method</span> <span class="keyword">indexer=</span>[<span class="entity">Natural</span> index, <span class="entity">Object</span> obj]</span>
+    
+    <span class="keyword">method</span> <span class="function">each</span>(<span class="entity">Function</span>(<span class="entity">Object</span>) block)
+}
+                        </pre>
+                </code>
+            </div>
+        
+            <h2>Pointers and Pseudo-Methods</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// Before we get to implementations, let's take a look at Pointers.</span>
+<span class="comment">// In Chime, a pointer is a Pseudo-Object.  That is, it's a value type</span>
+<span class="comment">// that acts a lot like a true object to the programmer</span>
+<span class="keyword">interface</span> <span class="entity">Pointer</span> : <span class="superclass">ValueType</span>
+{
+    <span class="comment">// This is the address this Pointer object references</span>
+    <span class="keyword">property</span> <span class="function">value</span>(<span class="entity">Natural</span>;)
+    <span class="keyword">property</span> <span class="function">value=</span>(<span class="entity">Natural</span>)
+    
+    <span class="comment">// The Type this pointer points to.  Setting this is</span>
+    <span class="comment">// required if you want to do pointer arithmetic.</span>
+    <span class="keyword">property</span> <span class="function">references</span>(<span class="entity">Type</span>;)
+    <span class="keyword">property</span> <span class="function">reference=</span>(<span class="entity">Type</span>)
+    
+    <span class="comment">// This pseudo-method dereferences a pointer as the specified type.</span>
+    <span class="comment">// The empty return value means there is a return, but it is</span>
+    <span class="comment">// determined at run time (actually compile-time)</span>
+    <span class="keyword">method</span> <span class="function">deref_as</span>(; <span class="entity">Type</span>)
+    
+    <span class="comment">// C-style offset-then-deref</span>
+    <span class="keyword">method</span> <span class="keyword">indexer</span>[; <span class="entity">Integer</span> index]</span>
+    
+    <span class="comment">// If 'reference' is set, no need to specify the type</span>
+    <span class="keyword">property</span> <span class="function">deref</span>(;)
+}
+
+<span class="comment">// Here is some example usage</span>
+<span class="entity">Pointer</span> p
+<span class="entity">Integer</span> int
+
+<span class="comment">// Imagine there is a MyStructure at 0x1234</span>
+p.<span class="function">value</span> = <span class="literal">0x1234</span>
+
+p.<span class="function">deref_as</span>(<span class="entity">MyStructure</span>).<span class="function">three_bit_integer</span>++
+
+int = <span class="literal">0x1234</span>
+
+<span class="comment">// 'to_pointer' is another pseudo-method of Integer and</span>
+<span class="comment">// Natural that returns a Pointer representation.</span>
+<span class="comment">// The value of p is now whatever was in int (0x1234)</span>
+p = int.<span class="function">to_pointer</span>()
+
+<span class="comment">// 'address' is the equivalent of '&amp;' in C and works</span>
+<span class="comment">// for all value types</span>
+p = int.<span class="function">address</span>
+
+p.<span class="function">deref_as</span>(<span class="entity">Integer</span>).<span class="function">to_pointer</span>().<span class="function">deref_as</span>(<span class="entity">MyStructure</span>)
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Implementations</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// An implementation is an internal definition of a class </span>
+<span class="comment">// structure and behavior.  This particular class has fairly limited</span>
+<span class="comment">// utility - it can only hold 10 objects.</span>
+<span class="keyword">implementation</span> <span class="entity">Array</span> : <span class="superclass">Object</span>
+{
+    <span class="comment">// Structure is defined by instance variables (and the superclass)</span>
+    <span class="entity">Pointer</span><span class="attribute">[<span class="literal">10</span>]</span> <span class="variable">objects</span>
+    
+    <span class="comment">// Behavior is defined by methods</span>
+    
+    <span class="keyword">method</span> <span class="function">length</span>(<span class="entity">Natural</span>;)
+    {
+        <span class="keyword">return</span> <span class="literal">10</span>
+    }
+    
+    <span class="comment">// Here's an indexer implementation that highlights the use</span>
+    <span class="comment">// of pointers and pointer arithmetic.</span>
+    <span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Object</span>; <span class="entity">Natural</span> index]</span>
+    {
+        <span class="keyword">if</span> (index &gt;= <span class="literal">10</span>)
+            <span class="keyword">return</span> <span class="keyword">nil</span>
+        
+        <span class="comment">// Notice that no typecasting is required on the return</span>
+        <span class="comment">// because all Reference types are considered equivalent</span>
+        <span class="keyword">return</span> <span class="variable">objects</span>[index]
+    }
+    
+    <span class="keyword">method</span> <span class="keyword">indexer=</span>[<span class="entity">Natural</span> index, <span class="entity">Object</span> value]</span>
+    {
+        <span class="keyword">if</span> (index &gt;= <span class="variable">length</span>)
+            <span class="keyword">return</span>
+        
+        <span class="variable">objects</span>[index] = value
+    }
+    
+    <span class="keyword">method</span> <span class="function">each</span>(<span class="entity">Function</span>(<span class="entity">Object</span>) block)
+    {
+        <span class="entity">Natural</span> i
+        
+        <span class="keyword">for</span> (i = <span class="literal">0</span>; i &lt; <span class="literal">10</span>; i++)
+        {
+            <span class="function">block</span>(<span class="keyword">self</span>[i])
+        }
+        
+        <span class="comment">// or, with a fancier block pseudo-method on Integer</span>
+        <span class="literal">10</span>.<span class="function">times</span>() <span class="keyword">do</span> (<span class="entity">Natural</span> j)
+        {
+            <span class="function">block</span>(<span class="keyword">self</span>[j])
+        }
+    }
+}
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Dispatch</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// The term dispatch refers to determining the actual code to execute</span>
+<span class="comment">// based on the type and method invoked.  Chime has a few simple rules.</span>
+
+<span class="comment">// Functions aren't associated with a type, so they are always</span>
+<span class="comment">// dispatched statically, based only on scope</span>
+<span class="function">sum</span>(1, <span class="function">and:</span>1)
+
+<span class="comment">// Pseudo-methods are a little special.  In many cases, they</span>
+<span class="comment">// aren't even functions at all.  They are really just </span>
+<span class="comment">// compiler operations, so they are even more static than functions.</span>
+<span class="entity">Integer</span> i
+
+i.<span class="function">address</span>
+
+<span class="comment">// Methods are always dispatched dynamically.  There</span>
+<span class="comment">// will not be a compiler warning, but there might be</span>
+<span class="comment">// a runtime error if this object and all its superclasses</span>
+<span class="comment">// do not implement the method</span>
+<span class="entity">MyObject</span> obj
+
+obj = <span class="entity">MyObject</span>.<span class="keyword">new</span>()
+
+obj.<span class="function">some_method</span>(<span class="literal">7</span>)
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Object Lifecycle</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// Classes all follow a simple retain counting mechanism</span>
+<span class="entity">MyObject</span> obj
+
+<span class="comment">// Retain count of +1</span>
+obj = <span class="entity">MyObject</span>.<span class="function">new</span>()
+
+<span class="comment">// Retain count of +2</span>
+obj.<span class="function">retain</span>()
+
+<span class="comment">// Retain count of +1</span>
+obj.<span class="function">release</span>()
+
+<span class="comment">// Retain count of 0, deallocated</span>
+obj.<span class="function">release</span>()
+
+<span class="comment">// This introduces a problem with functions/methods that</span>
+<span class="comment">// return values.  How does a caller (and the compiler) know</span>
+<span class="comment">// that ownership is being transferred?</span>
+
+<span class="keyword">function</span> <span class="function">new_object</span>(<span class="keyword">retained</span>;)
+{
+    <span class="keyword">return</span> <span class="entity">MyObject</span>.<span class="function">new</span>()
+}
+
+<span class="comment">// The compiler (and hopefully you) know that you</span>
+<span class="comment">// own this return value</span>
+obj = <span class="function">new_object</span>();
+                    </pre>
+                </code>
+            </div>
+        </section>
+        <footer id="contentinfo" class="body">
+            yo me is footer
+        </footer>
+    </body>
+</html>
