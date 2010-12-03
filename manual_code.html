@@ -6,6 +6,8 @@
         <style>
             #banner     { margin: 10px; }
             
+            pre         { margin: 5px; }
+            
             .codeblock  { margin: 10px; padding: 4px; border: 2px solid #999999; color: #fff; background-color: #000000; }
             
             .plain      { color: #ffffff; }
@@ -63,8 +65,7 @@
 <span class="keyword">structure</span> <span class="entity">MyNewStructure</span>
 {
     <span class="entity">MyStructure</span><span class="attribute">[<span class="literal">2</span>]</span> two_structures
-}
-                    </pre>
+}</pre>
                 </code>
             </div>
             
@@ -75,7 +76,7 @@
 <span class="comment">// for loops </span>
 <span class="keyword">for</span> (i = <span class="literal">0</span>; i &lt; <span class="literal">10</span>; i++)
 {
-    <span class="keyword">break</span> <span class="comment">// exits the immediately contained control structure</span>
+    <span class="keyword">break</span> <span class="comment">// exits the immediately contained scope</span>
 }
 
 <span class="comment">// while loop</span>
@@ -84,19 +85,35 @@
     <span class="keyword">break</span> <span class="comment">// don't spin forever</span>
 }
 
+<span class="comment">// until loop - equivalent to "while (not xyz)"</span>
+<span class="keyword">until</span> (<span class="keyword">false</span>)
+{
+    <span class="keyword">continue</span> <span class="comment">// kills this loop iteration</span>
+}
+
+<span class="comment">// loop, but check condition at end instead of start</span>
+<span class="keyword">do</span>
+{
+    <span class="keyword">continue</span> <span class="comment">// kills this loop iteration</span>
+} <span class="keyword">until</span> (<span class="keyword">false</span>)
+
 <span class="comment">// if and else</span>
 <span class="keyword">if</span> (<span class="keyword">true</span>)
-{
     <span class="function">something</span>()
-}
 <span class="keyword">else</span>
 {
     <span class="function">something_else</span>()
 }
 
+<span class="comment">// unless and tailing conditions</span>
+x = <span class="literal">5</span> <span class="keyword">unless</span> x > <span class="literal">10</span>
+
+<span class="comment">// unless and tailing conditions</span>
+
 <span class="comment">// switch is more or less lifted right out of</span>
 <span class="comment">// Ruby, and makes use of the "case_compare" method</span>
 <span class="comment">// operator.  A case statement can be an expression.</span>
+<span class="comment">// Cases do not fall through.  That's just crazy.</span>
 <span class="keyword">switch</span> (<span class="literal">value</span>)
 {
     <span class="keyword">case</span> <span class="literal">10</span>
@@ -112,8 +129,7 @@
     {
         <span class="function">no_matches</span>()
     }
-}
-                    </pre>
+}</pre>
                 </code>
             </div>
             
@@ -121,7 +137,7 @@
             <div class="codeblock">
                 <code>
                     <pre>
-<span class="comment">// This is the simplest function definition</span>
+<span class="comment">// This is the simplest function definition.</span>
 <span class="keyword">function</span> <span class="function">function_one</span>()
 {
 }
@@ -131,18 +147,27 @@
 {
 }
 
-<span class="comment">// Pointers are the default type, so if you omit the type, Pointer is used</span>
+<span class="comment">// Pointers are the default type, so if you omit the type Pointer</span>
+<span class="comment">// is used.  Return values work the same way.  If there is no return </span>
+<span class="comment">// statement, nil is implied</span>
 <span class="keyword">function</span> <span class="function">function_three</span>(a)
 {
+    <span class="keyword">return</span> a
+}
+
+<span class="comment">// Explicit types for returns are allowed</span>
+<span class="keyword">function</span> <span class="function">function_four</span>(<span class="entity">Void</span>;a)
+{
+    <span class="comment">// return statement not allowed in this function</span>
 }
 
 <span class="comment">// Labels are only optional for the first argument, but are required for all others</span>
-<span class="keyword">function</span> <span class="function">function_four</span>(<span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+<span class="keyword">function</span> <span class="function">function_five</span>(<span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
 {
 }
 
 <span class="comment">// Return types are specified first, followed by a semi-colon</span>
-<span class="keyword">function</span> <span class="function">function_four</span>(<span class="entity">Integer</span>; <span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+<span class="keyword">function</span> <span class="function">function_six</span>(<span class="entity">Integer</span>; <span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
 {
     <span class="keyword">return</span> a.<span class="function">value</span> + b
 }
@@ -152,49 +177,62 @@
             
             <h2>Blocks</h2>
             <div class="codeblock">
-                <code>                    
-                    <span class="comment">// Here's a function that accepts a function as one of its arguments</span><br />
-                    <span class="comment">// The Function type is also optional, because it can be </span><br />
-                    <span class="keyword">function</span> <span class="function">use_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span>(<span class="entity">Integer</span>;) block_argument) <br />
-                    {<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="function">block_argument</span>() * <span class="literal">2</span><br />
-                    }<br />
-                    <br />
-                    <span class="comment">// These are some examples of anonymous functions/blocks</span> <br />
-                    <span class="keyword">function</span> <span class="function">more_blocks</span>(<span class="entity">Integer</span> x) <br />
-                    {<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="entity">Integer</span> value <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// pass in an anonymous function</span> <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;value = <span class="function">use_block</span>(<span class="keyword">function</span>(<span class="entity">Integer</span>;)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;{<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="literal">5</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;})<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// this notation is equivalent for the <strong>last</strong> argument only</span> <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;value = <span class="function">use_block</span>() <span class="keyword">do</span> (<span class="entity">Integer</span>;) <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;{<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="literal">5</span> <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// this can make for a concise inline version</span> <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;value = <span class="function">use_block</span>() <span class="keyword">do</span> (<span class="entity">Integer</span>;) { <span class="keyword">return</span> <span class="literal">5</span> } <br />
-                    }<br />
-                    
-                    <br />
-                    
-                    <span class="comment">// Functions are just another type</span><br />
-                    <span class="keyword">function</span> <span class="function">function_type</span>()<br />
-                    {<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="entity">Function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span>, <span class="entity">Integer</span> <span class="function">and:</span>) sum<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;sum = <span class="keyword">function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> x, <span class="entity">Integer</span> <span class="keyword">and:</span>y)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;{<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> x + y<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">sum</span>(<span class="literal">1</span>, <span class="function">and:</span><span class="literal">1</span>)<br />
-                    }<br />
+                <code>
+                    <pre>
+<span class="comment">// Here's a function that accepts a function as one of its arguments</span>
+<span class="keyword">function</span> <span class="function">use_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span>(<span class="entity">Integer</span>;) block_argument)
+{
+    <span class="keyword">return</span> <span class="function">block_argument</span>() * <span class="literal">2</span>
+}
+
+<span class="keyword">function</span> <span class="function">empty_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span> block_argument)
+{
+    <span class="comment">// Blocks follow the same rules as functions.  They return a Pointer</span>
+    <span class="comment">// unless otherwise specified, and they can implicitly return nil</span>
+    <span class="function">block_argument</span>()
+}
+
+<span class="comment">// These are some examples of anonymous functions/blocks</span>
+<span class="keyword">function</span> <span class="function">more_blocks</span>(<span class="entity">Integer</span> x)
+{
+    <span class="entity">Integer</span> value
+    
+    <span class="comment">// pass in an anonymous function</span>
+    value = <span class="function">use_block</span>({ |<span class="entity">Integer</span>;| <span class="keyword">return</span> <span class="literal">5</span> })
+    
+    <span class="comment">// this notation is equivalent for the <strong>last</strong> argument only</span>
+    value = <span class="function">use_block</span>() <span class="keyword">do</span> |<span class="entity">Integer</span>;|
+    {
+        <span class="keyword">return</span> <span class="literal">5</span>
+    }
+    
+    <span class="comment">// blocks that have no return or arguments do not require the pipes</span>
+    <span class="function">empty_block</span>({ <span class="function">do_something</span>() })
+    
+    <span class="function">empty_block</span>() <span class="keyword">do</span>
+    {
+        <span class="function">do_something</span>()
+    }
+}
+
+<span class="comment">// Functions are just another type</span>
+<span class="keyword">function</span> <span class="function">function_type</span>()
+{
+    <span class="entity">Function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span>, <span class="entity">Integer</span> <span class="function">and:</span>) sum
+    
+    sum = <span class="keyword">function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> x, <span class="entity">Integer</span> <span class="function">and:</span>y)
+    {
+        <span class="keyword">return</span> x + y
+    }
+    
+    sum = <span class="keyword">do</span> |<span class="entity">Integer</span>; <span class="entity">Integer</span> x, <span class="entity">Integer</span> <span class="function">and:</span>y|
+    {
+        <span class="keyword">return</span> x + y
+    }
+    
+    <span class="function">sum</span>(<span class="literal">1</span>, <span class="function">and:</span><span class="literal">1</span>)
+}
+                    </pre>
                 </code>
             </div>
             
@@ -207,33 +245,75 @@
 {
     <span class="keyword">return</span> a.<span class="function">value</span> + b
 }
-                        
-<span class="comment">// Properties are just regular methods but can be called without parentheses. </span>
-<span class="keyword">property</span> <span class="function">my_property</span>(<span class="entity">Integer</span>;)</span>
+
+<span class="comment">// the body pseudo-method let you control how a subclass's</span>
+<span class="comment">// overridden method will behave</span>
+<span class="keyword">method</span> <span class="function">a_method</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> input)
 {
-    <span class="keyword">return</span> x
+    <span class="entity">Integer</span> x
+
+    x = <span class="keyword">body</span>(input) <span class="keyword">do</span> |<span class="entity">Integer</span>; <span class="entity">Integer</span> body_input|
+    {
+        <span class="comment">// this is the default implementation, and is the </span>
+        <span class="comment">// only part of this method that can be overridden </span>
+        <span class="keyword">return</span> body_input</span>
+    }
+
+    <span class="keyword">return</span> x + <span class="literal">1</span>
 }
 
-<span class="comment">// The '=' after the property name allows for the "self.my_property = foo" syntax </span>
-<span class="keyword">property</span> <span class="function">my_property=</span>(<span class="entity">Integer</span> value)</span>
+<span class="comment">// Properties are special methods that can get and/or set values without </span>
+<span class="comment">// needing the parenthesis notation </span>
+<span class="keyword">property</span> <span class="function">my_property</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> value)
 {
-    x = value
+    <span class="keyword">get</span>
+    {
+        <span class="keyword">return</span> x
+    }
+    <span class="keyword">set</span>
+    {
+        x = value
+    }
+}
+
+<span class="comment">// The indexer keyword denotes a method that uses the square bracket for calling. </span>
+<span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Integer</span>; <span class="entity">Integer</span> i, <span class="entity">Integer</span> value]</span>
+{
+    <span class="keyword">get</span>
+    {
+        <span class="keyword">return</span> i
+    }
+    <span class="keyword">set</span>
+    {
+        x = value
+    }
+}
+
+<span class="comment">// There are four keywords reserved for supporting the arithmetic operators '+', </span>
+<span class="comment">// '-', '/' and '*'.  These can be mutable, which have no return type, and immutable, which</span>
+<span class="comment">// return a value representing the result of the operation</span>
+<span class="keyword">arithmetic</span> <span class="keyword">self</span>(<span class="entity">Entity</span> other)
+{
+    <span class="keyword">addition</span>
+    {
+        <span class="keyword">self</span>.<span class="function">value</span> += other.<span class="function">value</span>
+    }
+    <span class="keyword">subtraction</span>
+    {
+        <span class="keyword">self</span>.<span class="function">value</span> -= other.<span class="function">value</span>
+    }
+    <span class="keyword">multiplication</span>
+    {
+        <span class="keyword">self</span>.<span class="function">value</span> *= other.<span class="function">value</span>
+    }
+    <span class="keyword">division</span>
+    {
+        <span class="keyword">self</span>.<span class="function">value</span> /= other.<span class="function">value</span>
+    }
 }
 
 <span class="comment">// There are a small set of reserved method names.  These provide ways to </span>
 <span class="comment">// hook into other language features </span>
-
-<span class="comment">// The indexer keyword denotes a function that uses the square bracket for calling </span>
-<span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Integer</span>; <span class="entity">Integer</span> x]</span>
-{
-    <span class="keyword">return</span> x
-}
-
-<span class="comment">// Similar to the setter, but for indexers "entity[5] = x" </span>
-<span class="keyword">method</span> <span class="keyword">indexer=</span>[<span class="entity">Integer</span> x, <span class="entity">Integer</span> value]</span>
-{
-    x = value
-}
 
 <span class="comment">// returns (-1,0,1,other) to support &lt;, &lt;=, ==, &gt;=, &gt;, and != </span>
 <span class="keyword">method</span> <span class="keyword">compare</span>(<span class="entity">Integer</span> other)
@@ -245,30 +325,6 @@
 <span class="keyword">method</span> <span class="keyword">case_compare</span>(<span class="entity">Integer</span> other)
 {
     <span class="keyword">return</span> <span class="keyword">self</span>.<span class="function">value</span> == other.<span class="function">value</span>
-}
-
-<span class="comment">// There are four keywords reserved for supporting the arithmetic operators '+', </span>
-<span class="comment">// '-', '/' and '*'.  These can be mutable, which have no return type, and immutable, which</span>
-<span class="comment">// return a value representing the result of the operation</span>
-
-<span class="keyword">method</span> <span class="keyword">addition</span>(<span class="entity">Entity</span> other)
-{
-    <span class="keyword">self</span>.<span class="function">value</span> += other.<span class="function">value</span>
-}
-
-<span class="keyword">method</span> <span class="keyword">subtraction</span>(<span class="entity">Entity</span> other)
-{
-    <span class="keyword">self</span>.<span class="function">value</span> -= other.<span class="function">value</span>
-}
-
-<span class="keyword">method</span> <span class="keyword">multiplication</span>(<span class="entity">Entity</span> other)
-{
-    <span class="keyword">self</span>.<span class="function">value</span> *= other.<span class="function">value</span>
-}
-
-<span class="keyword">method</span> <span class="keyword">division</span>(<span class="entity">Entity</span> other)
-{
-    <span class="keyword">self</span>.<span class="function">value</span> /= other.<span class="function">value</span>
 }
                     </pre>
                 </code>
@@ -289,11 +345,9 @@
 <span class="comment">// the Object interface</span>
 <span class="keyword">interface</span> <span class="entity">Array</span> : <span class="superclass">Object</span>
 {
-    <span class="comment">// Length property</span>
     <span class="keyword">property</span> <span class="function">length</span>(<span class="entity">Natural</span>;)
     
-    <span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Object</span>; <span class="entity">Natural</span> index]</span>
-    <span class="keyword">method</span> <span class="keyword">indexer=</span>[<span class="entity">Natural</span> index, <span class="entity">Object</span> obj]</span>
+    <span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Object</span>; <span class="entity">Natural</span> index]</span>
     
     <span class="keyword">method</span> <span class="function">each</span>(<span class="entity">Function</span>(<span class="entity">Object</span>) block)
 }
@@ -312,12 +366,10 @@
 {
     <span class="comment">// This is the address this Pointer object references</span>
     <span class="keyword">property</span> <span class="function">value</span>(<span class="entity">Natural</span>;)
-    <span class="keyword">property</span> <span class="function">value=</span>(<span class="entity">Natural</span>)
     
     <span class="comment">// The Type this pointer points to.  Setting this is</span>
     <span class="comment">// required if you want to do pointer arithmetic.</span>
-    <span class="keyword">property</span> <span class="function">references</span>(<span class="entity">Type</span>;)
-    <span class="keyword">property</span> <span class="function">reference=</span>(<span class="entity">Type</span>)
+    <span class="keyword">property</span> <span class="function">reference</span>(<span class="entity">Type</span>)
     
     <span class="comment">// This pseudo-method dereferences a pointer as the specified type.</span>
     <span class="comment">// The empty return value means there is a return, but it is</span>
@@ -361,8 +413,9 @@ p.<span class="function">deref_as</span>(<span class="entity">Integer</span>).<s
                 <code>
                     <pre>
 <span class="comment">// An implementation is an internal definition of a class </span>
-<span class="comment">// structure and behavior.  This particular class has fairly limited</span>
-<span class="comment">// utility - it can only hold 10 objects.</span>
+<span class="comment">// structure and behavior.  Here, the actual super-class is </span>
+<span class="comment">// specified.  This definition does affect the class's internal</span>
+<span class="comment">// structure.</span>
 <span class="keyword">implementation</span> <span class="entity">Array</span> : <span class="superclass">Object</span>
 {
     <span class="comment">// Structure is defined by instance variables (and the superclass)</span>
@@ -372,27 +425,32 @@ p.<span class="function">deref_as</span>(<span class="entity">Integer</span>).<s
     
     <span class="keyword">method</span> <span class="function">length</span>(<span class="entity">Natural</span>;)
     {
-        <span class="keyword">return</span> <span class="literal">10</span>
+        <span class="keyword">get</span>
+        {
+            <span class="keyword">return</span> <span class="literal">10</span>
+        }
     }
     
     <span class="comment">// Here's an indexer implementation that highlights the use</span>
     <span class="comment">// of pointers and pointer arithmetic.</span>
-    <span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Object</span>; <span class="entity">Natural</span> index]</span>
+    <span class="keyword">method</span> <span class="keyword">indexer</span>[<span class="entity">Object</span>; <span class="entity">Natural</span> index, <span class="entity">Object</span> value]</span>
     {
-        <span class="keyword">if</span> (index &gt;= <span class="literal">10</span>)
-            <span class="keyword">return</span> <span class="keyword">nil</span>
-        
-        <span class="comment">// Notice that no typecasting is required on the return</span>
-        <span class="comment">// because all Reference types are considered equivalent</span>
-        <span class="keyword">return</span> <span class="variable">objects</span>[index]
-    }
-    
-    <span class="keyword">method</span> <span class="keyword">indexer=</span>[<span class="entity">Natural</span> index, <span class="entity">Object</span> value]</span>
-    {
-        <span class="keyword">if</span> (index &gt;= <span class="variable">length</span>)
-            <span class="keyword">return</span>
-        
-        <span class="variable">objects</span>[index] = value
+        <span class="keyword">get</span>
+        {
+            <span class="keyword">if</span> (index &gt;= <span class="literal">10</span>)
+                <span class="keyword">return</span> <span class="keyword">nil</span>
+            
+            <span class="comment">// Notice that no typecasting is required on the return</span>
+            <span class="comment">// because all Reference types are considered equivalent</span>
+            <span class="keyword">return</span> <span class="variable">objects</span>[index]
+        }
+        <span class="keyword">set</span>
+        {
+            <span class="keyword">if</span> (index &gt;= <span class="variable">length</span>)
+                <span class="keyword">return</span>
+
+            <span class="variable">objects</span>[index] = value
+        }
     }
     
     <span class="keyword">method</span> <span class="function">each</span>(<span class="entity">Function</span>(<span class="entity">Object</span>) block)
@@ -410,8 +468,7 @@ p.<span class="function">deref_as</span>(<span class="entity">Integer</span>).<s
             <span class="function">block</span>(<span class="keyword">self</span>[j])
         }
     }
-}
-                    </pre>
+}</pre>
                 </code>
             </div>
             
@@ -428,7 +485,7 @@ p.<span class="function">deref_as</span>(<span class="entity">Integer</span>).<s
 
 <span class="comment">// Pseudo-methods are a little special.  In many cases, they</span>
 <span class="comment">// aren't even functions at all.  They are really just </span>
-<span class="comment">// compiler operations, so they are even more static than functions.</span>
+<span class="comment">// compiler operations, so they are "even more" static than functions.</span>
 <span class="entity">Integer</span> i
 
 i.<span class="function">address</span>
@@ -492,12 +549,41 @@ obj = <span class="function">new_object</span>();
                 </code>
             </div>
             
-            <h2>Object Lifecycle</h2>
+            <h2>Exceptions</h2>
             <div class="codeblock">
                 <code>
                     <pre>
-exceptions
-asm
+<span class="comment">// try-catch-finally, just like you know them</span>
+<span class="keyword">try</span>
+{
+    <span class="comment">// throw works a lot like return</span>
+    <span class="keyword">throw</span> <span class="literal">"BOOM!"</span> 
+}
+<span class="keyword">catch</span>(<span class="entity">RuntimeException</span> e)
+{
+    <span class="comment">// catch a specific exception class</span>
+}
+<span class="keyword">catch</span>(e)
+{
+    <span class="comment">// catch everything else</span>
+}
+<span class="keyword">finally</span>
+{
+    <span class="comment">// called no matter what, unless exception bubbles to the top</span>
+}
+                    </pre>
+                </code>
+            </div>
+            
+            <h2>Assembly</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="attribute">&lt;<span class="keyword">@arch</span>:<span class="plain">x86-64</span>&gt;</span>
+<span class="keyword">assembly</span>
+{
+
+}
                     </pre>
                 </code>
             </div>
