@@ -4,23 +4,24 @@
         <meta charset="utf-8" />
         <title>Code</title>
         <style>
-            #banner     { margin: 10px; }
+            #banner       { margin: 10px; }
             
-            pre         { margin: 5px; }
+            pre           { margin: 5px; }
             
-            .codeblock  { margin: 10px; padding: 4px; border: 2px solid #999999; color: #fff; background-color: #000000; }
+            .codeblock    { margin: 10px; padding: 4px; border: 2px solid #999999; color: #fff; background-color: #000000; }
             
-            .plain      { color: #ffffff; }
-            .attribute  { color: #9cb4db; }
-            .keyword    { color: #fce700; }
-            .entity     { color: #ff8f00; }
-            .variable   { color: #00fee0; }
-            .function   { color: #9cb4db; }
-            .comment    { color: #bcbcbc; }
-            .superclass { color: #ff8f00; font-style: italic;}
-            .literal    { color: #d5ff00; }
-            .constant   { color: #d5ff00; }
-            .string     { color: #46dd27; }
+            .plain        { color: #ffffff; }
+            .attribute    { color: #9cb4db; }
+            .keyword      { color: #fce700; }
+            .entity       { color: #ff8f00; }
+            .variable     { color: #00fee0; }
+            .function     { color: #9cb4db; }
+            .comment      { color: #bcbcbc; }
+            .superclass   { color: #ff8f00; font-style: italic;}
+            .literal      { color: #d5ff00; }
+            .constant     { color: #d5ff00; }
+            .string       { color: #46dd27; }
+            .preprocessor { color: #90a1bb; }
         </style>
     </head>
     <body id="index" class="home">
@@ -557,7 +558,7 @@ obj = <span class="function">new_object</span>();
 <span class="keyword">try</span>
 {
     <span class="comment">// throw works a lot like return</span>
-    <span class="keyword">throw</span> <span class="literal">"BOOM!"</span> 
+    <span class="keyword">throw</span> <span class="entity">RuntimeException</span>.<span class="function">new</span>(<span class="literal">"BOOM!"</span>)
 }
 <span class="keyword">catch</span>(<span class="entity">RuntimeException</span> e)
 {
@@ -570,8 +571,7 @@ obj = <span class="function">new_object</span>();
 <span class="keyword">finally</span>
 {
     <span class="comment">// called no matter what, unless exception bubbles to the top</span>
-}
-                    </pre>
+}</pre>
                 </code>
             </div>
             
@@ -579,12 +579,33 @@ obj = <span class="function">new_object</span>();
             <div class="codeblock">
                 <code>
                     <pre>
-<span class="attribute">&lt;<span class="keyword">@arch</span>:<span class="plain">x86-64</span>&gt;</span>
-<span class="keyword">assembly</span>
+<span class="preprocessor">assembly</span>
 {
-
+    <span class="comment">// crazy assembly goes here</span>
+}</pre>
+                </code>
+            </div>
+            
+            <h2>Conditional Compilation</h2>
+            <div class="codeblock">
+                <code>
+                    <pre>
+<span class="comment">// evaluate an attribute at compile time</span>
+<span class="preprocessor">version</span>(<span class="keyword">@arch</span> == x86-64)
+{
+    <span class="comment">// code here is compiled only when the @arch attribute equals x86-64</span>
 }
-                    </pre>
+<span class="preprocessor">else</span>
+{
+    <span class="comment">// version condition is not satisified</span>
+}
+
+<span class="comment">// because this is so common for debugging, there's a built-in</span>
+<span class="comment">// shortcut for version(@debug >= x)</span>
+<span class="preprocessor">debug</span>(5)
+{
+    <span class="comment">// code here is compiled only when the @debug attribute >= 5</span>
+}</pre>
                 </code>
             </div>
         </section>
