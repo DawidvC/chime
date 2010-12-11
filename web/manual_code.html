@@ -51,15 +51,15 @@
 {
     <span class="comment">// Structures are made up of built-in Types </span>
     
-    <span class="entity">Integer</span>     default_32_bit_size
-    <span class="entity">Integer</span><span class="attribute">&lt;<span class="literal">3</span>&gt;</span>  three_bit_integer
+    <span class="entity">Integer</span>       default_32_bit_size
+    <span class="entity">Integer</span><span class="attribute">&lt;<span class="literal">3</span>&gt;</span>    three_bit_integer
     
     <span class="entity">Integer</span><span class="attribute">[<span class="literal">5</span>]</span>    array_of_five_integers
     <span class="entity">Integer</span><span class="attribute">&lt;<span class="literal">8</span>&gt;</span><span class="attribute">[<span class="literal">5</span>]</span> array_of_five_8_bit_integers
     
-    <span class="entity">Natural</span><span class="attribute">&lt;<span class="literal">16</span>&gt;</span> 16_bit_unsigned_integer
+    <span class="entity">Natural</span><span class="attribute">&lt;<span class="literal">16</span>&gt;</span>   16_bit_unsigned_integer
     
-    <span class="entity">Float</span><span class="attribute">&lt;<span class="literal">32</span>&gt;</span>   32_bit_floating_point_number
+    <span class="entity">Float</span><span class="attribute">&lt;<span class="literal">32</span>&gt;</span>     32_bit_floating_point_number
 }
 
 <span class="comment">// Once defined, structures are Value types themselves</span>
@@ -109,8 +109,6 @@
 
 <span class="comment">// unless and tailing conditions</span>
 x = <span class="literal">5</span> <span class="keyword">unless</span> x > <span class="literal">10</span>
-
-<span class="comment">// unless and tailing conditions</span>
 
 <span class="comment">// switch  makes use of the "case_compare" method</span>
 <span class="comment">// operator.  A case statement can be an expression.</span>
@@ -167,8 +165,7 @@ x = <span class="literal">5</span> <span class="keyword">unless</span> x > <span
 <span class="keyword">function</span> <span class="function">function_six</span>(<span class="entity">Integer</span>; <span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
 {
     <span class="keyword">return</span> a.<span class="function">value</span> + b
-}
-                    </pre>
+}</pre>
                 </code>
             </div>
             
@@ -238,23 +235,22 @@ x = <span class="literal">5</span> <span class="keyword">unless</span> x > <span
     <span class="keyword">return</span> a.<span class="function">value</span> + b
 }
 
-<span class="comment">// the body pseudo-method let you control how a subclass's</span>
-<span class="comment">// overridden method will behave</span>
+<span class="comment">// the body function allows you to control how overriding will work</span>
 <span class="keyword">method</span> <span class="function">a_method</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> input)
 {
     <span class="entity">Integer</span> x
-  
+    
+    <span class="comment">// subclassers can only change the body block</span>
     x = <span class="keyword">body</span>(input) { |<span class="entity">Integer</span>; <span class="entity">Integer</span> body_input|
-      <span class="comment">// this is the default implementation, and is the </span>
-      <span class="comment">// only part of this method that can be overridden </span>
-      <span class="keyword">return</span> body_input</span>
+        <span class="comment">// this is the default implementation </span>
+        <span class="keyword">return</span> body_input + <span class="literal">1</span>
     }
     
     <span class="keyword">return</span> x + <span class="literal">1</span>
 }
 
 <span class="comment">// Accessors can be called without parenthesis </span>
-<span class="keyword">property</span> <span class="function">my_property</span>(<span class="entity">Integer</span>;<span class="entity">Integer</span> value)
+<span class="keyword">property</span> <span class="function">my_property</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> value)
 {
     <span class="keyword">get</span>
     {
@@ -474,7 +470,7 @@ obj.<span class="function">some_method</span>(<span class="literal">7</span>)
                 </code>
             </div>
             
-            <h2>Constants</h2>
+            <h2>Constants and Type Modifiers</h2>
             <div class="codeblock">
                 <code>
                     <pre>
@@ -487,7 +483,22 @@ obj.<span class="function">some_method</span>(<span class="literal">7</span>)
 <span class="entity">String</span> <span class="constant">MY_STRING</span> = <span class="string">"abc"</span>
 
 <span class="comment">// This is just a pointer to ascii data</span>
-<span class="entity">Pointer</span> <span class="constant">MY_C_STRING</span> = <span class="string">c"abc"</span></pre>
+<span class="entity">Pointer</span> <span class="constant">MY_C_STRING</span> = <span class="string">c"abc"</span>
+
+<span class="comment">// I've always found 'const', 'mutable', 'immutable' and 'restrict' confusing. </span>
+<span class="comment">// They provide valuable information to the compiler about the nature of the </span>
+<span class="comment">// data.  This can make for good optimizations.</span>
+<span class="keyword">function</span> <span class="function">foo</span>(<span class="entity">Natural</span>; <span class="keyword">constant</span> <span class="entity">Natural</span> x)
+{
+    x = <span class="literal">10</span> <span class="comment">// this is an error</span>
+    
+    <span class="keyword">return</span> x
+}
+
+<span class="comment">// 'unique' expresses an assumption this function makes about x and y - </span>
+<span class="comment">// their values do not overlap.  This is not often needed, but can be useful,</span>
+<span class="comment">// again, for boring compiler optimizations</span>
+<span class="keyword">function</span> <span class="function">foo</span>(<span class="keyword">unique</span> <span class="entity">Pointer</span> x, <span class="keyword">unique</span> <span class="entity">Pointer</span> y)</pre>
                 </code>
             </div>
             
