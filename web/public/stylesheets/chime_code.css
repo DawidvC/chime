@@ -1,0 +1,12 @@
+.plain        { color: #ffffff; }
+.attribute    { color: #9cb4db; }
+.keyword      { color: #fce700; }
+.entity       { color: #ff8f00; }
+.variable     { color: #00fee0; }
+.function     { color: #9cb4db; }
+.comment      { color: #bcbcbc; }
+.superclass   { color: #ff8f00; font-style: italic; }
+.literal      { color: #d5ff00; }
+.constant     { color: #d5ff00; }
+.string       { color: #46dd27; }
+.preprocessor { color: #90a1bb; }
