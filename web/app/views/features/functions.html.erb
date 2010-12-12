@@ -1,0 +1,41 @@
+<%= render("features_navigation") %>
+
+<section>
+  <h2>Functions</h2>
+  <code>
+<span class="comment">// This is the simplest function definition.</span>
+<span class="keyword">function</span> <span class="function">function_one</span>()
+{
+}
+
+<span class="comment">// Here's a function that takes one pointer as an argument</span>
+<span class="keyword">function</span> <span class="function">function_two</span>(<span class="entity">Pointer</span> a)
+{
+}
+
+<span class="comment">// Pointers are the default type, so if you omit the type Pointer</span>
+<span class="comment">// is used.  Return values work the same way.  If there is no return </span>
+<span class="comment">// statement, nil is implied</span>
+<span class="keyword">function</span> <span class="function">function_three</span>(a)
+{
+    <span class="keyword">return</span> a
+}
+
+<span class="comment">// Explicit types for returns are allowed</span>
+<span class="keyword">function</span> <span class="function">function_four</span>(<span class="entity">Void</span>;a)
+{
+    <span class="comment">// return statement not allowed in this function</span>
+}
+
+<span class="comment">// Labels are only optional for the first argument, but are required for all others</span>
+<span class="keyword">function</span> <span class="function">function_five</span>(<span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+{
+}
+
+<span class="comment">// Return types are specified first, followed by a semi-colon</span>
+<span class="keyword">function</span> <span class="function">function_six</span>(<span class="entity">Integer</span>; <span class="entity">Pointer</span> a, <span class="entity">Integer</span> <span class="function">with_integer:</span>b)
+{
+    <span class="keyword">return</span> a.<span class="function">value</span> + b
+}
+  </code>
+</section>
