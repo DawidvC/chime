@@ -1,0 +1,21 @@
+<%= render("type_navigation") %>
+
+<section>
+  <h2>Nil</h2>
+  <code>
+<span class="keyword">interface</span> <span class="entity">Pointer</span> : <span class="superclass">ValueType</span>
+{
+    <span class="keyword">property</span> <span class="function">value</span>(<span class="entity">Natural</span>; <span class="entity">Natural</span>)
+    
+    <span class="keyword">property</span> <span class="function">nil?</span>(<span class="entity">Boolean</span>;)
+    
+    <span class="keyword">property</span> <span class="function">reference</span>(<span class="entity">Type</span>; <span class="entity">Type</span>)
+    
+    <span class="keyword">method</span> <span class="function">deref_as</span>(<span class="entity">Type</span>; <span class="entity">Type</span>)
+    
+    <span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Integer</span> index](<span class="entity">Type</span>;)</span>
+    
+    <span class="keyword">method</span> <span class="function">deref</span>(<span class="entity">Type</span>;)
+}
+    </code>
+</section>
