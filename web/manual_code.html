@@ -291,13 +291,13 @@ x = <span class="literal">5</span> <span class="keyword">unless</span> x > <span
 <span class="keyword">operator</span> <span class="keyword">%</span>(<span class="entity">Entity</span> other)
 
 <span class="comment">// returns (-1,0,1,other) to support &lt;, &lt;=, ==, &gt;=, &gt;, and != </span>
-<span class="keyword">operator</span> <span class="keyword">&lt;=&gt;</span>(<span class="entity">Entity</span> other)
+<span class="keyword">operator</span> <span class="function">&lt;=&gt;</span>(<span class="entity">Entity</span> other)
 {
     <span class="keyword">return</span> <span class="keyword">self</span>.<span class="function">value</span>.<span class="function">compare</span>(other.<span class="function">value</span>)
 }
 
 <span class="comment">// case-compare for switch statements </span>
-<span class="keyword">operator</span> <span class="keyword">===</span>(<span class="entity">Entity</span> other)</pre>
+<span class="keyword">operator</span> <span class="function">===</span>(<span class="entity">Entity</span> other)</pre>
                 </code>
             </div>
             
