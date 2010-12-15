@@ -1,0 +1,61 @@
+<%= render("features_navigation") %>
+
+<section>
+  <h2>Implementations</h2>
+  <code>
+<span class="comment">// An implementation is an internal definition of a class </span>
+<span class="comment">// structure and behavior.  Here, the actual super-class is </span>
+<span class="comment">// specified.  This definition does affect the class's internal</span>
+<span class="comment">// structure.</span>
+<span class="keyword">implementation</span> <span class="entity">Array</span> : <span class="superclass">Object</span>
+{
+    <span class="comment">// Structure is defined by instance variables (and the superclass)</span>
+    <span class="entity">Pointer</span><span class="attribute">[<span class="literal">10</span>]</span> <span class="variable">objects</span>
+    
+    <span class="comment">// Behavior is defined by methods</span>
+    
+    <span class="keyword">property</span> <span class="function">length</span>(<span class="entity">Natural</span>;)
+    {
+        <span class="keyword">get</span>
+        {
+            <span class="keyword">return</span> <span class="literal">10</span>
+        }
+    }
+    
+    <span class="comment">// Here's an indexer implementation that highlights the use</span>
+    <span class="comment">// of pointers and pointer arithmetic.</span>
+    <span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Natural</span> index](<span class="entity">Object</span>; <span class="entity">Object</span> value)
+    {
+        <span class="keyword">get</span>
+        {
+            <span class="keyword">return</span> <span class="keyword">nil</span> <span class="keyword">if</span> index &gt;= <span class="keyword">self</span>.<span class="function">length</span>
+            
+            <span class="comment">// Notice that no typecasting is required on the return</span>
+            <span class="comment">// because all Reference types are considered equivalent</span>
+            <span class="keyword">return</span> <span class="variable">objects</span>[index]
+        }
+        <span class="keyword">set</span>
+        {
+            <span class="keyword">return</span> <span class="keyword">if</span> index &gt;= <span class="keyword">self</span>.<span class="function">length</span>
+
+            <span class="variable">objects</span>[index] = value
+        }
+    }
+    
+    <span class="keyword">method</span> <span class="function">each</span>(<span class="entity">Function</span>(<span class="entity">Object</span>) block)
+    {
+        <span class="entity">Natural</span> i
+        
+        <span class="keyword">for</span> (i = <span class="literal">0</span>; i &lt; <span class="literal">10</span>; i++)
+        {
+            <span class="function">block</span>(<span class="keyword">self</span>[i])
+        }
+        
+        <span class="comment">// or, with a fancier block pseudo-method on Integer</span>
+        <span class="literal">10</span>.<span class="function">times</span>() { |<span class="entity">Void</span>; <span class="entity">Natural</span> j|
+            <span class="function">block</span>(<span class="keyword">self</span>[j])
+        }
+    }
+}
+  </code>
+</section>

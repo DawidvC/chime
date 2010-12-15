@@ -1,0 +1,30 @@
+<%= render("features_navigation") %>
+
+<section>
+  <h2>Dispatch</h2>
+  <code>
+<span class="comment">// The term dispatch refers to determining the actual code to execute</span>
+<span class="comment">// based on the type and method invoked.  Chime has a few simple rules.</span>
+
+<span class="comment">// Functions that aren't associated with a type are always</span>
+<span class="comment">// dispatched statically, based only on scope</span>
+<span class="function">sum</span>(1, <span class="function">and:</span>1)
+
+<span class="comment">// Pseudo-methods are a little special.  In many cases, they</span>
+<span class="comment">// aren't even functions at all.  They are really just </span>
+<span class="comment">// compiler operations, so they are "even more" static than functions.</span>
+<span class="entity">Integer</span> i
+
+i.<span class="function">address</span>
+
+<span class="comment">// Methods are always dispatched dynamically.  There</span>
+<span class="comment">// will not be a compiler warning, but there might be</span>
+<span class="comment">// a runtime error if this object and all its superclasses</span>
+<span class="comment">// do not implement the method</span>
+<span class="entity">MyObject</span> obj
+
+obj = <span class="entity">MyObject</span>.<span class="keyword">new</span>()
+
+obj.<span class="function">some_method</span>(<span class="literal">7</span>)
+  </code>
+</section>

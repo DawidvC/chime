@@ -1,0 +1,21 @@
+<%= render("features_navigation") %>
+
+<section>
+  <h2>Type Modifiers</h2>
+  <code>
+<span class="comment">// I've always found 'const', 'mutable', 'immutable' and 'restrict' confusing. </span>
+<span class="comment">// They provide valuable information to the compiler about the nature of the </span>
+<span class="comment">// data.  This can make for good optimizations.</span>
+<span class="keyword">function</span> <span class="function">foo</span>(<span class="entity">Natural</span>; <span class="keyword">constant</span> <span class="entity">Natural</span> x)
+{
+    x = <span class="literal">10</span> <span class="comment">// this is an error</span>
+    
+    <span class="keyword">return</span> x
+}
+
+<span class="comment">// 'unique' expresses an assumption this function makes about x and y - </span>
+<span class="comment">// their values do not overlap.  This is not often needed, but can be useful,</span>
+<span class="comment">// again, for boring compiler optimizations</span>
+<span class="keyword">function</span> <span class="function">foo</span>(<span class="keyword">unique</span> <span class="entity">Pointer</span> x, <span class="keyword">unique</span> <span class="entity">Pointer</span> y)
+  </code>
+</section>

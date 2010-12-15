@@ -1,0 +1,23 @@
+<%= render("features_navigation") %>
+
+<section>
+  <h2>Conditional Compilation</h2>
+  <code>
+<span class="comment">// evaluate an attribute at compile time</span>
+<span class="preprocessor">version</span>(<span class="keyword">@arch</span> == x86-64)
+{
+    <span class="comment">// code here is compiled only when the @arch attribute equals x86-64</span>
+}
+<span class="preprocessor">else</span>
+{
+    <span class="comment">// version condition is not satisified</span>
+}
+
+<span class="comment">// because this is so common for debugging, there's a built-in</span>
+<span class="comment">// shortcut for version(@debug >= x)</span>
+<span class="preprocessor">debug</span>(5)
+{
+    <span class="comment">// code here is compiled only when the @debug attribute >= 5</span>
+}
+  </code>
+</section>
