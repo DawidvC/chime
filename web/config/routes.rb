@@ -48,6 +48,7 @@ Web::Application.routes.draw do
   
   match 'types/:action'    => 'types#:action'
   match 'features/:action' => 'features#:action'
+  match 'features'         => 'features#index'
   
   root :to => "types#integer"
 

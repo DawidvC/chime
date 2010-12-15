@@ -5,16 +5,20 @@
   <code>
 <span class="keyword">interface</span> <span class="entity">Integer</span>&lt;&gt; : <span class="superclass">ValueType</span>
 {
-    <span class="keyword">property</span> <span class="function">size_in_bytes</span>(<span class="entity">Natural</span>;)
+    <span class="keyword">method</span>       <span class="function">to_float</span>(<span class="entity">Float</span>;)
+    <span class="keyword">method</span> <span class="function">absolute_value</span>(<span class="entity">Integer</span>;)
     
     <span class="keyword">method</span> <span class="function">right_shift</span>(<span class="entity">Integer</span>; <span class="entity">Natural</span> places)
     <span class="keyword">method</span>  <span class="function">left_shift</span>(<span class="entity">Integer</span>; <span class="entity">Natural</span> places)
     <span class="keyword">method</span>    <span class="function">bit_mask</span>(<span class="entity">Integer</span>; <span class="entity">Natural</span> mask)
-    <span class="keyword">method</span>     <span class="function">set_bit</span>(<span class="entity">Integer</span>; <span class="entity">Natural</span> position, <span class="entity">Boolean</span> value)
-    
+    <span class="keyword">method</span>     <span class="function">set_bit</span>(<span class="entity">Integer</span>; <span class="entity">Natural</span> position, <span class="entity">Boolean</span> <span class="function">to:</span>value)
+    <span class="keyword">method</span>  <span class="function">compliment</span>(<span class="entity">Integer</span>;)
     
     <span class="keyword">method</span>         <span class="function">each</span>(<span class="entity">Function</span>(<span class="entity">Void</span>; <span class="entity">Integer</span>) block)
     <span class="keyword">method</span> <span class="function">reverse_each</span>(<span class="entity">Function</span>(<span class="entity">Void</span>; <span class="entity">Integer</span>) block)
+    
+    <span class="keyword">class</span> <span class="keyword">property</span> <span class="function">minimum</span>(<span class="entity">Integer</span>;)
+    <span class="keyword">class</span> <span class="keyword">property</span> <span class="function">maximum</span>(<span class="entity">Integer</span>;)
 }
     </code>
 </section>
