@@ -1,0 +1,37 @@
+<%= render("features_navigation") %>
+
+<section>
+  <h2>Literal</h2>
+  <code>
+<span class="comment">// Numbers are the most straight-forward</span>
+x = <span class="literal">7</span>         <span class="comment">// Integer</span>
+x = <span class="literal">7.5</span>       <span class="comment">// Float</span>
+x = <span class="literal">0x0000007</span>
+
+<span class="comment">// Imaginary numbers are supported with the 'j' syntax</span>
+x = <span class="literal">7j</span>         <span class="comment">// Integer</span>
+x = <span class="literal">-7.5j</span>      <span class="comment">// Float</span>
+
+<span class="comment">// String literals have two forms, object literals and</span>
+<span class="comment">// c-strings.  The c version even gets its own type, CString.</span>
+x = <span class="string">"this is an object of type String"</span>
+x = <span class="string">c"this is a c-string - just an array of null-terminated bytes, (non-unicode only)"</span>
+
+<span class="comment">// Character literals (can be unicode)</span>
+x = <span class="literal">'c'</span>
+
+<span class="comment">// Range is an object that represents a numeric span.  It has</span>
+<span class="comment">// a literal form.</span>
+x = <span class="literal">6:7</span>           <span class="comment">// 6 to 7 inclusive</span>
+x = <span class="string">"string"</span>[<span class="literal">0:2</span>] <span class="comment">// "str" </span>
+
+<span class="comment">// Array objects</span>
+x = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>]
+
+<span class="comment">// Hash objects</span>
+x = {<span class="string">"a"</span>:<span class="literal">1</span>, <span class="string">"b"</span>:<span class="literal">2</span>}
+
+<span class="comment">// Method Signatures</span>
+x.<span class="function">responds_to?</span>(<span class="literal">#foo:bar:</span>)
+  </code>
+</section>
