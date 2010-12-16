@@ -15,7 +15,8 @@
     <span class="entity">Integer</span> x
     
     <span class="comment">// subclassers can only change the body block</span>
-    x = <span class="keyword">body</span>(input) { |<span class="entity">Integer</span>; <span class="entity">Integer</span> body_input|
+    x = <span class="keyword">body</span>(input) |<span class="entity">Integer</span>; <span class="entity">Integer</span> body_input|
+    {
         <span class="comment">// this is the default implementation </span>
         <span class="keyword">return</span> body_input + <span class="literal">1</span>
     }

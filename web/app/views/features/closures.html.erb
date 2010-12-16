@@ -22,22 +22,24 @@
     <span class="entity">Integer</span> value
     
     <span class="comment">// pass in an anonymous function</span>
-    value = <span class="function">use_block</span>({ |<span class="entity">Integer</span>;| <span class="keyword">return</span> <span class="literal">5</span> })
+    value = <span class="function">use_block</span>(|<span class="entity">Integer</span>;| { <span class="keyword">return</span> <span class="literal">5</span> })
     
     <span class="comment">// this notation is equivalent for the <strong>last</strong> argument only</span>
-    value = <span class="function">use_block</span>() { |<span class="entity">Integer</span>;|
+    value = <span class="function">use_block</span>() |<span class="entity">Integer</span>;|
+    { 
         <span class="keyword">return</span> <span class="literal">5</span>
     }
     
     <span class="comment">// blocks that have no return or arguments do not require the pipes.</span>
     <span class="comment">// note that value has been 'closed over'</span>
-    <span class="function">empty_block</span>({ <span class="function">do_something</span>(value) })
+    <span class="function">empty_block</span>(|| { <span class="function">do_something</span>(value) })
     
     <span class="comment">// you can assign to local variables, but this</span>
-    <span class="comment">// just passing in the address of the variable.  Depending</span>
-    <span class="comment">// on when the block is used, this could be bad</span>
-    <span class="function">empty_block</span>() {
-        value = <span class="function">do_something</span>(0)
+    <span class="comment">// just passes in the address of the variable.  Depending</span>
+    <span class="comment">// on when the block is executed, this could be bad</span>
+    <span class="function">empty_block</span>() ||
+    {
+        value = <span class="function">do_something</span>(<span class="literal">0</span>)
     }
 }
 
@@ -46,8 +48,9 @@
 {
     <span class="entity">Function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span>, <span class="entity">Integer</span> <span class="function">and:</span>) sum
     
-    sum = { |<span class="entity">Integer</span>; <span class="entity">Integer</span> x, <span class="entity">Integer</span> <span class="function">and:</span>y|
-      <span class="keyword">return</span> x + y
+    sum = |<span class="entity">Integer</span>; <span class="entity">Integer</span> x, <span class="entity">Integer</span> <span class="function">and:</span>y|
+    {
+        <span class="keyword">return</span> x + y
     }
     
     <span class="function">sum</span>(<span class="literal">1</span>, <span class="function">and:</span><span class="literal">1</span>)

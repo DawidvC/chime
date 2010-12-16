@@ -52,7 +52,8 @@
         }
         
         <span class="comment">// or, with a fancier block pseudo-method on Integer</span>
-        <span class="literal">10</span>.<span class="function">times</span>() { |<span class="entity">Void</span>; <span class="entity">Natural</span> j|
+        <span class="literal">10</span>.<span class="function">times</span>() |<span class="entity">Void</span>; <span class="entity">Natural</span> j|
+        {
             <span class="function">block</span>(<span class="keyword">self</span>[j])
         }
     }
