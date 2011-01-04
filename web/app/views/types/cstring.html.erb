@@ -1,0 +1,19 @@
+<%= render("type_navigation") %>
+
+<section>
+  <h2>CString</h2>
+  <code>
+<span class="keyword">interface</span> <span class="entity">CString</span>&lt;&gt; : <span class="superclass">Reference</span>&lt;&gt;
+{
+    <span class="keyword">property</span> <span class="function">length</span>(<span class="entity">Natural</span>;)
+    
+    <span class="keyword">method</span>   <span class="function">copy_to</span>(;<span class="keyword">unique</span> <span class="entity">CString</span> destination)
+    
+    <span class="keyword">indexer</span>  <span class="keyword">self</span>[<span class="entity">Natural</span> i](<span class="entity">Character</span>; <span class="entity">Character</span> c)</span>
+    
+    <span class="keyword">method</span>   <span class="function">to_string</span>(<span class="entity">String</span>;)
+    <span class="keyword">operator</span> <span class="function">&lt;=&gt;</span>(<span class="entity">CString</span> other)
+    <span class="keyword">operator</span> <span class="function">===</span>(<span class="entity">CString</span> other)
+}
+    </code>
+</section>

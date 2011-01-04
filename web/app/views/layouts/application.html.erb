@@ -9,13 +9,13 @@
 </head>
 <body>
   <header id="banner">
-    Chime
+    Chime - <%= link_to("Features", :controller => 'features') %> - <%= link_to("Types", :controller => 'types') %>
   </header>
   
 <%= yield %>
   
   <footer id="contentinfo">
-    yo me is footer
+    &nbsp;
   </footer>
 </body>
 </html>

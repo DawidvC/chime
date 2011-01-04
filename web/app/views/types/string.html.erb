@@ -1,0 +1,18 @@
+<%= render("type_navigation") %>
+
+<section>
+  <h2>String</h2>
+  <code>
+<span class="keyword">interface</span> <span class="entity">String</span> : <span class="superclass">Object</span>
+{
+    <span class="keyword">property</span> <span class="function">length</span>(<span class="entity">Number</span>;)
+    
+    <span class="keyword">method</span>   <span class="function">to_cstring</span>(<span class="entity">CString</span>;)
+    <span class="keyword">operator</span> <span class="function">&lt;=&gt;</span>(<span class="entity">String</span> other)
+    <span class="keyword">operator</span> <span class="function">===</span>(<span class="entity">String</span> other)
+    
+    <span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Range</span> range](<span class="entity">String</span>;)</span>
+    <span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Number</span> index](<span class="entity">Character</span>;)</span>
+}
+    </code>
+</section>
