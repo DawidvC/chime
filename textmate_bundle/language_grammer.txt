@@ -1,0 +1,59 @@
+{	comment = 'This is textmate syntax grammer for chime';
+	scopeName = 'source.chime';
+	fileTypes = ( 'chi', 'chm' );
+	foldingStartMarker = '\b(namespace|interface)\b';
+	foldingStopMarker = '(})';
+	patterns = (
+		{	name = 'comment.line.double-slash.chime';
+			begin = '//';
+			end = '$\n?';
+		},
+		{	name = 'keyword.control.chime';
+			match = '\b(if|while|for|return|switch|case|end|default|foreach|in|enum|get|set|else)\b';
+		},
+		{	match = '(class|module)\s+(\w+)';
+			captures = {
+				1 = { name = 'keyword'; };
+				2 = { name = 'entity.name.type.chime'; };
+			};
+		},
+		{	name = 'entity.name';
+			match = '\b(self|super)\b';
+		},
+		{	name = 'constant.numeric.c';
+			match = '\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b';
+		},
+		{	name = 'keyword';
+			match = '\b(namespace|interface|method|property)\b';
+		},
+		{	match = '(constant|function|method)\s+((\w+|<\w+>)\s+)?((\w|=)+)';
+			captures = {
+				1 = { name = 'keyword'; };
+				3 = { name = 'support.type'; };
+				4 = { name = 'entity'; };
+			};
+		},
+		{	match = '\b((\w+|<\w+>)\s+)?(\w+(:))(\w+)\b';
+			captures = {
+				1 = { name = 'support.type'; };
+				3 = { name = 'support.other'; };
+				5 = { name = 'variable.parameter'; };
+			};
+		},
+		{	match = '(:)\s+(\w*)';
+			captures = {
+				1 = { name = 'keyword.operator'; };
+				2 = { name = 'entity.other.inherited-class'; };
+			};
+		},
+		{	name = 'string.quoted.double.untitled';
+			begin = '"';
+			end = '"';
+			patterns = (
+				{	name = 'constant.character.escape.untitled';
+					match = '\\.';
+				},
+			);
+		},
+	);
+}
