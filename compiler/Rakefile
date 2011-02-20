@@ -14,8 +14,9 @@ task(:build) do
   system("#{COMPILER_COMMAND} -c lexer/string_lexer.cpp -o #{BUILD_PATH}/string_lexer.o")
   system("#{COMPILER_COMMAND} -c lexer/token.cpp        -o #{BUILD_PATH}/token.o")
   system("#{COMPILER_COMMAND} -c tests/lexer_tests.cpp  -o #{BUILD_PATH}/lexer_tests.o")
+  system("#{COMPILER_COMMAND} -c tests/token_tests.cpp  -o #{BUILD_PATH}/token_tests.o")
   
-  o_files = ["file_lexer.o", "lexer.o", "lexer_tests.o", "string_lexer.o", "token.o"]
+  o_files = ["file_lexer.o", "lexer.o", "string_lexer.o", "token.o", "lexer_tests.o", "token_tests.o"]
   o_files.collect! {|x| "#{BUILD_PATH}/#{x}" }
   
   system("#{COMPILER_COMMAND} -lgtest -lgtest_main #{o_files.join(" ")} -o #{BUILD_PATH}/chime_test")
