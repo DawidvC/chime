@@ -103,13 +103,6 @@ TEST_F(LexerTest, MethodWithOneParameter)
 	const char *tokens[] = {"method", "foo", "(", "bar", ")", "{", "}", NULL};
 	ExpectTokens(tokens);
 }
-TEST_F(LexerTest, MethodWithOneValueParameter)
-{
-	lex("method foo(<bar:16>) {}");
-	
-	const char *tokens[] = {"method", "foo", "(", "<", "bar", ":", "16", ">", ")", "{", "}", NULL};
-	ExpectTokens(tokens);
-}
 TEST_F(LexerTest, MethodsWithMathSymbolNames)
 {
 	lex("method +() {}");
@@ -249,13 +242,7 @@ TEST_F(LexerTest, IntegerMethodCall)
 	const char *tokens[] = {"5", ".", "times", NULL};
 	ExpectTokens(tokens);
 }
-TEST_F(LexerTest, IntegerStaticMethodCall)
-{
-	lex("5..times");
-	
-	const char *tokens[] = {"5", "..", "times", NULL};
-	ExpectTokens(tokens);
-}
+
 TEST_F(LexerTest, FloatMethodCall)
 {
 	lex("5.6.floor");
@@ -263,36 +250,13 @@ TEST_F(LexerTest, FloatMethodCall)
 	const char *tokens[] = {"5.6", ".", "floor", NULL};
 	ExpectTokens(tokens);
 }
-TEST_F(LexerTest, FloatStaticMethodCall)
-{
-	lex("5.6..floor");
-	
-	const char *tokens[] = {"5.6", "..", "floor", NULL};
-	ExpectTokens(tokens);
-}
-
-#pragma mark typing
-TEST_F(LexerTest, ValueType)
-{
-	lex("<char>");
-	
-	const char *tokens[] = {"<", "char", ">", NULL};
-	ExpectTokens(tokens);
-}
-TEST_F(LexerTest, ValueWithSizeType)
-{
-	lex("<int:64>");
-
-	const char *tokens[] = {"<", "int", ":", "64", ">", NULL};
-	ExpectTokens(tokens);
-}
 
 #pragma mark parameters
 TEST_F(LexerTest, Parameters)
 {
-	lex("foo(<int:64> bar:bas)");
+	lex("foo(Integer bar:bas)");
 
-	const char *tokens[] = {"foo", "(", "<", "int", ":", "64", ">","bar", ":", "bas", ")", NULL};
+	const char *tokens[] = {"foo", "(", "Integer","bar", ":", "bas", ")", NULL};
 	ExpectTokens(tokens);
 }
 TEST_F(LexerTest, TwoSimpleParameters)
@@ -311,11 +275,11 @@ TEST_F(LexerTest, DotOperator)
 	const char *tokens[] = {"x", ".", "hello", NULL};
 	ExpectTokens(tokens);
 }
-TEST_F(LexerTest, DoubleDotOperator)
+TEST_F(LexerTest, DoubleDot)
 {
 	lex("x..hello()");
 
-	const char *tokens[] = {"x", "..", "hello", "(", ")", NULL};
+	const char *tokens[] = {"x", ".", ".", "hello", "(", ")", NULL};
 	ExpectTokens(tokens);
 }
 TEST_F(LexerTest, AssignmentOperator)
