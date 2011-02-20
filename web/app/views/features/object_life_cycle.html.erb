@@ -3,36 +3,27 @@
 <section>
   <h2>Object Life Cycle</h2>
   <code>
-<span class="comment">// Classes all follow a simple retain counting mechanism</span>
-<span class="entity">MyObject</span> obj
+<span class="comment">// Classes all follow a simple retain counting mechanism, but these details</span>
+<span class="comment">// are hidden from the developer.  The result ends up looking a lot like a</span>
+<span class="comment">// garbage-collected environment</span>
+<span class="keyword">method</span> <span class="function">simple_example</span>()
+{
+    <span class="entity">MyObject</span> obj
+    
+    <span class="comment">// Retain count of +1</span>
+    obj = <span class="entity">MyObject</span>.<span class="function">new</span>()
+    
+    <span class="comment">// At this point, obj will fall out of scope, so its</span>
+    <span class="comment">// retain count is decremented.  This results in the</span>
+    <span class="comment">// count getting to zero, which causes a deallocation</span>
+}
 
-<span class="comment">// Retain count of +1</span>
-obj = <span class="entity">MyObject</span>.<span class="function">new</span>()
-
-<span class="comment">// Retain count of +2</span>
-obj.<span class="function">retain</span>()
-
-<span class="comment">// Retain count of +1</span>
-obj.<span class="function">release</span>()
-
-<span class="comment">// Retain count of 0, deallocated</span>
-obj.<span class="function">release</span>()
-
-<span class="comment">// This introduces a problem with functions/methods that</span>
-<span class="comment">// return values.  How does a caller (and the compiler) know</span>
-<span class="comment">// that ownership is being transferred?</span>
-
-<span class="keyword">function</span> <span class="function">new_object</span>(<span class="keyword">retained</span>;)
+<span class="comment">// Consider this next example.  A newly allocated object is</span>
+<span class="comment">// returned.  Here, the object is not yet out of scope, so its</span>
+<span class="comment">// retain count is not modified.</span>
+<span class="keyword">method</span> <span class="function">returns_new</span>()
 {
     <span class="keyword">return</span> <span class="entity">MyObject</span>.<span class="function">new</span>()
 }
-
-<span class="comment">// The compiler (and hopefully you) know that you</span>
-<span class="comment">// own this return value</span>
-obj = <span class="function">new_object</span>();
-
-<span class="comment">// All local variables are stack-allocated.  Variables are only moved</span>
-<span class="comment">// off the stack when returned, or when a closure that references them</span>
-<span class="comment">// is itself moved off the stack</span>
   </code>
 </section>

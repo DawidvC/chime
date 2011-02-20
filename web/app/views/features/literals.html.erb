@@ -3,27 +3,16 @@
 <section>
   <h2>Literal</h2>
   <code>
-<span class="comment">// Supporting both value and object types can be tricky.  To do</span>
-<span class="comment">// it, literal values are boxed whenever they are used as</span>
-<span class="comment">// objects</span>
-
 <span class="comment">// Strings</span>
-x = <span class="string">"This is an object-type string"</span>
-y = <span class="string">#"This is a value-type string"</span>
-
-<span class="comment">// Character literals (can be unicode)</span>
-x = <span class="literal">'c'</span>
-y = <span class="literal">#'c'</span>
+x = <span class="string">"This is a string literal"</span>
 
 <span class="comment">// Numbers</span>
-x = <span class="literal">7</span>          <span class="comment">// Number</span>
-y = <span class="literal">#7</span>         <span class="comment">// Integer</span>
-x = <span class="literal">7.5</span>        <span class="comment">// Float</span>
-y = <span class="literal">#0x0000007</span> <span class="comment">// Integer</span>
+x = <span class="literal">7</span>
+x = <span class="literal">7.5</span>
+y = <span class="literal">0x0000007</span>
 
 <span class="comment">// Imaginary numbers are supported with the 'j' syntax</span>
 x = <span class="literal">7j</span>
-y = <span class="literal">#-7.5j</span>
 
 <span class="comment">// Range is an object that represents a numeric span.  It has</span>
 <span class="comment">// a literal form</span>
@@ -31,11 +20,9 @@ x = <span class="literal">6:7</span>           <span class="comment">// 6 to 7 i
 x = <span class="string">"string"</span>[<span class="literal">0:2</span>] <span class="comment">// "str" </span>
 
 <span class="comment">// Array objects</span>
-x = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>] <span class="comment">// becomes</span>
-x = <span class="entity">Array</span>.<span class="function">new_with_objects</span>(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>)
+x = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>]
 
 <span class="comment">// Hash objects</span>
-x = {<span class="string">"a"</span>:<span class="literal">1</span>, <span class="string">"b"</span>:<span class="literal">2</span>} <span class="comment">// becomes</span>
-x = <span class="entity">Hash</span>.<span class="function">new_with_objects</span>(<span class="string">"a"</span>, <span class="literal">1</span>, <span class="string">"b"</span>, <span class="literal">2</span>)
+x = {<span class="string">"a"</span>:<span class="literal">1</span>, <span class="string">"b"</span>:<span class="entity">SomeObject</span>.<span class="function">new</span>()}
   </code>
 </section>
