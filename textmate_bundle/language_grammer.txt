@@ -11,7 +11,7 @@
 		{	match = '\b(if|while|for|return|switch|case|default|else|next)\b';
 			name = 'keyword.control.chime';
 		},
-		{	match = '(namespace|implementation|interface)\s+([\w\.]+)';
+		{	match = '(namespace|implementation|interface|import)\s+([\w\.]+)';
 			captures = {
 				1 = { name = 'keyword'; };
 				2 = { name = 'entity.name.type.chime'; };
