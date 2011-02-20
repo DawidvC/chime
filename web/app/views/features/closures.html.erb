@@ -3,21 +3,21 @@
 <section>
   <h2>Closures</h2>
   <code>
-<span class="comment">// Here's a function that accepts a function as one of its arguments</span>
-<span class="keyword">function</span> <span class="function">use_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span>(<span class="entity">Integer</span>;) block_argument)
+<span class="comment">// Here's a method that accepts a function as one of its arguments</span>
+<span class="keyword">method</span> <span class="function">use_block</span>(<span class="entity">Number</span>; <span class="entity">Function</span>(<span class="entity">Number</span>;) block_argument)
 {
     <span class="keyword">return</span> <span class="function">block_argument</span>() * <span class="literal">2</span>
 }
 
-<span class="keyword">function</span> <span class="function">empty_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span> block_argument)
+<span class="keyword">method</span> <span class="function">empty_block</span>(<span class="entity">Integer</span>; <span class="entity">Function</span> block_argument)
 {
-    <span class="comment">// Blocks follow the same rules as functions.  They return a Pointer</span>
+    <span class="comment">// Blocks follow the same rules as methods.  They return an Object</span>
     <span class="comment">// unless otherwise specified, and they can implicitly return nil</span>
     <span class="function">block_argument</span>()
 }
 
 <span class="comment">// These are some examples of anonymous functions/blocks</span>
-<span class="keyword">function</span> <span class="function">more_blocks</span>(<span class="entity">Integer</span> x)
+<span class="keyword">method</span> <span class="function">more_blocks</span>(<span class="entity">Integer</span> x)
 {
     <span class="entity">Integer</span> value
     
@@ -44,7 +44,7 @@
 }
 
 <span class="comment">// Functions are just another type</span>
-<span class="keyword">function</span> <span class="function">function_type</span>()
+<span class="keyword">method</span> <span class="function">function_type</span>()
 {
     <span class="entity">Function</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span>, <span class="entity">Integer</span> <span class="function">and:</span>) sum
     
