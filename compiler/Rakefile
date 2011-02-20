@@ -1,0 +1,31 @@
+# Rakefile for chime
+COMPILER_COMMAND = "c++ -Wall -I/opt/local/include -L/opt/local/lib"
+BUILD_PATH       = "/tmp/chime"
+
+FileUtils.mkpath(BUILD_PATH)
+
+task(:default => :test)
+
+desc("Build all sources")
+task(:build) do
+  `#{COMPILER_COMMAND} -c lexer/token.cpp        -o #{BUILD_PATH}/token.o`
+  `#{COMPILER_COMMAND} -c lexer/lexer.cpp        -o #{BUILD_PATH}/lexer.o`
+  `#{COMPILER_COMMAND} -c lexer/file_lexer.cpp   -o #{BUILD_PATH}/file_lexer.o`
+  `#{COMPILER_COMMAND} -c lexer/string_lexer.cpp -o #{BUILD_PATH}/string_lexer.o`
+  `#{COMPILER_COMMAND} -c lexer/token.cpp        -o #{BUILD_PATH}/token.o`
+  `#{COMPILER_COMMAND} -c tests/lexer_tests.cpp  -o #{BUILD_PATH}/lexer_tests.o`
+  
+  o_files = ["file_lexer.o", "lexer.o", "lexer_tests.o", "string_lexer.o", "token.o"]
+  o_files.collect! {|x| "#{BUILD_PATH}/#{x}" }
+  
+  `#{COMPILER_COMMAND} -lgtest -lgtest_main #{o_files.join(" ")} -o #{BUILD_PATH}/chime_test`
+end
+
+task(:test => :build) do
+  system("#{BUILD_PATH}/chime_test")
+end
+
+task(:clean) do
+  `rm -rf #{BUILD_PATH}`
+end
+
