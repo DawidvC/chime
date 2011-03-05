@@ -55,7 +55,7 @@
     <span class="entity">Integer</span> x
     
     <span class="comment">// subclassers can only change the body block</span>
-    x = <span class="keyword">body</span>(input) |<span class="entity">Integer</span>; <span class="entity">Integer</span> body_input|
+    x = <span class="keyword">body</span>(input) <span class="keyword">do</span> (<span class="entity">Integer</span>; <span class="entity">Integer</span> body_input)
     {
         <span class="comment">// this is the default implementation </span>
         <span class="keyword">return</span> body_input + <span class="literal">1</span>
@@ -114,10 +114,6 @@
 <span class="keyword">operator</span> <span class="keyword">*</span>(<span class="entity">Object</span> other)
 <span class="keyword">operator</span> <span class="keyword">/</span>(<span class="entity">Object</span> other)
 <span class="keyword">operator</span> <span class="keyword">%</span>(<span class="entity">Object</span> other)
-
-<span class="keyword">operator</span> <span class="keyword">and</span>(<span class="entity">Object</span> other)
-<span class="keyword">operator</span> <span class="keyword">or</span>(<span class="entity">Object</span> other)
-<span class="keyword">operator</span> <span class="keyword">!</span>(<span class="entity">Object</span> other)
 
 <span class="comment">// returns (-1,0,1,nil) to support &lt;, &lt;=, ==, &gt;=, &gt;, and != </span>
 <span class="keyword">operator</span> <span class="keyword">&lt;=&gt;</span>(<span class="entity">Object</span> other)
