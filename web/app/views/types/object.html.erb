@@ -3,7 +3,7 @@
 <section>
   <h2>Object</h2>
   <code>
-<span class="keyword">interface</span> <span class="entity">Object</span> : <span class="superclass">Reference</span>
+<span class="keyword">interface</span> <span class="entity">Object</span>
 {
     <span class="comment">// memory management</span>
     <span class="keyword">method</span>   <span class="function">new</span>()
@@ -17,6 +17,7 @@
     <span class="keyword">method</span>   <span class="function">to_string</span>(<span class="entity">String</span>;)
     <span class="keyword">operator</span> <span class="function">&lt;=&gt;</span>(<span class="entity">Object</span> o)
     <span class="keyword">operator</span> <span class="function">===</span>(<span class="entity">Object</span> o)
+    <span class="keyword">property</span> <span class="function">nil?</span>(<span class="entity">Boolean</span>;)
     
     <span class="comment">// meta methods</span>
     <span class="keyword">property</span> <span class="function">class</span>(<span class="entity">Class</span>;)
@@ -25,6 +26,7 @@
     <span class="keyword">method</span>   <span class="function">is_kind_of?</span>(<span class="entity">Boolean</span>; <span class="entity">Class</span> class)
     <span class="keyword">method</span>   <span class="function">is_instance_of?</span>(<span class="entity">Boolean</span>; <span class="entity">Class</span> class)
     <span class="keyword">method</span>   <span class="function">responds_to?</span>(<span class="entity">Boolean</span>; <span class="entity">MethodSignature</span> signature)
+    
     
 }
     </code>

@@ -6,9 +6,15 @@
 <span class="keyword">interface</span> <span class="entity">Number</span> : <span class="superclass">Object</span>
 {
     <span class="keyword">method</span>   <span class="function">to_string</span>(<span class="entity">String</span>;)
+    <span class="keyword">method</span>   <span class="function">absolute_value</span>(<span class="entity">Number</span>;)
     
     <span class="keyword">operator</span> <span class="function">&lt;=&gt;</span>(<span class="entity">Number</span> other)
     <span class="keyword">operator</span> <span class="function">===</span>(<span class="entity">Number</span> other)
+    
+    <span class="keyword">class</span> <span class="keyword">property</span> <span class="function">nan</span>(<span class="entity">Float</span>;)
+    <span class="keyword">class</span> <span class="keyword">property</span> <span class="function">infinity</span>(<span class="entity">Float</span>;)
+    
+    <span class="keyword">method</span> <span class="function">times</span>(<span class="entity">Function</span>(<span class="entity">Void</span>; <span class="entity">Number</span>) block)
 }
     </code>
 </section>
