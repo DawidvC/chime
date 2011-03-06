@@ -7,13 +7,19 @@
 <span class="comment">// that a class implements.  Inheritance is also defined, but only via</span>
 <span class="comment">// the other interfaces that the class implements.</span>
 <span class="comment">// </span>
-<span class="comment">// An interface does not define any of the class's internal structure.</span>
-<span class="comment">// By extension, it is not possible to access a super-class's instance variables.</span>
+<span class="comment">// An interface does not define any of the class's internal structure apart.</span>
+<span class="comment">// from its superclass.</span>
 <span class="comment">// </span>
 <span class="comment">// A subclasser need only know about these methods and those defined by</span>
 <span class="comment">// the Object interface</span>
-<span class="keyword">interface</span> <span class="entity">Array</span> : <span class="superclass">Object</span>
+<span class="comment">// </span>
+<span class="comment">// Also, check out the namespacing with the dot syntax</span>
+<span class="keyword">interface</span> <span class="entity">Collection</span>.<span class="entity">Array</span> : <span class="superclass">Object</span>
 {
+    <span class="comment">// Include a Mixin.  A mixin is an Interface/Implementation</span>
+    <span class="comment">// pair that specifies no superclass.</span>
+    <span class="keyword">include</span> <span class="entity">Enumeration</span>
+    
     <span class="keyword">property</span> <span class="function">length</span>(<span class="entity">Number</span>;)
     
     <span class="keyword">indexer</span> <span class="keyword">self</span>[<span class="entity">Number</span> index](<span class="entity">Object</span>; <span class="entity">Object</span>)
