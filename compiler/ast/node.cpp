@@ -1,5 +1,7 @@
 #include "node.h"
 #include <string>
+#include "../lexer/token.h"
+#import "structural/import.h"
 
 namespace ast
 {
@@ -53,11 +55,48 @@ namespace ast
             str.append("\n");
             str.append((*i)->string_representation(depth+1));
         }
-    
+        
         return str;
     }
     void node::print(void)
     {
         printf("%s\n", this->string_representation().c_str());
+    }
+    
+    ast::node* node::parse(chime::parser* parser)
+    {
+        return NULL;
+    }
+    
+    ast::node* construct(chime::parser* parser)
+    {
+        chime::token* t;
+        ast::node*    node;
+        
+        t = parser->look_ahead();
+        if (t->equal_to("import"))
+        {
+            node = new ast::import(parser);
+        }
+        else if (t->equal_to("interface"))
+        {
+        
+        }
+        else if (t->equal_to("implementation"))
+        {
+        
+        }
+        
+        return node;
+    }
+    
+    ast::node* construct_expression(chime::parser* parser)
+    {
+        return NULL;
+    }
+    
+    ast::node* construct_valued_expression(chime::parser* parser)
+    {
+        return NULL;
     }
 }

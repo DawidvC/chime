@@ -3,6 +3,7 @@
 
 #include "../lexer/file_lexer.h"
 #include "../parser/parser.h"
+#include "../ast/ast.h"
 
 int main(int argc, char* argv[])
 {
@@ -13,7 +14,7 @@ int main(int argc, char* argv[])
     lexer  = new chime::filelexer(argv[1]);
     parser = new chime::parser(lexer);
     
-    node = parser->parse();
+    node = ast::construct(parser);
     if (!node)
         return 1;
     

@@ -1,32 +1,46 @@
-# Rakefile for chime
+require 'rake/clean'
+
 COMPILER_COMMAND = "c++ -Wall -I/opt/local/include -L/opt/local/lib"
 BUILD_PATH       = "/tmp/chime"
 
-FileUtils.mkpath(BUILD_PATH)
+CLEAN.include("#{BUILD_PATH}/*")
 
-task(:default => :test)
+# FileLists
+ALL_SOURCES      = FileList['**/*.cpp']
+MAIN_SOURCES     = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp']
+FRONTEND_SOURCES = FileList['frontend/**/*.cpp']
+TEST_SOURCES     = FileList['tests/**/*.cpp']
 
-desc("Build all sources")
-task(:build) do
-  system("#{COMPILER_COMMAND} -c lexer/token.cpp        -o #{BUILD_PATH}/token.o")
-  system("#{COMPILER_COMMAND} -c lexer/lexer.cpp        -o #{BUILD_PATH}/lexer.o")
-  system("#{COMPILER_COMMAND} -c lexer/file_lexer.cpp   -o #{BUILD_PATH}/file_lexer.o")
-  system("#{COMPILER_COMMAND} -c lexer/string_lexer.cpp -o #{BUILD_PATH}/string_lexer.o")
-  system("#{COMPILER_COMMAND} -c lexer/token.cpp        -o #{BUILD_PATH}/token.o")
-  system("#{COMPILER_COMMAND} -c tests/lexer_tests.cpp  -o #{BUILD_PATH}/lexer_tests.o")
-  system("#{COMPILER_COMMAND} -c tests/token_tests.cpp  -o #{BUILD_PATH}/token_tests.o")
+ALL_OBJS         = ALL_SOURCES.map      { |x| BUILD_PATH + '/' + x.ext('o') }
+MAIN_OBJS        = MAIN_SOURCES.map     { |x| BUILD_PATH + '/' + x.ext('o') }
+FRONTEND_OBJ     = FRONTEND_SOURCES.map { |x| BUILD_PATH + '/' + x.ext('o') }
+TEST_OBJ         = TEST_SOURCES.map     { |x| BUILD_PATH + '/' + x.ext('o') }
+
+# Rules
+ALL_SOURCES.each_with_index do |source_file, i|
+  object_file = ALL_OBJS[i]
   
-  o_files = ["file_lexer.o", "lexer.o", "string_lexer.o", "token.o", "lexer_tests.o", "token_tests.o"]
-  o_files.collect! {|x| "#{BUILD_PATH}/#{x}" }
-  
-  system("#{COMPILER_COMMAND} -lgtest -lgtest_main #{o_files.join(" ")} -o #{BUILD_PATH}/chime_test")
+  file object_file => source_file do
+    # make sure we have a path to put to the o file in
+    FileUtils.mkpath(File.dirname(object_file))
+    
+    sh "#{COMPILER_COMMAND} -c #{source_file} -o #{object_file}"
+  end
 end
 
-task(:test => :build) do
-  system("#{BUILD_PATH}/chime_test")
+# Dependancies
+file "#{BUILD_PATH}/ast/node.o"                        => ['ast/node.cpp', 'ast/node.h']
+file "#{BUILD_PATH}/tests/parser/basic_parser_tests.o" => ['tests/parser/basic_parser_tests.cpp']
+file "#{BUILD_PATH}/tests/lexer_tests.o"               => ['tests/lexer_tests.cpp', 'lexer/string_lexer.h']
+
+file "#{BUILD_PATH}/chime_test" => ALL_OBJS do
+  sh "#{COMPILER_COMMAND} -lgtest -lgtest_main -o #{BUILD_PATH}/chime_test #{MAIN_OBJS} #{TEST_OBJ}"
 end
 
-task(:clean) do
-  `rm -rf #{BUILD_PATH}`
-end
+# Tasks
+task :default => :test
 
+desc 'Run the test binary'
+task :test => ["#{BUILD_PATH}/chime_test"] do
+  sh "#{BUILD_PATH}/chime_test"
+end

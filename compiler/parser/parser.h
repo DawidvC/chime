@@ -1,5 +1,4 @@
 #include "../lexer/lexer.h"
-#include "../ast/ast.h"
 
 #ifndef PARSER
 #define PARSER
@@ -11,8 +10,6 @@ namespace chime
     public:
         parser(chime::lexer* lexer);
         ~parser();
-        
-        ast::node* parse(void);
         
         token* next_token(void);
         token* next_token(const char* expected);

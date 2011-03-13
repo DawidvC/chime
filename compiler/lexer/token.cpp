@@ -13,10 +13,13 @@ namespace chime
 	{
 	}
 	
-	bool token::equal_to(const char* s)
-	{
-		return value.compare(s) == 0;
-	}
+    bool token::equal_to(const char* s)
+    {
+        if (s == NULL)
+            return false;
+            
+        return value.compare(s) == 0;
+    }
 	
 	bool token::empty(void)
 	{
@@ -117,6 +120,14 @@ namespace chime
 		
 		return true;
 	}
+    bool token::is_entity(void)
+    {
+        char c;
+        
+        c = *value.begin();
+        
+        return (c >= 'A' && c <= 'Z' );
+    }
 	bool token::is_punctuation(void)
 	{
 		if (value == "[")	return true;
@@ -151,7 +162,6 @@ namespace chime
 	}
 	int token::precedence(void)
 	{
-		if (value == "..")	return 60;
 		if (value == ".")	return 60;
 		if (value == "*")	return 50;
 		if (value == "/")	return 50;

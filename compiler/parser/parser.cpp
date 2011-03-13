@@ -16,10 +16,6 @@ namespace chime
     {
     }
     
-    ast::node* parser::parse(void)
-    {
-        return this->parse_structural();
-    }
     
 #pragma mark *** Token Traversal ***
     token* parser::next_token(void)

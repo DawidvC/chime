@@ -81,3 +81,18 @@ TEST_F(TokenTest, IsStructural)
     token->value = "namespace";
     ASSERT_TRUE(token->is_structural());
 }
+
+TEST_F(TokenTest, IsEntity)
+{
+    token->value = "Abc";
+    ASSERT_TRUE(token->is_entity());
+    
+    token->value = "ABCdef";
+    ASSERT_TRUE(token->is_entity());
+    
+    token->value = "abc";
+    ASSERT_TRUE(!token->is_entity());
+    
+    token->value = "aBC";
+    ASSERT_TRUE(!token->is_entity());
+}

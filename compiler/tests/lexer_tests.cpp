@@ -310,3 +310,4 @@ TEST_F(LexerTest, GreaterOrEqualOperator)
 	const char *tokens[] = {"x", ">=", "y", NULL};
 	ExpectTokens(tokens);
 }
+
