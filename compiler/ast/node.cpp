@@ -112,7 +112,6 @@ namespace ast
         else if (t->is_entity())
         {
             node = new ast::entity_reference(parser);
-            fprintf(stderr, "Made node: %s", node->to_string().c_str());
         }
         
         // we found the first node, but there could be an operator applied

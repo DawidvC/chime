@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "../../frontend/chime.h"
+#include "../../ast/ast.h"
+#include "parse_helpers.h"
 
 class BasicParserTest : public testing::Test
 {
@@ -37,11 +39,15 @@ private:
 
 TEST_F(BasicParserTest, ImportIdentifier)
 {
-    ast::node* node;
+    ast::import*          node;
+    ast::binary_operator* op_node;
     
-    node = parse("import Yo.Dog");
+    node = (ast::import*)parse("import Yo.Dog");
     
-    ASSERT_EQ("import", node->node_name());
+    assert_import(node);
     
-    node->print();
+    op_node = (ast::binary_operator*)node->expression();
+    assert_operator(".", op_node);
+    assert_entity("Yo", op_node->left_operand());
+    assert_entity("Dog", op_node->right_operand());
 }
