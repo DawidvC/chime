@@ -42,4 +42,6 @@ TEST_F(BasicParserTest, ImportIdentifier)
     node = parse("import Yo.Dog");
     
     ASSERT_EQ("import", node->node_name());
+    
+    node->print();
 }

@@ -8,7 +8,7 @@ namespace ast
     class binary_operator : public basic_operator
     {
     public:
-        binary_operator();
+        binary_operator(chime::parser* parser, ast::node* left_operand);
         
         virtual std::string node_name(void);
         virtual std::string to_string(void);

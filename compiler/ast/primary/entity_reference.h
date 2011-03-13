@@ -9,7 +9,7 @@ namespace ast
     class entity_reference : public node
     {
     public:
-        entity_reference();
+        entity_reference(chime::parser* parser);
         
         virtual std::string node_name(void);
         virtual std::string to_string(void);

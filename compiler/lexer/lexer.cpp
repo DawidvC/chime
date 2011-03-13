@@ -2,6 +2,7 @@
 #include <string>
 
 #include "lexer.h"
+#include "eof_token.h"
 
 namespace chime
 {
@@ -30,12 +31,16 @@ namespace chime
         // remove the first token, which is now out of date
         token_buffer->erase(token_buffer->begin());
         
+        if (t == NULL)
+            t = new eof_token();
+        
         return t;
     }
     
     token* lexer::look_ahead(unsigned int distance)
     {
-        int i;
+        token* t;
+        int    i;
         
         // we only need to scan ahead if there isn't enough
         // in the buffer
@@ -44,7 +49,12 @@ namespace chime
             token_buffer->push_back(this->extract_next_token());
         }
         
-        return (*token_buffer)[distance-1];
+        t = (*token_buffer)[distance-1];
+        
+        if (t == NULL)
+            t = new eof_token();
+        
+        return t;
     }
 	
 	token* lexer::extract_next_token(void)

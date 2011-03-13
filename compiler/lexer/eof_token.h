@@ -1,18 +1,13 @@
-#include <string>
+#include "token.h"
 
-#ifndef _TOKEN_H_
-#define _TOKEN_H_
+#ifndef _EOF_TOKEN_H_
+#define _EOF_TOKEN_H_
 
 namespace chime
 {
-    class token
+    class eof_token : public token
     {
     public:
-        std::string value;
-        
-        token();
-        virtual ~token();
-        
         virtual bool equal_to(const char*);
         
         virtual bool empty(void);
@@ -39,4 +34,4 @@ namespace chime
     };
 }
 
-#endif /* _TOKEN_H_ */
+#endif /* _EOF_TOKEN_H_ */

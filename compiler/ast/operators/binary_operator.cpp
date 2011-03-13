@@ -2,8 +2,12 @@
 
 namespace ast
 {
-    binary_operator::binary_operator()
+    binary_operator::binary_operator(chime::parser* parser, ast::node* left_operand)
     {
+        this->identifier(parser->next_token_value());
+        
+        this->left_operand(left_operand);
+        this->right_operand(construct_valued_expression(parser));
     }
     
     std::string binary_operator::node_name(void)

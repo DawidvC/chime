@@ -2,8 +2,9 @@
 
 namespace ast
 {
-    entity_reference::entity_reference()
+    entity_reference::entity_reference(chime::parser* parser)
     {
+        this->identifier(parser->next_token_value());
     }
     
     std::string entity_reference::node_name(void)

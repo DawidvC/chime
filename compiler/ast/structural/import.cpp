@@ -1,29 +1,14 @@
 #include "import.h"
+#include "../primary/entity_reference.h"
 
 namespace ast
 {
     import::import(chime::parser* parser)
     {
-        chime::token* t;
-        ast::node*    node;
-        
         // parse the import statement
         parser->next_token_value("import");
         
-        node = ast::construct_valued_expression(parser);
-        
-        t = parser->look_ahead();
-        if (t->is_string())
-        {
-            //ast::node* n;
-            
-            //n = 
-            printf("Found a string for the import\n");
-        }
-        else if (t->is_entity())
-        {
-            printf("Found an entity for the import\n");
-        }
+        this->expression(ast::construct_valued_expression(parser));
     }
     
     std::string import::node_name(void)

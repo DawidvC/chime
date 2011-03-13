@@ -2,6 +2,8 @@
 #include <string>
 #include "../lexer/token.h"
 #import "structural/import.h"
+#import "primary/entity_reference.h"
+#import "operators/binary_operator.h"
 
 namespace ast
 {
@@ -97,6 +99,60 @@ namespace ast
     
     ast::node* construct_valued_expression(chime::parser* parser)
     {
-        return NULL;
+        chime::token* t;
+        ast::node*    node;
+        
+        node = NULL;
+        
+        t = parser->look_ahead();
+        if (t->is_string())
+        {
+            throw "construct_valued_expression: found string - unimplemented";
+        }
+        else if (t->is_entity())
+        {
+            node = new ast::entity_reference(parser);
+            fprintf(stderr, "Made node: %s", node->to_string().c_str());
+        }
+        
+        // we found the first node, but there could be an operator applied
+        // to that node
+        t = parser->look_ahead();
+        if (t->precedence() > 0)
+        {
+            node = new ast::binary_operator(parser, node);
+        }
+        
+        return node;
     }
+    
+    // ast::node* construct_binary_operator(int precedence, ast::node* left_operand)
+    // {
+    //     ast::binary_operator* node;
+    //     ast::node* right_operand;
+    //     token* t;
+    //     
+    //     while ((t = this->look_ahead()))
+    //     {
+    //         if (t->precedence() < precedence)
+    //             return left_operand;
+    //         
+    //         node = new ast::binary_operator();
+    //         node->identifier(this->next_token_value());
+    //         
+    //         right_operand = this->parse_expression();
+    //         
+    //         if (this->look_ahead() != NULL)
+    //         {   
+    //             if (t->precedence() < this->look_ahead()->precedence())
+    //                 right_operand = this->parse_binary_operator(t->precedence()+1, right_operand);
+    //         }
+    //         
+    //         node->left_operand(left_operand);
+    //         node->right_operand(right_operand);
+    //         left_operand = node;
+    //     }
+    //     
+    //     return left_operand;
+    // }
 }
