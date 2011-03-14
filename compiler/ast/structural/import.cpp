@@ -22,13 +22,6 @@ namespace ast
     }
     void import::expression(ast::node* n)
     {
-        if (_children->size() != 0)
-        {
-            printf("importnode::expression failed\n");
-            fflush(stdout);
-            throw "madness";
-        }
-        
-        _children->push_back(n);
+        this->add_child(n);
     }
 }

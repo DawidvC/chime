@@ -37,6 +37,10 @@ file "#{BUILD_PATH}/chime_test" => ALL_OBJS do
   sh "#{COMPILER_COMMAND} -lgtest -lgtest_main -o #{BUILD_PATH}/chime_test #{MAIN_OBJS} #{TEST_OBJ}"
 end
 
+file "#{BUILD_PATH}/chime" => ALL_OBJS do
+  sh "#{COMPILER_COMMAND} -o #{BUILD_PATH}/chime #{MAIN_OBJS} #{FRONTEND_OBJ}"
+end
+
 # Tasks
 task :default => :test
 
@@ -44,3 +48,6 @@ desc 'Run the test binary'
 task :test => ["#{BUILD_PATH}/chime_test"] do
   sh "#{BUILD_PATH}/chime_test"
 end
+
+desc 'Build the main binary'
+task :build => ["#{BUILD_PATH}/chime"]

@@ -1,6 +1,7 @@
 #include "node.h"
 #include <string>
 #include "../lexer/token.h"
+#import "structural/implementation.h"
 #import "structural/import.h"
 #import "primary/entity_reference.h"
 #import "operators/binary_operator.h"
@@ -62,7 +63,7 @@ namespace ast
     }
     void node::print(void)
     {
-        printf("%s\n", this->string_representation().c_str());
+        fprintf(stderr, "%s\n", this->string_representation().c_str());
     }
     
     ast::node* node::parse(chime::parser* parser)
@@ -73,23 +74,44 @@ namespace ast
     ast::node* construct(chime::parser* parser)
     {
         chime::token* t;
-        ast::node*    node;
+        ast::node*   root;
         
-        t = parser->look_ahead();
-        if (t->equal_to("import"))
+        root = new ast::node();
+        
+        while (true)
         {
-            node = new ast::import(parser);
+            ast::node* node;
+            
+            t = parser->look_ahead();
+            if (t->empty())
+                break;
+            
+            node = NULL;
+            
+            if (t->equal_to("import"))
+            {
+                node = new ast::import(parser);
+            }
+            // else if (t->equal_to("interface"))
+            // {
+            //     
+            // }
+            else if (t->equal_to("implementation"))
+            {
+                node = new ast::implementation(parser);
+            }
+            else
+            {
+                fprintf(stderr, "found something we weren't expecting in construct '%s'\n", t->value.c_str());
+                
+                break;
+            }
+            
+            if (node)
+                root->add_child(node);
         }
-        else if (t->equal_to("interface"))
-        {
         
-        }
-        else if (t->equal_to("implementation"))
-        {
-        
-        }
-        
-        return node;
+        return root;
     }
     
     ast::node* construct_expression(chime::parser* parser)
