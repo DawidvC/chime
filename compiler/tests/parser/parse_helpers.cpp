@@ -16,3 +16,15 @@ void assert_entity(const char* identifier, ast::node* node)
     ASSERT_EQ("entity reference", node->node_name());
     ASSERT_EQ(identifier, ((ast::entity_reference*)node)->identifier());
 }
+
+void assert_type(const char* identifier, ast::node* node)
+{
+    ASSERT_EQ("type reference", node->node_name());
+    ASSERT_EQ(identifier, ((ast::type_reference*)node)->identifier());
+}
+
+void assert_implementation(const char* identifier, ast::node* node)
+{
+    ASSERT_EQ("implementation", node->node_name());
+    assert_type(identifier, ((ast::implementation*)node)->type_ref());
+}

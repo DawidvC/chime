@@ -2,5 +2,6 @@
 #include "operators/basic_operator.h"
 #include "operators/binary_operator.h"
 #include "primary/entity_reference.h"
+#include "primary/type_reference.h"
 #include "structural/implementation.h"
 #include "structural/import.h"

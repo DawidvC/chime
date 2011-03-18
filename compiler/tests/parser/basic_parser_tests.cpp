@@ -74,5 +74,5 @@ TEST_F(BasicParserTest, SimpleImplementation)
     
     node = parse("implementation SomeClass {}");
     
-    ASSERT_EQ("implementation", node->child_at_index(0)->node_name());
+    assert_implementation("SomeClass", node->child_at_index(0));
 }

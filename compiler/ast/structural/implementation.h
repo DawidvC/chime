@@ -1,5 +1,6 @@
 #include <string>
 #include "../node.h"
+#include "../primary/type_reference.h"
 
 #ifndef IMPLEMENTATION_NODE
 #define IMPLEMENTATION_NODE
@@ -12,6 +13,9 @@ namespace ast
         implementation(chime::parser* parser);
         
         virtual std::string node_name(void);
+        
+        ast::type_reference* type_ref() const;
+        void                 type_ref(ast::type_reference* n);
     };
 }
 
