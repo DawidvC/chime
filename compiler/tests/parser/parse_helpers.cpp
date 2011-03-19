@@ -41,3 +41,25 @@ void assert_instance_variable(const char* type, const char* identifier, ast::nod
     ASSERT_EQ(identifier, ((ast::instance_variable*)node)->identifier());
     assert_type(type, ((ast::instance_variable*)node)->variable_type());
 }
+
+void assert_method_definition(const char* identifier, ast::node* node)
+{
+    ASSERT_EQ("method definition", node->node_name());
+    ASSERT_EQ(identifier, ((ast::method_definition*)node)->identifier());
+}
+
+void assert_method_parameter(const char* type, const char* label, const char* identifier, ast::method_parameter* node)
+{
+    ASSERT_EQ("method parameter", node->node_name());
+    ASSERT_EQ(identifier, node->identifier());
+    
+    if (type)
+    {
+        assert_type(type, node->type());
+    }
+    
+    if (label)
+    {
+        ASSERT_EQ(label, node->label());
+    }
+}

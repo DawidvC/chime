@@ -6,3 +6,4 @@
 #include "structural/implementation.h"
 #include "structural/import.h"
 #include "structural/instance_variable.h"
+#include "structural/method_definition.h"

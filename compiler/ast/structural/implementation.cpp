@@ -1,5 +1,6 @@
 #include "implementation.h"
 #include "instance_variable.h"
+#include "method_definition.h"
 
 namespace ast
 {
@@ -16,10 +17,9 @@ namespace ast
             this->super_class(new ast::type_reference(parser));
         }
         
-        parser->next_token_value("{"); // beginning the body
-        
+        // { body }
+        parser->next_token_value("{");
         this->parse_body(parser);
-        
         parser->next_token_value("}");
     }
     
@@ -84,8 +84,7 @@ namespace ast
             }
             else if (t->equal_to("method"))
             {
-                fprintf(stderr, "found a method def\n");
-                break;
+                this->add_child(new ast::method_definition(parser));
             }
             else
             {
