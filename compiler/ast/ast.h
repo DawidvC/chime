@@ -5,3 +5,4 @@
 #include "primary/type_reference.h"
 #include "structural/implementation.h"
 #include "structural/import.h"
+#include "structural/instance_variable.h"

@@ -82,17 +82,17 @@ TEST_F(TokenTest, IsStructural)
     ASSERT_TRUE(token->is_structural());
 }
 
-TEST_F(TokenTest, IsEntity)
+TEST_F(TokenTest, IsType)
 {
     token->value = "Abc";
-    ASSERT_TRUE(token->is_entity());
+    ASSERT_TRUE(token->is_type());
     
     token->value = "ABCdef";
-    ASSERT_TRUE(token->is_entity());
+    ASSERT_TRUE(token->is_type());
     
     token->value = "abc";
-    ASSERT_TRUE(!token->is_entity());
+    ASSERT_TRUE(!token->is_type());
     
     token->value = "aBC";
-    ASSERT_TRUE(!token->is_entity());
+    ASSERT_TRUE(!token->is_type());
 }

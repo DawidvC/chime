@@ -18,17 +18,30 @@ namespace ast
         }
     }
     
+    import::~import()
+    {
+        delete _importand;
+    }
+    
     std::string import::node_name(void)
     {
         return std::string("import");
     }
+    std::string import::to_string(void)
+    {
+        std::string s;
+        
+        s += "import: " + this->importand()->identifier();
+        
+        return s;
+    }
     
     ast::type_reference* import::importand() const
     {
-        return (ast::type_reference*)this->child_at_index(0);
+        return _importand;
     }
     void import::importand(ast::type_reference* n)
     {
-        this->add_child(n);
+        _importand = n;
     }
 }

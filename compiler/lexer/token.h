@@ -28,7 +28,7 @@ namespace chime
         virtual bool is_control(void);
         virtual bool is_literal(void);
         virtual bool is_identifier(void);
-        virtual bool is_entity(void);
+        virtual bool is_type(void);
         virtual bool is_punctuation(void);
         virtual bool is_reserved(void);
         virtual bool is_block_start(void);

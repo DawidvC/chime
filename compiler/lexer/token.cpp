@@ -120,7 +120,7 @@ namespace chime
 		
 		return true;
 	}
-    bool token::is_entity(void)
+    bool token::is_type(void)
     {
         char c;
         

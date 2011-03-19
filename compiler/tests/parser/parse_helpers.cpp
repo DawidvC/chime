@@ -34,3 +34,10 @@ void assert_implementation(const char* identifier, const char* superclass, ast::
         assert_type(superclass, ((ast::implementation*)node)->super_class());
     }
 }
+
+void assert_instance_variable(const char* type, const char* identifier, ast::node* node)
+{
+    ASSERT_EQ("instance variable", node->node_name());
+    ASSERT_EQ(identifier, ((ast::instance_variable*)node)->identifier());
+    assert_type(type, ((ast::instance_variable*)node)->variable_type());
+}

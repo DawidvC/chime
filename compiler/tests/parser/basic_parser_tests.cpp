@@ -77,3 +77,16 @@ TEST_F(BasicParserTest, ImplementationWithSuperClass)
     
     assert_implementation("SomeClass", "SuperClass", node->child_at_index(0));
 }
+
+TEST_F(BasicParserTest, InstanceVariable)
+{
+    ast::node*              node;
+    ast::instance_variable* ivar;
+    
+    node = parse("implementation SomeClass { Foo bar }");
+    
+    assert_implementation("SomeClass", NULL, node->child_at_index(0));
+    
+    ivar = (ast::instance_variable*)node->child_at_index(0)->child_at_index(0);
+    assert_instance_variable("Foo", "bar", ivar);
+}

@@ -36,6 +36,11 @@ namespace ast
         return (*_children)[i];
     }
     
+    int node::child_count() const
+    {
+        return (int)_children->size();
+    }
+    
     std::string node::node_name(void)
     {
         return std::string("node");
@@ -131,9 +136,9 @@ namespace ast
         {
             throw "construct_valued_expression: found string - unimplemented";
         }
-        else if (t->is_entity())
+        else if (t->is_type())
         {
-            node = new ast::entity_reference(parser);
+            node = new ast::type_reference(parser);
         }
         
         // we found the first node, but there could be an operator applied

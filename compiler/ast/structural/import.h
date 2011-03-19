@@ -11,11 +11,16 @@ namespace ast
     {
     public:
         import(chime::parser* parser);
+        virtual ~import();
         
         virtual std::string node_name(void);
+        virtual std::string to_string(void);
         
         ast::type_reference* importand() const;
         void                 importand(ast::type_reference* n);
+    
+    protected:
+        ast::type_reference* _importand;
     };
 }
 
