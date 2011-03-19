@@ -10,10 +10,13 @@ namespace chime
     parser::parser(chime::lexer* lexer)
     {
         _lexer = lexer;
+        
+        _errors = new std::vector<chime::parse_error*>();
     }
     
     parser::~parser()
     {
+        delete _errors;
     }
     
     
@@ -34,7 +37,13 @@ namespace chime
         
         if ((expected != NULL) && (!t->equal_to(expected)))
         {
-            printf("[Parser] Expected '%s' but got '%s'\n", expected, t->value.c_str());
+            chime::parse_error* e;
+            
+            e = new chime::parse_error("Expected '%s' but got '%s'", expected, t->value.c_str());
+            
+            this->errors()->push_back(e);
+            
+            return NULL;
         }
         
         return t;
@@ -60,6 +69,9 @@ namespace chime
     std::string parser::next_token_value(const char* expected)
     {
         token *t = this->next_token(expected);
+        if (!t)
+            return std::string();
+        
         std::string v = t->value;
         
         delete t;
@@ -73,5 +85,10 @@ namespace chime
     token* parser::look_ahead(int distance)
     {
         return _lexer->look_ahead(distance);
+    }
+    
+    std::vector<chime::parse_error*>* parser::errors(void) const
+    {
+        return _errors;
     }
 }

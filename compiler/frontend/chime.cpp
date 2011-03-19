@@ -1,9 +1,39 @@
 #include <cstdio>
 #include <string>
+#include <getopt.h>
 
 #include "../lexer/file_lexer.h"
 #include "../parser/parser.h"
 #include "../ast/ast.h"
+
+void get_options(int argc, char* argv[])
+{
+    int32_t c;
+    
+    static struct option longopts[] = {
+        { "help",       no_argument,            NULL,           'h' },
+        { "print",      no_argument,            NULL,           'p' },
+        { NULL,         0,                      NULL,           0 }
+    };
+    
+    while ((c = getopt_long(argc, argv, "hp", longopts, NULL)) != -1)
+    {
+        switch (c)
+        {
+            case 'h':
+            default:
+                printf("usage: chime [options] [--] [file] [arguments]\n");
+                printf("\n");
+                printf("  -h (--help)   print this help message and exit\n");
+                printf("  -p (--print)  print out the AST representation for the input file\n");
+                exit(0);
+                break;
+        }
+    }
+    
+    argc -= optind;
+    argv += optind;
+}
 
 int main(int argc, char* argv[])
 {
@@ -11,12 +41,26 @@ int main(int argc, char* argv[])
     chime::filelexer* lexer;
     ast::node*        node;
     
+    get_options(argc, argv);
+    
     lexer  = new chime::filelexer(argv[1]);
     parser = new chime::parser(lexer);
     
     node = ast::construct(parser);
     if (!node)
         return 1;
+    
+    if (!parser->errors()->empty())
+    {
+        std::vector<chime::parse_error*>::iterator i;
+        
+        for (i=parser->errors()->begin(); i < parser->errors()->end(); i++)
+        {
+            fprintf(stdout, "[Parse:\e[31merror\e[0m] %s\n", (*i)->message().c_str());
+        }
+        
+        return 1;
+    }
     
     fprintf(stdout, "%s\n", node->string_representation().c_str());
     
