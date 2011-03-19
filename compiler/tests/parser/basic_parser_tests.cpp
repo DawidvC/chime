@@ -74,5 +74,14 @@ TEST_F(BasicParserTest, SimpleImplementation)
     
     node = parse("implementation SomeClass {}");
     
-    assert_implementation("SomeClass", node->child_at_index(0));
+    assert_implementation("SomeClass", NULL, node->child_at_index(0));
+}
+
+TEST_F(BasicParserTest, ImplementationWithSuperClass)
+{
+    ast::node* node;
+    
+    node = parse("implementation SomeClass : SuperClass {}");
+    
+    assert_implementation("SomeClass", "SuperClass", node->child_at_index(0));
 }

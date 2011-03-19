@@ -23,8 +23,13 @@ void assert_type(const char* identifier, ast::node* node)
     ASSERT_EQ(identifier, ((ast::type_reference*)node)->identifier());
 }
 
-void assert_implementation(const char* identifier, ast::node* node)
+void assert_implementation(const char* identifier, const char* superclass, ast::node* node)
 {
     ASSERT_EQ("implementation", node->node_name());
     assert_type(identifier, ((ast::implementation*)node)->type_ref());
+    
+    if (superclass)
+    {
+        assert_type(superclass, ((ast::implementation*)node)->super_class());
+    }
 }

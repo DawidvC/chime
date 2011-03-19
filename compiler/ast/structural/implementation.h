@@ -16,6 +16,8 @@ namespace ast
         
         ast::type_reference* type_ref() const;
         void                 type_ref(ast::type_reference* n);
+        ast::type_reference* super_class() const;
+        void                 super_class(ast::type_reference* n);
     };
 }
 
