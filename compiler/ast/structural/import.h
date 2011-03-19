@@ -1,5 +1,6 @@
 #include <string>
 #include "../node.h"
+#include "../primary/type_reference.h"
 
 #ifndef IMPORT_NODE
 #define IMPORT_NODE
@@ -13,8 +14,8 @@ namespace ast
         
         virtual std::string node_name(void);
         
-        ast::node* expression() const;
-        void       expression(ast::node* n);
+        ast::type_reference* importand() const;
+        void                 importand(ast::type_reference* n);
     };
 }
 

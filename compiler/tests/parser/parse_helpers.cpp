@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 #include "parse_helpers.h"
 
-void assert_import(ast::node* node)
+void assert_import(const char* value, ast::node* node)
 {
     ASSERT_EQ("import", node->node_name());
+    assert_type(value,  ((ast::import*)node)->importand());
 }
 
 void assert_operator(const char* identifier, ast::node* op)

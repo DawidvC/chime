@@ -1,5 +1,5 @@
 #include "import.h"
-#include "../primary/entity_reference.h"
+#include "../primary/type_reference.h"
 
 namespace ast
 {
@@ -8,7 +8,14 @@ namespace ast
         // parse the import statement
         parser->next_token_value("import");
         
-        this->expression(ast::construct_valued_expression(parser));
+        if (parser->look_ahead()->is_string())
+        {
+            fprintf(stderr, "not yet able to handle string imports\n");
+        }
+        else
+        {
+            this->importand(new ast::type_reference(parser));
+        }
     }
     
     std::string import::node_name(void)
@@ -16,11 +23,11 @@ namespace ast
         return std::string("import");
     }
     
-    ast::node* import::expression() const
+    ast::type_reference* import::importand() const
     {
-        return this->child_at_index(0);
+        return (ast::type_reference*)this->child_at_index(0);
     }
-    void import::expression(ast::node* n)
+    void import::importand(ast::type_reference* n)
     {
         this->add_child(n);
     }

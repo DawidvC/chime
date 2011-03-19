@@ -39,17 +39,11 @@ private:
 
 TEST_F(BasicParserTest, ImportIdentifier)
 {
-    ast::import*          node;
-    ast::binary_operator* op_node;
+    ast::import* node;
     
     node = (ast::import*)parse("import Yo.Dog")->child_at_index(0);
     
-    assert_import(node);
-    
-    op_node = (ast::binary_operator*)node->expression();
-    assert_operator(".", op_node);
-    assert_entity("Yo", op_node->left_operand());
-    assert_entity("Dog", op_node->right_operand());
+    assert_import("Yo.Dog", node);
 }
 
 TEST_F(BasicParserTest, MultipleImports)
@@ -60,12 +54,10 @@ TEST_F(BasicParserTest, MultipleImports)
     node = parse("import Yo\nimport Sup\n");
     
     import = (ast::import*)node->child_at_index(0);
-    assert_import(import);
-    assert_entity("Yo", import->expression());
+    assert_import("Yo", import);
     
     import = (ast::import*)node->child_at_index(1);
-    assert_import(import);
-    assert_entity("Sup", import->expression());
+    assert_import("Sup", import);
 }
 
 TEST_F(BasicParserTest, SimpleImplementation)
