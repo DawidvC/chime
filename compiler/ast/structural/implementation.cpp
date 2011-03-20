@@ -72,6 +72,10 @@ namespace ast
         
         while (true)
         {
+            // this means we've reached the end of the body
+            if (parser->look_ahead()->equal_to("}"))
+                break;
+                
             node = parser->parse_with_structural();
             if (!node)
             {

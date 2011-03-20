@@ -27,6 +27,16 @@ protected:
         
         _last_node = parser->parse();
         
+        if (!parser->errors()->empty())
+        {
+            std::vector<chime::parse_error*>::iterator i;
+            
+            for (i=parser->errors()->begin(); i < parser->errors()->end(); i++)
+            {
+                fprintf(stdout, "[Parse:\e[31merror\e[0m] %s\n", (*i)->message().c_str());
+            }
+        }
+        
         delete parser;
         delete lexer;
         
@@ -156,4 +166,14 @@ TEST_F(BasicParserTest, ExpressionInMethodBody)
     op = (ast::binary_operator*)node->child_at_index(0);
     
     assert_operator("=", op);
+}
+
+TEST_F(BasicParserTest, MethodCall)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("call()");
+    
+    node->print();
 }

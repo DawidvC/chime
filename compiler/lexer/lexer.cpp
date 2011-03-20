@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <string>
+#include <assert.h>
 
 #include "lexer.h"
 #include "eof_token.h"
@@ -48,6 +49,8 @@ namespace chime
         {
             token_buffer->push_back(this->extract_next_token());
         }
+        
+        assert(distance - 1 < token_buffer->size());
         
         t = (*token_buffer)[distance-1];
         

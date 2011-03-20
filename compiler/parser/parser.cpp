@@ -236,6 +236,11 @@ namespace chime
         }
         else if (t->is_identifier())
         {
+            if (this->look_ahead(2)->equal_to("("))
+            {
+                return new ast::method_call(this);
+            }
+            
             node = new ast::entity_reference(this);
         }
         else
@@ -256,21 +261,19 @@ namespace chime
         ast::binary_operator* node;
         ast::node*            right_operand;
         token*                t;
+        int                   current_precedence;
         
         while (true)
         {
             t = this->look_ahead();
             if (t->empty())
-            {
-                chime::parse_error* e;
-                
-                e = new chime::parse_error("parse_binary_operator: no next token");
-                
-                this->errors()->push_back(e);
-                break;
-            }
-                
-            if (t->precedence() < precedence)
+                return left_operand;
+            
+            // we have to store this, because t is just a look-ahead token,
+            // and may be removed by future parsing operations
+            current_precedence = t->precedence();
+            
+            if (current_precedence < precedence)
                 return left_operand;
             
             node = new ast::binary_operator();
@@ -278,8 +281,10 @@ namespace chime
             
             right_operand = this->parse_expression();
             
-            if (t->precedence() < this->look_ahead()->precedence())
-                right_operand = this->parse_binary_operator(t->precedence()+1, right_operand);
+            if (current_precedence < this->look_ahead()->precedence())
+            {
+                right_operand = this->parse_binary_operator(current_precedence+1, right_operand);
+            }
             
             node->left_operand(left_operand);
             node->right_operand(right_operand);

@@ -1,5 +1,6 @@
 #include "node.h"
 #include <string>
+#include <assert.h>
 #include "../lexer/token.h"
 #import "structural/implementation.h"
 #import "structural/import.h"
@@ -33,10 +34,12 @@ namespace ast
     
     ast::node* node::child_at_index(unsigned int i) const
     {
+        assert(i < this->child_count());
+        
         return (*_children)[i];
     }
     
-    int node::child_count() const
+    unsigned int node::child_count() const
     {
         return (int)_children->size();
     }

@@ -76,6 +76,14 @@ TEST_F(LexerTest, LookAheadTwoAndNext)
 	EXPECT_EQ(".", lexer->look_ahead(1)->value);
 }
 
+TEST_F(LexerTest, LookAheadPastInput)
+{
+    lex("foo");
+    
+    EXPECT_TRUE(lexer->look_ahead(2)->empty());
+    EXPECT_TRUE(lexer->look_ahead(3)->empty());
+}
+
 #pragma mark basic definitions
 TEST_F(LexerTest, SimpleContructor)
 {

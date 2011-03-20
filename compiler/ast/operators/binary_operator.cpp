@@ -27,6 +27,7 @@ namespace ast
     void binary_operator::right_operand(ast::node* op)
     {
         assert(this->child_count() == 1);
+        assert(op != NULL);
         
         _children->push_back(op);
     }
@@ -37,6 +38,7 @@ namespace ast
     void binary_operator::left_operand(ast::node* op)
     {
         assert(this->child_count() == 0);
+        assert(op != NULL);
         
         _children->push_back(op);
     }

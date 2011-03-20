@@ -19,7 +19,7 @@ namespace ast
         void                     add_child(ast::node* new_child);
         std::vector<ast::node*>* children(void) const;
         ast::node*               child_at_index(unsigned int i) const;
-        int                      child_count() const;
+        unsigned int             child_count() const;
         
         virtual std::string node_name(void);
         virtual std::string to_string(void);
