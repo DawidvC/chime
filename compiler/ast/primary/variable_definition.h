@@ -2,16 +2,16 @@
 #include "../node.h"
 #include "../primary/type_reference.h"
 
-#ifndef INSTANCE_VARIABLE
-#define INSTANCE_VARIABLE
+#ifndef VARIABLE_DEFINITION
+#define VARIABLE_DEFINITION
 
 namespace ast
 {
-    class instance_variable : public node
+    class variable_definition : public node
     {
     public:
-        instance_variable(chime::parser* parser);
-        virtual ~instance_variable();
+        variable_definition(chime::parser* parser);
+        virtual ~variable_definition();
         
         virtual std::string node_name(void);
         virtual std::string to_string(void);

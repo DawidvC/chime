@@ -1,5 +1,6 @@
 #include "method_parameter.h"
 #include "../primary/type_reference.h"
+#include "../../parser/parser.h"
 
 namespace ast
 {

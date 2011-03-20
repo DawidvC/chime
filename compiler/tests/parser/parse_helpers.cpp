@@ -35,11 +35,11 @@ void assert_implementation(const char* identifier, const char* superclass, ast::
     }
 }
 
-void assert_instance_variable(const char* type, const char* identifier, ast::node* node)
+void assert_variable_definition(const char* type, const char* identifier, ast::node* node)
 {
-    ASSERT_EQ("instance variable", node->node_name());
-    ASSERT_EQ(identifier, ((ast::instance_variable*)node)->identifier());
-    assert_type(type, ((ast::instance_variable*)node)->variable_type());
+    ASSERT_EQ("variable definition", node->node_name());
+    ASSERT_EQ(identifier, ((ast::variable_definition*)node)->identifier());
+    assert_type(type, ((ast::variable_definition*)node)->variable_type());
 }
 
 void assert_method_definition(const char* identifier, ast::node* node)
@@ -62,4 +62,9 @@ void assert_method_parameter(const char* type, const char* label, const char* id
     {
         ASSERT_EQ(label, node->label());
     }
+}
+
+void assert_operator(const char* identifier, ast::basic_operator* op)
+{
+    ASSERT_EQ(identifier, op->identifier());
 }

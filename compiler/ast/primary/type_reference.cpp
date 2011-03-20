@@ -1,4 +1,5 @@
 #include "type_reference.h"
+#include "../../parser/parser.h"
 
 namespace ast
 {
@@ -9,7 +10,7 @@ namespace ast
         
         t = parser->look_ahead();
         
-        while (t->is_entity() || t->equal_to("."))
+        while (t->is_type() || t->equal_to("."))
         {
             t = parser->next_token();
             

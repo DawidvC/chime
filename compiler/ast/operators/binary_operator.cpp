@@ -1,13 +1,10 @@
 #include "binary_operator.h"
+#include <assert.h>
 
 namespace ast
 {
-    binary_operator::binary_operator(chime::parser* parser, ast::node* left_operand)
+    binary_operator::binary_operator()
     {
-        this->identifier(parser->next_token_value());
-        
-        this->left_operand(left_operand);
-        this->right_operand(construct_valued_expression(parser));
     }
     
     std::string binary_operator::node_name(void)
@@ -29,12 +26,7 @@ namespace ast
     }
     void binary_operator::right_operand(ast::node* op)
     {
-        if (_children->size() != 1)
-        {
-            printf("right_operator failed\n");
-            fflush(stdout);
-            throw "madness";
-        }
+        assert(this->child_count() == 1);
         
         _children->push_back(op);
     }
@@ -44,12 +36,7 @@ namespace ast
     }
     void binary_operator::left_operand(ast::node* op)
     {
-        if (_children->size() != 0)
-        {
-            printf("left_operator failed\n");
-            fflush(stdout);
-            throw "madness";
-        }
+        assert(this->child_count() == 0);
         
         _children->push_back(op);
     }

@@ -1,4 +1,5 @@
 #include "entity_reference.h"
+#include "../../parser/parser.h"
 
 namespace ast
 {

@@ -1,8 +1,12 @@
 #include <vector>
-#include "../parser/parser.h"
 
 #ifndef AST_NODE
 #define AST_NODE
+
+namespace chime
+{
+    class parser;
+}
 
 namespace ast
 {
@@ -22,14 +26,8 @@ namespace ast
         virtual std::string string_representation(int depth=0);
         void                print(void);
         
-        virtual ast::node* parse(chime::parser* parser);
-        
     protected:
         std::vector<ast::node*>* _children;
     };
-    
-    ast::node* construct(chime::parser* parser);
-    ast::node* construct_expression(chime::parser* parser);
-    ast::node* construct_valued_expression(chime::parser* parser);
 }
 #endif

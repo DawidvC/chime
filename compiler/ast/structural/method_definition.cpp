@@ -1,4 +1,5 @@
 #include "method_definition.h"
+#include "../../parser/parser.h"
 
 namespace ast
 {
@@ -78,6 +79,22 @@ namespace ast
     
     void method_definition::parse_body(chime::parser* parser)
     {
+        ast::node* node;
         
+        while (true)
+        {
+            node = parser->parse_without_structural();
+            if (!node)
+            {
+                chime::parse_error* e;
+                
+                e = new chime::parse_error("method_definition::parse_body: unable to get next node");
+                
+                parser->errors()->push_back(e);
+                break;
+            }
+            
+            this->add_child(node);
+        }
     }
 }

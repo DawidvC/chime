@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     lexer  = new chime::filelexer(argv[1]);
     parser = new chime::parser(lexer);
     
-    node = ast::construct(parser);
+    node = parser->parse();
     if (!node)
         return 1;
     

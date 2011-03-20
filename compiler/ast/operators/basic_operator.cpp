@@ -6,6 +6,10 @@ namespace ast
     {
     }
     
+    basic_operator::~basic_operator()
+    {
+    }
+    
     std::string basic_operator::identifier() const
     {
         return _identifier;

@@ -25,7 +25,7 @@ protected:
         lexer  = new chime::stringlexer(input);
         parser = new chime::parser(lexer);
         
-        _last_node = ast::construct(parser);
+        _last_node = parser->parse();
         
         delete parser;
         delete lexer;
@@ -85,15 +85,15 @@ TEST_F(BasicParserTest, ImplementationWithSuperClass)
 
 TEST_F(BasicParserTest, InstanceVariable)
 {
-    ast::node*              node;
-    ast::instance_variable* ivar;
+    ast::node*                node;
+    ast::variable_definition* ivar;
     
     node = parse("implementation SomeClass { Foo bar }");
     
     assert_implementation("SomeClass", NULL, node->child_at_index(0));
     
-    ivar = (ast::instance_variable*)node->child_at_index(0)->child_at_index(0);
-    assert_instance_variable("Foo", "bar", ivar);
+    ivar = (ast::variable_definition*)node->child_at_index(0)->child_at_index(0);
+    assert_variable_definition("Foo", "bar", ivar);
 }
 
 TEST_F(BasicParserTest, SimpleMethodDefinition)
@@ -119,4 +119,41 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneParameter)
     method = (ast::method_definition*)node->child_at_index(0);
     assert_method_definition("new", method);
     assert_method_parameter("Hash", NULL, "arg1", method->parameter_at_index(0));
+}
+
+TEST_F(BasicParserTest, AssignmentExpression)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("a = b");
+    op   = (ast::binary_operator*)node->child_at_index(0);
+    
+    assert_operator("=", op);
+    assert_entity("a", op->left_operand());
+    assert_entity("b", op->right_operand());
+}
+
+TEST_F(BasicParserTest, TopLevelMethod)
+{
+    ast::node* node;
+    
+    node = parse("method foo() {}");
+    
+    assert_method_definition("foo", node->child_at_index(0));
+}
+
+TEST_F(BasicParserTest, ExpressionInMethodBody)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("method foo() { a = b }");
+    node = node->child_at_index(0); // get the method def
+    
+    ASSERT_EQ(1, node->child_count());
+    
+    op = (ast::binary_operator*)node->child_at_index(0);
+    
+    assert_operator("=", op);
 }

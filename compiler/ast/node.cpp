@@ -61,7 +61,16 @@ namespace ast
         for (i=_children->begin(); i < _children->end(); i++)
         {
             str.append("\n");
-            str.append((*i)->string_representation(depth+1));
+            
+            if ((*i) == NULL )
+            {
+                str.append(depth+1,' ');
+                str.append("(null)\n");
+            }
+            else
+            {
+                str.append((*i)->string_representation(depth+1));
+            }
         }
         
         return str;
@@ -70,115 +79,4 @@ namespace ast
     {
         fprintf(stderr, "%s\n", this->string_representation().c_str());
     }
-    
-    ast::node* node::parse(chime::parser* parser)
-    {
-        return NULL;
-    }
-    
-    ast::node* construct(chime::parser* parser)
-    {
-        chime::token* t;
-        ast::node*   root;
-        
-        root = new ast::node();
-        
-        while (true)
-        {
-            ast::node* node;
-            
-            t = parser->look_ahead();
-            if (t->empty())
-                break;
-            
-            node = NULL;
-            
-            if (t->equal_to("import"))
-            {
-                node = new ast::import(parser);
-            }
-            // else if (t->equal_to("interface"))
-            // {
-            //     
-            // }
-            else if (t->equal_to("implementation"))
-            {
-                node = new ast::implementation(parser);
-            }
-            else
-            {
-                fprintf(stderr, "found something we weren't expecting in construct '%s'\n", t->value.c_str());
-                
-                break;
-            }
-            
-            if (node)
-                root->add_child(node);
-        }
-        
-        return root;
-    }
-    
-    ast::node* construct_expression(chime::parser* parser)
-    {
-        return NULL;
-    }
-    
-    ast::node* construct_valued_expression(chime::parser* parser)
-    {
-        chime::token* t;
-        ast::node*    node;
-        
-        node = NULL;
-        
-        t = parser->look_ahead();
-        if (t->is_string())
-        {
-            throw "construct_valued_expression: found string - unimplemented";
-        }
-        else if (t->is_type())
-        {
-            node = new ast::type_reference(parser);
-        }
-        
-        // we found the first node, but there could be an operator applied
-        // to that node
-        t = parser->look_ahead();
-        if (t->precedence() > 0)
-        {
-            node = new ast::binary_operator(parser, node);
-        }
-        
-        return node;
-    }
-    
-    // ast::node* construct_binary_operator(int precedence, ast::node* left_operand)
-    // {
-    //     ast::binary_operator* node;
-    //     ast::node* right_operand;
-    //     token* t;
-    //     
-    //     while ((t = this->look_ahead()))
-    //     {
-    //         if (t->precedence() < precedence)
-    //             return left_operand;
-    //         
-    //         node = new ast::binary_operator();
-    //         node->identifier(this->next_token_value());
-    //         
-    //         right_operand = this->parse_expression();
-    //         
-    //         if (this->look_ahead() != NULL)
-    //         {   
-    //             if (t->precedence() < this->look_ahead()->precedence())
-    //                 right_operand = this->parse_binary_operator(t->precedence()+1, right_operand);
-    //         }
-    //         
-    //         node->left_operand(left_operand);
-    //         node->right_operand(right_operand);
-    //         left_operand = node;
-    //     }
-    //     
-    //     return left_operand;
-    // }
 }

@@ -10,6 +10,7 @@ namespace ast
     {
     public:
         basic_operator();
+        virtual ~basic_operator();
         
         std::string identifier() const;
         void identifier(std::string s);

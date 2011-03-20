@@ -3,7 +3,7 @@
 #include "operators/binary_operator.h"
 #include "primary/entity_reference.h"
 #include "primary/type_reference.h"
+#include "primary/variable_definition.h"
 #include "structural/implementation.h"
 #include "structural/import.h"
-#include "structural/instance_variable.h"
 #include "structural/method_definition.h"

@@ -14,7 +14,11 @@ protected:
 
 TEST_F(ParseErrorTest, Constructor)
 {
-    chime::parse_error error("yo %d", 1);
+    chime::parse_error* error;
     
-    fprintf(stderr, "string %s", error.message().c_str());
+    error = new chime::parse_error("yo %d", 1);
+    
+    ASSERT_EQ("yo 1", error->message());
+    
+    delete error;
 }

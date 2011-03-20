@@ -1,6 +1,6 @@
 #include "implementation.h"
-#include "instance_variable.h"
 #include "method_definition.h"
+#include "../../parser/parser.h"
 
 namespace ast
 {
@@ -68,29 +68,22 @@ namespace ast
     
     void implementation::parse_body(chime::parser* parser)
     {
-        chime::token* t;
+        ast::node* node;
         
         while (true)
         {
-            t = parser->look_ahead();
-            
-            if (t->empty() || t->equal_to("}"))
-                break;
-            
-            if (t->is_type())
+            node = parser->parse_with_structural();
+            if (!node)
             {
-                // this means we have an instance variable definition
-                this->add_child(new ast::instance_variable(parser));
-            }
-            else if (t->equal_to("method"))
-            {
-                this->add_child(new ast::method_definition(parser));
-            }
-            else
-            {
-                fprintf(stderr, "found something we weren't expecting in parse_body '%s'\n", t->value.c_str());
+                chime::parse_error* e;
+                
+                e = new chime::parse_error("method_definition::parse_body: unable to get next node");
+                
+                parser->errors()->push_back(e);
                 break;
             }
+            
+            this->add_child(node);
         }
     }
 }
