@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <assert.h>
 
 #include "parser.h"
 
@@ -139,7 +140,7 @@ namespace chime
         }
         else if (t->is_type())
         {
-            node = new ast::variable_definition(this);
+            node = this->parse_type();
         }
         else
         {
@@ -232,7 +233,7 @@ namespace chime
         }
         else if (t->is_type())
         {
-            node = new ast::type_reference(this);
+            node = this->parse_type();
         }
         else if (t->is_identifier())
         {
@@ -250,7 +251,8 @@ namespace chime
             e = new chime::parse_error("expression: found something weird '%s'", t->value.c_str());
             
             this->errors()->push_back(e);
-            node = NULL;
+            
+            return NULL;
         }
         
         return this->parse_binary_operator(0, node);
@@ -292,5 +294,31 @@ namespace chime
         }
         
         return left_operand;
+    }
+    
+    ast::node* parser::parse_type(void)
+    {
+        chime::token* t;
+        
+        t = this->look_ahead(2);
+        
+        // we might have an operator on a type
+        if (t->precedence() > 0)
+        {
+            ast::node* node;
+            
+            node = new ast::type_reference(this);
+            
+            node = this->parse_binary_operator(0, node);
+            
+            return node;
+        }
+        
+        if (t->is_identifier())
+        {
+            return new ast::variable_definition(this);
+        }
+        
+        return new ast::type_reference(this);
     }
 }

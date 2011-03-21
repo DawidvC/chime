@@ -11,8 +11,6 @@ namespace ast
         parser->next_token_value("(");
         this->parse_arguments(parser);
         parser->next_token_value(")");
-        
-        fprintf(stderr, "parsed a method call\n");
     }
     
     std::string method_call::node_name(void)

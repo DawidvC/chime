@@ -54,11 +54,17 @@ private:
 
 TEST_F(BasicParserTest, ImportIdentifier)
 {
-    ast::import* node;
+    ast::node*            node;
+    ast::binary_operator* op;
     
-    node = (ast::import*)parse("import Yo.Dog")->child_at_index(0);
+    node = parse("import Yo.Dog")->child_at_index(0);
+    op   = (ast::binary_operator*)node->child_at_index(0);
     
-    assert_import("Yo.Dog", node);
+    assert_import(node);
+    
+    assert_operator(".", op);
+    assert_type("Yo", op->left_operand());
+    assert_type("Dog", op->right_operand());
 }
 
 TEST_F(BasicParserTest, MultipleImports)
@@ -69,10 +75,12 @@ TEST_F(BasicParserTest, MultipleImports)
     node = parse("import Yo\nimport Sup\n");
     
     import = (ast::import*)node->child_at_index(0);
-    assert_import("Yo", import);
+    assert_import(import);
+    assert_type("Yo", import->importand());
     
     import = (ast::import*)node->child_at_index(1);
-    assert_import("Sup", import);
+    assert_import(import);
+    assert_type("Sup", import->importand());
 }
 
 TEST_F(BasicParserTest, SimpleImplementation)
@@ -161,7 +169,7 @@ TEST_F(BasicParserTest, ExpressionInMethodBody)
     node = parse("method foo() { a = b }");
     node = node->child_at_index(0); // get the method def
     
-    ASSERT_EQ(1, node->child_count());
+    ASSERT_EQ(1, (int)node->child_count());
     
     op = (ast::binary_operator*)node->child_at_index(0);
     
@@ -170,10 +178,22 @@ TEST_F(BasicParserTest, ExpressionInMethodBody)
 
 TEST_F(BasicParserTest, MethodCall)
 {
-    ast::node*            node;
-    ast::binary_operator* op;
+    ast::node* node;
     
     node = parse("call()");
     
-    node->print();
+    assert_method_call("call", node->child_at_index(0));
+}
+
+TEST_F(BasicParserTest, TypeMethodCall)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("Type.call()");
+    op   = (ast::binary_operator*)node->child_at_index(0);
+    
+    assert_operator(".", op);
+    assert_type("Type", op->left_operand());
+    assert_method_call("call", op->right_operand());
 }

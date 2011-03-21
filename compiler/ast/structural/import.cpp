@@ -1,4 +1,5 @@
 #include "import.h"
+#include <assert.h>
 #include "../primary/type_reference.h"
 #include "../../parser/parser.h"
 
@@ -9,40 +10,27 @@ namespace ast
         // parse the import statement
         parser->next_token_value("import");
         
-        if (parser->look_ahead()->is_string())
-        {
-            fprintf(stderr, "not yet able to handle string imports\n");
-        }
-        else
-        {
-            this->importand(new ast::type_reference(parser));
-        }
+        this->importand(parser->parse_expression());
     }
     
     import::~import()
     {
-        delete _importand;
     }
     
     std::string import::node_name(void)
     {
         return std::string("import");
     }
-    std::string import::to_string(void)
-    {
-        std::string s;
-        
-        s += "import: " + this->importand()->identifier();
-        
-        return s;
-    }
     
-    ast::type_reference* import::importand() const
+    ast::node* import::importand() const
     {
-        return _importand;
+        return this->child_at_index(0);
     }
-    void import::importand(ast::type_reference* n)
+    void import::importand(ast::node* n)
     {
-        _importand = n;
+        assert(this->child_count() == 0);
+        assert(n != NULL);
+        
+        _children->push_back(n);
     }
 }

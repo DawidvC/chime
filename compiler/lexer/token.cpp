@@ -68,14 +68,17 @@ namespace chime
 		
 		return false;
 	}
-	bool token::is_structural(void)
-	{
-		if (value == "method")		return true;
-		if (value == "class")		return true;
-		if (value == "namespace")	return true;
-		
-		return false;
-	}
+    bool token::is_structural(void)
+    {
+        if (value == "method")         return true;
+        if (value == "class")          return true;
+        if (value == "namespace")      return true;
+        if (value == "import")         return true;
+        if (value == "implementation") return true;
+        if (value == "interface")      return true;
+        
+        return false;
+    }
 	bool token::is_conditional(void)
 	{
 		if (value == "if")			return true;
@@ -111,18 +114,20 @@ namespace chime
 	{
 		return this->is_string() || this->is_number() || this->is_boolean();
 	}
-	bool token::is_identifier(void)
-	{
-		if (this->empty())			return false;
-		if (this->is_literal())		return false;
-		if (this->is_reserved())	return false;
-		if (this->precedence() > 0) return false;
-		
-		return true;
-	}
+    bool token::is_identifier(void)
+    {
+        if (this->empty())          return false;
+        if (this->is_literal())     return false;
+        if (this->is_reserved())    return false;
+        if (this->precedence() > 0) return false;
+        
+        return true;
+    }
     bool token::is_type(void)
     {
         char c;
+        
+        if (!this->is_identifier()) return false;
         
         c = *value.begin();
         

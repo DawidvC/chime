@@ -1,13 +1,22 @@
 #include "variable_definition.h"
 #include "../../parser/parser.h"
+#include <assert.h>
 
 namespace ast
 {
     variable_definition::variable_definition(chime::parser* parser)
     {
+        chime::token* t;
+        
         this->variable_type(new ast::type_reference(parser));
         
-        this->identifier(parser->next_token_value());
+        t = parser->next_token();
+        
+        assert(t->is_identifier());
+        
+        this->identifier(t->value);
+        
+        delete t;
     }
     
     variable_definition::~variable_definition()

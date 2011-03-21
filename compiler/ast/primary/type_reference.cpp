@@ -5,21 +5,23 @@ namespace ast
 {
     type_reference::type_reference(chime::parser* parser)
     {
-        std::string   s;
-        chime::token* t;
-        
-        t = parser->look_ahead();
-        
-        while (t->is_type() || t->equal_to("."))
-        {
-            t = parser->next_token();
-            
-            s += t->value;
-            
-            t = parser->look_ahead();
-        }
-        
-        this->identifier(s);
+        // std::string   s;
+        // chime::token* t;
+        // 
+        // t = parser->look_ahead();
+        // 
+        // while (t->is_type() || t->equal_to("."))
+        // {
+        //     t = parser->next_token();
+        //     
+        //     s += t->value;
+        //     
+        //     t = parser->look_ahead();
+        // }
+        // 
+        // this->identifier(s);
+        // 
+        this->identifier(parser->next_token_value());
     }
     
     std::string type_reference::node_name(void)

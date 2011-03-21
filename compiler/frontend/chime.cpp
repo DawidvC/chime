@@ -58,8 +58,6 @@ int main(int argc, char* argv[])
         {
             fprintf(stdout, "[Parse:\e[31merror\e[0m] %s\n", (*i)->message().c_str());
         }
-        
-        return 1;
     }
     
     fprintf(stdout, "%s\n", node->string_representation().c_str());

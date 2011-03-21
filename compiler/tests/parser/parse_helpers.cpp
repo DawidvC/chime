@@ -1,10 +1,9 @@
 #include <gtest/gtest.h>
 #include "parse_helpers.h"
 
-void assert_import(const char* value, ast::node* node)
+void assert_import(ast::node* node)
 {
     ASSERT_EQ("import", node->node_name());
-    assert_type(value,  ((ast::import*)node)->importand());
 }
 
 void assert_operator(const char* identifier, ast::node* op)
@@ -67,4 +66,10 @@ void assert_method_parameter(const char* type, const char* label, const char* id
 void assert_operator(const char* identifier, ast::basic_operator* op)
 {
     ASSERT_EQ(identifier, op->identifier());
+}
+
+void assert_method_call(const char* identifier, ast::node* node)
+{
+    ASSERT_EQ("method call", node->node_name());
+    ASSERT_EQ(identifier, ((ast::method_call*)node)->identifier());
 }

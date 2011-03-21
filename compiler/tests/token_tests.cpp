@@ -80,6 +80,15 @@ TEST_F(TokenTest, IsStructural)
     
     token->value = "namespace";
     ASSERT_TRUE(token->is_structural());
+    
+    token->value = "import";
+    ASSERT_TRUE(token->is_structural());
+    
+    token->value = "interface";
+    ASSERT_TRUE(token->is_structural());
+    
+    token->value = "implementation";
+    ASSERT_TRUE(token->is_structural());
 }
 
 TEST_F(TokenTest, IsType)
@@ -94,5 +103,8 @@ TEST_F(TokenTest, IsType)
     ASSERT_TRUE(!token->is_type());
     
     token->value = "aBC";
+    ASSERT_TRUE(!token->is_type());
+    
+    token->value = ".";
     ASSERT_TRUE(!token->is_type());
 }
