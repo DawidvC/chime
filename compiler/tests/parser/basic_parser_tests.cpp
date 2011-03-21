@@ -242,6 +242,17 @@ TEST_F(BasicParserTest, TypeMethodCall)
     assert_method_call("call", op->right_operand());
 }
 
+TEST_F(BasicParserTest, MethodCallArguments)
+{
+    ast::method_call* call;
+    
+    call = (ast::method_call*)parse("call(a, b)")->child_at_index(0);
+    
+    assert_method_call("call", call);
+    assert_entity("a", call->child_at_index(0));
+    assert_entity("b", call->child_at_index(1));
+}
+
 TEST_F(BasicParserTest, FunctionType)
 {
     ast::variable_definition* node;

@@ -37,6 +37,20 @@ namespace ast
     
     void method_call::parse_arguments(chime::parser* parser)
     {
+        chime::token* t;
         
+        while (true)
+        {
+            t = parser->look_ahead();
+            
+            if (t->empty() || t->equal_to(")"))
+                break;
+            
+            this->add_child(parser->parse_expression());
+            
+            // take care of the commas
+            if (parser->look_ahead()->equal_to(","))
+                parser->next_token_value(",");
+        }
     }
 }
