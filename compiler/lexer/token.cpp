@@ -120,6 +120,7 @@ namespace chime
         if (this->is_literal())     return false;
         if (this->is_reserved())    return false;
         if (this->precedence() > 0) return false;
+        if (this->is_punctuation()) return false;
         
         return true;
     }
@@ -133,21 +134,22 @@ namespace chime
         
         return (c >= 'A' && c <= 'Z' );
     }
-	bool token::is_punctuation(void)
-	{
-		if (value == "[")	return true;
-		if (value == "]")	return true;
-		if (value == "{")	return true;
-		if (value == "}")	return true;
-		if (value == "(")	return true;
-		if (value == ")")	return true;
-		if (value == ";")	return true;
-		if (value == ",")	return true;
-		if (value == "|")	return true;
-		if (value == "\n")	return true;
-		
-		return false;
-	}
+    bool token::is_punctuation(void)
+    {
+        if (value == "[")   return true;
+        if (value == "]")   return true;
+        if (value == "{")   return true;
+        if (value == "}")   return true;
+        if (value == "(")   return true;
+        if (value == ")")   return true;
+        if (value == ";")   return true;
+        if (value == ",")   return true;
+        if (value == ":")   return true;
+        if (value == "|")   return true;
+        if (value == "\n")  return true;
+        
+        return false;
+    }
 	bool token::is_reserved(void)
 	{
 		if (this->is_control())		return true;

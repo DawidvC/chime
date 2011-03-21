@@ -10,7 +10,7 @@ namespace ast
     class variable_definition : public node
     {
     public:
-        variable_definition(chime::parser* parser);
+        variable_definition(chime::parser* parser, ast::type_reference* type);
         virtual ~variable_definition();
         
         virtual std::string node_name(void);

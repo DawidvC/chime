@@ -108,3 +108,12 @@ TEST_F(TokenTest, IsType)
     token->value = ".";
     ASSERT_TRUE(!token->is_type());
 }
+
+TEST_F(TokenTest, IsIdentifier)
+{
+    token->value = "abc";
+    ASSERT_TRUE(token->is_identifier());
+    
+    token->value = ":";
+    ASSERT_TRUE(!token->is_identifier());
+}

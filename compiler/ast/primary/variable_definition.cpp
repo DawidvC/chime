@@ -4,17 +4,18 @@
 
 namespace ast
 {
-    variable_definition::variable_definition(chime::parser* parser)
+    variable_definition::variable_definition(chime::parser* parser, ast::type_reference* type)
     {
         chime::token* t;
-        
-        this->variable_type(new ast::type_reference(parser));
         
         t = parser->next_token();
         
         assert(t->is_identifier());
         
         this->identifier(t->value);
+        
+        assert(type != NULL);
+        _type_ref = type;
         
         delete t;
     }

@@ -74,6 +74,10 @@ namespace ast
                 break;
             
             this->add_parameter(new method_parameter(parser));
+            
+            // take care of the commas
+            if (parser->look_ahead()->equal_to(","))
+                parser->next_token_value(",");
         }
     }
     

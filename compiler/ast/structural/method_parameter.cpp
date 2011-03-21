@@ -11,8 +11,22 @@ namespace ast
         _type = NULL;
         _label = "";
         
-        t = parser->look_ahead();
+        t = parser->look_ahead(2);
+        if (t->equal_to(")") || t->equal_to(","))
+        {
+            // untyped identifier
+            this->identifier(parser->next_token_value());
+            return;
+        }
         
+        if (t->equal_to(":"))
+        {
+            // label:identifier
+            this->label(parser->next_token_value());
+            parser->next_token_value(":");
+        }
+        
+        t = parser->look_ahead();
         if (t->is_type())
         {
             this->type(new type_reference(parser));

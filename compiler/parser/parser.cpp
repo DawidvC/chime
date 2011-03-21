@@ -138,10 +138,6 @@ namespace chime
         {
             node = new ast::method_definition(this);
         }
-        else if (t->is_type())
-        {
-            node = this->parse_type();
-        }
         else
         {
             node = this->parse_without_structural();
@@ -234,6 +230,11 @@ namespace chime
         else if (t->is_type())
         {
             node = this->parse_type();
+            
+            if (this->look_ahead()->is_identifier())
+            {
+                return new ast::variable_definition(this, (ast::type_reference*)node);
+            }
         }
         else if (t->is_identifier())
         {
@@ -299,26 +300,18 @@ namespace chime
     ast::node* parser::parse_type(void)
     {
         chime::token* t;
+        ast::node*    node;
         
-        t = this->look_ahead(2);
+        node = new ast::type_reference(this);
+        
+        t = this->look_ahead();
         
         // we might have an operator on a type
         if (t->precedence() > 0)
         {
-            ast::node* node;
-            
-            node = new ast::type_reference(this);
-            
             node = this->parse_binary_operator(0, node);
-            
-            return node;
         }
         
-        if (t->is_identifier())
-        {
-            return new ast::variable_definition(this);
-        }
-        
-        return new ast::type_reference(this);
+        return node;
     }
 }

@@ -19,6 +19,8 @@ namespace ast
         
     protected:
         std::string _identifier;
+        
+        void parse_parameters(chime::parser* parser);
     };
 }
 
