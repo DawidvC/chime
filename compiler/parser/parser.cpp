@@ -11,6 +11,7 @@ namespace chime
     parser::parser(chime::lexer* lexer)
     {
         _lexer = lexer;
+        _lexer->ignore_new_lines(false);
         
         _errors = new std::vector<chime::parse_error*>();
     }
@@ -19,7 +20,6 @@ namespace chime
     {
         delete _errors;
     }
-    
     
 #pragma mark *** Token Handling ***
     token* parser::next_token(void)
@@ -79,6 +79,30 @@ namespace chime
         
         return v;
     }
+    void   parser::advance_past_ending_tokens(void)
+    {
+        token* t;
+        
+        while (true)
+        {
+            t = this->look_ahead();
+            if (!t->is_ending())
+                break;
+                
+            if (t->empty() || t->value == "}")
+                break;
+            
+            if (t->value == "\n")
+            {
+                this->next_token_value("\n");
+            }
+            else if (t->value == ";")
+            {
+                this->next_token_value(";");
+            }
+        }
+    }
+    
     token* parser::look_ahead(void)
     {
         return this->look_ahead(1);
@@ -96,8 +120,7 @@ namespace chime
 #pragma mark *** Parsing Methods ***
     ast::node* parser::parse(void)
     {
-        
-        ast::node*   root;
+        ast::node* root;
         
         root = new ast::node();
         
@@ -167,21 +190,47 @@ namespace chime
         {
             chime::parse_error* e;
             
-            e = new chime::parse_error("construct_initial_expression: found empty/null token");
+            e = new chime::parse_error("parse_without_structural: found empty/null token");
             
             this->errors()->push_back(e);
             return NULL;
         }
-        
-        if (t->is_control())
+        else if (t->is_control())
         {
             chime::parse_error* e;
             
-            e = new chime::parse_error("construct_initial_expression: control not implemented");
+            e = new chime::parse_error("parse_without_structural: control not implemented");
             
             this->errors()->push_back(e);
             return NULL;
             // node = this->parse_parentheses();
+        }
+        else if (t->is_type())
+        {
+            node = this->parse_type();
+            
+            t = this->look_ahead();
+            if (t->empty())
+            {
+                return node;
+            }
+            else if (t->is_identifier())
+            {
+                return new ast::variable_definition(this, (ast::type_reference*)node);
+            }
+            else if (t->precedence() > 0)
+            {
+                return this->parse_binary_operator(0, node);
+            }
+            else
+            {
+                chime::parse_error* e;
+
+                e = new chime::parse_error("parse_without_structural: found something unexpected '%s'", t->value.c_str());
+
+                this->errors()->push_back(e);
+                return NULL;
+            }
         }
         
         node = this->parse_expression();
@@ -204,6 +253,7 @@ namespace chime
             e = new chime::parse_error("Unable to extract the next token while making an expression");
             
             this->errors()->push_back(e);
+            
             return NULL;
         }
         
@@ -214,6 +264,7 @@ namespace chime
             e = new chime::parse_error("expression: parentheses not implemented");
             
             this->errors()->push_back(e);
+            
             return NULL;
             // node = this->parse_parentheses();
         }
@@ -224,17 +275,13 @@ namespace chime
             e = new chime::parse_error("expression: literal not implemented");
             
             this->errors()->push_back(e);
+            
             return NULL;
             // node = this->parse_literal();
         }
         else if (t->is_type())
         {
             node = this->parse_type();
-            
-            if (this->look_ahead()->is_identifier())
-            {
-                return new ast::variable_definition(this, (ast::type_reference*)node);
-            }
         }
         else if (t->is_identifier())
         {
@@ -271,6 +318,12 @@ namespace chime
             t = this->look_ahead();
             if (t->empty())
                 return left_operand;
+            
+            if (t->is_ending())
+            {
+                this->advance_past_ending_tokens();
+                return left_operand;
+            }
             
             // we have to store this, because t is just a look-ahead token,
             // and may be removed by future parsing operations

@@ -11,6 +11,7 @@ namespace ast
         parser->next_token_value("import");
         
         this->importand(parser->parse_expression());
+        parser->advance_past_ending_tokens();
     }
     
     import::~import()

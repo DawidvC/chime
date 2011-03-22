@@ -21,8 +21,7 @@ namespace ast
     
     void node::add_child(ast::node* new_child)
     {
-        if (new_child == NULL)
-            throw "nope!";
+        assert(new_child != NULL);
         
         _children->push_back(new_child);
     }

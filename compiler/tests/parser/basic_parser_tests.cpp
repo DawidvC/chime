@@ -1,60 +1,7 @@
-#include <gtest/gtest.h>
-#include "../../frontend/chime.h"
-#include "../../ast/ast.h"
-#include "parse_helpers.h"
+#include "parser_tests_base.h"
 
-class BasicParserTest : public testing::Test
+class BasicParserTest : public ParserTestsBase
 {
-protected:
-    virtual void SetUp()
-    {
-        _last_node = NULL;
-    }
-    
-    virtual void TearDown()
-    {
-        if (_last_node)
-            delete _last_node;
-    }
-    
-    ast::node* parse(const char *input)
-    {
-        chime::stringlexer* lexer;
-        chime::parser*      parser;
-        
-        lexer  = new chime::stringlexer(input);
-        parser = new chime::parser(lexer);
-        
-        _last_node = parser->parse();
-        
-        if (!parser->errors()->empty())
-        {
-            std::vector<chime::parse_error*>::iterator i;
-            
-            for (i=parser->errors()->begin(); i < parser->errors()->end(); i++)
-            {
-                fprintf(stdout, "[Parse:\e[31merror\e[0m] %s\n", (*i)->message().c_str());
-            }
-        }
-        
-        delete parser;
-        delete lexer;
-        
-        return _last_node;
-    }
-    
-    ast::implementation* parse_implemenation(const char *input)
-    {
-        return (ast::implementation*)this->parse(input)->child_at_index(0);
-    }
-    
-    ast::method_definition* parse_method_def(const char *input)
-    {
-        return (ast::method_definition*)this->parse(input)->child_at_index(0);
-    }
-    
-private:
-    ast::node* _last_node;
 };
 
 TEST_F(BasicParserTest, ImportIdentifier)
@@ -184,6 +131,27 @@ TEST_F(BasicParserTest, AssignmentExpression)
     assert_operator("=", op);
     assert_entity("a", op->left_operand());
     assert_entity("b", op->right_operand());
+}
+
+TEST_F(BasicParserTest, AssignmentFromMethodCall)
+{
+    ast::binary_operator* op;
+    
+    op = (ast::binary_operator*)parse("a = Foo.Bar.baz()")->child_at_index(0);
+    
+    assert_operator("=", op);
+    assert_entity("a", op->left_operand());
+    
+    op = (ast::binary_operator*)op->right_operand();
+    
+    assert_operator(".", op);
+    assert_type("Foo", op->left_operand());
+    
+    op = (ast::binary_operator*)op->right_operand();
+    
+    assert_operator(".", op);
+    assert_type("Bar", op->left_operand());
+    assert_method_call("baz", op->right_operand());
 }
 
 TEST_F(BasicParserTest, TopLevelMethod)

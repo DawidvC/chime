@@ -18,6 +18,7 @@ namespace chime
         bool        advance_token_if_equals(const char* expected);
         std::string next_token_value(void);
         std::string next_token_value(const char* expected);
+        void        advance_past_ending_tokens(void);
         token*      look_ahead(void);
         token*      look_ahead(int);
         

@@ -1,10 +1,12 @@
 #include "entity_reference.h"
 #include "../../parser/parser.h"
+#include <assert.h>
 
 namespace ast
 {
     entity_reference::entity_reference(chime::parser* parser)
     {
+        assert(parser->look_ahead()->is_identifier());
         this->identifier(parser->next_token_value());
     }
     

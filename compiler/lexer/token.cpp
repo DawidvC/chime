@@ -121,6 +121,7 @@ namespace chime
         if (this->is_reserved())    return false;
         if (this->precedence() > 0) return false;
         if (this->is_punctuation()) return false;
+        if (this->is_type())        return false;
         
         return true;
     }
@@ -128,7 +129,11 @@ namespace chime
     {
         char c;
         
-        if (!this->is_identifier()) return false;
+        if (this->empty())          return false;
+        if (this->is_literal())     return false;
+        if (this->is_reserved())    return false;
+        if (this->precedence() > 0) return false;
+        if (this->is_punctuation()) return false;
         
         c = *value.begin();
         
@@ -167,6 +172,10 @@ namespace chime
 		
 		return false;
 	}
+    bool token::is_ending(void) const
+    {
+        return (value == ";") || (value == "\n") || (value == "}");
+    }
 	int token::precedence(void)
 	{
 		if (value == ".")	return 60;

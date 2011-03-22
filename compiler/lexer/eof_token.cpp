@@ -75,6 +75,10 @@ namespace chime
     {
         return false;
     }
+    bool eof_token::is_ending(void) const
+    {
+        return true;
+    }
     int eof_token::precedence(void)
     {
         return -1;

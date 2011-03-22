@@ -10,16 +10,16 @@ namespace chime
     lexer::lexer()
     {
         current_line = 1;
-        ignore_new_lines = true;
+        this->ignore_new_lines(true);
         token_buffer = new std::vector<token*>();
         _peeked_char = 0;
     }
-
+    
     lexer::~lexer()
     {
         delete token_buffer;
     }
-
+    
     token* lexer::next_token(void)
     {
         token* t;
@@ -59,7 +59,16 @@ namespace chime
         
         return t;
     }
-	
+    
+    bool lexer::ignore_new_lines() const
+    {
+        return _ignore_new_lines;
+    }
+    void lexer::ignore_new_lines(bool i)
+    {
+        _ignore_new_lines = i;
+    }
+    
 	token* lexer::extract_next_token(void)
 	{
 		token* t = new token();
@@ -103,7 +112,7 @@ namespace chime
 					break;
                 case '\n':
 					current_line++;
-					if (ignore_new_lines)
+					if (_ignore_new_lines)
 					{
 						if (t->empty())
 							this->next_char();
@@ -187,17 +196,19 @@ namespace chime
 					
 					return t;
 					break;
-				case '/':
-					this->next_char();
-					if (this->peek() == '/')
-					{
-						do
-						{
-							c = this->next_char();
-						}
-						while (( c != '\n') && (c != 0));
-					}
-					else
+                case '/':
+                    this->next_char();
+                    if (this->peek() == '/')
+                    {
+                        char next;
+                        do
+                        {
+                            c = this->next_char();
+                            next = this->peek();
+                        }
+                        while ((next != '\n') && (next != 0));
+                    }
+                    else
 					{
 						t->value = '/';
 						return t;

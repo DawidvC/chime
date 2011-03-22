@@ -27,6 +27,7 @@ namespace chime
         virtual bool is_punctuation(void);
         virtual bool is_reserved(void);
         virtual bool is_block_start(void);
+        virtual bool is_ending(void) const;
         virtual int precedence(void);
         
         virtual long integer_value(void);

@@ -189,14 +189,25 @@ TEST_F(LexerTest, WhitespaceInDefinition)
 }
 TEST_F(LexerTest, SignificantNewlines)
 {
-	lex("a += b\na = 0");
-	
-	lexer->ignore_new_lines = false;
-	
-	const char *tokens[] = {"a", "+", "=", "b", "\n", "a", "=", "0", NULL};
-	ExpectTokens(tokens);
-	
-	lexer->ignore_new_lines = true;
+    lex("a += b\na = 0");
+    
+    lexer->ignore_new_lines(false);
+    
+    const char *tokens[] = {"a", "+", "=", "b", "\n", "a", "=", "0", NULL};
+    ExpectTokens(tokens);
+    
+    lexer->ignore_new_lines(true);
+}
+TEST_F(LexerTest, NewlineAfterComment)
+{
+    lex("something // a comment\n");
+    
+    lexer->ignore_new_lines(false);
+    
+    const char *tokens[] = {"something", "\n", NULL};
+    ExpectTokens(tokens);
+    
+    lexer->ignore_new_lines(true);
 }
 
 #pragma mark comments
