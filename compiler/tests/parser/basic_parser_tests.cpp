@@ -37,32 +37,32 @@ TEST_F(BasicParserTest, MultipleImports)
 
 TEST_F(BasicParserTest, SimpleImplementation)
 {
-    ast::node* node;
+    ast::implementation* node;
     
-    node = parse("implementation SomeClass {}");
+    node = parse_implementation("implementation SomeClass {}");
     
-    assert_implementation("SomeClass", NULL, node->child_at_index(0));
+    assert_implementation("SomeClass", NULL, node);
 }
 
 TEST_F(BasicParserTest, ImplementationWithSuperClass)
 {
-    ast::node* node;
+    ast::implementation* node;
     
-    node = parse("implementation SomeClass : SuperClass {}");
+    node = parse_implementation("implementation SomeClass : SuperClass {}");
     
-    assert_implementation("SomeClass", "SuperClass", node->child_at_index(0));
+    assert_implementation("SomeClass", "SuperClass", node);
 }
 
 TEST_F(BasicParserTest, InstanceVariable)
 {
-    ast::node*                node;
+    ast::implementation*       node;
     ast::variable_definition* ivar;
     
-    node = parse("implementation SomeClass { Foo bar }");
+    node = parse_implementation("implementation SomeClass { Foo bar }");
     
-    assert_implementation("SomeClass", NULL, node->child_at_index(0));
+    assert_implementation("SomeClass", NULL, node);
     
-    ivar = (ast::variable_definition*)node->child_at_index(0)->child_at_index(0);
+    ivar = (ast::variable_definition*)node->child_at_index(0);
     assert_variable_definition("Foo", "bar", ivar);
 }
 
@@ -71,7 +71,7 @@ TEST_F(BasicParserTest, SimpleMethodDefinition)
     ast::implementation*    node;
     ast::method_definition* method;
     
-    node = parse_implemenation("implementation SomeClass { method new() { } }");
+    node = parse_implementation("implementation SomeClass { method new() { } }");
     
     assert_implementation("SomeClass", NULL, node);
     

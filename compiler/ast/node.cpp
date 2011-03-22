@@ -66,7 +66,7 @@ namespace ast
             
             if ((*i) == NULL )
             {
-                str.append(depth+1,' ');
+                str.append(depth+1, ' ');
                 str.append("(null)\n");
             }
             else

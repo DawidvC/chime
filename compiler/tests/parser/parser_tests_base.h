@@ -15,7 +15,7 @@ protected:
     
     ast::node* parse(const char *input);
     
-    ast::implementation* parse_implemenation(const char *input);
+    ast::implementation* parse_implementation(const char *input);
     ast::method_definition* parse_method_def(const char *input);
     
 protected:

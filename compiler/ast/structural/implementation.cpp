@@ -17,10 +17,18 @@ namespace ast
             this->super_class(new ast::type_reference(parser));
         }
         
+        parser->advance_past_ending_tokens();
+        
         // { body }
         parser->next_token_value("{");
+        
+        parser->advance_past_ending_tokens();
+        
         this->parse_body(parser);
+        
         parser->next_token_value("}");
+        
+        parser->advance_past_ending_tokens();
     }
     
     implementation::~implementation()

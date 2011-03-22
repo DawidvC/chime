@@ -50,7 +50,7 @@ Web::Application.routes.draw do
   match 'features/:action' => 'features#:action'
   match 'features'         => 'features#index'
   
-  root :to => "types#integer"
+  root :to => "types#object"
 
   # See how all your routes lay out with "rake routes"
 

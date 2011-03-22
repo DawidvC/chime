@@ -16,10 +16,20 @@ namespace ast
         this->parse_parameters(parser);
         parser->next_token_value(")");
         
+        parser->advance_past_ending_tokens();
+        
         // { body }
         parser->next_token_value("{");
+        
+        parser->advance_past_ending_tokens();
+        
         this->parse_body(parser);
+        
+        parser->advance_past_ending_tokens();
+        
         parser->next_token_value("}");
+        
+        parser->advance_past_ending_tokens();
     }
     
     method_definition::~method_definition()
