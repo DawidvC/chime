@@ -17,9 +17,9 @@ namespace ast
         virtual std::string to_string(void);
         
         ast::type_reference* type_ref() const;
-        void                 type_ref(ast::type_reference* n);
+        void                 type_ref(ast::type_reference* node);
         ast::type_reference* super_class() const;
-        void                 super_class(ast::type_reference* n);
+        void                 super_class(ast::type_reference* node);
         
     protected:
         ast::type_reference* _type_ref;

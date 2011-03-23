@@ -113,6 +113,9 @@ TEST_F(TokenTest, IsType)
     
     token->value = "(";
     ASSERT_TRUE(!token->is_type());
+    
+    token->value = "";
+    ASSERT_TRUE(!token->is_type());
 }
 
 TEST_F(TokenTest, IsIdentifier)

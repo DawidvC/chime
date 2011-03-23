@@ -1,6 +1,7 @@
 #include "implementation.h"
 #include "method_definition.h"
 #include "../../parser/parser.h"
+#include <assert.h>
 
 namespace ast
 {
@@ -16,19 +17,15 @@ namespace ast
         {
             this->super_class(new ast::type_reference(parser));
         }
+        else
+        {
+            this->super_class(NULL);
+        }
         
         parser->advance_past_ending_tokens();
         
         // { body }
-        parser->next_token_value("{");
-        
-        parser->advance_past_ending_tokens();
-        
         this->parse_body(parser);
-        
-        parser->next_token_value("}");
-        
-        parser->advance_past_ending_tokens();
     }
     
     implementation::~implementation()
@@ -60,23 +57,28 @@ namespace ast
     {
         return _type_ref;
     }
-    void implementation::type_ref(ast::type_reference* n)
+    void implementation::type_ref(ast::type_reference* node)
     {
-        _type_ref = n;
+        assert(node != NULL);
+        
+        _type_ref = node;
     }
     
     ast::type_reference* implementation::super_class() const
     {
         return _super_class;
     }
-    void implementation::super_class(ast::type_reference* n)
+    void implementation::super_class(ast::type_reference* node)
     {
-        _super_class = n;
+        _super_class = node;
     }
     
     void implementation::parse_body(chime::parser* parser)
     {
         ast::node* node;
+        
+        parser->next_token_value("{");
+        parser->advance_past_ending_tokens();
         
         while (true)
         {
@@ -91,11 +93,14 @@ namespace ast
                 
                 e = new chime::parse_error("method_definition::parse_body: unable to get next node");
                 
-                parser->errors()->push_back(e);
+                parser->add_error(e);
                 break;
             }
             
             this->add_child(node);
         }
+        
+        parser->next_token_value("}");
+        parser->advance_past_ending_tokens();
     }
 }
