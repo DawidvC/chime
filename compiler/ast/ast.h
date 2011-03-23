@@ -1,4 +1,5 @@
 #include "node.h"
+#include "literals/string_literal.h"
 #include "operators/basic_operator.h"
 #include "operators/binary_operator.h"
 #include "primary/entity_reference.h"

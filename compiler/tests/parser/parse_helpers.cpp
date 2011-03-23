@@ -73,3 +73,9 @@ void assert_method_call(const char* identifier, ast::node* node)
     ASSERT_EQ("method call", node->node_name());
     ASSERT_EQ(identifier, ((ast::method_call*)node)->identifier());
 }
+
+void assert_literal(const char* value, ast::node* node)
+{
+    ASSERT_EQ("string literal", node->node_name());
+    ASSERT_EQ(value, ((ast::string_literal*)node)->value());
+}

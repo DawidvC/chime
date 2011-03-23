@@ -30,6 +30,7 @@ namespace chime
         ast::node*  parse_expression(void);
         ast::node*  parse_binary_operator(int precedence, ast::node* left_operand);
         ast::node*  parse_type(void);
+        ast::node*  parse_literal(void);
         
     protected:
         chime::lexer*                     _lexer;

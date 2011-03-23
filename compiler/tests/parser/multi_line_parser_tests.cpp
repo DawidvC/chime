@@ -6,11 +6,24 @@ class MultiLineParserTest : public ParserTestsBase
 
 TEST_F(MultiLineParserTest, MakeVariableAndUseIt)
 {
-    ast::node* node;
+    ast::node*            node;
+    ast::binary_operator* op;
     
     node = parse("a = Number.new()\na.to_string()");
     
-    node->print();
+    op = (ast::binary_operator*)node->child_at_index(0);
+    assert_operator("=", op);
+    assert_entity("a", op->left_operand());
+    
+    op = (ast::binary_operator*)op->right_operand();
+    assert_operator(".", op);
+    assert_type("Number", op->left_operand());
+    assert_method_call("new", op->right_operand());
+    
+    op = (ast::binary_operator*)node->child_at_index(1);
+    assert_operator(".", op);
+    assert_entity("a", op->left_operand());
+    assert_method_call("to_string", op->right_operand());
 }
 
 TEST_F(MultiLineParserTest, Implemenation)

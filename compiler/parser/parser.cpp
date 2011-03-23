@@ -79,7 +79,7 @@ namespace chime
         
         return v;
     }
-    void   parser::advance_past_ending_tokens(void)
+    void parser::advance_past_ending_tokens(void)
     {
         token* t;
         
@@ -270,14 +270,7 @@ namespace chime
         }
         else if(t->is_literal())
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("expression: literal not implemented");
-            
-            this->errors()->push_back(e);
-            
-            return NULL;
-            // node = this->parse_literal();
+            node = this->parse_literal();
         }
         else if (t->is_type())
         {
@@ -363,6 +356,36 @@ namespace chime
         if (t->precedence() > 0)
         {
             node = this->parse_binary_operator(0, node);
+        }
+        
+        return node;
+    }
+    
+    ast::node* parser::parse_literal(void)
+    {
+        chime::token* t;
+        ast::node*    node;
+        
+        t = this->look_ahead();
+        if (t->is_floating_point())
+        {
+            assert(false);
+        }
+        else if (t->is_integer())
+        {
+            assert(false);
+        }
+        else if (t->is_string())
+        {
+            node = new ast::string_literal(this);
+        }
+        else if (t->is_boolean())
+        {
+            assert(false);
+        }
+        else
+        {
+            assert(false);
         }
         
         return node;
