@@ -197,13 +197,7 @@ namespace chime
         }
         else if (t->is_control())
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("parse_without_structural: control not implemented");
-            
-            this->errors()->push_back(e);
-            return NULL;
-            // node = this->parse_parentheses();
+            return this->parse_control();
         }
         else if (t->is_type())
         {
@@ -234,6 +228,8 @@ namespace chime
         }
         
         node = this->parse_expression();
+        
+        node = this->parse_tailing_conditional(node);
         
         return node;
     }
@@ -389,5 +385,46 @@ namespace chime
         }
         
         return node;
+    }
+    
+    ast::node* parser::parse_control(void)
+    {
+        chime::token* t;
+        ast::node*    node;
+        
+        t = this->look_ahead();
+        if (t->equal_to("next"))
+        {
+            node = new ast::next(this);
+        }
+        else
+        {
+            assert(false);
+        }
+        
+        node = this->parse_tailing_conditional(node);
+        
+        return node;
+    }
+    
+    ast::node* parser::parse_tailing_conditional(ast::node* body_node)
+    {
+        chime::token* t;
+        ast::node*    node;
+        
+        t = this->look_ahead();
+        if (!t->is_conditional())
+        {
+            return body_node;
+        }
+        else if (t->equal_to("if"))
+        {
+            node = new ast::if_statement(this, body_node);
+            
+            this->advance_past_ending_tokens();
+            return node;
+        }
+        
+        return body_node;
     }
 }

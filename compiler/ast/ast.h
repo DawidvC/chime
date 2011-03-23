@@ -1,4 +1,6 @@
 #include "node.h"
+#include "control/if_statement.h"
+#include "control/next.h"
 #include "literals/string_literal.h"
 #include "operators/basic_operator.h"
 #include "operators/binary_operator.h"

@@ -30,6 +30,8 @@ end
 
 # Dependancies
 file "#{BUILD_PATH}/ast/node.o"                        => ['ast/node.cpp', 'ast/node.h']
+file "#{BUILD_PATH}/ast/control/if_statement.o"        => ['ast/control/if_statement.h', 'ast/node.h']
+file "#{BUILD_PATH}/ast/control/next.o"                => ['ast/control/next.h', 'ast/node.h']
 file "#{BUILD_PATH}/tests/parser/basic_parser_tests.o" => ['tests/parser/basic_parser_tests.cpp']
 file "#{BUILD_PATH}/tests/lexer_tests.o"               => ['tests/lexer_tests.cpp', 'lexer/string_lexer.h']
 

@@ -100,10 +100,10 @@ namespace chime
         if (value == "switch")      return true;
         if (value == "case")        return true;
         if (value == "break")       return true;
-        if (value == "continue")    return true;
         if (value == "else")        return true;
         if (value == "return")      return true;
         if (value == "yield")       return true;
+        if (value == "next")        return true;
         
         if (this->is_loop())        return true;
         if (this->is_conditional()) return true;

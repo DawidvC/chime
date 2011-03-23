@@ -138,3 +138,9 @@ TEST_F(TokenTest, IsEnding)
     token->value = "}";
     ASSERT_TRUE(token->is_ending());
 }
+
+TEST_F(TokenTest, IsControl)
+{
+    token->value = "next";
+    ASSERT_TRUE(token->is_control());
+}

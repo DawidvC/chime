@@ -250,8 +250,7 @@ TEST_F(BasicParserTest, MethodCallWithBlockAndBody)
     
     assert_method_call("call", call);
     assert_block(call->child_at_index(0));
-    
-    call->print();
+    assert_operator("=", call->child_at_index(0)->child_at_index(0));
 }
 
 TEST_F(BasicParserTest, MethodCallWithBlockParameters)
@@ -262,6 +261,4 @@ TEST_F(BasicParserTest, MethodCallWithBlockParameters)
     
     assert_method_call("call", call);
     assert_block(call->child_at_index(0));
-    
-    call->print();
 }

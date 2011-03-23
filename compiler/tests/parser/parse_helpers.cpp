@@ -84,3 +84,13 @@ void assert_block(ast::node* node)
 {
     ASSERT_EQ("block", node->node_name());
 }
+
+void assert_next(ast::node* node)
+{
+    ASSERT_EQ("next statement", node->node_name());
+}
+
+void assert_if_statement(ast::node* node)
+{
+    ASSERT_EQ("if statement", node->node_name());
+}
