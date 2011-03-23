@@ -50,15 +50,7 @@ int main(int argc, char* argv[])
     if (!node)
         return 1;
     
-    if (!parser->errors()->empty())
-    {
-        std::vector<chime::parse_error*>::iterator i;
-        
-        for (i=parser->errors()->begin(); i < parser->errors()->end(); i++)
-        {
-            fprintf(stdout, "[Parse:\e[31merror\e[0m] %s\n", (*i)->message().c_str());
-        }
-    }
+    parser->print_errors();
     
     fprintf(stdout, "%s\n", node->string_representation().c_str());
     

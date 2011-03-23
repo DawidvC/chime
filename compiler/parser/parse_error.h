@@ -13,8 +13,12 @@ namespace chime
         
         std::string message() const;
         
+        int         line(void) const;
+        void        line(int l);
+        
     protected:
         std::string* _message;
+        int          _line;
     };
 }
 

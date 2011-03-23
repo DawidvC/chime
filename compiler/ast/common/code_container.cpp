@@ -70,7 +70,7 @@ namespace ast
                 
                 e = new chime::parse_error("code_container::parse_body: unable to get next node");
                 
-                parser->errors()->push_back(e);
+                parser->add_error(e);
                 break;
             }
             

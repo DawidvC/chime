@@ -117,6 +117,32 @@ namespace chime
         return _errors;
     }
     
+    void parser::add_error(chime::parse_error* e)
+    {
+        assert(e != NULL);
+        
+        e->line(_lexer->current_line());
+        
+        this->errors()->push_back(e);
+    }
+    
+    void parser::print_errors(void) const
+    {
+        std::vector<chime::parse_error*>::iterator i;
+        
+        if (this->errors()->empty())
+            return;
+        
+        for (i=this->errors()->begin(); i < this->errors()->end(); i++)
+        {
+            chime::parse_error* e;
+            
+            e = (*i);
+            
+            fprintf(stdout, "[Parse:\e[31merror\e[0m:%d] %s\n", e->line(), e->message().c_str());
+        }
+    }
+    
 #pragma mark *** Parsing Methods ***
     ast::node* parser::parse(void)
     {
@@ -172,7 +198,7 @@ namespace chime
             
             e = new chime::parse_error("Unable to construct in the main loop");
             
-            this->errors()->push_back(e);
+            this->add_error(e);
         }
         
         return node;
@@ -192,7 +218,7 @@ namespace chime
             
             e = new chime::parse_error("parse_without_structural: found empty/null token");
             
-            this->errors()->push_back(e);
+            this->add_error(e);
             return NULL;
         }
         else if (t->is_control())
@@ -219,10 +245,10 @@ namespace chime
             else
             {
                 chime::parse_error* e;
-
+                
                 e = new chime::parse_error("parse_without_structural: found something unexpected '%s'", t->value.c_str());
-
-                this->errors()->push_back(e);
+                
+                this->add_error(e);
                 return NULL;
             }
         }
@@ -248,7 +274,7 @@ namespace chime
             
             e = new chime::parse_error("Unable to extract the next token while making an expression");
             
-            this->errors()->push_back(e);
+            this->add_error(e);
             
             return NULL;
         }
@@ -259,7 +285,7 @@ namespace chime
             
             e = new chime::parse_error("expression: parentheses not implemented");
             
-            this->errors()->push_back(e);
+            this->add_error(e);
             
             return NULL;
             // node = this->parse_parentheses();
@@ -287,7 +313,7 @@ namespace chime
             
             e = new chime::parse_error("expression: found something weird '%s'", t->value.c_str());
             
-            this->errors()->push_back(e);
+            this->add_error(e);
             
             return NULL;
         }
@@ -377,7 +403,12 @@ namespace chime
         }
         else if (t->is_boolean())
         {
-            assert(false);
+            chime::parse_error* e;
+            
+            e = new chime::parse_error("parse_literal: found something weird '%s'", t->value.c_str());
+            
+            this->add_error(e);
+            return NULL;
         }
         else
         {

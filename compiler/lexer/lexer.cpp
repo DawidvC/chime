@@ -9,7 +9,7 @@ namespace chime
 {
     lexer::lexer()
     {
-        current_line = 1;
+        _current_line = 1;
         this->ignore_new_lines(true);
         token_buffer = new std::vector<token*>();
         _peeked_char = 0;
@@ -34,6 +34,9 @@ namespace chime
         
         if (t == NULL)
             t = new eof_token();
+        
+        if (t->value == "\n")
+            _current_line++;
         
         return t;
     }
@@ -67,6 +70,11 @@ namespace chime
     void lexer::ignore_new_lines(bool i)
     {
         _ignore_new_lines = i;
+    }
+    
+    int lexer::current_line(void) const
+    {
+        return _current_line;
     }
     
 	token* lexer::extract_next_token(void)
@@ -111,14 +119,15 @@ namespace chime
 						this->next_char();
 					break;
                 case '\n':
-					current_line++;
-					if (_ignore_new_lines)
-					{
-						if (t->empty())
-							this->next_char();
-						else
-							return t;
-					}
+                    if (_ignore_new_lines)
+                    {
+                        _current_line++;
+                        
+                        if (t->empty())
+                            this->next_char();
+                        else
+                            return t;
+                    }
 					else
 					{
 						if (t->empty())

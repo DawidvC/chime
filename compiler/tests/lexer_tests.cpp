@@ -209,6 +209,32 @@ TEST_F(LexerTest, NewlineAfterComment)
     
     lexer->ignore_new_lines(true);
 }
+TEST_F(LexerTest, LineAccounting)
+{
+    lex("\na\n\n\n5 == 1\n");
+    
+    lexer->ignore_new_lines(false);
+    
+    ASSERT_EQ(1, lexer->current_line());
+    
+    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ(2,   lexer->current_line());
+    
+    ASSERT_EQ("a",lexer->next_token()->value);
+    ASSERT_EQ(2,   lexer->current_line());
+    
+    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ(3,   lexer->current_line());
+    
+    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ(4,   lexer->current_line());
+    
+    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ(5,   lexer->current_line());
+    
+    ASSERT_EQ("5",lexer->next_token()->value);
+    ASSERT_EQ(5,   lexer->current_line());
+}
 
 #pragma mark comments
 TEST_F(LexerTest, LeadingInlineComments)

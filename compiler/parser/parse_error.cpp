@@ -16,6 +16,8 @@ namespace chime
         va_end(list);
         
         _message = new std::string(buffer);
+        
+        this->line(-1);
     }
     
     parse_error::~parse_error()
@@ -26,5 +28,15 @@ namespace chime
     std::string parse_error::message() const
     {
         return *_message;
+    }
+    
+    int parse_error::line(void) const
+    {
+        return _line;
+    }
+    
+    void parse_error::line(int l)
+    {
+        _line = l;
     }
 }

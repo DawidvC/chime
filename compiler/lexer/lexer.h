@@ -23,9 +23,11 @@ namespace chime
         bool ignore_new_lines() const;
         void ignore_new_lines(bool i);
         
+        int  current_line(void) const;
+        
     protected:
         bool                 _ignore_new_lines;
-        int                  current_line;
+        int                  _current_line;
         std::vector<token*>* token_buffer;
         
 		token* extract_next_token(void);

@@ -21,15 +21,7 @@ ast::node* ParserTestsBase::parse(const char *input)
     
     _last_node = parser->parse();
     
-    if (!parser->errors()->empty())
-    {
-        std::vector<chime::parse_error*>::iterator i;
-        
-        for (i=parser->errors()->begin(); i < parser->errors()->end(); i++)
-        {
-            fprintf(stdout, "[Parse:\e[31merror\e[0m] %s\n", (*i)->message().c_str());
-        }
-    }
+    parser->print_errors();
     
     delete parser;
     delete lexer;

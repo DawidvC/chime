@@ -23,6 +23,8 @@ namespace chime
         token*      look_ahead(int);
         
         std::vector<chime::parse_error*>* errors(void) const;
+        void                              add_error(chime::parse_error* e);
+        void                              print_errors(void) const;
         
         ast::node*  parse(void);
         ast::node*  parse_with_structural(void);
