@@ -229,3 +229,39 @@ TEST_F(BasicParserTest, FunctionType)
     
     assert_variable_definition("Function", "a", node);
 }
+
+TEST_F(BasicParserTest, MethodCallWithBlock)
+{
+    ast::method_call* call;
+    
+    call = (ast::method_call*)parse("call(a, b) do {}")->child_at_index(0);
+    
+    assert_method_call("call", call);
+    assert_entity("a", call->child_at_index(0));
+    assert_entity("b", call->child_at_index(1));
+    assert_block(call->child_at_index(2));
+}
+
+TEST_F(BasicParserTest, MethodCallWithBlockAndBody)
+{
+    ast::method_call* call;
+    
+    call = (ast::method_call*)parse("call() do { a = \"string\" }")->child_at_index(0);
+    
+    assert_method_call("call", call);
+    assert_block(call->child_at_index(0));
+    
+    call->print();
+}
+
+TEST_F(BasicParserTest, MethodCallWithBlockParameters)
+{
+    ast::method_call* call;
+    
+    call = (ast::method_call*)parse("call() do (a) { }")->child_at_index(0);
+    
+    assert_method_call("call", call);
+    assert_block(call->child_at_index(0));
+    
+    call->print();
+}

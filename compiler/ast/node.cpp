@@ -57,7 +57,7 @@ namespace ast
         std::string str;
         std::vector<ast::node*>::iterator i;
         
-        str.append(depth,' ');
+        str.append(depth*2,' ');
         str.append(this->to_string());
         
         for (i=_children->begin(); i < _children->end(); i++)

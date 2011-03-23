@@ -1,5 +1,6 @@
 #include "method_call.h"
 #include "../../parser/parser.h"
+#include "block.h"
 
 namespace ast
 {
@@ -8,9 +9,7 @@ namespace ast
         this->identifier(parser->next_token_value());
         
         // ( arguments )
-        parser->next_token_value("(");
         this->parse_arguments(parser);
-        parser->next_token_value(")");
     }
     
     std::string method_call::node_name(void)
@@ -40,6 +39,8 @@ namespace ast
         chime::token* t;
         ast::node*    node;
         
+        parser->next_token_value("(");
+        
         while (true)
         {
             t = parser->look_ahead();
@@ -56,6 +57,13 @@ namespace ast
             // take care of the commas
             if (parser->look_ahead()->equal_to(","))
                 parser->next_token_value(",");
+        }
+        
+        parser->next_token_value(")");
+        
+        if (parser->look_ahead()->equal_to("do"))
+        {
+            this->add_child(new ast::block(parser));
         }
     }
 }

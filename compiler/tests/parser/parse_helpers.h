@@ -12,3 +12,4 @@ void assert_operator(const char* identifier, ast::basic_operator* op);
 void assert_method_call(const char* identifier, ast::node* node);
 
 void assert_literal(const char* value, ast::node* node);
+void assert_block(ast::node* node);

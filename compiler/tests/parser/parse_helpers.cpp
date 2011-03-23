@@ -79,3 +79,8 @@ void assert_literal(const char* value, ast::node* node)
     ASSERT_EQ("string literal", node->node_name());
     ASSERT_EQ(value, ((ast::string_literal*)node)->value());
 }
+
+void assert_block(ast::node* node)
+{
+    ASSERT_EQ("block", node->node_name());
+}

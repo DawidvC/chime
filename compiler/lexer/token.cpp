@@ -86,30 +86,30 @@ namespace chime
 		
 		return false;
 	}
-	bool token::is_loop(void)
-	{
-		if (value == "while")		return true;
-		if (value == "until")		return true;
-		
-		return false;
-	}
-	bool token::is_control(void)
-	{
-		if (value == "for")			return true;
-		if (value == "switch")		return true;
-		if (value == "case")		return true;
-		if (value == "break")		return true;
-		if (value == "continue")	return true;
-		if (value == "else")		return true;
-		if (value == "return")		return true;
-		if (value == "yield")		return true;
-		if (value == "do")			return true;
-		
-		if (this->is_loop())		return true;
-		if (this->is_conditional())	return true;
-		
-		return false;
-	}
+    bool token::is_loop(void)
+    {
+        if (value == "while") return true;
+        if (value == "until") return true;
+        if (value == "loop")  return true;
+        
+        return false;
+    }
+    bool token::is_control(void)
+    {
+        if (value == "for")         return true;
+        if (value == "switch")      return true;
+        if (value == "case")        return true;
+        if (value == "break")       return true;
+        if (value == "continue")    return true;
+        if (value == "else")        return true;
+        if (value == "return")      return true;
+        if (value == "yield")       return true;
+        
+        if (this->is_loop())        return true;
+        if (this->is_conditional()) return true;
+        
+        return false;
+    }
 	bool token::is_literal(void)
 	{
 		return this->is_string() || this->is_number() || this->is_boolean();
@@ -165,13 +165,10 @@ namespace chime
 		
 		return false;
 	}
-	bool token::is_block_start(void)
-	{
-		if (value == "do")	return true;
-		if (value == "{")	return true;
-		
-		return false;
-	}
+    bool token::is_block_start(void)
+    {
+        return value == "do";
+    }
     bool token::is_ending(void) const
     {
         return (value == ";") || (value == "\n") || (value == "}");
