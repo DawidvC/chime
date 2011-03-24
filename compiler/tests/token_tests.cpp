@@ -128,6 +128,9 @@ TEST_F(TokenTest, IsIdentifier)
     
     token->value = ":";
     ASSERT_TRUE(!token->is_identifier());
+    
+    token->value = "";
+    ASSERT_TRUE(!token->is_identifier());
 }
 
 TEST_F(TokenTest, IsEnding)

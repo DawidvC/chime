@@ -154,6 +154,10 @@ namespace chime
         {
             ast::node* node;
             
+            this->advance_past_ending_tokens();
+            
+            fprintf(stderr, "a token: %d - %d\n", this->look_ahead()->empty(), _lexer->current_line());
+            
             node = parse_with_structural();
             if (node == NULL)
                 break;

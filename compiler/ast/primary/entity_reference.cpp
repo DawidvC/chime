@@ -29,6 +29,8 @@ namespace ast
     }
     void entity_reference::identifier(std::string s)
     {
+        assert(!s.empty());
+        
         _identifier = s;
     }
 }

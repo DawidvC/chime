@@ -1,6 +1,7 @@
 require 'rake/clean'
 
-COMPILER_COMMAND = "c++ -Wall -I/opt/local/include -L/opt/local/lib"
+COMPILER         = "c++"
+COMPILER_COMMAND = "#{COMPILER} -Wall -I/opt/local/include -L/opt/local/lib"
 BUILD_PATH       = "/tmp/chime"
 
 CLEAN.include("#{BUILD_PATH}/*")

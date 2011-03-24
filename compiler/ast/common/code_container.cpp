@@ -64,7 +64,7 @@ namespace ast
             parser->advance_past_ending_tokens();
             
             // we've reached the end of the body
-            if (parser->look_ahead()->equal_to("}"))
+            if (parser->look_ahead()->is_ending())
                 break;
             
             if (with_structural)

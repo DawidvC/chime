@@ -22,4 +22,4 @@ namespace chime
     };
 }
 
-#endif PARSE_ERROR
+#endif
