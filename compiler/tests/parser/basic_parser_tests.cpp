@@ -262,3 +262,18 @@ TEST_F(BasicParserTest, MethodCallWithBlockParameters)
     assert_method_call("call", call);
     assert_block(call->child_at_index(0));
 }
+
+TEST_F(BasicParserTest, MethodWithOperatorsOnType)
+{
+    ast::method_definition* method;
+    ast::binary_operator*   op;
+    
+    method = parse_method_def("method foo() { Bar.baz() }");
+    
+    assert_method_definition("foo", method);
+    
+    op = (ast::binary_operator*)method->child_at_index(0);
+    assert_operator(".", op);
+    assert_type("Bar", op->left_operand());
+    assert_method_call("baz", op->right_operand());
+}

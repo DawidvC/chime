@@ -230,7 +230,7 @@ namespace chime
             node = this->parse_type();
             
             t = this->look_ahead();
-            if (t->empty())
+            if (t->empty() || t->is_ending())
             {
                 return node;
             }
@@ -337,6 +337,7 @@ namespace chime
             if (t->is_ending())
             {
                 this->advance_past_ending_tokens();
+                
                 return left_operand;
             }
             
@@ -373,7 +374,6 @@ namespace chime
         node = new ast::type_reference(this);
         
         t = this->look_ahead();
-        
         // we might have an operator on a type
         if (t->precedence() > 0)
         {

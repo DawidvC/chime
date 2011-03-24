@@ -1,5 +1,6 @@
 #include "code_container.h"
 #include "../../parser/parser.h"
+#include <assert.h>
 
 namespace ast
 {
@@ -15,6 +16,8 @@ namespace ast
     
     void code_container::add_parameter(method_parameter* param)
     {
+        assert(param != NULL);
+        
         _parameters->push_back(param);
     }
     std::vector<method_parameter*>* code_container::parameters(void) const
@@ -55,14 +58,15 @@ namespace ast
         
         parser->advance_past_ending_tokens();
         parser->next_token_value("{");
-        parser->advance_past_ending_tokens();
         
         while (true)
         {
+            parser->advance_past_ending_tokens();
+            
             // we've reached the end of the body
             if (parser->look_ahead()->equal_to("}"))
                 break;
-                
+            
             node = parser->parse_without_structural();
             if (!node)
             {

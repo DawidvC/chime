@@ -35,11 +35,22 @@ TEST_F(MultiLineParserTest, Implemenation)
     assert_implementation("SomeClass", NULL, node);
 }
 
+TEST_F(MultiLineParserTest, ImplementationWithMethod)
+{
+    ast::implementation* node;
+    
+    node = parse_implementation("implementation Foo\n{\nmethod foo(bar)\n{\n}\n}\n");
+    
+    assert_implementation("Foo", NULL, node);
+    ASSERT_EQ(1, node->child_count());
+    assert_method_definition("foo", node->child_at_index(0));
+}
+
 TEST_F(MultiLineParserTest, SimpleMethodDefinition)
 {
     ast::method_definition* method;
     
-    method = (ast::method_definition*)parse("method new()\n{\n}\n")->child_at_index(0);
+    method = parse_method_def("method new()\n{\n}\n");
     
     assert_method_definition("new", method);
 }
