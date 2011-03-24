@@ -1,0 +1,6 @@
+implementation Foo : Bar
+{
+    method something()
+    {
+    }
+}

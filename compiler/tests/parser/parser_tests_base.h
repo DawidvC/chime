@@ -13,9 +13,10 @@ protected:
     
     virtual void TearDown();
     
-    ast::node* parse(const char *input);
+    virtual chime::lexer* lex(const char* input);
+    ast::node*            parse(const char *input);
     
-    ast::implementation* parse_implementation(const char *input);
+    ast::implementation*    parse_implementation(const char *input);
     ast::method_definition* parse_method_def(const char *input);
     
 protected:

@@ -28,52 +28,61 @@ protected:
 
 		while(tokens[i] != NULL)
 		{
-			EXPECT_EQ(tokens[i],lexer->next_token()->value);
+            ASSERT_EQ(tokens[i], next_token_value());
 			i++;
 		}
 	}
+	
+    chime::token* next_token(void)
+    {
+        return lexer->next_token();
+    }
+    std::string next_token_value(void)
+    {
+        return this->next_token()->value();
+    }
 };
 
 #pragma mark token functions
 TEST_F(LexerTest, LookAhead)
 {
-	lex("hello.world()");
-	
-	EXPECT_EQ("hello", lexer->look_ahead(1)->value);
-	EXPECT_EQ("hello", lexer->look_ahead(1)->value);
-	
-	EXPECT_EQ(".", lexer->look_ahead(2)->value);
-	EXPECT_EQ("world", lexer->look_ahead(3)->value);
-	EXPECT_EQ("(", lexer->look_ahead(4)->value);
-	EXPECT_EQ(")", lexer->look_ahead(5)->value);
-	
-	EXPECT_EQ("hello", lexer->next_token()->value);
+    lex("hello.world()");
+    
+    ASSERT_EQ("hello", lexer->look_ahead(1)->value());
+    ASSERT_EQ("hello", lexer->look_ahead(1)->value());
+    
+    ASSERT_EQ(".",     lexer->look_ahead(2)->value());
+    ASSERT_EQ("world", lexer->look_ahead(3)->value());
+    ASSERT_EQ("(",     lexer->look_ahead(4)->value());
+    ASSERT_EQ(")",     lexer->look_ahead(5)->value());
+    
+    ASSERT_EQ("hello", lexer->next_token()->value());
 }
 TEST_F(LexerTest, LookAheadWithBlankInput)
 {
     lex("");
     
-    EXPECT_TRUE(lexer->look_ahead(1)->empty());
-    EXPECT_TRUE(lexer->look_ahead(1)->is_punctuation());
+    ASSERT_TRUE(lexer->look_ahead(1)->empty());
+    ASSERT_TRUE(lexer->look_ahead(1)->is_punctuation());
 }
 TEST_F(LexerTest, LookAheadAndNext)
 {
-	lex("foo.bar()");
-	
-	EXPECT_EQ("foo", lexer->look_ahead(1)->value);
-	EXPECT_EQ("foo", lexer->next_token()->value);
-	
-	EXPECT_EQ(".", lexer->look_ahead(1)->value);
-	EXPECT_EQ(".", lexer->next_token()->value);
+    lex("foo.bar()");
+    
+    ASSERT_EQ("foo", lexer->look_ahead(1)->value());
+    ASSERT_EQ("foo", lexer->next_token()->value());
+    
+    ASSERT_EQ(".",   lexer->look_ahead(1)->value());
+    ASSERT_EQ(".",   lexer->next_token()->value());
 }
 TEST_F(LexerTest, LookAheadTwoAndNext)
 {
-	lex("foo.bar()");
-	
-	EXPECT_EQ("foo", lexer->look_ahead(1)->value);
-	EXPECT_EQ(".", lexer->look_ahead(2)->value);
-	EXPECT_EQ("foo", lexer->next_token()->value);
-	EXPECT_EQ(".", lexer->look_ahead(1)->value);
+    lex("foo.bar()");
+    
+    ASSERT_EQ("foo", lexer->look_ahead(1)->value());
+    ASSERT_EQ(".",   lexer->look_ahead(2)->value());
+    ASSERT_EQ("foo", lexer->next_token()->value());
+    ASSERT_EQ(".",   lexer->look_ahead(1)->value());
 }
 
 TEST_F(LexerTest, LookAheadPastInput)
@@ -217,22 +226,22 @@ TEST_F(LexerTest, LineAccounting)
     
     ASSERT_EQ(1, lexer->current_line());
     
-    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ("\n",lexer->next_token()->value());
     ASSERT_EQ(2,   lexer->current_line());
     
-    ASSERT_EQ("a",lexer->next_token()->value);
+    ASSERT_EQ("a",lexer->next_token()->value());
     ASSERT_EQ(2,   lexer->current_line());
     
-    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ("\n",lexer->next_token()->value());
     ASSERT_EQ(3,   lexer->current_line());
     
-    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ("\n",lexer->next_token()->value());
     ASSERT_EQ(4,   lexer->current_line());
     
-    ASSERT_EQ("\n",lexer->next_token()->value);
+    ASSERT_EQ("\n",lexer->next_token()->value());
     ASSERT_EQ(5,   lexer->current_line());
     
-    ASSERT_EQ("5",lexer->next_token()->value);
+    ASSERT_EQ("5",lexer->next_token()->value());
     ASSERT_EQ(5,   lexer->current_line());
 }
 

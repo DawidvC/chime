@@ -8,10 +8,15 @@ namespace chime
     class token
     {
     public:
-        std::string value;
-        
         token();
         virtual ~token();
+        
+        void clear_value(void);
+        void set_value(const char c);
+        void set_value(const char* s);
+        void append(const char c);
+        std::string value(void) const;
+        const char* c_str(void) const;
         
         virtual bool equal_to(const char*);
         
@@ -37,6 +42,9 @@ namespace chime
         
         virtual long integer_value(void);
         virtual std::string string_value(void);
+    
+    protected:
+        std::string _value;
     };
 }
 

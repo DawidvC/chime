@@ -19,134 +19,137 @@ protected:
 TEST_F(TokenTest, Constructor)
 {
     EXPECT_FALSE(token == NULL);
-    EXPECT_EQ("", token->value);
+    EXPECT_EQ("", token->value());
 }
 
 TEST_F(TokenTest, Empty)
 {
-    EXPECT_TRUE(token->empty());
+    ASSERT_TRUE(token->empty());
+    
+    token->clear_value();
+    ASSERT_TRUE(token->empty());
+    
+    token->append((char)0);
+    ASSERT_TRUE(token->empty());
 }
 
 TEST_F(TokenTest, IsEqual)
 {
-    token->value = "abc123";
+    token->set_value("abc123");
     ASSERT_TRUE(token->equal_to("abc123"));
     ASSERT_FALSE(token->equal_to("123abc"));
 }
 
 TEST_F(TokenTest, IsString)
 {
-    token->value = "\"string\"";
+    token->set_value("\"string\"");
     EXPECT_TRUE(token->is_string());
 }
 
 TEST_F(TokenTest, IsNumber)
 {
-    token->value = "0";
+    token->set_value("0");
     EXPECT_TRUE(token->is_number());
-    token->value = "1";
+    token->set_value("1");
     EXPECT_TRUE(token->is_number());
-    token->value = "2";
+    token->set_value("2");
     EXPECT_TRUE(token->is_number());
-    token->value = "3";
+    token->set_value("3");
     EXPECT_TRUE(token->is_number());
     
-    token->value = "10";
+    token->set_value("10");
     EXPECT_TRUE(token->is_number());
 }
 
 TEST_F(TokenTest, IsModifier)
 {
-    token->value = "private";
+    token->set_value("private");
     EXPECT_TRUE(token->is_modifier());
     
-    token->value = "protected";
+    token->set_value("protected");
     EXPECT_TRUE(token->is_modifier());
     
-    token->value = "abstract";
+    token->set_value("abstract");
     EXPECT_TRUE(token->is_modifier());
     
-    token->value = "internal";
+    token->set_value("internal");
     EXPECT_TRUE(token->is_modifier());
 }
 
 TEST_F(TokenTest, IsStructural)
 {
-    token->value = "method";
+    token->set_value("method");
     ASSERT_TRUE(token->is_structural());
     
-    token->value = "class";
+    token->set_value("class");
     ASSERT_TRUE(token->is_structural());
     
-    token->value = "namespace";
+    token->set_value("import");
     ASSERT_TRUE(token->is_structural());
     
-    token->value = "import";
+    token->set_value("interface");
     ASSERT_TRUE(token->is_structural());
     
-    token->value = "interface";
-    ASSERT_TRUE(token->is_structural());
-    
-    token->value = "implementation";
+    token->set_value("implementation");
     ASSERT_TRUE(token->is_structural());
 }
 
 TEST_F(TokenTest, IsType)
 {
-    token->value = "Abc";
+    token->set_value("Abc");
     ASSERT_TRUE(token->is_type());
     
-    token->value = "ABCdef";
+    token->set_value("ABCdef");
     ASSERT_TRUE(token->is_type());
     
-    token->value = "abc";
+    token->set_value("abc");
     ASSERT_TRUE(!token->is_type());
     
-    token->value = "aBC";
+    token->set_value("aBC");
     ASSERT_TRUE(!token->is_type());
     
-    token->value = ".";
+    token->set_value(".");
     ASSERT_TRUE(!token->is_type());
     
-    token->value = "\n";
+    token->set_value("\n");
     ASSERT_TRUE(!token->is_type());
     
-    token->value = "(";
+    token->set_value("(");
     ASSERT_TRUE(!token->is_type());
     
-    token->value = "";
+    token->set_value("");
     ASSERT_TRUE(!token->is_type());
 }
 
 TEST_F(TokenTest, IsIdentifier)
 {
-    token->value = "abc";
+    token->set_value("abc");
     ASSERT_TRUE(token->is_identifier());
     
-    token->value = "Abc";
+    token->set_value("Abc");
     ASSERT_TRUE(!token->is_identifier());
     
-    token->value = ":";
+    token->set_value(":");
     ASSERT_TRUE(!token->is_identifier());
     
-    token->value = "";
+    token->set_value("");
     ASSERT_TRUE(!token->is_identifier());
 }
 
 TEST_F(TokenTest, IsEnding)
 {
-    token->value = ";";
+    token->set_value(";");
     ASSERT_TRUE(token->is_ending());
     
-    token->value = "\n";
+    token->set_value("\n");
     ASSERT_TRUE(token->is_ending());
     
-    token->value = "}";
+    token->set_value("}");
     ASSERT_TRUE(token->is_ending());
 }
 
 TEST_F(TokenTest, IsControl)
 {
-    token->value = "next";
+    token->set_value("next");
     ASSERT_TRUE(token->is_control());
 }

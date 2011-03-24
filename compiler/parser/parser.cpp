@@ -40,7 +40,7 @@ namespace chime
         {
             chime::parse_error* e;
             
-            e = new chime::parse_error("Expected '%s' but got '%s'", expected, t->value.c_str());
+            e = new chime::parse_error("Expected '%s' but got '%s'", expected, t->c_str());
             
             this->errors()->push_back(e);
             
@@ -73,7 +73,7 @@ namespace chime
         if (!t)
             return std::string();
         
-        std::string v = t->value;
+        std::string v = t->value();
         
         delete t;
         
@@ -89,14 +89,14 @@ namespace chime
             if (!t->is_ending())
                 break;
                 
-            if (t->empty() || t->value == "}")
+            if (t->empty() || t->equal_to("}"))
                 break;
             
-            if (t->value == "\n")
+            if (t->equal_to("\n"))
             {
                 this->next_token_value("\n");
             }
-            else if (t->value == ";")
+            else if (t->equal_to(";"))
             {
                 this->next_token_value(";");
             }
@@ -155,8 +155,6 @@ namespace chime
             ast::node* node;
             
             this->advance_past_ending_tokens();
-            
-            fprintf(stderr, "a token: %d - %d\n", this->look_ahead()->empty(), _lexer->current_line());
             
             node = parse_with_structural();
             if (node == NULL)
@@ -250,7 +248,7 @@ namespace chime
             {
                 chime::parse_error* e;
                 
-                e = new chime::parse_error("parse_without_structural: found something unexpected '%s'", t->value.c_str());
+                e = new chime::parse_error("parse_without_structural: found something unexpected '%s'", t->c_str());
                 
                 this->add_error(e);
                 return NULL;
@@ -315,7 +313,7 @@ namespace chime
         {
             chime::parse_error* e;
             
-            e = new chime::parse_error("expression: found something weird '%s'", t->value.c_str());
+            e = new chime::parse_error("expression: found something weird '%s'", t->c_str());
             
             this->add_error(e);
             
@@ -409,7 +407,7 @@ namespace chime
         {
             chime::parse_error* e;
             
-            e = new chime::parse_error("parse_literal: found something weird '%s'", t->value.c_str());
+            e = new chime::parse_error("parse_literal: found something weird '%s'", t->c_str());
             
             this->add_error(e);
             return NULL;

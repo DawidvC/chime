@@ -35,7 +35,7 @@ namespace chime
         if (t == NULL)
             t = new eof_token();
         
-        if (t->value == "\n")
+        if (t->equal_to("\n"))
             _current_line++;
         
         return t;
@@ -91,7 +91,7 @@ namespace chime
 				c = _peeked_char;
 				_peeked_char = 0;
 				
-				t->value += '.';
+                t->append('.');
 				
 				return t;
 			}
@@ -101,7 +101,7 @@ namespace chime
 			// handle strings
 			if (t->is_string())
 			{
-				t->value += next_char();
+                t->append(this->next_char());
 				if (c == '"')
 					return t;
 				
@@ -131,8 +131,8 @@ namespace chime
 					else
 					{
 						if (t->empty())
-							t->value = next_char();
-						
+                            t->set_value(this->next_char());
+                        
 						return t;
 					}
 					break;
@@ -140,7 +140,7 @@ namespace chime
 					// if we have nothing so far, then we have a dot
 					if (t->empty())
 					{
-                        t->value = next_char();
+                        t->set_value(this->next_char());
                         
                         return t;
 					}
@@ -171,8 +171,8 @@ namespace chime
 						else
 						{
 							_peeked_char = 0;
-							t->value += '.';
-							t->value += this->next_char();
+                            t->append('.');
+                            t->append(this->next_char());
 						}
 					}
 						
@@ -189,8 +189,8 @@ namespace chime
 				case '*':
 				case '|':
 					if (t->empty())
-						t->value = this->next_char();
-						
+                        t->set_value(this->next_char());
+                    
 					return t;
 					break;
 				case '<':
@@ -198,9 +198,9 @@ namespace chime
 				case '=':
 					if (t->empty())
 					{
-						t->value = this->next_char();
+                        t->set_value(this->next_char());
 						if (!this->is_finished() && (this->peek() == '='))
-							t->value += this->next_char();
+                            t->append(this->next_char());
 					}
 					
 					return t;
@@ -219,7 +219,7 @@ namespace chime
                     }
                     else
 					{
-						t->value = '/';
+                        t->set_value('/');
 						return t;
 					}
 					break;
@@ -230,11 +230,11 @@ namespace chime
 					}
 					else
 					{
-						t->value = this->next_char();
+                        t->set_value(this->next_char());
 					}
 					break;
 				default:
-					t->value += this->next_char();
+                    t->append(this->next_char());
 					break;
 			}
 		}

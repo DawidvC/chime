@@ -10,13 +10,18 @@ void ParserTestsBase::TearDown()
     if (_last_node)
         delete _last_node;
 }
-    
-ast::node* ParserTestsBase::parse(const char *input)
+
+chime::lexer* ParserTestsBase::lex(const char* input)
 {
-    chime::stringlexer* lexer;
-    chime::parser*      parser;
+    return new chime::stringlexer(input);
+}
+
+ast::node* ParserTestsBase::parse(const char* input)
+{
+    chime::lexer*  lexer;
+    chime::parser* parser;
     
-    lexer  = new chime::stringlexer(input);
+    lexer  = this->lex(input);
     parser = new chime::parser(lexer);
     
     _last_node = parser->parse();
@@ -28,7 +33,7 @@ ast::node* ParserTestsBase::parse(const char *input)
     
     return _last_node;
 }
-    
+
 ast::implementation* ParserTestsBase::parse_implementation(const char *input)
 {
     return (ast::implementation*)this->parse(input)->child_at_index(0);
