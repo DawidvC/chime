@@ -52,7 +52,7 @@ namespace ast
         parser->next_token_value(")");
     }
     
-    void code_container::parse_body(chime::parser* parser)
+    void code_container::parse_body(chime::parser* parser, bool with_structural)
     {
         ast::node* node;
         
@@ -67,7 +67,15 @@ namespace ast
             if (parser->look_ahead()->equal_to("}"))
                 break;
             
-            node = parser->parse_without_structural();
+            if (with_structural)
+            {
+                node = parser->parse_with_structural();
+            }
+            else
+            {
+                node = parser->parse_without_structural();
+            }
+            
             if (!node)
             {
                 chime::parse_error* e;

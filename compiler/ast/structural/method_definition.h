@@ -2,7 +2,6 @@
 #define METHOD_DEFINITON
 
 #include <string>
-#include "../node.h"
 #include "../common/code_container.h"
 
 namespace ast

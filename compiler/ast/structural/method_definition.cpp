@@ -10,7 +10,7 @@ namespace ast
         this->identifier(parser->next_token_value());
         
         this->parse_parameters(parser);
-        this->parse_body(parser);
+        this->parse_body(parser, false);
     }
     
     std::string method_definition::node_name(void)

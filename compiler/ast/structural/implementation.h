@@ -1,13 +1,13 @@
-#include <string>
-#include "../node.h"
-#include "../primary/type_reference.h"
-
 #ifndef IMPLEMENTATION_NODE
 #define IMPLEMENTATION_NODE
 
+#include <string>
+#include "../common/code_container.h"
+#include "../primary/type_reference.h"
+
 namespace ast
 {
-    class implementation : public node
+    class implementation : public code_container
     {
     public:
         implementation(chime::parser* parser);
@@ -24,8 +24,6 @@ namespace ast
     protected:
         ast::type_reference* _type_ref;
         ast::type_reference* _super_class;
-        
-        void parse_body(chime::parser* parser);
     };
 }
 

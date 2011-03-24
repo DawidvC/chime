@@ -42,7 +42,7 @@ TEST_F(MultiLineParserTest, ImplementationWithMethod)
     node = parse_implementation("implementation Foo\n{\nmethod foo(bar)\n{\n}\n}\n");
     
     assert_implementation("Foo", NULL, node);
-    ASSERT_EQ(1, node->child_count());
+    ASSERT_EQ(1, (int)node->child_count());
     assert_method_definition("foo", node->child_at_index(0));
 }
 

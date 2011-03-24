@@ -21,7 +21,7 @@ namespace ast
         std::vector<method_parameter*>* _parameters;
         
         void parse_parameters(chime::parser* parser);
-        void parse_body(chime::parser* parser);
+        void parse_body(chime::parser* parser, bool with_structural);
     };
 }
 

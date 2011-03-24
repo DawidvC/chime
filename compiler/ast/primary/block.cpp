@@ -13,7 +13,7 @@ namespace ast
             this->parse_parameters(parser);
         }
         
-        this->parse_body(parser);
+        this->parse_body(parser, false);
     }
     
     std::string block::node_name(void)
