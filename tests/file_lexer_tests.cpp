@@ -20,7 +20,7 @@ protected:
     {
         std::string s;
         
-        s += "/Users/matt/Documents/programming/chime/compiler/tests/files/";
+        s += "/tmp/chime/tests/fixtures/";
         s += input;
         
         _lexer = new chime::filelexer(s.c_str());

@@ -57,14 +57,14 @@ namespace ast
         std::string str;
         std::vector<ast::node*>::iterator i;
         
-        str.append(depth*2,' ');
+        str.append(depth*2, ' ');
         str.append(this->to_string());
         
         for (i=_children->begin(); i < _children->end(); i++)
         {
             str.append("\n");
             
-            if ((*i) == NULL )
+            if ((*i) == NULL)
             {
                 str.append(depth+1, ' ');
                 str.append("(null)\n");
@@ -80,5 +80,12 @@ namespace ast
     void node::print(void)
     {
         fprintf(stderr, "%s\n", this->string_representation().c_str());
+    }
+    
+    llvm::Value* node::codegen(void)
+    {
+        assert(false);
+        
+        return NULL;
     }
 }

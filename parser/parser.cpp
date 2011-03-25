@@ -1,10 +1,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-
 #include "parser.h"
-
-#define LOG(x) do { printf(x); fflush(stdout); } while (0);
 
 namespace chime
 {
@@ -32,7 +29,12 @@ namespace chime
         
         if (t == NULL)
         {
-            LOG("[Parser] Reached the end of the file unexpectedly\n")
+            chime::parse_error* e;
+            
+            e = new chime::parse_error("Reached the end of the file unexpectedly");
+            
+            this->add_error(e);
+            
             return NULL;
         }
         
@@ -42,7 +44,7 @@ namespace chime
             
             e = new chime::parse_error("Expected '%s' but got '%s'", expected, t->c_str());
             
-            this->errors()->push_back(e);
+            this->add_error(e);
             
             return NULL;
         }

@@ -8,7 +8,7 @@ class FileParserTests : public ParserTestsBase
         chime::lexer* lexer;
         std::string   s;
         
-        s += "/Users/matt/Documents/programming/chime/compiler/tests/files/";
+        s += "/tmp/chime/tests/fixtures/";
         s += input;
         
         lexer = new chime::filelexer(s.c_str());
