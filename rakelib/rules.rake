@@ -25,9 +25,7 @@ def dependencies_for_filelist(list)
     
     file object_file => dependencies do
       log("Compile", source_file.ext('o'))
-      verbose(false) do
-        sh("#{CXX} -c #{source_file} -o #{object_file}")
-      end
+      sh("#{CXX} -c #{source_file} -o #{object_file}")
     end
     
     object_files.add(object_file)

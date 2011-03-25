@@ -1,7 +1,6 @@
 # Rakefile: configuration
 
 # LLVM stuff
-LLVM_PATH      = "/Users/matt/Documents/programming/build/Release+Asserts"
 LLVM_CONFIG    = "#{LLVM_PATH}/bin/llvm-config"
 
 output         = `#{LLVM_CONFIG} --cppflags --ldflags --libs core`.split("\n")

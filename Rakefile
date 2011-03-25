@@ -2,6 +2,7 @@
 require 'rake/clean'
 
 BUILD_PATH = "/tmp/chime"
+LLVM_PATH  = "/Users/matt/Documents/programming/build/Release+Asserts"
 
 # basic tasks
 directory BUILD_PATH
