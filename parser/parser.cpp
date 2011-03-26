@@ -399,7 +399,7 @@ namespace chime
         }
         else if (t->is_integer())
         {
-            assert(false);
+            node = new ast::integer_literal(this);
         }
         else if (t->is_string())
         {

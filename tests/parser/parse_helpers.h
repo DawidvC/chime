@@ -11,6 +11,7 @@ void assert_method_parameter(const char* type, const char* label, const char* id
 void assert_operator(const char* identifier, ast::basic_operator* op);
 void assert_method_call(const char* identifier, ast::node* node);
 void assert_literal(const char* value, ast::node* node);
+void assert_literal(int value, ast::node* node);
 void assert_block(ast::node* node);
 void assert_next(ast::node* node);
 void assert_if_statement(ast::node* node);
