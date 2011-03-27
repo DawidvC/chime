@@ -9,9 +9,10 @@ LLVM_LD_FLAGS  = output[1]
 LLVM_LIBRARIES = output[2]
 
 # Base stuff
-CXX_FLAGS      = "-Wall -I/opt/local/include"
+COMPILER_FLAGS = "-Wall -I/opt/local/include -I#{Rake.original_dir}"
 LINKER_FLAGS   = "-L/opt/local/lib"
 
 # core compiler/linker stuff
-CXX            = "#{LLVM_PATH}/bin/clang++ #{CXX_FLAGS} #{LLVM_CXX_FLAGS}"
+CC             = "#{LLVM_PATH}/bin/clang #{COMPILER_FLAGS}"
+CXX            = "#{LLVM_PATH}/bin/clang++ #{COMPILER_FLAGS} #{LLVM_CXX_FLAGS}"
 LINKER         = "#{LLVM_PATH}/bin/clang++ #{LINKER_FLAGS} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES}"

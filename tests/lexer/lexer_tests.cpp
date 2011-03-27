@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../lexer/string_lexer.h"
+#include "lexer/string_lexer.h"
 
 class LexerTest : public testing::Test
 {

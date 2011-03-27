@@ -10,23 +10,7 @@ directory BUILD_PATH
 CLEAN.include("#{BUILD_PATH}/*")
 
 # target tasks
-task :default => :all
-
-task :all => [:frontend, :test]
-
-desc 'Build the chime library'
-task :library => ["#{BUILD_PATH}/libchime.a"]
-
-desc 'Run the test binary'
-task :test, [:filter] => ["#{BUILD_PATH}/chime_test"] do |task, arguments|
-  filter = nil
-  if arguments[:filter]
-    filter = "--gtest_filter=#{arguments[:filter]}"
-  end
-  
-  log("Execute", "#{BUILD_PATH}/chime_test #{filter}")
-  sh "#{BUILD_PATH}/chime_test #{filter}"
-end
+task :default => ['compiler:all', 'runtime:all']
 
 desc "Print out the build configuration variables"
 task :print_config do
@@ -36,13 +20,45 @@ task :print_config do
   puts("LLVM_LD_FLAGS:  '#{LLVM_LD_FLAGS}'")
   puts("LLVM_LIBRARIES: '#{LLVM_LIBRARIES}'")
   puts("")
-  puts("CXX_FLAGS:      '#{CXX_FLAGS}'")
+  puts("COMPILER_FLAGS: '#{COMPILER_FLAGS}'")
   puts("LINKER_FLAGS:   '#{LINKER_FLAGS}'")
+  puts("CC:             '#{CC}'")
   puts("CXX:            '#{CXX}'")
   puts("LINKER:         '#{LINKER}'")
   puts("")
   puts("BUILD_PATH:     '#{BUILD_PATH}'")
 end
 
-desc 'Build the main frontend binary, chime'
-task :frontend => ["#{BUILD_PATH}/chime"]
+namespace :compiler do
+  desc 'Build the main frontend binary, chime'
+  task :frontend => ["#{BUILD_PATH}/chime"]
+  
+  desc 'Build the chime library'
+  task :library => ["#{BUILD_PATH}/libchime.a"]
+  
+  desc 'Run the compiler tests'
+  task :test, [:filter] => ["#{BUILD_PATH}/chime_test"] do |task, arguments|
+    filter = nil
+    if arguments[:filter]
+      filter = "--gtest_filter=#{arguments[:filter]}"
+    end
+
+    log("Execute", "#{BUILD_PATH}/chime_test #{filter}")
+    sh "#{BUILD_PATH}/chime_test #{filter}"
+  end
+  
+  task :all => [:frontend, :test]
+end
+
+namespace :runtime do
+  desc "Build the runtime library"
+  task :build => ["#{BUILD_PATH}/libchimeruntime.a"]
+  
+  desc "Run the runtime tests"
+  task :test => ["#{BUILD_PATH}/runtime_test"] do
+    log("Execute", "#{BUILD_PATH}/runtime_test")
+    sh "#{BUILD_PATH}/runtime_test"
+  end
+  
+  task :all => [:test]
+end

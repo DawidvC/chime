@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../lexer/token.h"
+#include "lexer/token.h"
 
 class TokenTest : public testing::Test
 {

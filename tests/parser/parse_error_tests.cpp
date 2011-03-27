@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../parser/parse_error.h"
+#include "parser/parse_error.h"
 
 class ParseErrorTest : public testing::Test
 {

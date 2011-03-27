@@ -1,9 +1,11 @@
 # Rakefile: rules
 
 # make filelists for all of our sources
-LIBRARY_SOURCES  = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp']
-TEST_SOURCES     = FileList['tests/**/*.cpp']
+LIBRARY_SOURCES  = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp', 'operations/**/*.cpp']
+TEST_SOURCES     = FileList['tests/lexer/**/*.cpp', 'tests/parser/**/*.cpp']
 FRONTEND_SOURCES = FileList['frontend/**/*.cpp']
+RUNTIME_SOURCES  = FileList['runtime/**/*.c']
+RUNTIME_TEST_SOURCES = FileList['tests/runtime/**/*.cpp']
 
 def dependencies_for_filelist(list)
   object_files = FileList.new()
@@ -25,7 +27,15 @@ def dependencies_for_filelist(list)
     
     file object_file => dependencies do
       log("Compile", source_file.ext('o'))
-      sh("#{CXX} -c #{source_file} -o #{object_file}")
+      
+      compiler = case File.extname(source_file)
+      when ".cpp"
+        CXX
+      when ".c"
+        CC
+      end
+      
+      sh("#{compiler} -c #{source_file} -o #{object_file}")
     end
     
     object_files.add(object_file)
@@ -35,8 +45,11 @@ def dependencies_for_filelist(list)
 end
 
 # create dependenices on the sources for each object file
-LIBRARY_OBJECTS  = dependencies_for_filelist(LIBRARY_SOURCES)
-TEST_OBJECTS     = dependencies_for_filelist(TEST_SOURCES)
-FRONTEND_OBJECTS = dependencies_for_filelist(FRONTEND_SOURCES)
+LIBRARY_OBJECTS      = dependencies_for_filelist(LIBRARY_SOURCES)
+TEST_OBJECTS         = dependencies_for_filelist(TEST_SOURCES)
+FRONTEND_OBJECTS     = dependencies_for_filelist(FRONTEND_SOURCES)
+RUNTIME_OBJECTS      = dependencies_for_filelist(RUNTIME_SOURCES)
+RUNTIME_TEST_OBJECTS = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
 
-# make manual dependencies
+# manual rules
+file "#{BUILD_PATH}/runtime/chime_object.o" => ['runtime/collections/chime_dictionary.h']
