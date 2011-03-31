@@ -25,6 +25,10 @@ void chime_runtime_initialize(void)
     assert(object_class);
     
     assert(chime_runtime_create_class("Method", object_class));
+    
+    assert(chime_runtime_create_class("Null", object_class));
+    
+    assert(chime_runtime_create_class("Integer", object_class));
 }
 
 void chime_runtime_destroy(void)

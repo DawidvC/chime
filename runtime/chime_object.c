@@ -5,6 +5,7 @@
 #include "chime_runtime.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <assert.h>
 
 chime_object_t* chime_object_create(chime_object_t* object_class)
@@ -56,6 +57,22 @@ void chime_object_destroy(chime_object_t* object)
     free(object);
 }
 
+chime_object_t* chime_object_get_class(chime_object_t* object)
+{
+    if (object == 0)
+    {
+        // null class
+        return chime_runtime_get_class("Null");
+    }
+    else if (chime_object_is_literal(object))
+    {
+        if (chime_object_is_integer(object))
+            return chime_runtime_get_class("Integer");
+    }
+    
+    return object->self_class;
+}
+
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name)
 {
     if (!instance->properties)
@@ -81,12 +98,17 @@ chime_function_t chime_object_get_function(chime_object_t* instance)
     return (chime_function_t)instance->properties;
 }
 
-void chime_object_set_function(chime_object_t* instance, const char* name, chime_function_t function)
+void chime_object_set_function(chime_object_t* instance, const char* name, chime_function_t function, unsigned long arity)
 {
     chime_object_t* method_object;
     
+    assert(instance);
+    assert(name);
+    assert(arity <= 8);
+    
     method_object = chime_object_create_with_name("Method");
     method_object->properties = (void*)function;
+    method_object->flags = arity;
     
     chime_object_set_property(instance, name, method_object);
 }
@@ -95,9 +117,28 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
 {
     chime_object_t*  method_object;
     chime_function_t function;
+    chime_object_t*  result_object;
+    va_list          arguments;
     
     method_object = chime_object_get_property(instance, name);
     function      = chime_object_get_function(method_object);
     
-    return function(instance, name);
+    va_start(arguments, name);
+    
+    switch (method_object->flags)
+    {
+        case 0:
+            result_object = function(instance, name);
+            break;
+        case 1:
+            result_object = function(instance, name, va_arg(arguments, chime_object_t*));
+            break;
+        case 2:
+            result_object = function(instance, name, va_arg(arguments, chime_object_t*), va_arg(arguments, chime_object_t*));
+            break;
+    }
+    
+    va_end(arguments);
+    
+    return result_object;
 }
