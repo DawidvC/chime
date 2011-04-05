@@ -7,14 +7,12 @@
 #include <vector>
 
 #include "llvm/DerivedTypes.h"
-// #include "llvm/LLVMContext.h"
-// #include "llvm/Module.h"
-// #include "llvm/Analysis/Verifier.h"
-// #include "llvm/Support/IRBuilder.h"
 
 namespace chime
 {
     class parser;
+    
+    class code_generator;
 }
 
 namespace ast
@@ -35,7 +33,7 @@ namespace ast
         virtual std::string      string_representation(int depth=0);
         void                     print(void);
         
-        virtual llvm::Value*     codegen(void);
+        virtual llvm::Value*     codegen(chime::code_generator& generator);
         
     protected:
         std::vector<ast::node*>* _children;

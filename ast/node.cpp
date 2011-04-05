@@ -82,9 +82,9 @@ namespace ast
         fprintf(stderr, "%s\n", this->string_representation().c_str());
     }
     
-    llvm::Value* node::codegen(void)
+    llvm::Value* node::codegen(chime::code_generator& generator)
     {
-        assert(false);
+        //assert(false);
         
         return NULL;
     }
