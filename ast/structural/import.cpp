@@ -10,7 +10,7 @@ namespace ast
         // parse the import statement
         parser->next_token_value("import");
         
-        this->importand(parser->parse_expression());
+        this->importand(parser->parse_type());
         parser->advance_past_ending_tokens();
     }
     

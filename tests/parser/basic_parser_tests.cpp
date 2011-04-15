@@ -6,17 +6,12 @@ class BasicParserTest : public ParserTestsBase
 
 TEST_F(BasicParserTest, ImportIdentifier)
 {
-    ast::node*            node;
-    ast::binary_operator* op;
+    ast::node* node;
     
     node = parse("import Yo.Dog")->child_at_index(0);
-    op   = (ast::binary_operator*)node->child_at_index(0);
     
     assert_import(node);
-    
-    assert_operator(".", op);
-    assert_type("Yo", op->left_operand());
-    assert_type("Dog", op->right_operand());
+    assert_type("Yo.Dog", ((ast::import*)node)->importand());
 }
 
 TEST_F(BasicParserTest, MultipleImports)
@@ -133,7 +128,7 @@ TEST_F(BasicParserTest, AssignmentExpression)
     assert_entity("b", op->right_operand());
 }
 
-TEST_F(BasicParserTest, AssignmentFromMethodCall)
+TEST_F(BasicParserTest, AssignmentFromTypeMethodCall)
 {
     ast::binary_operator* op;
     
@@ -145,12 +140,7 @@ TEST_F(BasicParserTest, AssignmentFromMethodCall)
     op = (ast::binary_operator*)op->right_operand();
     
     assert_operator(".", op);
-    assert_type("Foo", op->left_operand());
-    
-    op = (ast::binary_operator*)op->right_operand();
-    
-    assert_operator(".", op);
-    assert_type("Bar", op->left_operand());
+    assert_type("Foo.Bar", op->left_operand());
     assert_method_call("baz", op->right_operand());
 }
 
@@ -207,6 +197,19 @@ TEST_F(BasicParserTest, TypeMethodCall)
     
     assert_operator(".", op);
     assert_type("Type", op->left_operand());
+    assert_method_call("call", op->right_operand());
+}
+
+TEST_F(BasicParserTest, NamespacedTypeMethodCall)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("Some.Type.call()");
+    op   = (ast::binary_operator*)node->child_at_index(0);
+    
+    assert_operator(".", op);
+    assert_type("Some.Type", op->left_operand());
     assert_method_call("call", op->right_operand());
 }
 

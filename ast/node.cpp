@@ -38,6 +38,11 @@ namespace ast
         return (*_children)[i];
     }
     
+    void node::replace_child_at_index(unsigned int i, ast::node* new_child)
+    {
+        (*_children)[i] = new_child;
+    }
+    
     unsigned int node::child_count() const
     {
         return (int)_children->size();

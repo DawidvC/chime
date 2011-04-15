@@ -4,10 +4,19 @@
 
 namespace ast
 {
+    entity_reference::entity_reference()
+    {
+        _identifier = "";
+    }
+    
     entity_reference::entity_reference(chime::parser* parser)
     {
         assert(parser->look_ahead()->is_identifier());
         this->identifier(parser->next_token_value());
+    }
+    
+    entity_reference::~entity_reference()
+    {
     }
     
     std::string entity_reference::node_name(void)

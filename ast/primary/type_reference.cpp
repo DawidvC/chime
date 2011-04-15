@@ -1,14 +1,27 @@
 #include "type_reference.h"
 #include "../../parser/parser.h"
 #include <assert.h>
+#include "operations/code_generator.h"
 
 namespace ast
 {
     type_reference::type_reference(chime::parser* parser)
     {
+        std::string str;
+        
         assert(parser->look_ahead()->is_type());
         
-        this->identifier(parser->next_token_value());
+        str += parser->next_token_value();
+        
+        while (parser->look_ahead()->equal_to(".") && parser->look_ahead(2)->is_type())
+        {
+            parser->next_token_value(".");
+            
+            str += ".";
+            str +=parser->next_token_value();
+        }
+        
+        this->identifier(str);
         
         if (this->identifier() == "Function")
         {
@@ -44,5 +57,11 @@ namespace ast
     void type_reference::parse_parameters(chime::parser* parser)
     {
         
+    }
+    
+    llvm::Value* type_reference::codegen(chime::code_generator& generator)
+    {
+        return NULL;
+        // return generator->call_chime_runtime_get_class(this->identifier());
     }
 }

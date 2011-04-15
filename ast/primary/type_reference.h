@@ -1,12 +1,12 @@
 #include <string>
-#include "../node.h"
+#include "ast/primary/entity_reference.h"
 
 #ifndef TYPE_REFERENCE
 #define TYPE_REFERENCE
 
 namespace ast
 {
-    class type_reference : public node
+    class type_reference : public entity_reference
     {
     public:
         type_reference(chime::parser* parser);
@@ -14,8 +14,10 @@ namespace ast
         virtual std::string node_name(void);
         virtual std::string to_string(void);
         
-        std::string identifier() const;
-        void identifier(std::string s);
+        virtual std::string identifier() const;
+        virtual void identifier(std::string s);
+        
+        llvm::Value* codegen(chime::code_generator& generator);
         
     protected:
         std::string _identifier;
