@@ -6,11 +6,6 @@ void assert_import(ast::node* node)
     ASSERT_EQ("import", node->node_name());
 }
 
-void assert_operator(const char* identifier, ast::node* op)
-{
-    ASSERT_EQ(identifier, ((ast::basic_operator*)op)->identifier());
-}
-
 void assert_entity(const char* identifier, ast::node* node)
 {
     ASSERT_EQ("entity reference", node->node_name());
@@ -63,9 +58,10 @@ void assert_method_parameter(const char* type, const char* label, const char* id
     }
 }
 
-void assert_operator(const char* identifier, ast::basic_operator* op)
+void assert_operator(const char* identifier, ast::node* node)
 {
-    ASSERT_EQ(identifier, op->identifier());
+    ASSERT_EQ("binary operator", node->node_name());
+    ASSERT_EQ(identifier, ((ast::binary_operator*)node)->identifier());
 }
 
 void assert_method_call(const char* identifier, ast::node* node)

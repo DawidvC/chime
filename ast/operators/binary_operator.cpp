@@ -1,5 +1,7 @@
 #include "binary_operator.h"
 #include <assert.h>
+#include "operations/code_generator.h"
+#include "ast/primary/method_call.h"
 
 namespace ast
 {
@@ -27,9 +29,8 @@ namespace ast
     void binary_operator::right_operand(ast::node* op)
     {
         assert(this->child_count() == 1);
-        assert(op != NULL);
         
-        _children->push_back(op);
+        this->add_child(op);
     }
     ast::node* binary_operator::left_operand(void) const
     {
@@ -38,8 +39,29 @@ namespace ast
     void binary_operator::left_operand(ast::node* op)
     {
         assert(this->child_count() == 0);
-        assert(op != NULL);
         
-        _children->push_back(op);
+        this->add_child(op);
+    }
+    
+    llvm::Value* binary_operator::codegen(chime::code_generator& generator)
+    {
+        llvm::Value* l_value;
+        llvm::Value* r_value;
+        
+        l_value = this->left_operand()->codegen(generator);
+        
+        assert(l_value != NULL);
+        
+        if (this->identifier().compare(".") == 0)
+        {
+            ast::method_call* call;
+            
+            call = dynamic_cast<ast::method_call*>(this->right_operand());
+            assert(call);
+            
+            return generator.call_chime_object_invoke(l_value, call->identifier());
+        }
+        
+        return NULL;
     }
 }

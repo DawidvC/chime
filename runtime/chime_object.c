@@ -120,8 +120,16 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
     chime_object_t*  result_object;
     va_list          arguments;
     
+    fprintf(stderr, "[runtime] Invoking '%s' on %p\n", name, instance);
+    
     method_object = chime_object_get_property(instance, name);
-    function      = chime_object_get_function(method_object);
+    if (!method_object)
+    {
+        fprintf(stderr, "[runtime] method missing for '%s'\n", name);
+        return NULL;
+    }
+    
+    function = chime_object_get_function(method_object);
     
     va_start(arguments, name);
     

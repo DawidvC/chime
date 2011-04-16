@@ -5,8 +5,8 @@
 
 #include "lexer/file_lexer.h"
 #include "parser/parser.h"
-#include "operations/code_generator.h"
 #include "ast/ast.h"
+#include "operations/code_generator.h"
 
 #include <llvm/Pass.h>
 #include <llvm/PassManager.h>
@@ -90,6 +90,7 @@ int main(int argc, char* argv[])
     if (print_ast)
     {
         fprintf(stdout, "%s\n", node->string_representation().c_str());
+        
         return 0;
     }
     

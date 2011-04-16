@@ -56,12 +56,14 @@ namespace ast
     
     void type_reference::parse_parameters(chime::parser* parser)
     {
-        
     }
     
     llvm::Value* type_reference::codegen(chime::code_generator& generator)
     {
-        return NULL;
-        // return generator->call_chime_runtime_get_class(this->identifier());
+        llvm::Value* class_name_ptr;
+        
+        class_name_ptr = generator.make_constant_string(this->identifier());
+        
+        return generator.call_chime_runtime_get_class(class_name_ptr);
     }
 }

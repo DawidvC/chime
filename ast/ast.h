@@ -9,7 +9,6 @@
 #include "primary/method_call.h"
 #include "primary/type_reference.h"
 #include "primary/variable_definition.h"
-#include "runtime/runtime_invoke.h"
 #include "structural/implementation.h"
 #include "structural/import.h"
 #include "structural/method_definition.h"

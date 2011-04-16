@@ -5,6 +5,7 @@
 #include "collections/chime_array.h"
 #include "chime_object_internal.h"
 #include <assert.h>
+#include <stdio.h>
 
 static chime_dictionary_t* _chime_classes    = 0;
 static chime_object_t*     _root_meta_class  = 0;
@@ -22,6 +23,9 @@ void chime_runtime_initialize(void)
     assert(_root_meta_class);
     
     object_class = chime_runtime_create_class("Object", 0);
+    assert(object_class);
+    
+    object_class = chime_runtime_create_class("External", 0);
     assert(object_class);
     
     assert(chime_runtime_create_class("Method", object_class));
@@ -63,5 +67,11 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
 
 chime_object_t* chime_runtime_get_class(const char* name)
 {
-    return chime_dictionary_get(_chime_classes, name);
+    chime_object_t* object;
+    
+    object = chime_dictionary_get(_chime_classes, name);
+    
+    fprintf(stderr, "[runtime] Getting class '%s' => %p\n", name, object);
+    
+    return object;
 }

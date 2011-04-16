@@ -11,6 +11,7 @@ namespace ast
     class integer_literal : public node
     {
     public:
+        integer_literal();
         integer_literal(chime::parser* parser);
         
         virtual std::string node_name(void);
@@ -18,6 +19,8 @@ namespace ast
         
         long value(void) const;
         void value(long v);
+        
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
     private:
         long _value;

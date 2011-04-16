@@ -1,4 +1,4 @@
-// node.h
+// code_generator.h
 //
 
 #ifndef CODE_GENERATOR
@@ -24,8 +24,19 @@ namespace chime
         
         llvm::IRBuilder<>* builder(void) const;
         llvm::Module*      module(void) const;
+        llvm::LLVMContext* get_context(void) const;
         
-        llvm::Function* define_chime_runtime_initialize(void);
+        llvm::Value*       make_constant_string(std::string str);
+        
+        void               set_value_for_identifier(std::string name, llvm::Value* value);
+        llvm::Value*       value_for_identifier(std::string name);
+        
+        llvm::Type*     get_c_string_ptr_type(void);
+        llvm::Type*     get_chime_object_ptr_type(void);
+        
+        void            call_chime_runtime_initialize(void);
+        llvm::Value*    call_chime_runtime_get_class(llvm::Value* class_name_ptr);
+        llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name);
         
         void generate(ast::node* node, const char* module_name);
         
@@ -33,6 +44,9 @@ namespace chime
         llvm::Module*                        _module;
         llvm::IRBuilder<>*                   _builder;
         std::map<std::string, llvm::Value*>* _scope_values;
+        
+        llvm::PointerType*                   _object_ptr_type;
+        llvm::Type*                          _c_string_ptr_type;
         
         void make_main(void);
     };
