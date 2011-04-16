@@ -1,5 +1,5 @@
 #include "type_reference.h"
-#include "../../parser/parser.h"
+#include "parser/parser.h"
 #include <assert.h>
 #include "operations/code_generator.h"
 

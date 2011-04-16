@@ -1,6 +1,6 @@
 #include "entity_reference.h"
-#include "../../parser/parser.h"
-#include <assert.h>
+#include "parser/parser.h"
+#include "operations/code_generator.h"
 
 namespace ast
 {
@@ -41,5 +41,21 @@ namespace ast
         assert(!s.empty());
         
         _identifier = s;
+    }
+    
+    llvm::Value* entity_reference::codegen(chime::code_generator& generator)
+    {
+        llvm::Value* value;
+        
+        value = generator.value_for_identifier(this->identifier());
+        
+        if (!value)
+        {
+            value = generator.insert_chime_object_alloca();
+            
+            generator.set_value_for_identifier(this->identifier(), value);
+        }
+        
+        return value;
     }
 }

@@ -19,6 +19,8 @@ namespace ast
         virtual std::string identifier() const;
         virtual void identifier(std::string s);
         
+        llvm::Value* codegen(chime::code_generator& generator);
+        
     protected:
         std::string _identifier;
     };

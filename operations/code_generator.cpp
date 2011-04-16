@@ -98,6 +98,16 @@ namespace chime
         return _object_ptr_type;
     }
     
+    llvm::AllocaInst* code_generator::insert_chime_object_alloca(void)
+    {
+        llvm::AllocaInst* alloca;
+        
+        alloca = this->builder()->CreateAlloca(this->get_chime_object_ptr_type(), 0, "object pointer");
+        alloca->setAlignment(8);
+        
+        return alloca;
+    }
+    
     void code_generator::call_chime_runtime_initialize(void)
     {
         llvm::Function* function_chime_runtime_initialize;
@@ -119,8 +129,9 @@ namespace chime
     
     llvm::Value* code_generator::call_chime_runtime_get_class(llvm::Value* class_name_ptr)
     {
-        llvm::Function* function_chime_runtime_get_class;
-        llvm::CallInst* call;
+        llvm::Function*   function_chime_runtime_get_class;
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
         
         function_chime_runtime_get_class = (llvm::Function*)this->value_for_identifier("chime_runtime_get_class");
         if (function_chime_runtime_get_class == NULL)
@@ -138,10 +149,7 @@ namespace chime
             this->set_value_for_identifier("chime_runtime_get_class", function_chime_runtime_get_class);
         }
         
-        llvm::AllocaInst* alloca;
-        
-        alloca = this->builder()->CreateAlloca(this->get_chime_object_ptr_type(), 0, "return of class lookup");
-        alloca->setAlignment(8);
+        alloca = this->insert_chime_object_alloca();
         
         call = this->builder()->CreateCall(function_chime_runtime_get_class, class_name_ptr, "class lookup");
         call->setTailCall(false);
@@ -151,10 +159,12 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* code_generator::call_chime_object_invoke(llvm::Value* object_value, std::string name)
+    llvm::Value* code_generator::call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args)
     {
-        llvm::Function* function_chime_object_invoke;
-        llvm::CallInst* call;
+        llvm::Function*                     function_chime_object_invoke;
+        llvm::CallInst*                     call;
+        std::vector<llvm::Value*>::iterator it;
+        llvm::AllocaInst*                   alloca;
         
         function_chime_object_invoke = (llvm::Function*)this->value_for_identifier("chime_object_invoke");
         if (function_chime_object_invoke == NULL)
@@ -180,17 +190,21 @@ namespace chime
         
         loaded_object_ptr = this->builder()->CreateLoad(object_value, "instance for object invoke");
         
-        std::vector<llvm::Value*> ptr_call1_params;
-        ptr_call1_params.push_back(loaded_object_ptr);
-        ptr_call1_params.push_back(property_name_ptr);
+        // grab an iterator and do some insertions such that
+        // the object comes first, followed by the property, followed
+        // by whatever arguments were supplied
+        it = args.begin();
+        it = args.insert(it, property_name_ptr);
+        args.insert(it, loaded_object_ptr);
         
-        // CallInst* ptr_call1 = CallInst::Create(func_chime_object_invoke, , "call1", label_entry);
+        alloca = this->insert_chime_object_alloca();
         
-        
-        call = this->builder()->CreateCall(function_chime_object_invoke, ptr_call1_params.begin(), ptr_call1_params.end(), "object invoke");
+        call = this->builder()->CreateCall(function_chime_object_invoke, args.begin(), args.end(), "object invoke");
         call->setTailCall(false);
         
-        return NULL;
+        this->builder()->CreateStore(call, alloca, false);
+        
+        return alloca;
     }
     
     void code_generator::make_main(void)
@@ -218,12 +232,6 @@ namespace chime
         this->builder()->SetInsertPoint(label_entry);
         
         this->call_chime_runtime_initialize();
-        
-        // just a test
-        //llvm::Value* t = this->call_chime_runtime_get_class("Object");
-        //this->call_chime_object_invoke(t, "printf");
-        
-        //this->builder()->CreateRet(llvm::ConstantInt::get(context, llvm::APInt(32, 2, false)));
     }
     
     void code_generator::generate(ast::node* node, const char* module_name)

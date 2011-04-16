@@ -120,7 +120,12 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
     chime_object_t*  result_object;
     va_list          arguments;
     
-    fprintf(stderr, "[runtime] Invoking '%s' on %p\n", name, instance);
+    if (instance == NULL)
+    {
+        instance = chime_runtime_get_class("Null");
+    }
+    
+    fprintf(stderr, "[runtime] invoking '%s' on %p\n", name, instance);
     
     method_object = chime_object_get_property(instance, name);
     if (!method_object)

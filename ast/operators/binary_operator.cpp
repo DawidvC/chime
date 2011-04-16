@@ -45,11 +45,11 @@ namespace ast
     
     llvm::Value* binary_operator::codegen(chime::code_generator& generator)
     {
-        llvm::Value* l_value;
-        llvm::Value* r_value;
+        llvm::Value*              l_value;
+        llvm::Value*              r_value;
+        std::vector<llvm::Value*> arguments;
         
         l_value = this->left_operand()->codegen(generator);
-        
         assert(l_value != NULL);
         
         if (this->identifier().compare(".") == 0)
@@ -59,9 +59,25 @@ namespace ast
             call = dynamic_cast<ast::method_call*>(this->right_operand());
             assert(call);
             
-            return generator.call_chime_object_invoke(l_value, call->identifier());
+            return generator.call_chime_object_invoke(l_value, call->identifier(), arguments);
         }
         
-        return NULL;
+        r_value = this->right_operand()->codegen(generator);
+        assert(r_value != NULL);
+        
+        if (this->identifier().compare("=") == 0)
+        {
+            llvm::LoadInst* loaded_object_ptr;
+            
+            loaded_object_ptr = generator.builder()->CreateLoad(r_value, "l_value in assignment");
+            
+            generator.builder()->CreateStore(loaded_object_ptr, l_value, false);
+            
+            return l_value;
+        }
+        
+        arguments.push_back(r_value);
+        
+        return generator.call_chime_object_invoke(l_value, this->identifier(), arguments);
     }
 }

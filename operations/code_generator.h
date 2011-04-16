@@ -31,12 +31,13 @@ namespace chime
         void               set_value_for_identifier(std::string name, llvm::Value* value);
         llvm::Value*       value_for_identifier(std::string name);
         
-        llvm::Type*     get_c_string_ptr_type(void);
-        llvm::Type*     get_chime_object_ptr_type(void);
+        llvm::Type*       get_c_string_ptr_type(void);
+        llvm::Type*       get_chime_object_ptr_type(void);
+        llvm::AllocaInst* insert_chime_object_alloca(void);
         
         void            call_chime_runtime_initialize(void);
         llvm::Value*    call_chime_runtime_get_class(llvm::Value* class_name_ptr);
-        llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name);
+        llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);
         
         void generate(ast::node* node, const char* module_name);
         
