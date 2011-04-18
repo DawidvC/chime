@@ -38,6 +38,7 @@ namespace chime
         void            call_chime_runtime_initialize(void);
         llvm::Value*    call_chime_runtime_get_class(llvm::Value* class_name_ptr);
         llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);
+        llvm::Value*    call_chime_literal_encode_integer(signed long value);
         
         void generate(ast::node* node, const char* module_name);
         

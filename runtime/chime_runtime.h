@@ -10,11 +10,14 @@
 extern "C" {
 #endif
 
+extern unsigned char chime_log_level;
+
 void chime_runtime_initialize(void);
 void chime_runtime_destroy(void);
 
 chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* super_class);
 chime_object_t* chime_runtime_get_class(const char* name);
+char*           chime_runtime_get_class_name(chime_object_t* instance);
 
 #ifdef __cplusplus
 }

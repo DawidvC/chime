@@ -9,10 +9,15 @@
 
 static chime_dictionary_t* _chime_classes    = 0;
 static chime_object_t*     _root_meta_class  = 0;
+unsigned char              chime_log_level   = 5;
 
 void chime_runtime_initialize(void)
 {
     chime_object_t* object_class;
+    unsigned char   old_level;
+    
+    old_level = chime_log_level;
+    chime_log_level = 3;
     
     _chime_classes = chime_dictionary_create();
     
@@ -25,14 +30,13 @@ void chime_runtime_initialize(void)
     object_class = chime_runtime_create_class("Object", 0);
     assert(object_class);
     
-    object_class = chime_runtime_create_class("External", 0);
-    assert(object_class);
+    assert(chime_runtime_create_class("External", 0));
     
     assert(chime_runtime_create_class("Method", object_class));
     
-    assert(chime_runtime_create_class("Null", object_class));
+    chime_literal_initialize();
     
-    assert(chime_runtime_create_class("Integer", object_class));
+    chime_log_level = old_level; // restore logging after initialization
 }
 
 void chime_runtime_destroy(void)
@@ -71,7 +75,8 @@ chime_object_t* chime_runtime_get_class(const char* name)
     
     object = chime_dictionary_get(_chime_classes, name);
     
-    fprintf(stderr, "[runtime] Getting class '%s' => %p\n", name, object);
+    if (chime_log_level >= 5)
+        fprintf(stderr, "[runtime] Getting class '%s' => %p\n", name, object);
     
     return object;
 }

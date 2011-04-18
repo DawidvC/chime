@@ -7,6 +7,7 @@ protected:
     virtual void SetUp()
     {
         chime_runtime_initialize();
+        chime_log_level = 3;
     }
     virtual void TearDown()
     {
@@ -38,4 +39,13 @@ TEST_F(RuntimeLiteralTests, Integer)
     object = chime_literal_encode_integer(0);
     
     ASSERT_EQ(0, chime_literal_decode_integer(object));
+}
+
+TEST_F(RuntimeLiteralTests, MethodInvokedOnInteger)
+{
+    chime_object_t* a;
+    
+    a = chime_literal_encode_integer(1);
+    
+    chime_object_invoke(a, "a_method");
 }

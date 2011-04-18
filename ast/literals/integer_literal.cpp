@@ -1,13 +1,7 @@
 #include "integer_literal.h"
-#include "../../parser/parser.h"
-#include <assert.h>
+#include "parser/parser.h"
+#include "operations/code_generator.h"
 #include <sstream>
-
-#include "llvm/DerivedTypes.h"
-#include "llvm/LLVMContext.h"
-#include "llvm/Module.h"
-#include "llvm/Analysis/Verifier.h"
-#include "llvm/Support/IRBuilder.h"
 
 namespace ast
 {
@@ -53,11 +47,6 @@ namespace ast
     
     llvm::Value* integer_literal::codegen(chime::code_generator& generator)
     {
-        llvm::APInt ap_int;
-        
-        // 64-bit signed value
-        ap_int = llvm::APInt(64, this->value(), true);
-        
-        return llvm::ConstantInt::get(llvm::getGlobalContext(), ap_int);
+        return generator.call_chime_literal_encode_integer(this->value());
     }
 }

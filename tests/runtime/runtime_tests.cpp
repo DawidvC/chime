@@ -7,6 +7,7 @@ protected:
     virtual void SetUp()
     {
         chime_runtime_initialize();
+        chime_log_level = 3;
     }
     virtual void TearDown()
     {
