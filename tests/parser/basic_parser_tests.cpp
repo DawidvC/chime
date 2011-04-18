@@ -128,6 +128,27 @@ TEST_F(BasicParserTest, AssignmentExpression)
     assert_entity("b", op->right_operand());
 }
 
+TEST_F(BasicParserTest, ComplexOperatorExpression)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("a = b + c * d + e");
+    op   = (ast::binary_operator*)node->child_at_index(0);
+    
+    ASSERT_OPERATOR("=", op);
+    ASSERT_ENTITY("a", op->left_operand());
+    
+    op = (ast::binary_operator*)op->right_operand();
+    ASSERT_OPERATOR("+", op);
+    ASSERT_ENTITY("e", op->right_operand());
+    
+    op = (ast::binary_operator*)op->left_operand();
+    ASSERT_OPERATOR("+", op);
+    ASSERT_ENTITY("b", op->left_operand());
+    ASSERT_OPERATOR("*", op->right_operand());
+}
+
 TEST_F(BasicParserTest, AssignmentFromTypeMethodCall)
 {
     ast::binary_operator* op;

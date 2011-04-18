@@ -264,6 +264,49 @@ namespace chime
         return node;
     }
     
+    ast::node* parser::parse_primary(void)
+    {
+        chime::token* t;
+        ast::node*    node;
+        
+        node = NULL;
+        
+        t = this->look_ahead();
+        if (t == NULL || t->empty())
+        {
+            chime::parse_error* e;
+            
+            e = new chime::parse_error("Unable to extract the next token while parsing a primary expression");
+            
+            this->add_error(e);
+            
+            return NULL;
+        }
+        else if (t->is_literal())
+        {
+            node = this->parse_literal();
+        }
+        else if (t->is_type())
+        {
+            node = this->parse_type();
+        }
+        else if (t->is_identifier())
+        {
+            if (this->look_ahead(2)->equal_to("("))
+            {
+                return new ast::method_call(this);
+            }
+            
+            node = new ast::entity_reference(this);
+        }
+        else
+        {
+            assert(0 && "how did we get to this point");
+        }
+        
+        return node;
+    }
+    
     ast::node* parser::parse_expression(void)
     {
         chime::token* t;
@@ -294,7 +337,7 @@ namespace chime
             return NULL;
             // node = this->parse_parentheses();
         }
-        else if(t->is_literal())
+        else if (t->is_literal())
         {
             node = this->parse_literal();
         }
@@ -355,7 +398,7 @@ namespace chime
             node = new ast::binary_operator();
             node->identifier(this->next_token_value());
             
-            right_operand = this->parse_expression();
+            right_operand = this->parse_primary();
             
             if (current_precedence < this->look_ahead()->precedence())
             {

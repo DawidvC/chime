@@ -15,6 +15,10 @@ void assert_block(ast::node* node);
 void assert_next(ast::node* node);
 void assert_if_statement(ast::node* node);
 
+#define ASSERT_ENTITY(x, y) do { \
+    ASSERT_EQ("entity reference", y->node_name()); \
+    ASSERT_EQ(x, ((ast::entity_reference*)y)->identifier()); \
+    } while (0);
 #define ASSERT_TYPE(x, y) do { \
     ASSERT_EQ("type reference", y->node_name()); \
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
