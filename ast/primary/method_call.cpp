@@ -48,6 +48,18 @@ namespace ast
             if (t->empty() || t->equal_to(")"))
                 break;
             
+            // handle labels
+            if (parser->look_ahead(2)->equal_to(":"))
+            {
+                parser->next_token();
+                parser->next_token_value(":");
+                if (parser->look_ahead()->equal_to(")"))
+                {
+                    //there needs to be a block after this
+                    break;
+                }
+            }
+            
             node = parser->parse_expression();
             if (node == NULL)
                 break;

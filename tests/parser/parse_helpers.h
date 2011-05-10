@@ -18,13 +18,21 @@ void assert_if_statement(ast::node* node);
 #define ASSERT_ENTITY(x, y) do { \
     ASSERT_EQ("entity reference", y->node_name()); \
     ASSERT_EQ(x, ((ast::entity_reference*)y)->identifier()); \
-    } while (0);
+    } while (0)
+    
 #define ASSERT_TYPE(x, y) do { \
     ASSERT_EQ("type reference", y->node_name()); \
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
-    } while (0);
+    } while (0)
     
 #define ASSERT_OPERATOR(x, y) do { \
     ASSERT_EQ("binary operator", y->node_name()); \
     ASSERT_EQ(x, ((ast::binary_operator*)y)->identifier()); \
-    } while (0);
+    } while (0)
+
+#define ASSERT_METHOD_CALL(x, y) do { \
+    ASSERT_EQ("method call", y->node_name()); \
+    ASSERT_EQ(x, ((ast::method_call*)y)->identifier()); \
+    } while (0)
+
+#define ASSERT_BLOCK(x) ASSERT_EQ("block", x->node_name())
