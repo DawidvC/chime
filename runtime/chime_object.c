@@ -38,6 +38,9 @@ chime_object_t* chime_object_create_with_name(const char* class_name)
 {
     chime_object_t* object_class;
     
+    if (chime_log_level >= 5)
+        fprintf(stderr, "[runtime] creating object with class name '%s'\n", class_name);
+        
     object_class = chime_runtime_get_class(class_name);
     
     // class must not be null
@@ -194,4 +197,16 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
     va_end(arguments);
     
     return result_object;
+}
+
+#pragma mark -
+#pragma mark Method Definitions of Object
+static chime_object_t* ObjectClass(chime_object_t* instance, const char* method_name, ...)
+{
+    return chime_object_get_class(instance);
+}
+
+static chime_object_t* ObjectName(chime_object_t* instance, const char* method_name, ...)
+{
+    return chime_object_get_class(instance);
 }

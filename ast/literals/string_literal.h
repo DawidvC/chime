@@ -2,7 +2,7 @@
 #define STRING_LITERAL
 
 #include <string>
-#include "../node.h"
+#include "ast/node.h"
 
 namespace ast
 {
@@ -16,6 +16,8 @@ namespace ast
         
         std::string value(void) const;
         void value(std::string v);
+        
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
     private:
         std::string _value;

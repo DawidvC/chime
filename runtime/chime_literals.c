@@ -2,6 +2,7 @@
 
 #include "chime_literals.h"
 #include "chime_runtime.h"
+#include "chime_runtime_internal.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <assert.h>
@@ -80,15 +81,12 @@ static chime_object_t* IntegerMultiply(chime_object_t* instance, const char* met
 
 void chime_literal_initialize(void)
 {
-    chime_object_t* object_class;
     chime_object_t* new_class;
-    
-    object_class = chime_runtime_get_class("Object");
-    
-    new_class = chime_runtime_create_class("Null", object_class);
+        
+    new_class = chime_runtime_create_class("Null", _object_class);
     assert(new_class);
     
-    new_class = chime_runtime_create_class("Integer", object_class);
+    new_class = chime_runtime_create_class("Integer", _object_class);
     assert(new_class);
     
     chime_object_set_function(new_class, "print", IntegerPrint, 1);

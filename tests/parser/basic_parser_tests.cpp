@@ -281,10 +281,19 @@ TEST_F(BasicParserTest, MethodCallWithBlockParameters)
 {
     ast::method_call* call;
     
-    call = (ast::method_call*)parse("call() do (a) { }")->child_at_index(0);
+    call = parse_method_call("call() do (a) { }");
     
     assert_method_call("call", call);
     assert_block(call->child_at_index(0));
+}
+
+TEST_F(BasicParserTest, MethodCallWithLabelledBlock)
+{
+    ast::method_call* call;
+    
+    call = parse_method_call("on_queue(queue, async:) do { queue = 0 }");
+    
+    assert_method_call("on_queue", call);
 }
 
 TEST_F(BasicParserTest, MethodWithOperatorsOnType)

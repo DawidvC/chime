@@ -242,6 +242,42 @@ namespace chime
         return alloca;
     }
     
+    llvm::Value* code_generator::call_chime_string_create_with_c_string(std::string str)
+    {
+        llvm::Function*   function_chime_string_create_with_c_string;
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        function_chime_string_create_with_c_string = (llvm::Function*)this->value_for_identifier("chime_string_create_with_c_string");
+        if (function_chime_string_create_with_c_string == NULL)
+        {
+            std::vector<const llvm::Type*> function_args;
+            llvm::FunctionType*            function_type;
+            
+            function_args.push_back(this->get_c_string_ptr_type());
+            
+            function_type = llvm::FunctionType::get(this->get_chime_object_ptr_type(), function_args, false);
+            
+            function_chime_string_create_with_c_string = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_string_create_with_c_string", this->module());
+            function_chime_string_create_with_c_string->setCallingConv(llvm::CallingConv::C);
+            
+            this->set_value_for_identifier("chime_string_create_with_c_string", function_chime_string_create_with_c_string);
+        }
+        
+        llvm::Value* c_string_ptr;
+        
+        c_string_ptr = this->make_constant_string(str);
+        
+        alloca = this->insert_chime_object_alloca();
+        
+        call = this->builder()->CreateCall(function_chime_string_create_with_c_string, c_string_ptr, "create string");
+        call->setTailCall(false);
+        
+        this->builder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
     void code_generator::make_main(void)
     {
         llvm::LLVMContext&             context = this->module()->getContext();

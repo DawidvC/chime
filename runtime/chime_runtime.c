@@ -9,11 +9,13 @@
 
 static chime_dictionary_t* _chime_classes    = 0;
 static chime_object_t*     _root_meta_class  = 0;
+chime_object_t*            _object_class     = 0;
+chime_object_t*            _string_class     = 0;
+chime_object_t*            _method_class     = 0;
 unsigned char              chime_log_level   = 5;
 
 void chime_runtime_initialize(void)
 {
-    chime_object_t* object_class;
     unsigned char   old_level;
     
     old_level = chime_log_level;
@@ -27,22 +29,42 @@ void chime_runtime_initialize(void)
     _root_meta_class = chime_object_create(0);
     assert(_root_meta_class);
     
-    object_class = chime_runtime_create_class("Object", 0);
-    assert(object_class);
+    _object_class = chime_runtime_create_class("Object", 0);
+    assert(_object_class);
     
-    assert(chime_runtime_create_class("External", 0));
+    _method_class = chime_runtime_create_class("Method", _object_class);
+    assert(_method_class);
     
-    assert(chime_runtime_create_class("Method", object_class));
+    // once the root objects are created, strings come next,
+    // because they tie into lots of stuff
+    chime_string_initialize();
+    
+    // now go back and fix up the first classes, as they are missing the name properties
+    chime_object_set_property(_root_meta_class, "name", chime_string_create_with_c_string("MetaClass"));
+    chime_object_set_property(_object_class,    "name", chime_string_create_with_c_string("Object"));
+    chime_object_set_property(_string_class,    "name", chime_string_create_with_c_string("String"));
+    chime_object_set_property(_method_class,    "name", chime_string_create_with_c_string("Method"));
     
     chime_literal_initialize();
+    
+    assert(chime_runtime_create_class("External", 0));
     
     chime_log_level = old_level; // restore logging after initialization
 }
 
 void chime_runtime_destroy(void)
 {
+    chime_object_destroy(_string_class);
+    _string_class = NULL;
+    
+    chime_object_destroy(_object_class);
+    _object_class = NULL;
+    
     chime_object_destroy(_root_meta_class);
+    _root_meta_class = NULL;
+    
     chime_dictionary_destroy(_chime_classes);
+    _chime_classes = NULL;
 }
 
 chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* super_class)
@@ -51,6 +73,15 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
     chime_object_t* meta_class_object;
     
     class_object = chime_object_create(super_class);
+    
+    if (_string_class)
+    {
+        // add a property on the class
+        chime_object_t* string_object;
+        
+        string_object = chime_string_create_with_c_string(name);
+        chime_object_set_property(class_object, "name", string_object);
+    }
     
     if (super_class == 0)
     {

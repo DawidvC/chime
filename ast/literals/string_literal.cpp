@@ -1,5 +1,6 @@
 #include "string_literal.h"
-#include "../../parser/parser.h"
+#include "parser/parser.h"
+#include "operations/code_generator.h"
 #include <assert.h>
 
 namespace ast
@@ -36,5 +37,10 @@ namespace ast
     void string_literal::value(std::string v)
     {
         _value = v;
+    }
+    
+    llvm::Value* string_literal::codegen(chime::code_generator& generator)
+    {
+        return generator.call_chime_string_create_with_c_string(this->value());
     }
 }

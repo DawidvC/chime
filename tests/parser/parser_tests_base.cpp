@@ -44,3 +44,7 @@ ast::method_definition* ParserTestsBase::parse_method_def(const char *input)
     return (ast::method_definition*)this->parse(input)->child_at_index(0);
 }
 
+ast::method_call* ParserTestsBase::parse_method_call(const char* input)
+{
+    return dynamic_cast<ast::method_call*>(this->parse(input)->child_at_index(0));
+}
