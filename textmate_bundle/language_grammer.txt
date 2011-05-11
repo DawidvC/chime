@@ -33,7 +33,9 @@
 			name = 'support.type';
 		},
 		{	match = ',\s*(\w+:)';
-			name = 'support.function';
+			captures = {
+				1 = { name = 'support.function'; };
+			};
 		},
 		{	match = '(:)\s+(\w*)';
 			captures = {
