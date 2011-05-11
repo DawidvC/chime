@@ -54,3 +54,21 @@ TEST_F(MultiLineParserTest, SimpleMethodDefinition)
     
     assert_method_definition("new", method);
 }
+
+TEST_F(MultiLineParserTest, TwoClassMethodsInARow)
+{
+    ast::node*            node;
+    ast::binary_operator* op;
+    
+    node = parse("Foo.bar()\nShoo.baz()\n");
+    
+    op = (ast::binary_operator*)node->child_at_index(0);
+    ASSERT_OPERATOR(".", op);
+    ASSERT_TYPE("Foo", op->left_operand());
+    ASSERT_METHOD_CALL("bar", op->right_operand());
+    
+    op = (ast::binary_operator*)node->child_at_index(1);
+    ASSERT_OPERATOR(".", op);
+    ASSERT_TYPE("Shoo", op->left_operand());
+    ASSERT_METHOD_CALL("baz", op->right_operand());
+}

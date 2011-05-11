@@ -383,8 +383,6 @@ namespace chime
             
             if (t->is_ending())
             {
-                this->advance_past_ending_tokens();
-                
                 return left_operand;
             }
             
