@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
 # emit IR
 /tmp/chime/chime -e -o /tmp/chime/target.ll $1
 
