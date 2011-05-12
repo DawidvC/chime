@@ -282,6 +282,14 @@ namespace chime
             
             return NULL;
         }
+        else if (t->equal_to("("))
+        {
+            this->next_token_value("(");
+            
+            node = this->parse_expression();
+            
+            this->next_token_value(")");
+        }
         else if (t->is_literal())
         {
             node = this->parse_literal();
@@ -326,18 +334,7 @@ namespace chime
             return NULL;
         }
         
-        if (t->equal_to("("))
-        {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("expression: parentheses not implemented");
-            
-            this->add_error(e);
-            
-            return NULL;
-            // node = this->parse_parentheses();
-        }
-        else if (t->is_literal())
+        if (t->is_literal())
         {
             node = this->parse_literal();
         }
