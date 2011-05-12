@@ -365,4 +365,10 @@ TEST_F(LexerTest, GreaterOrEqualOperator)
 	const char *tokens[] = {"x", ">=", "y", NULL};
 	ExpectTokens(tokens);
 }
-
+TEST_F(LexerTest, SpaceshipOperator)
+{
+    lex("x <=> y");
+    
+    const char *tokens[] = {"x", "<=>", "y", NULL};
+    ExpectTokens(tokens);
+}

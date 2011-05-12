@@ -196,15 +196,20 @@ namespace chime
 				case '<':
 				case '>':
 				case '=':
-					if (t->empty())
-					{
+                    if (t->empty())
+                    {
+                        // handle '<=' and '>='
                         t->set_value(this->next_char());
-						if (!this->is_finished() && (this->peek() == '='))
+                        if (!this->is_finished() && (this->peek() == '='))
                             t->append(this->next_char());
-					}
-					
-					return t;
-					break;
+                        
+                        // handle '<=>'
+                        if (!this->is_finished() && (this->peek() == '>') && (t->equal_to("<=")))
+                            t->append(this->next_char());
+                    }
+                    
+                    return t;
+                    break;
                 case '/':
                     this->next_char();
                     if (this->peek() == '/')
