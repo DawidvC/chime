@@ -16,3 +16,7 @@ LINKER_FLAGS   = "-L/opt/local/lib"
 CC             = "#{LLVM_PATH}/bin/clang #{COMPILER_FLAGS}"
 CXX            = "#{LLVM_PATH}/bin/clang++ #{COMPILER_FLAGS} #{LLVM_CXX_FLAGS}"
 LINKER         = "#{LLVM_PATH}/bin/clang++ #{LINKER_FLAGS} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES}"
+
+# -r : add object files to the archive
+# -s : add object-file index
+ARCHIVER       = "ar rs"

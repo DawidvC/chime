@@ -4,13 +4,16 @@ require 'rake/clean'
 BUILD_PATH = "/tmp/chime"
 LLVM_PATH  = "/Users/matt/Documents/programming/build/Release+Asserts"
 
+# this controls the verbosity of sh
+verbose(false)
+
 # basic tasks
 directory BUILD_PATH
 
 CLEAN.include("#{BUILD_PATH}/*")
 
 # target tasks
-task :default => ['compiler:all', 'runtime:all']
+task :default => ['compiler:all', 'runtime:all', 'library:all']
 
 desc "Print out the build configuration variables"
 task :print_config do
@@ -25,6 +28,7 @@ task :print_config do
   puts("CC:             '#{CC}'")
   puts("CXX:            '#{CXX}'")
   puts("LINKER:         '#{LINKER}'")
+  puts("ARCHIVER:       '#{ARCHIVER}'")
   puts("")
   puts("BUILD_PATH:     '#{BUILD_PATH}'")
 end
@@ -33,8 +37,8 @@ namespace :compiler do
   desc 'Build the main frontend binary, chime'
   task :frontend => ["#{BUILD_PATH}/chime"]
   
-  desc 'Build the chime library'
-  task :library => ["#{BUILD_PATH}/libchime.a"]
+  desc 'Build the chime compiler library'
+  task :library => ["#{BUILD_PATH}/libchimecompiler.a"]
   
   desc 'Run the compiler tests'
   task :test, [:filter] => ["#{BUILD_PATH}/chime_test"] do |task, arguments|
@@ -61,4 +65,17 @@ namespace :runtime do
   end
   
   task :all => [:test]
+end
+
+namespace :library do
+  desc "Build the core class library"
+  task :build => ["#{BUILD_PATH}/libchime.a"]
+  
+  desc "Run the runtime tests"
+  task :test => ["#{BUILD_PATH}/library_test"] do
+    log("Execute", "#{BUILD_PATH}/library_test")
+    sh "#{BUILD_PATH}/library_test"
+  end
+  
+  task :all# => [:test]
 end
