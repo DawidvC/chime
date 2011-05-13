@@ -259,11 +259,30 @@ TEST_F(BasicParserTest, MethodCallArguments)
 {
     ast::method_call* call;
     
-    call = (ast::method_call*)parse("call(a, b)")->child_at_index(0);
+    call = parse_method_call("call(a, b)");
     
-    assert_method_call("call", call);
-    assert_entity("a", call->child_at_index(0));
-    assert_entity("b", call->child_at_index(1));
+    ASSERT_METHOD_CALL("call", call);
+    ASSERT_ENTITY("a", call->child_at_index(0));
+    ASSERT_ENTITY("b", call->child_at_index(1));
+}
+
+TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
+{
+    ast::method_call*     call;
+    ast::binary_operator* op;
+    
+    call = parse_method_call("call((a + b) * c)");
+    
+    ASSERT_METHOD_CALL("call", call);
+    
+    op = (ast::binary_operator*)call->child_at_index(0);
+    ASSERT_OPERATOR("*", op);
+    ASSERT_ENTITY("c", op->right_operand());
+    
+    op = (ast::binary_operator*)op->left_operand();
+    ASSERT_OPERATOR("+", op);
+    ASSERT_ENTITY("a", op->left_operand());
+    ASSERT_ENTITY("b", op->right_operand());
 }
 
 TEST_F(BasicParserTest, FunctionType)

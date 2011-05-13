@@ -153,3 +153,24 @@ TEST_F(TokenTest, IsControl)
     token->set_value("next");
     ASSERT_TRUE(token->is_control());
 }
+
+TEST_F(TokenTest, IsOperator)
+{
+    token->set_value(".");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->set_value("<=>");
+    ASSERT_TRUE(token->precedence() > 0);
+}
+
+TEST_F(TokenTest, IsLiteral)
+{
+    token->set_value("1");
+    ASSERT_TRUE(token->is_literal());
+    
+    token->set_value("true");
+    ASSERT_TRUE(token->is_literal());
+    
+    token->set_value("false");
+    ASSERT_TRUE(token->is_literal());
+}

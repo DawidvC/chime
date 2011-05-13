@@ -36,3 +36,5 @@ void assert_if_statement(ast::node* node);
     } while (0)
 
 #define ASSERT_BLOCK(x) ASSERT_EQ("block", x->node_name())
+
+#define ASSERT_LITERAL_TRUE(x) ASSERT_EQ("true literal", x->node_name())

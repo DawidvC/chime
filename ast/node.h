@@ -5,6 +5,7 @@
 #define AST_NODE
 
 #include <vector>
+#include <string>
 #include <assert.h>
 
 #include "llvm/DerivedTypes.h"

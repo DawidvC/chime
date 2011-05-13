@@ -211,6 +211,7 @@ namespace chime
         if (_value == ">")   return 30;
         if (_value == "and") return 20;
         if (_value == "or")  return 20;
+        if (_value == "<=>") return 15;
         if (_value == "==")  return 15;
         if (_value == ">=")  return 15;
         if (_value == "<=")  return 15;

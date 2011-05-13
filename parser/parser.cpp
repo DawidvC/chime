@@ -334,7 +334,15 @@ namespace chime
             return NULL;
         }
         
-        if (t->is_literal())
+        if (t->equal_to("("))
+        {
+            this->next_token_value("(");
+            
+            node = this->parse_expression();
+            
+            this->next_token_value(")");
+        }
+        else if (t->is_literal())
         {
             node = this->parse_literal();
         }
@@ -443,18 +451,13 @@ namespace chime
         {
             node = new ast::string_literal(this);
         }
-        else if (t->is_boolean())
+        else if (t->equal_to("true"))
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("parse_literal: found something weird '%s'", t->c_str());
-            
-            this->add_error(e);
-            return NULL;
+            node = new ast::true_literal(this);
         }
         else
         {
-            assert(false);
+            assert(0 && "Unhandled literal!");
         }
         
         return node;

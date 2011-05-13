@@ -21,3 +21,12 @@ TEST_F(LiteralParserTest, Integer)
     
     assert_literal(128, node->child_at_index(0));
 }
+
+TEST_F(LiteralParserTest, True)
+{
+    ast::node* node;
+    
+    node = parse("true")->child_at_index(0);
+    
+    ASSERT_LITERAL_TRUE(node);
+}
