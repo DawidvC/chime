@@ -47,7 +47,7 @@ namespace ast
     {
         llvm::Value*              l_value;
         llvm::Value*              r_value;
-        llvm::LoadInst*           r_object_ptr;
+        llvm::LoadInst*           object_load;
         std::vector<llvm::Value*> arguments;
         
         l_value = this->left_operand()->codegen(generator);
@@ -56,9 +56,22 @@ namespace ast
         if (this->identifier().compare(".") == 0)
         {
             ast::method_call* call;
+            llvm::Value*      argument_value;
             
             call = dynamic_cast<ast::method_call*>(this->right_operand());
             assert(call);
+            
+            // arguments need to be filled in here!
+            std::vector<ast::node*>::iterator i;
+            for (i=call->children()->begin(); i < call->children()->end(); i++)
+            {
+                argument_value = (*i)->codegen(generator);
+                assert(argument_value);
+                
+                object_load = generator.builder()->CreateLoad(argument_value, "loaded argument");
+                
+                arguments.push_back(object_load);
+            }
             
             return generator.call_chime_object_invoke(l_value, call->identifier(), arguments);
         }
@@ -66,16 +79,16 @@ namespace ast
         r_value = this->right_operand()->codegen(generator);
         assert(r_value != NULL);
         
-        r_object_ptr = generator.builder()->CreateLoad(r_value, "loaded r_value");
+        object_load = generator.builder()->CreateLoad(r_value, "loaded r_value");
         
         if (this->identifier().compare("=") == 0)
         {
-            generator.builder()->CreateStore(r_object_ptr, l_value, false);
+            generator.builder()->CreateStore(object_load, l_value, false);
             
             return l_value;
         }
         
-        arguments.push_back(r_object_ptr);
+        arguments.push_back(object_load);
         
         return generator.call_chime_object_invoke(l_value, this->identifier(), arguments);
     }

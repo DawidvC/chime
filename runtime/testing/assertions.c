@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdarg.h>
 
-static chime_object_t* AssertTrue(chime_object_t* instance, const char* method_name, ...)
+static chime_object_t* AssertIsTrue(chime_object_t* instance, const char* method_name, ...)
 {
     chime_object_t* a;
     va_list         arguments;
@@ -18,7 +18,44 @@ static chime_object_t* AssertTrue(chime_object_t* instance, const char* method_n
     
     va_end(arguments);
     
-    assert(a == CHIME_LITERAL_TRUE);
+    if (a == CHIME_LITERAL_NULL || a == CHIME_LITERAL_FALSE)
+        fprintf(stderr, "[Assert] is_true: failed\n");
+    
+    return CHIME_LITERAL_NULL;
+}
+
+static chime_object_t* AssertIsFalse(chime_object_t* instance, const char* method_name, ...)
+{
+    chime_object_t* a;
+    va_list         arguments;
+    
+    va_start(arguments, method_name);
+    
+    a = va_arg(arguments, chime_object_t*);
+    
+    va_end(arguments);
+    
+    if (!(a == CHIME_LITERAL_NULL || a == CHIME_LITERAL_FALSE))
+        fprintf(stderr, "[Assert] is_false: failed\n");
+    
+    return CHIME_LITERAL_NULL;
+}
+
+static chime_object_t* AssertEqualTo(chime_object_t* instance, const char* method_name, ...)
+{
+    va_list         arguments;
+    chime_object_t* a;
+    chime_object_t* b;
+    
+    va_start(arguments, method_name);
+    
+    a = va_arg(arguments, chime_object_t*);
+    b = va_arg(arguments, chime_object_t*);
+    
+    va_end(arguments);
+    
+    if (chime_object_invoke(a, "<=>", b) != chime_literal_encode_integer(0))
+        fprintf(stderr, "[Assert] equal:to: failed\n");
     
     return CHIME_LITERAL_NULL;
 }
@@ -30,17 +67,7 @@ void chime_assertion_initialize(void)
     assertion_class = chime_runtime_create_class("Assert", _object_class);
     assert(assertion_class);
     
-    chime_object_set_function(assertion_class, "true", AssertTrue, 2);
-}
-
-chime_object_t* chime_string_create_with_c_string(const char* string)
-{
-    chime_object_t* object;
-    
-    object = chime_object_create(_string_class);
-    object->flags = (unsigned long)string;
-    
-    fprintf(stderr, "Creating string instance '%s' => %p\n", string, object);
-    
-    return object;
+    chime_object_set_function(assertion_class, "is_true",  AssertIsTrue,  1);
+    chime_object_set_function(assertion_class, "is_false", AssertIsFalse, 1);
+    chime_object_set_function(assertion_class, "equal",    AssertEqualTo, 2);
 }

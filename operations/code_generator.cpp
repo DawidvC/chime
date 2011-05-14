@@ -242,6 +242,42 @@ namespace chime
         return alloca;
     }
     
+    llvm::Value* code_generator::call_chime_literal_encode_boolean(unsigned char value)
+    {
+        llvm::Function*   function_chime_literal_encode_boolean;
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        function_chime_literal_encode_boolean = (llvm::Function*)this->value_for_identifier("chime_literal_encode_boolean");
+        if (function_chime_literal_encode_boolean == NULL)
+        {
+            std::vector<const llvm::Type*> function_args;
+            llvm::FunctionType*            function_type;
+            
+            function_args.push_back(llvm::IntegerType::get(*this->get_context(), 8));
+            
+            function_type = llvm::FunctionType::get(this->get_chime_object_ptr_type(), function_args, false);
+            
+            function_chime_literal_encode_boolean = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_literal_encode_boolean", this->module());
+            function_chime_literal_encode_boolean->setCallingConv(llvm::CallingConv::C);
+            
+            this->set_value_for_identifier("chime_literal_encode_boolean", function_chime_literal_encode_boolean);
+        }
+        
+        llvm::Value* boolean_value;
+        
+        alloca = this->insert_chime_object_alloca();
+        
+        boolean_value = llvm::ConstantInt::get(*this->get_context(), llvm::APInt(8, value, 10));
+        
+        call = this->builder()->CreateCall(function_chime_literal_encode_boolean, boolean_value, "encode boolean");
+        call->setTailCall(false);
+        
+        this->builder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
     llvm::Value* code_generator::call_chime_string_create_with_c_string(std::string str)
     {
         llvm::Function*   function_chime_string_create_with_c_string;

@@ -49,3 +49,12 @@ TEST_F(RuntimeLiteralTests, MethodInvokedOnInteger)
     
     chime_object_invoke(a, "a_method");
 }
+
+TEST_F(RuntimeLiteralTests, MethodInvokedOnIntegerWithArgument)
+{
+    chime_object_t* a;
+    
+    a = chime_literal_encode_integer(1);
+    
+    chime_object_invoke(a, "a_method", chime_literal_encode_integer(5));
+}

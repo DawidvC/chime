@@ -21,6 +21,9 @@ void            chime_literal_initialize(void);
 chime_object_t* chime_literal_encode_integer(signed long value);
 signed long     chime_literal_decode_integer(chime_object_t* object);
 
+chime_object_t* chime_literal_encode_boolean(unsigned char value);
+unsigned char   chime_literal_decode_boolean(chime_object_t* object);
+
 unsigned char chime_object_is_literal(chime_object_t* object);
 unsigned char chime_object_is_integer(chime_object_t* object);
 unsigned char chime_object_is_string(chime_object_t* instance);

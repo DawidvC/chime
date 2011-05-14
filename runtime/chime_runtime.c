@@ -4,6 +4,7 @@
 #include "chime_runtime_internal.h"
 #include "collections/chime_array.h"
 #include "chime_object_internal.h"
+#include "testing/assertions.h"
 #include <assert.h>
 #include <stdio.h>
 
@@ -12,7 +13,7 @@ static chime_object_t*     _root_meta_class  = 0;
 chime_object_t*            _object_class     = 0;
 chime_object_t*            _string_class     = 0;
 chime_object_t*            _method_class     = 0;
-unsigned char              chime_log_level   = 5;
+unsigned char              chime_log_level   = 4;
 
 void chime_runtime_initialize(void)
 {
@@ -46,6 +47,8 @@ void chime_runtime_initialize(void)
     chime_object_set_property(_method_class,    "name", chime_string_create_with_c_string("Method"));
     
     chime_literal_initialize();
+    
+    chime_assertion_initialize();
     
     assert(chime_runtime_create_class("External", 0));
     
