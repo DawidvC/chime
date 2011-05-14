@@ -451,9 +451,9 @@ namespace chime
         {
             node = new ast::string_literal(this);
         }
-        else if (t->equal_to("true"))
+        else if (t->is_boolean())
         {
-            node = new ast::true_literal(this);
+            node = new ast::boolean_literal(this);
         }
         else
         {

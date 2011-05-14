@@ -37,4 +37,13 @@ void assert_if_statement(ast::node* node);
 
 #define ASSERT_BLOCK(x) ASSERT_EQ("block", x->node_name())
 
-#define ASSERT_LITERAL_TRUE(x) ASSERT_EQ("true literal", x->node_name())
+#define ASSERT_LITERAL_TRUE(x) do { \
+    ASSERT_EQ("boolean literal", x->node_name()); \
+    ASSERT_EQ(1, ((ast::boolean_literal*)x)->value()); \
+    } while (0)
+
+#define ASSERT_LITERAL_FALSE(x) do { \
+    ASSERT_EQ("boolean literal", x->node_name()); \
+    ASSERT_EQ(0, ((ast::boolean_literal*)x)->value()); \
+    } while (0)
+

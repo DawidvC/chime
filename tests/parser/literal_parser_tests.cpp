@@ -30,3 +30,12 @@ TEST_F(LiteralParserTest, True)
     
     ASSERT_LITERAL_TRUE(node);
 }
+
+TEST_F(LiteralParserTest, False)
+{
+    ast::node* node;
+    
+    node = parse("false")->child_at_index(0);
+    
+    ASSERT_LITERAL_FALSE(node);
+}

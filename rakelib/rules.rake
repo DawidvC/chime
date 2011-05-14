@@ -57,3 +57,5 @@ LIBRARY_TEST_OBJECTS = dependencies_for_filelist(LIBRARY_TEST_SOURCES)
 
 # manual rules
 file "#{BUILD_PATH}/runtime/chime_object.o" => ['runtime/collections/chime_dictionary.h']
+
+file "#{BUILD_PATH}/tests/parser/parser_tests_base.o" => ['tests/parser/parse_helpers.h']
