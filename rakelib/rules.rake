@@ -8,6 +8,55 @@ RUNTIME_SOURCES      = FileList['runtime/**/*.c']
 RUNTIME_TEST_SOURCES = FileList['tests/runtime/**/*.cpp']
 LIBRARY_SOURCES      = FileList['library/**/*.cpp']
 LIBRARY_TEST_SOURCES = FileList['tests/library/**/*.cpp']
+RAKE_SOURCES         = FileList['Rakefile', 'rakelib/*.rake']
+
+file("#{BUILD_PATH}/rake_cache" => RAKE_SOURCES) do
+  log("Touch", "rake_cache")
+  sh("touch #{BUILD_PATH}/rake_cache", :verbose => false)
+end
+
+def compile(source_file, object_file)
+  log("Compile", source_file.ext('o'))
+  
+  compiler = case File.extname(source_file)
+  when ".cpp"
+    CXX
+  when ".c"
+    CC
+  else
+    raise("Don't know how to compile #{path}")
+  end
+  
+  sh("#{compiler} -c #{source_file} -o #{object_file}", :verbose => false)
+end
+
+def header_dependencies_for_file(path)
+  return unless File.exist?(path)
+  
+  includes = Array.new()
+  
+  File.open(path) do |file|
+    until file.eof?
+      line = file.readline()
+      
+      case line[0,6]
+      when "class "
+        break
+      when "namesp"
+        break
+      when "#inclu"
+        project_header = line[/#include "([\/\w]+\.h)"/, 1]
+        
+        # must not be nil and must exist
+        next unless project_header and File.exist?(File.join(Rake.original_dir, project_header))
+        
+        includes << project_header if project_header
+      end
+    end
+  end
+  
+  includes
+end
 
 def dependencies_for_filelist(list)
   object_files = FileList.new()
@@ -20,24 +69,26 @@ def dependencies_for_filelist(list)
     
     dependencies = Array.new()
     
+    dependencies << "#{BUILD_PATH}/rake_cache"
     dependencies << source_file
-    dependencies << header_file if File.exist?(File.join(Rake.original_dir,header_file))
     dependencies << object_dir
     
-    # the object file depends on the path, source and header
-    directory object_dir
+    # add the main header, and also scan it for additional dependencies
+    header_file_path = File.join(Rake.original_dir, header_file)
+    if File.exist?(header_file_path)
+      dependencies << header_file
+      
+      dependencies += header_dependencies_for_file(header_file_path)
+    end
     
-    file object_file => dependencies do
-      log("Compile", source_file.ext('o'))
-      
-      compiler = case File.extname(source_file)
-      when ".cpp"
-        CXX
-      when ".c"
-        CC
-      end
-      
-      sh("#{compiler} -c #{source_file} -o #{object_file}")
+    # deal with the detected headers
+    dependencies += header_dependencies_for_file(source_file)
+    
+    # the object file depends on the path, source and header
+    directory(object_dir)
+    
+    file(object_file => dependencies) do
+      compile(source_file, object_file)
     end
     
     object_files.add(object_file)
@@ -55,7 +106,4 @@ RUNTIME_TEST_OBJECTS = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
 LIBRARY_OBJECTS      = dependencies_for_filelist(LIBRARY_SOURCES)
 LIBRARY_TEST_OBJECTS = dependencies_for_filelist(LIBRARY_TEST_SOURCES)
 
-# manual rules
-file "#{BUILD_PATH}/runtime/chime_object.o" => ['runtime/collections/chime_dictionary.h']
-
-file "#{BUILD_PATH}/tests/parser/parser_tests_base.o" => ['tests/parser/parse_helpers.h']
+# manual rules go here
