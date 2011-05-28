@@ -1,8 +1,21 @@
 #include "parser_tests_base.h"
+#include "parser/parse_error.h"
 
 class BasicParserTest : public ParserTestsBase
 {
 };
+
+
+TEST_F(BasicParserTest, ErrorTest)
+{
+    chime::parse_error* error;
+    
+    error = new chime::parse_error("yo %d", 1);
+    
+    ASSERT_EQ("yo 1", error->message());
+    
+    delete error;
+}
 
 TEST_F(BasicParserTest, ImportIdentifier)
 {
