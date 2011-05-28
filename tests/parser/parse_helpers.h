@@ -24,7 +24,12 @@ void assert_if_statement(ast::node* node);
     ASSERT_EQ("type reference", y->node_name()); \
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
     } while (0)
-    
+
+#define ASSERT_METHOD_DEFINITION(x, y) do { \
+    ASSERT_EQ("method definition", y->node_name()); \
+    ASSERT_EQ(x, ((ast::method_definition*)y)->identifier()); \
+    } while (0)
+
 #define ASSERT_OPERATOR(x, y) do { \
     ASSERT_EQ("binary operator", y->node_name()); \
     ASSERT_EQ(x, ((ast::binary_operator*)y)->identifier()); \

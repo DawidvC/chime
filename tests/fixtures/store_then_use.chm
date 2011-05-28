@@ -1,2 +1,2 @@
-a = Object
+a = Object.new()
 a.to_string()
