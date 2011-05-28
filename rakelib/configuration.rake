@@ -9,7 +9,7 @@ LLVM_LD_FLAGS  = output[1]
 LLVM_LIBRARIES = output[2]
 
 # Base stuff
-COMPILER_FLAGS = "-Wall -Werror -I/opt/local/include -I#{Rake.original_dir}"
+COMPILER_FLAGS = "-Wall -Werror -Wno-unused-function -I/opt/local/include -I#{Rake.original_dir}"
 LINKER_FLAGS   = "-L/opt/local/lib"
 
 # core compiler/linker stuff

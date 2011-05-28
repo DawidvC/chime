@@ -1,5 +1,12 @@
 # Rakefile: targets
 
+# the build system itself
+file("#{BUILD_PATH}/rake_cache" => LLVM_CONFIG)
+file("#{BUILD_PATH}/rake_cache" => RAKE_SOURCES) do
+  log("Touch", "rake_cache")
+  sh("touch #{BUILD_PATH}/rake_cache", :verbose => false)
+end
+
 # test fixtures
 directory("#{BUILD_PATH}/tests/fixtures")
 

@@ -10,11 +10,6 @@ LIBRARY_SOURCES      = FileList['library/**/*.cpp']
 LIBRARY_TEST_SOURCES = FileList['tests/library/**/*.cpp']
 RAKE_SOURCES         = FileList['Rakefile', 'rakelib/*.rake']
 
-file("#{BUILD_PATH}/rake_cache" => RAKE_SOURCES) do
-  log("Touch", "rake_cache")
-  sh("touch #{BUILD_PATH}/rake_cache", :verbose => false)
-end
-
 def compile(source_file, object_file)
   log("Compile", source_file.ext('o'))
   

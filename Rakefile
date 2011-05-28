@@ -8,15 +8,15 @@ LLVM_PATH  = "/Users/matt/Documents/programming/build/Release+Asserts"
 verbose(false)
 
 # basic tasks
-directory BUILD_PATH
+directory(BUILD_PATH)
 
 CLEAN.include("#{BUILD_PATH}/*")
 
 # target tasks
-task :default => ['compiler:all', 'runtime:all', 'library:all']
+multitask(:default => ['compiler:all', 'runtime:all'])
 
-desc "Print out the build configuration variables"
-task :print_config do
+desc("Print the build configuration variables")
+task(:print_config) do
   puts("LLVM_PATH:      '#{LLVM_PATH}'")
   puts("LLVM_CONFIG:    '#{LLVM_CONFIG}'")
   puts("LLVM_CXX_FLAGS: '#{LLVM_CXX_FLAGS}'")
@@ -34,48 +34,40 @@ task :print_config do
 end
 
 namespace :compiler do
-  desc 'Build the main frontend binary, chime'
+  desc "Build the main frontend binary, chime"
   task :frontend => ["#{BUILD_PATH}/chime"]
   
-  desc 'Build the chime compiler library'
+  desc "Build the chime compiler library"
   task :library => ["#{BUILD_PATH}/libchimecompiler.a"]
   
-  desc 'Run the compiler tests'
+  desc("Run the compiler tests, with an optional filter parameter")
   task :test, [:filter] => ["#{BUILD_PATH}/chime_test"] do |task, arguments|
-    filter = nil
-    if arguments[:filter]
-      filter = "--gtest_filter=#{arguments[:filter]}"
-    end
-
-    log("Execute", "#{BUILD_PATH}/chime_test #{filter}")
-    sh "#{BUILD_PATH}/chime_test #{filter}"
+    execute_test_binary("#{BUILD_PATH}/chime_test", arguments[:filter])
   end
   
-  task :all => [:frontend, :test]
+  # the explicit namespacing seems necessary for multitask for some
+  # weird reason.  This could be a bug in rake.
+  multitask(:all => ['compiler:test', :frontend])
 end
 
 namespace :runtime do
   desc "Build the runtime library"
-  task :build => ["#{BUILD_PATH}/libchimeruntime.a"]
+  task :library => ["#{BUILD_PATH}/libchimeruntime.a"]
   
   desc "Run the runtime tests"
-  task :test => ["#{BUILD_PATH}/runtime_test"] do
-    log("Execute", "#{BUILD_PATH}/runtime_test")
-    sh "#{BUILD_PATH}/runtime_test"
+  task(:test => ["#{BUILD_PATH}/runtime_test"]) do
+    execute_test_binary("#{BUILD_PATH}/runtime_test")
   end
   
-  task :all => [:test]
+  task(:all => :test)
 end
 
 namespace :library do
-  desc "Build the core class library"
-  task :build => ["#{BUILD_PATH}/libchime.a"]
+  desc("Build the core class library")
+  task(:build => ["#{BUILD_PATH}/libchime.a"])
   
-  desc "Run the runtime tests"
-  task :test => ["#{BUILD_PATH}/library_test"] do
-    log("Execute", "#{BUILD_PATH}/library_test")
-    sh "#{BUILD_PATH}/library_test"
+  desc("Run the runtime tests")
+  task(:test => ["#{BUILD_PATH}/library_test"]) do
+    execute_test_binary("#{BUILD_PATH}/library_test")
   end
-  
-  task :all# => [:test]
 end
