@@ -9,8 +9,9 @@ namespace chime
         _builder      = new llvm::IRBuilder<>(llvm::getGlobalContext());
         _scope_values = new std::map<std::string, llvm::Value*>();
         
-        _object_ptr_type = NULL;
-        _c_string_ptr_type = NULL;
+        _object_ptr_type         = NULL;
+        _c_string_ptr_type       = NULL;
+        _chime_function_type     = NULL;
     }
     
     code_generator::~code_generator()
@@ -74,6 +75,25 @@ namespace chime
         return (*_scope_values)[name];
     }
     
+    void code_generator::current_method_target(llvm::Value* target)
+    {
+        _current_method_target = target;
+    }
+    
+    llvm::Value* code_generator::current_method_target(void)
+    {
+        if (_current_method_target == NULL)
+        {
+            llvm::Value* class_name_ptr;
+            
+            class_name_ptr = this->make_constant_string("Main");
+            
+            return this->call_chime_runtime_get_class(class_name_ptr);
+        }
+        
+        return _current_method_target;
+    }
+    
     llvm::Type* code_generator::get_c_string_ptr_type(void)
     {
         if (!_c_string_ptr_type)
@@ -96,6 +116,21 @@ namespace chime
         _object_ptr_type = llvm::PointerType::get(object_struct_type, 0);
         
         return _object_ptr_type;
+    }
+    
+    llvm::FunctionType* code_generator::get_chime_function_type(void)
+    {
+        std::vector<const llvm::Type*> function_args;
+        
+        if (_chime_function_type)
+            return _chime_function_type;
+        
+        function_args.push_back(this->get_chime_object_ptr_type());
+        function_args.push_back(this->get_c_string_ptr_type());
+        
+        _chime_function_type = llvm::FunctionType::get(this->get_chime_object_ptr_type(), function_args, true);
+        
+        return _chime_function_type;
     }
     
     llvm::AllocaInst* code_generator::insert_chime_object_alloca(void)
@@ -206,6 +241,11 @@ namespace chime
         
         return alloca;
     }
+    llvm::Value* code_generator::call_chime_object_invoke_current_target(std::string name, std::vector<llvm::Value*> args)
+    {
+        return this->call_chime_object_invoke(this->current_method_target(), name, args);
+    }
+    
     llvm::Value* code_generator::call_chime_literal_encode_integer(signed long value)
     {
         llvm::Function*   function_chime_literal_encode_integer;
@@ -278,6 +318,21 @@ namespace chime
         return alloca;
     }
     
+    llvm::Value* code_generator::get_chime_literal_null(void)
+    {
+        llvm::Value* literal_null;
+        
+        literal_null = this->value_for_identifier("chime_literal_null");
+        if (literal_null == NULL)
+        {
+            literal_null = llvm::ConstantPointerNull::get((llvm::PointerType*)this->get_chime_object_ptr_type());
+            
+            this->set_value_for_identifier("chime_literal_null", literal_null);
+        }
+        
+        return literal_null;
+    }
+    
     llvm::Value* code_generator::call_chime_string_create_with_c_string(std::string str)
     {
         llvm::Function*   function_chime_string_create_with_c_string;
@@ -312,6 +367,48 @@ namespace chime
         this->builder()->CreateStore(call, alloca, false);
         
         return alloca;
+    }
+    
+    void code_generator::call_chime_object_set_function(llvm::Value* object_value, std::string name, llvm::Function* function, unsigned int arity)
+    {
+        llvm::Function*                     function_chime_object_set_function;
+        llvm::CallInst*                     call;
+        std::vector<llvm::Value*>::iterator it;
+        
+        function_chime_object_set_function = (llvm::Function*)this->value_for_identifier("chime_object_set_function");
+        if (function_chime_object_set_function == NULL)
+        {
+            std::vector<const llvm::Type*> function_args;
+            llvm::FunctionType*            function_type;
+            
+            function_args.push_back(this->get_chime_object_ptr_type());
+            function_args.push_back(this->get_c_string_ptr_type());
+            function_args.push_back(llvm::PointerType::get(this->get_chime_function_type(), 0));
+            function_args.push_back(llvm::IntegerType::get(*this->get_context(), 64));
+            
+            function_type = llvm::FunctionType::get(llvm::Type::getVoidTy(*this->get_context()), function_args, false);
+            
+            function_chime_object_set_function = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_object_set_function", this->module());
+            function_chime_object_set_function->setCallingConv(llvm::CallingConv::C);
+            
+            this->set_value_for_identifier("chime_object_set_function", function_chime_object_set_function);
+        }
+        
+        llvm::Value*              property_name_ptr;
+        llvm::LoadInst*           loaded_object_ptr;
+        std::vector<llvm::Value*> args;
+        
+        property_name_ptr = this->make_constant_string(name);
+        
+        loaded_object_ptr = this->builder()->CreateLoad(object_value, "instance for object set function");
+        
+        args.push_back(loaded_object_ptr);
+        args.push_back(property_name_ptr);
+        args.push_back(function);
+        args.push_back(llvm::ConstantInt::get(*this->get_context(), llvm::APInt(64, arity, 10)));
+        
+        call = this->builder()->CreateCall(function_chime_object_set_function, args.begin(), args.end(), "");
+        call->setTailCall(false);
     }
     
     void code_generator::make_main(void)
