@@ -1,6 +1,7 @@
 #include "method_call.h"
-#include "../../parser/parser.h"
+#include "parser/parser.h"
 #include "block.h"
+#include "operations/code_generator.h"
 
 namespace ast
 {
@@ -77,5 +78,26 @@ namespace ast
         {
             this->add_child(new ast::block(parser));
         }
+    }
+    
+    llvm::Value* method_call::codegen_with_target(llvm::Value* target, chime::code_generator& generator)
+    {
+        llvm::Value*      argument_value;
+        llvm::LoadInst*   object_load;
+        
+        std::vector<llvm::Value*>         arguments;
+        std::vector<ast::node*>::iterator i;
+        
+        for (i = this->children()->begin(); i < this->children()->end(); i++)
+        {
+            argument_value = (*i)->codegen(generator);
+            assert(argument_value);
+            
+            object_load = generator.builder()->CreateLoad(argument_value, "loaded argument");
+            
+            arguments.push_back(object_load);
+        }
+        
+        return generator.call_chime_object_invoke(target, this->identifier(), arguments);
     }
 }

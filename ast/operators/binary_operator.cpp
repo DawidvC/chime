@@ -56,24 +56,11 @@ namespace ast
         if (this->identifier().compare(".") == 0)
         {
             ast::method_call* call;
-            llvm::Value*      argument_value;
             
             call = dynamic_cast<ast::method_call*>(this->right_operand());
             assert(call);
             
-            // arguments need to be filled in here!
-            std::vector<ast::node*>::iterator i;
-            for (i=call->children()->begin(); i < call->children()->end(); i++)
-            {
-                argument_value = (*i)->codegen(generator);
-                assert(argument_value);
-                
-                object_load = generator.builder()->CreateLoad(argument_value, "loaded argument");
-                
-                arguments.push_back(object_load);
-            }
-            
-            return generator.call_chime_object_invoke(l_value, call->identifier(), arguments);
+            return call->codegen_with_target(l_value, generator);;
         }
         
         r_value = this->right_operand()->codegen(generator);

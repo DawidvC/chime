@@ -17,6 +17,8 @@ namespace ast
         std::string identifier() const;
         void identifier(std::string s);
         
+        llvm::Value* codegen_with_target(llvm::Value* target, chime::code_generator& generator);
+        
     protected:
         std::string _identifier;
         
