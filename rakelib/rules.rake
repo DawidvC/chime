@@ -10,49 +10,6 @@ LIBRARY_SOURCES      = FileList['library/**/*.cpp']
 LIBRARY_TEST_SOURCES = FileList['tests/library/**/*.cpp']
 RAKE_SOURCES         = FileList['Rakefile', 'rakelib/*.rake']
 
-def compile(source_file, object_file)
-  log("Compile", source_file.ext('o'))
-  
-  compiler = case File.extname(source_file)
-  when ".cpp"
-    CXX
-  when ".c"
-    CC
-  else
-    raise("Don't know how to compile #{path}")
-  end
-  
-  sh("#{compiler} -c #{source_file} -o #{object_file}", :verbose => false)
-end
-
-def header_dependencies_for_file(path)
-  return unless File.exist?(path)
-  
-  includes = Array.new()
-  
-  File.open(path) do |file|
-    until file.eof?
-      line = file.readline()
-      
-      case line[0,6]
-      when "class "
-        break
-      when "namesp"
-        break
-      when "#inclu"
-        project_header = line[/#include "([\/\w]+\.h)"/, 1]
-        
-        # must not be nil and must exist
-        next unless project_header and File.exist?(File.join(Rake.original_dir, project_header))
-        
-        includes << project_header if project_header
-      end
-    end
-  end
-  
-  includes
-end
-
 def dependencies_for_filelist(list)
   object_files = FileList.new()
   
@@ -101,4 +58,3 @@ RUNTIME_TEST_OBJECTS = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
 LIBRARY_OBJECTS      = dependencies_for_filelist(LIBRARY_SOURCES)
 LIBRARY_TEST_OBJECTS = dependencies_for_filelist(LIBRARY_TEST_SOURCES)
 
-# manual rules go here
