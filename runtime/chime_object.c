@@ -122,6 +122,9 @@ void chime_object_set_function(chime_object_t* instance, const char* name, chime
 {
     chime_object_t* method_object;
     
+    if (chime_log_level >= 4)
+        fprintf(stderr, "[runtime] setting function '%s' on %p\n", name, instance);
+        
     assert(instance);
     assert(name);
     assert(arity <= 8);
