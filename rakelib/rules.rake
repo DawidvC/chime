@@ -1,7 +1,7 @@
 # Rakefile: rules
 
 # make filelists for all of our sources
-COMPILER_SOURCES     = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp', 'operations/**/*.cpp']
+COMPILER_SOURCES     = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp', 'codegen/**/*.cpp']
 TEST_SOURCES         = FileList['tests/lexer/**/*.cpp', 'tests/parser/**/*.cpp']
 FRONTEND_SOURCES     = FileList['frontend/**/*.cpp']
 RUNTIME_SOURCES      = FileList['runtime/**/*.c']

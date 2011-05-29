@@ -1,7 +1,7 @@
 #include "type_reference.h"
 #include "parser/parser.h"
 #include <assert.h>
-#include "operations/code_generator.h"
+#include "codegen/code_generator.h"
 
 namespace ast
 {

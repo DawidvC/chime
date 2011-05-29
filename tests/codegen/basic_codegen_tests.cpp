@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../../operations/code_generator.h"
+#include "codegen/code_generator.h"
 
 class CodeGenTests : public testing::Test
 {

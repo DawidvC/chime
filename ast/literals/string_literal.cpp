@@ -1,6 +1,6 @@
 #include "string_literal.h"
 #include "parser/parser.h"
-#include "operations/code_generator.h"
+#include "codegen/code_generator.h"
 #include <assert.h>
 
 namespace ast

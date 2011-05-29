@@ -1,6 +1,6 @@
 #include "integer_literal.h"
 #include "parser/parser.h"
-#include "operations/code_generator.h"
+#include "codegen/code_generator.h"
 #include <sstream>
 
 namespace ast

@@ -1,7 +1,7 @@
 #include "method_call.h"
 #include "parser/parser.h"
 #include "block.h"
-#include "operations/code_generator.h"
+#include "codegen/code_generator.h"
 
 namespace ast
 {

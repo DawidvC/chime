@@ -1,6 +1,6 @@
 #include "binary_operator.h"
 #include <assert.h>
-#include "operations/code_generator.h"
+#include "codegen/code_generator.h"
 #include "ast/primary/method_call.h"
 
 namespace ast
