@@ -47,7 +47,7 @@ namespace :compiler do
   
   # the explicit namespacing seems necessary for multitask for some
   # weird reason.  This could be a bug in rake.
-  multitask(:all => ['compiler:test', :frontend])
+  multitask(:all => ['compiler:test', 'compiler:frontend'])
 end
 
 namespace :runtime do
