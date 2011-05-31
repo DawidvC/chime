@@ -1,0 +1,10 @@
+method test_boolean_literals()
+{
+    Assert.is_true(true)
+    Assert.is_false(false)
+    Assert.is_true(true == true)
+    Assert.is_true(true != false)
+    Assert.equal(true, to:true)
+}
+
+Assert.is_false(Main.test_boolean_literals())

@@ -17,8 +17,10 @@ namespace ast
         std::string         identifier() const;
         void                identifier(std::string s);
         
+        llvm::Value*        codegen(chime::code_generator& generator);
+        
     protected:
-        std::string                     _identifier;
+        std::string _identifier;
     };
 }
 
