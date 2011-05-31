@@ -2,12 +2,16 @@
 
 namespace chime
 {
-    RuntimeInterface::RuntimeInterface(llvm::Module* module)
+    RuntimeInterface::RuntimeInterface(llvm::Module* module, llvm::IRBuilder<>* builder)
     {
         _module            = module;
+        _builder           = builder;
         
         _objectPtrType     = NULL;
         _chimeFunctionType = NULL;
+        
+        _functionChimeRuntimeInitialize = NULL;
+        _functionChimeLibraryInitialize = NULL;
     }
     
     RuntimeInterface::~RuntimeInterface()
@@ -17,6 +21,16 @@ namespace chime
     llvm::Module* RuntimeInterface::getModule(void) const
     {
         return _module;
+    }
+    
+    llvm::LLVMContext& RuntimeInterface::getContext(void) const
+    {
+        return _module->getContext();
+    }
+    
+    llvm::IRBuilder<>* RuntimeInterface::getBuilder(void) const
+    {
+        return _builder;
     }
     
     llvm::Type* RuntimeInterface::getChimeObjectPtrType(llvm::LLVMContext& context)
@@ -48,5 +62,37 @@ namespace chime
         _chimeFunctionType = llvm::FunctionType::get(this->getChimeObjectPtrType(context), functionArgs, true);
         
         return _chimeFunctionType;
+    }
+    
+    void RuntimeInterface::callChimeRuntimeInitialize(void)
+    {
+        if (_functionChimeRuntimeInitialize == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+            
+            _functionChimeRuntimeInitialize = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_runtime_initialize", this->getModule());
+            _functionChimeRuntimeInitialize->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        this->getBuilder()->CreateCall(_functionChimeRuntimeInitialize, "");
+    }
+    
+    void RuntimeInterface::callChimeLibraryInitialize(void)
+    {
+        if (_functionChimeLibraryInitialize == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+            
+            _functionChimeLibraryInitialize = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_library_initialize", this->getModule());
+            _functionChimeLibraryInitialize->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        this->getBuilder()->CreateCall(_functionChimeLibraryInitialize, "");
     }
 }

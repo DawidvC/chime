@@ -13,7 +13,7 @@ directory(BUILD_PATH)
 CLEAN.include("#{BUILD_PATH}/*")
 
 # target tasks
-multitask(:default => ['compiler:all', 'runtime:all'])
+multitask(:default => ['compiler:all', 'runtime:all', 'library:build'])
 
 desc("Print the build configuration variables")
 task(:print_config) do

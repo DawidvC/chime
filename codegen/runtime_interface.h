@@ -6,25 +6,29 @@
 
 #include "llvm/DerivedTypes.h"
 #include "llvm/Module.h"
+#include "llvm/Support/IRBuilder.h"
 
 namespace chime
 {
     class RuntimeInterface
     {
     public:
-        RuntimeInterface(llvm::Module* module);
+        RuntimeInterface(llvm::Module* module, llvm::IRBuilder<>* builder);
         virtual ~RuntimeInterface();
         
         // accessors
-        llvm::Module* getModule(void) const;
+        llvm::Module*      getModule(void) const;
+        llvm::LLVMContext& getContext(void) const;
+        llvm::IRBuilder<>* getBuilder(void) const;
         
         // types
         llvm::Type*         getChimeObjectPtrType(llvm::LLVMContext& context);
         llvm::FunctionType* getChimeFunctionType(llvm::LLVMContext& context);
         
-        // // runtime functions
-        // void         callChimeRuntimeInitialize(void);
-        //              
+        // runtime functions
+        void         callChimeRuntimeInitialize(void);
+        void         callChimeLibraryInitialize(void);
+        
         // llvm::Value* callChimeRuntimeGetClass(llvm::Value* class_name_ptr);
         // 
         // // object functions
@@ -41,10 +45,14 @@ namespace chime
         
     protected:
         llvm::Module*       _module;
+        llvm::IRBuilder<>*  _builder;
         
         llvm::PointerType*  _objectPtrType;
         llvm::Type*         _cStringPtrType;
         llvm::FunctionType* _chimeFunctionType;
+        
+        llvm::Function*     _functionChimeRuntimeInitialize;
+        llvm::Function*     _functionChimeLibraryInitialize;
     };
 }
 

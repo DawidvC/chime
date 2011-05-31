@@ -1,4 +1,5 @@
 #include "code_generator.h"
+#include "codegen/runtime_interface.h"
 #include <assert.h>
 
 namespace chime
@@ -12,6 +13,8 @@ namespace chime
         _object_ptr_type         = NULL;
         _c_string_ptr_type       = NULL;
         _chime_function_type     = NULL;
+        
+        _runtimeInterface        = NULL;
     }
     
     code_generator::~code_generator()
@@ -21,6 +24,9 @@ namespace chime
         
         if (_module)
             delete _module;
+        
+        if (_runtimeInterface)
+            delete _runtimeInterface;
     }
     
     llvm::IRBuilder<>* code_generator::builder(void) const
@@ -36,6 +42,11 @@ namespace chime
     llvm::LLVMContext* code_generator::get_context(void) const
     {
         return &(this->module()->getContext());
+    }
+    
+    RuntimeInterface* code_generator::getRuntime(void) const
+    {
+        return _runtimeInterface;
     }
     
     llvm::Value* code_generator::make_constant_string(std::string str)
@@ -141,25 +152,6 @@ namespace chime
         alloca->setAlignment(8);
         
         return alloca;
-    }
-    
-    void code_generator::call_chime_runtime_initialize(void)
-    {
-        llvm::Function* function_chime_runtime_initialize;
-        
-        function_chime_runtime_initialize = (llvm::Function*)this->value_for_identifier("chime_runtime_initialize");
-        if (function_chime_runtime_initialize == NULL)
-        {
-            std::vector<const llvm::Type*> function_args;
-            llvm::FunctionType*            function_type;
-            
-            function_type = llvm::FunctionType::get(llvm::Type::getVoidTy(*this->get_context()), function_args, false);
-            
-            function_chime_runtime_initialize = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_runtime_initialize", this->module());
-            function_chime_runtime_initialize->setCallingConv(llvm::CallingConv::C);
-        }
-        
-        this->builder()->CreateCall(function_chime_runtime_initialize, "");
     }
     
     llvm::Value* code_generator::call_chime_runtime_get_class(llvm::Value* class_name_ptr)
@@ -435,7 +427,8 @@ namespace chime
         llvm::BasicBlock* label_entry = llvm::BasicBlock::Create(context, "entry", main_function, 0);
         this->builder()->SetInsertPoint(label_entry);
         
-        this->call_chime_runtime_initialize();
+        this->getRuntime()->callChimeRuntimeInitialize();
+        this->getRuntime()->callChimeLibraryInitialize();
     }
     
     void code_generator::generate(ast::node* node, const char* module_name)
@@ -445,6 +438,8 @@ namespace chime
         assert(node != NULL);
         
         _module = new llvm::Module(module_name, llvm::getGlobalContext());
+        
+        _runtimeInterface = new RuntimeInterface(this->module(), this->builder());
         
         this->make_main();
         

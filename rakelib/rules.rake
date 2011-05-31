@@ -6,7 +6,7 @@ TEST_SOURCES         = FileList['tests/lexer/**/*.cpp', 'tests/parser/**/*.cpp']
 FRONTEND_SOURCES     = FileList['frontend/**/*.cpp']
 RUNTIME_SOURCES      = FileList['runtime/**/*.c']
 RUNTIME_TEST_SOURCES = FileList['tests/runtime/**/*.cpp']
-LIBRARY_SOURCES      = FileList['library/**/*.cpp']
+LIBRARY_SOURCES      = FileList['library/**/*.c']
 LIBRARY_TEST_SOURCES = FileList['tests/library/**/*.cpp']
 RAKE_SOURCES         = FileList['Rakefile', 'rakelib/*.rake']
 

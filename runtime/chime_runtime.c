@@ -1,10 +1,9 @@
 // Chime Runtime: chime_runtime.c
 
-#include "chime_runtime.h"
-#include "chime_runtime_internal.h"
-#include "collections/chime_array.h"
-#include "chime_object_internal.h"
-#include "testing/assertions.h"
+#include "runtime/chime_runtime.h"
+#include "runtime/chime_runtime_internal.h"
+#include "runtime/collections/chime_array.h"
+#include "runtime/chime_object_internal.h"
 #include <assert.h>
 #include <stdio.h>
 
@@ -13,12 +12,13 @@ static chime_object_t*     _root_meta_class  = 0;
 chime_object_t*            _object_class     = 0;
 chime_object_t*            _string_class     = 0;
 chime_object_t*            _method_class     = 0;
-unsigned char              chime_log_level   = 4;
+unsigned char              chime_log_level   = 5;
 
 void chime_runtime_initialize(void)
 {
-    unsigned char   old_level;
+    unsigned char old_level;
     
+    // save original logging level
     old_level = chime_log_level;
     chime_log_level = 3;
     
@@ -48,15 +48,17 @@ void chime_runtime_initialize(void)
     
     chime_literal_initialize();
     
-    chime_assertion_initialize();
-    
     assert(chime_runtime_create_class("External", 0));
+    assert(chime_runtime_create_class("Main", _object_class));
     
     chime_log_level = old_level; // restore logging after initialization
 }
 
 void chime_runtime_destroy(void)
 {
+    chime_object_destroy(_method_class);
+    _method_class = NULL;
+    
     chime_object_destroy(_string_class);
     _string_class = NULL;
     

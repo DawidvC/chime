@@ -16,6 +16,8 @@
 
 namespace chime
 {
+    class RuntimeInterface;
+    
     class code_generator
     {
     public:
@@ -25,6 +27,7 @@ namespace chime
         llvm::IRBuilder<>* builder(void) const;
         llvm::Module*      module(void) const;
         llvm::LLVMContext* get_context(void) const;
+        RuntimeInterface*  getRuntime(void) const;
         
         llvm::Value*       make_constant_string(std::string str);
         
@@ -40,7 +43,6 @@ namespace chime
         
         llvm::AllocaInst*   insert_chime_object_alloca(void);
         
-        void            call_chime_runtime_initialize(void);
         llvm::Value*    call_chime_runtime_get_class(llvm::Value* class_name_ptr);
         llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);
         llvm::Value*    call_chime_object_invoke_current_target(std::string name, std::vector<llvm::Value*> args);
@@ -61,6 +63,8 @@ namespace chime
         llvm::PointerType*                   _object_ptr_type;
         llvm::Type*                          _c_string_ptr_type;
         llvm::FunctionType*                  _chime_function_type;
+        
+        RuntimeInterface*                    _runtimeInterface;
         
         void make_main(void);
     };
