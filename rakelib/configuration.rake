@@ -3,7 +3,8 @@
 # LLVM stuff
 LLVM_CONFIG    = "#{LLVM_PATH}/bin/llvm-config"
 
-output         = `#{LLVM_CONFIG} --cppflags --ldflags --libs core`.split("\n")
+# core x86
+output         = `#{LLVM_CONFIG} --cppflags --ldflags --libs all`.split("\n")
 LLVM_CXX_FLAGS = output[0]
 LLVM_LD_FLAGS  = output[1]
 LLVM_LIBRARIES = output[2]
@@ -15,7 +16,7 @@ LINKER_FLAGS   = "-L/opt/local/lib"
 # core compiler/linker stuff
 CC             = "#{LLVM_PATH}/bin/clang #{COMPILER_FLAGS}"
 CXX            = "#{LLVM_PATH}/bin/clang++ #{COMPILER_FLAGS} #{LLVM_CXX_FLAGS}"
-LINKER         = "#{LLVM_PATH}/bin/clang++ #{LINKER_FLAGS} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES}"
+LINKER         = "#{LLVM_PATH}/bin/clang++ #{LINKER_FLAGS}"
 
 # -r : add object files to the archive
 # -s : add object-file index

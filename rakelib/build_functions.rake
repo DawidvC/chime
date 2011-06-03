@@ -20,7 +20,9 @@ def execute_test_binary(path, filter=nil)
   filter = "--gtest_filter=#{filter}" if filter
   
   log("Execute", "#{path} #{filter}")
-  sh("#{path} #{filter}")
+  value = sh("#{path} #{filter}")
+  
+  log("Test", value ? "Passed" : "Failed".red)
 end
 
 # functions for dependency calculation

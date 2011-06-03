@@ -33,15 +33,15 @@ task(:print_config) do
   puts("BUILD_PATH:     '#{BUILD_PATH}'")
 end
 
-namespace :compiler do
-  desc "Build the main frontend binary, chime"
-  task :frontend => ["#{BUILD_PATH}/chime"]
+namespace(:compiler) do
+  desc("Build the main frontend binary, chime")
+  task(:frontend => ["#{BUILD_PATH}/chime"])
   
-  desc "Build the chime compiler library"
-  task :library => ["#{BUILD_PATH}/libchimecompiler.a"]
+  desc("Build the chime compiler library")
+  task(:library => ["#{BUILD_PATH}/libchimecompiler.a"])
   
   desc("Run the compiler tests, with an optional filter parameter")
-  task :test, [:filter] => ["#{BUILD_PATH}/chime_test"] do |task, arguments|
+  task(:test, [:filter] => ["#{BUILD_PATH}/chime_test"]) do |task, arguments|
     execute_test_binary("#{BUILD_PATH}/chime_test", arguments[:filter])
   end
   
@@ -50,11 +50,11 @@ namespace :compiler do
   multitask(:all => ['compiler:test', 'compiler:frontend'])
 end
 
-namespace :runtime do
-  desc "Build the runtime library"
-  task :library => ["#{BUILD_PATH}/libchimeruntime.a"]
+namespace(:runtime) do
+  desc("Build the runtime library")
+  task(:library => ["#{BUILD_PATH}/libchimeruntime.a"])
   
-  desc "Run the runtime tests"
+  desc("Run the runtime tests")
   task(:test => ["#{BUILD_PATH}/runtime_test"]) do
     execute_test_binary("#{BUILD_PATH}/runtime_test")
   end
@@ -62,7 +62,7 @@ namespace :runtime do
   task(:all => :test)
 end
 
-namespace :library do
+namespace(:library) do
   desc("Build the core class library")
   task(:build => ["#{BUILD_PATH}/libchime.a"])
   

@@ -2,14 +2,13 @@
 
 set -e
 
-# emit IR
-/tmp/chime/chime -e -o /tmp/chime/target.ll $1
-
 # compile to object code
-llc -filetype=obj -o /tmp/chime/target.o /tmp/chime/target.ll
+/tmp/chime/chime -o /tmp/chime/target.o $1
 
 # link
-clang -o /tmp/chime/target -L/tmp/chime -lchimeruntime -lchime /tmp/chime/target.o
+#clang -o /tmp/chime/target -L/tmp/chime -lchimeruntime -lchime /tmp/chime/target.o
+LD_FLAGS="-dynamic -arch x86_64 -macosx_version_min 10.6.0 -lcrt1.10.6.o -lSystem"
+ld $LD_FLAGS -L/tmp/chime -lchimeruntime -lchime -o /tmp/chime/target /tmp/chime/target.o
 
 # execute
 /tmp/chime/target

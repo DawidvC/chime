@@ -7,7 +7,6 @@ FRONTEND_SOURCES     = FileList['frontend/**/*.cpp']
 RUNTIME_SOURCES      = FileList['runtime/**/*.c']
 RUNTIME_TEST_SOURCES = FileList['tests/runtime/**/*.cpp']
 LIBRARY_SOURCES      = FileList['library/**/*.c']
-LIBRARY_TEST_SOURCES = FileList['tests/library/**/*.cpp']
 RAKE_SOURCES         = FileList['Rakefile', 'rakelib/*.rake']
 
 def dependencies_for_filelist(list)
@@ -56,5 +55,4 @@ FRONTEND_OBJECTS     = dependencies_for_filelist(FRONTEND_SOURCES)
 RUNTIME_OBJECTS      = dependencies_for_filelist(RUNTIME_SOURCES)
 RUNTIME_TEST_OBJECTS = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
 LIBRARY_OBJECTS      = dependencies_for_filelist(LIBRARY_SOURCES)
-LIBRARY_TEST_OBJECTS = dependencies_for_filelist(LIBRARY_TEST_SOURCES)
 

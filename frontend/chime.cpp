@@ -13,9 +13,17 @@
 #include <llvm/Assembly/PrintModulePass.h>
 #include <llvm/Support/FormattedStream.h>
 
+// for emitting object files
+#include "llvm/Support/Host.h"
+#include "llvm/ADT/Triple.h"
+#include "llvm/Target/TargetData.h"
+#include "llvm/Target/TargetMachine.h"
+#include "llvm/Target/TargetRegistry.h"
+#include "llvm/Target/TargetSelect.h"
+
 bool        print_ast;
 bool        emit_llvm_ir;
-const char* output_file_name;
+const char* outputFileName;
 
 // std::string path_with_new_extension(std::string path, const char* extension)
 // {
@@ -29,16 +37,16 @@ void get_options(int argc, char* argv[])
     int32_t c;
     
     static struct option longopts[] = {
-        { "emit-llvm",  no_argument,            NULL,           'e' },
-        { "help",       no_argument,            NULL,           'h' },
+        { "emit-llvm",  no_argument,       NULL, 'e' },
+        { "help",       no_argument,       NULL, 'h' },
         { "output",     required_argument, NULL, 'o' },
-        { "print",      no_argument,            NULL,           'p' },
-        { NULL,         0,                      NULL,           0 }
+        { "print",      no_argument,       NULL, 'p' },
+        { NULL,         0,                 NULL, 0   }
     };
     
-    print_ast        = false;
-    emit_llvm_ir     = false;
-    output_file_name = NULL;
+    print_ast      = false;
+    emit_llvm_ir   = false;
+    outputFileName = NULL;
     
     while ((c = getopt_long(argc, argv, "eho:p", longopts, NULL)) != -1)
     {
@@ -48,7 +56,7 @@ void get_options(int argc, char* argv[])
                 emit_llvm_ir = true;
                 break;
             case 'o':
-                output_file_name = optarg;
+                outputFileName = optarg;
                 break;
             case 'p':
                 print_ast = true;
@@ -59,11 +67,79 @@ void get_options(int argc, char* argv[])
                 printf("\n");
                 printf("  -e (--emit-llvm)  create llvm IR\n");
                 printf("  -h (--help)       print this help message and exit\n");
+                printf("  -o (--output)     name of output file\n");
                 printf("  -p (--print)      print out the AST representation for the input file\n");
                 exit(0);
                 break;
         }
     }
+}
+
+void produce_ir(llvm::Module& module)
+{
+    llvm::PassManager  passManager;
+    llvm::raw_ostream* stream;
+    
+    if (outputFileName)
+    {
+        std::string errorString;
+        
+        stream = new llvm::raw_fd_ostream(outputFileName, errorString, 0);
+    }
+    else
+    {
+        stream = &llvm::outs();
+    }
+    
+    passManager.add(llvm::createPrintModulePass(stream));
+    
+    passManager.run(module);
+}
+
+void produce_object_file(llvm::Module& module)
+{
+    llvm::PassManager    passManager;
+    std::string          errorString;
+    llvm::Triple         triple;
+    const llvm::Target*  target = 0;
+    llvm::TargetMachine* targetMachine;
+    std::string          featuresString;
+    llvm::raw_ostream*   stream;
+    
+    stream = new llvm::raw_fd_ostream(outputFileName, errorString, llvm::raw_fd_ostream::F_Binary);
+    
+    llvm::formatted_raw_ostream formatted_ostream(*stream);
+    
+    //llvm::InitializeAllTargetInfos();
+    
+    //llvm::InitializeNativeTarget();
+    //llvm::InitializeNativeTargetAsmPrinter();
+    llvm::InitializeAllTargets();
+    llvm::InitializeAllAsmPrinters();
+    llvm::InitializeAllAsmParsers();
+    
+    triple.setTriple(llvm::sys::getHostTriple());
+    
+    target = llvm::TargetRegistry::lookupTarget(triple.getTriple(), errorString);
+    
+    if (!target)
+    {
+        fprintf(stderr, "crap %s\n", errorString.c_str());
+    }
+    
+    targetMachine = target->createTargetMachine(triple.getTriple(), featuresString);
+    
+    passManager.add(new llvm::TargetData((const llvm::TargetData)*targetMachine->getTargetData()));
+    
+    targetMachine->setAsmVerbosityDefault(true);
+    
+    // llvm::TargetMachine::CGFT_ObjectFile
+    if (targetMachine->addPassesToEmitFile(passManager, formatted_ostream, llvm::TargetMachine::CGFT_ObjectFile, llvm::CodeGenOpt::None, false))
+    {
+        fprintf(stderr, "Target type does not support object file generation\n");
+    }
+    
+    passManager.run(module);
 }
 
 int main(int argc, char* argv[])
@@ -98,22 +174,11 @@ int main(int argc, char* argv[])
     
     if (emit_llvm_ir)
     {
-        llvm::PassManager    pass_manager;
-        std::string          error_string;
-        llvm::raw_ostream*   stream;
-        
-        if (output_file_name)
-        {
-            stream = new llvm::raw_fd_ostream(output_file_name, error_string, 0);
-        }
-        else
-        {
-            stream = &llvm::outs();
-        }   
-        
-        pass_manager.add(llvm::createPrintModulePass(stream));
-        pass_manager.run(*generator->module());
+        produce_ir(*generator->module());
+        return 0;
     }
+    
+    produce_object_file(*generator->module());
     
     return 0;
 }

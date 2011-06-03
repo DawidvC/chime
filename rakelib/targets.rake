@@ -20,7 +20,7 @@ file("#{BUILD_PATH}/chime_test" => :test_fixtures)
 file("#{BUILD_PATH}/chime_test" => "#{BUILD_PATH}/libchimecompiler.a")
 file("#{BUILD_PATH}/chime_test" => TEST_OBJECTS) do
   log("Link", "#{BUILD_PATH}/chime_test")
-  sh("#{LINKER} -lgtest -lgtest_main -L#{BUILD_PATH} -lchimecompiler -o #{BUILD_PATH}/chime_test #{TEST_OBJECTS}")
+  sh("#{LINKER} -lgtest -lgtest_main -L#{BUILD_PATH} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES} -lchimecompiler -o #{BUILD_PATH}/chime_test #{TEST_OBJECTS}")
 end
 
 # compiler library
@@ -35,7 +35,7 @@ end
 file("#{BUILD_PATH}/chime" => "#{BUILD_PATH}/libchimecompiler.a")
 file("#{BUILD_PATH}/chime" => FRONTEND_OBJECTS) do
   log("Link", "#{BUILD_PATH}/chime")
-  sh("#{LINKER} -L#{BUILD_PATH} -lchimecompiler -o #{BUILD_PATH}/chime #{FRONTEND_OBJECTS}")
+  sh("#{LINKER} -L#{BUILD_PATH} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES} -lchimecompiler -o #{BUILD_PATH}/chime #{FRONTEND_OBJECTS}")
 end
 
 # runtime
@@ -55,11 +55,4 @@ end
 file("#{BUILD_PATH}/libchime.a" => LIBRARY_OBJECTS) do
   log("Library", "#{BUILD_PATH}/libchime.a")
   sh("#{ARCHIVER} #{BUILD_PATH}/libchime.a #{LIBRARY_OBJECTS}", :verbose => false)
-end
-
-# library test
-file("#{BUILD_PATH}/library_test" => "#{BUILD_PATH}/libchime.a")
-file("#{BUILD_PATH}/library_test" => LIBRARY_TEST_OBJECTS) do
-  log("Link", "#{BUILD_PATH}/library_test")
-  sh("#{LINKER} -lgtest -lgtest_main -L#{BUILD_PATH} -lchimeruntime -lchime -o #{BUILD_PATH}/runtime_test #{LIBRARY_TEST_OBJECTS}")
 end
