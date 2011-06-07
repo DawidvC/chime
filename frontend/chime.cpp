@@ -110,13 +110,9 @@ void produce_object_file(llvm::Module& module)
     
     llvm::formatted_raw_ostream formatted_ostream(*stream);
     
-    //llvm::InitializeAllTargetInfos();
-    
-    //llvm::InitializeNativeTarget();
-    //llvm::InitializeNativeTargetAsmPrinter();
-    llvm::InitializeAllTargets();
-    llvm::InitializeAllAsmPrinters();
-    llvm::InitializeAllAsmParsers();
+    // initialize the target and asm generator for just this machine
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
     
     triple.setTriple(llvm::sys::getHostTriple());
     

@@ -22,7 +22,9 @@ def execute_test_binary(path, filter=nil)
   log("Execute", "#{path} #{filter}")
   value = sh("#{path} #{filter}")
   
-  log("Test", value ? "Passed" : "Failed".red)
+  result = value ? "Passed" : "Failed".red
+  
+  log("Test", "#{path}: #{result}")
 end
 
 # functions for dependency calculation

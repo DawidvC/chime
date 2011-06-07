@@ -4,7 +4,7 @@
 LLVM_CONFIG    = "#{LLVM_PATH}/bin/llvm-config"
 
 # core x86
-output         = `#{LLVM_CONFIG} --cppflags --ldflags --libs all`.split("\n")
+output         = `#{LLVM_CONFIG} --cppflags --ldflags --libs nativecodegen`.split("\n")
 LLVM_CXX_FLAGS = output[0]
 LLVM_LD_FLAGS  = output[1]
 LLVM_LIBRARIES = output[2]
