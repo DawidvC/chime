@@ -9,17 +9,17 @@
     <span class="comment">// throw works a lot like return</span>
     <span class="keyword">throw</span> <span class="entity">RuntimeException</span>.<span class="function">new</span>(<span class="literal">"BOOM!"</span>)
 }
-<span class="keyword">catch</span>(<span class="entity">RuntimeException</span> e)
+<span class="keyword">catch</span> (<span class="entity">RuntimeException</span> e)
 {
     <span class="comment">// catch a specific exception class</span>
 }
-<span class="keyword">catch</span>(e)
+<span class="keyword">catch</span> (e)
 {
     <span class="comment">// catch everything else</span>
 }
 <span class="keyword">finally</span>
 {
-    <span class="comment">// called no matter what, unless exception bubbles to the top</span>
+    <span class="comment">// called no matter what</span>
 }
   </code>
 </section>
