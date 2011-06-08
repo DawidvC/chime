@@ -1,13 +1,14 @@
 # Rakefile: rules
 
 # make filelists for all of our sources
-COMPILER_SOURCES     = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp', 'codegen/**/*.cpp']
-TEST_SOURCES         = FileList['tests/lexer/**/*.cpp', 'tests/parser/**/*.cpp']
-FRONTEND_SOURCES     = FileList['frontend/**/*.cpp']
-RUNTIME_SOURCES      = FileList['runtime/**/*.c']
-RUNTIME_TEST_SOURCES = FileList['tests/runtime/**/*.cpp']
-LIBRARY_SOURCES      = FileList['library/**/*.c']
-RAKE_SOURCES         = FileList['Rakefile', 'rakelib/*.rake']
+RAKE_SOURCES          = FileList['Rakefile']#, 'rakelib/*.rake']
+COMPILER_SOURCES      = FileList['ast/**/*.cpp', 'lexer/**/*.cpp', 'parser/**/*.cpp', 'codegen/**/*.cpp']
+TEST_SOURCES          = FileList['tests/lexer/**/*.cpp', 'tests/parser/**/*.cpp']
+FRONTEND_SOURCES      = FileList['frontend/**/*.cpp']
+RUNTIME_SOURCES       = FileList['runtime/**/*.c']
+RUNTIME_TEST_SOURCES  = FileList['tests/runtime/**/*.cpp']
+LIBRARY_SOURCES       = FileList['library/**/*.c']
+LANGUAGE_TEST_SOURCES = FileList['tests/language/**/*.chm']
 
 def dependencies_for_filelist(list)
   object_files = FileList.new()
@@ -49,10 +50,30 @@ def dependencies_for_filelist(list)
 end
 
 # create dependenices on the sources for each object file
-COMPILER_OBJECTS     = dependencies_for_filelist(COMPILER_SOURCES)
-TEST_OBJECTS         = dependencies_for_filelist(TEST_SOURCES)
-FRONTEND_OBJECTS     = dependencies_for_filelist(FRONTEND_SOURCES)
-RUNTIME_OBJECTS      = dependencies_for_filelist(RUNTIME_SOURCES)
-RUNTIME_TEST_OBJECTS = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
-LIBRARY_OBJECTS      = dependencies_for_filelist(LIBRARY_SOURCES)
+COMPILER_OBJECTS      = dependencies_for_filelist(COMPILER_SOURCES)
+TEST_OBJECTS          = dependencies_for_filelist(TEST_SOURCES)
+FRONTEND_OBJECTS      = dependencies_for_filelist(FRONTEND_SOURCES)
+RUNTIME_OBJECTS       = dependencies_for_filelist(RUNTIME_SOURCES)
+RUNTIME_TEST_OBJECTS  = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
+LIBRARY_OBJECTS       = dependencies_for_filelist(LIBRARY_SOURCES)
+
+LANGUAGE_TEST_OBJECTS = FileList.new()
+LANGUAGE_TEST_SOURCES.each do |source_file|
+  object_file = BUILD_PATH + '/' + source_file.ext('o')
+  object_dir  = File.dirname(object_file)
+  
+  dependencies = Array.new()
+  
+  dependencies << "#{BUILD_PATH}/rake_cache"
+  dependencies << source_file
+  dependencies << object_dir
+  dependencies << CHIME_COMPILER
+  
+  directory(object_dir)
+  file(object_file => dependencies) do
+    compile(source_file, object_file)
+  end
+  
+  LANGUAGE_TEST_OBJECTS << object_file
+end
 

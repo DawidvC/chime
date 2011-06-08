@@ -52,7 +52,17 @@ file("#{BUILD_PATH}/runtime_test" => RUNTIME_TEST_OBJECTS) do
 end
 
 # library
+file("#{BUILD_PATH}/libchime.a" => "#{BUILD_PATH}/libchimeruntime.a")
 file("#{BUILD_PATH}/libchime.a" => LIBRARY_OBJECTS) do
   log("Library", "#{BUILD_PATH}/libchime.a")
   sh("#{ARCHIVER} #{BUILD_PATH}/libchime.a #{LIBRARY_OBJECTS}", :verbose => false)
+end
+
+# language tests
+file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchime.a")
+file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchimeruntime.a")
+file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/chime")
+file("#{BUILD_PATH}/language_test" => LANGUAGE_TEST_OBJECTS) do
+  log("Link", "#{BUILD_PATH}/language_test")
+  sh("#{CHIME_LINKER} -o #{BUILD_PATH}/language_test #{LANGUAGE_TEST_OBJECTS}", :verbose => false)
 end

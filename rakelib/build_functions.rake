@@ -9,11 +9,13 @@ def compile(source_file, object_file)
     CXX
   when ".c"
     CC
+  when ".chm", ".chime"
+    CHIME_COMPILER
   else
     raise("Don't know how to compile #{path}")
   end
   
-  sh("#{compiler} -c #{source_file} -o #{object_file}", :verbose => false)
+  sh("#{compiler} -c -o #{object_file} #{source_file}", :verbose => false)
 end
 
 def execute_test_binary(path, filter=nil)
