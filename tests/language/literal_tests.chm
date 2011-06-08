@@ -17,4 +17,13 @@
         Assert.equal(true, to:true)
         Assert.equal(true, to:false)
 //     }
+//
+//     method test_integer_literals()
+//     {
+//         Assert.is_true((1 <=> 1) == 0)
+//         Assert.is_true(1 == 1)
+//         Assert.equal(1, to:1)
+//         Assert.equal(1, to:2)
+//         Assert.is_false(10 == 10)
+//     }
 // }
