@@ -22,8 +22,8 @@ namespace chime
         llvm::IRBuilder<>* getBuilder(void) const;
         
         // types
-        llvm::Type*         getChimeObjectPtrType(llvm::LLVMContext& context);
-        llvm::FunctionType* getChimeFunctionType(llvm::LLVMContext& context);
+        llvm::Type*         getChimeObjectPtrType(void);
+        llvm::FunctionType* getChimeFunctionType(void);
         
         // runtime functions
         void         callChimeRuntimeInitialize(void);

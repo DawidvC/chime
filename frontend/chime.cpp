@@ -37,6 +37,7 @@ void get_options(int argc, char* argv[])
     int32_t c;
     
     static struct option longopts[] = {
+        { NULL,         no_argument,       NULL, 'c' },
         { "emit-llvm",  no_argument,       NULL, 'e' },
         { "help",       no_argument,       NULL, 'h' },
         { "output",     required_argument, NULL, 'o' },
@@ -48,10 +49,12 @@ void get_options(int argc, char* argv[])
     emit_llvm_ir   = false;
     outputFileName = NULL;
     
-    while ((c = getopt_long(argc, argv, "eho:p", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "ceho:p", longopts, NULL)) != -1)
     {
         switch (c)
         {
+            case 'c':
+                break;
             case 'e':
                 emit_llvm_ir = true;
                 break;
@@ -65,6 +68,7 @@ void get_options(int argc, char* argv[])
             default:
                 printf("usage: chime [options] [--] [file] [arguments]\n");
                 printf("\n");
+                printf("  -c                run only compile and assemble steps\n");
                 printf("  -e (--emit-llvm)  create llvm IR\n");
                 printf("  -h (--help)       print this help message and exit\n");
                 printf("  -o (--output)     name of output file\n");

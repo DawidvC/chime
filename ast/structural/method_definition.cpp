@@ -38,20 +38,26 @@ namespace ast
     
     llvm::Value* method_definition::codegen(chime::code_generator& generator)
     {
-        llvm::Function*   method_function;
+        llvm::Function*   methodFunction;
         llvm::Value*      target;
-        llvm::BasicBlock* basic_block;
+        llvm::BasicBlock* basicBlock;
         
-        method_function = llvm::Function::Create(generator.get_chime_function_type(), llvm::GlobalValue::ExternalLinkage, this->identifier(), generator.module());
-        method_function->setCallingConv(llvm::CallingConv::C);
+        methodFunction = llvm::Function::Create(generator.getRuntime()->getChimeFunctionType(), llvm::GlobalValue::ExternalLinkage, this->identifier(), generator.module());
+        methodFunction->setCallingConv(llvm::CallingConv::C);
         
-        basic_block = llvm::BasicBlock::Create(*generator.get_context(), "entry", method_function, 0);
+        basicBlock = llvm::BasicBlock::Create(generator.get_context(), "entry", methodFunction, 0);
+        generator.builder()->SetInsertPoint(basicBlock);
         
-        llvm::ReturnInst::Create(*generator.get_context(), generator.get_chime_literal_null(), basic_block);
+        // body goes here
+        
+        generator.builder()->CreateRet(generator.get_chime_literal_null());
         
         target = generator.current_method_target();
         
-        generator.call_chime_object_set_function(target, this->identifier(), method_function, this->parameters()->size());
+        generator.call_chime_object_set_function(target, this->identifier(), methodFunction, this->parameters()->size());
+        
+        // finally, verify the functiont to be sure we didn't mess anything up
+        llvm::verifyFunction(*methodFunction);
         
         return NULL;
     }

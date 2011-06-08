@@ -33,14 +33,14 @@ namespace chime
         return _builder;
     }
     
-    llvm::Type* RuntimeInterface::getChimeObjectPtrType(llvm::LLVMContext& context)
+    llvm::Type* RuntimeInterface::getChimeObjectPtrType(void)
     {
         llvm::OpaqueType* objectStructType;
         
         if (_objectPtrType)
             return _objectPtrType;
             
-        objectStructType = llvm::OpaqueType::get(context);
+        objectStructType = llvm::OpaqueType::get(this->getContext());
         
         this->getModule()->addTypeName("struct._chime_object", objectStructType);
          
@@ -49,17 +49,17 @@ namespace chime
         return _objectPtrType;
     }
     
-    llvm::FunctionType* RuntimeInterface::getChimeFunctionType(llvm::LLVMContext& context)
+    llvm::FunctionType* RuntimeInterface::getChimeFunctionType(void)
     {
         std::vector<const llvm::Type*> functionArgs;
         
         if (_chimeFunctionType)
             return _chimeFunctionType;
         
-        functionArgs.push_back(this->getChimeObjectPtrType(context));
-        functionArgs.push_back(llvm::PointerType::get(llvm::IntegerType::get(context, 8), 0));
+        functionArgs.push_back(this->getChimeObjectPtrType());
+        functionArgs.push_back(llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0));
         
-        _chimeFunctionType = llvm::FunctionType::get(this->getChimeObjectPtrType(context), functionArgs, true);
+        _chimeFunctionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, true);
         
         return _chimeFunctionType;
     }

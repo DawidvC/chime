@@ -13,11 +13,10 @@
 #include "llvm/Support/IRBuilder.h"
 
 #include "ast/node.h"
+#include "codegen/runtime_interface.h"
 
 namespace chime
 {
-    class RuntimeInterface;
-    
     class code_generator
     {
     public:
@@ -26,7 +25,7 @@ namespace chime
         
         llvm::IRBuilder<>* builder(void) const;
         llvm::Module*      module(void) const;
-        llvm::LLVMContext* get_context(void) const;
+        llvm::LLVMContext& get_context(void) const;
         RuntimeInterface*  getRuntime(void) const;
         
         llvm::Value*       make_constant_string(std::string str);
@@ -38,8 +37,6 @@ namespace chime
         llvm::Value*       current_method_target(void);
         
         llvm::Type*         get_c_string_ptr_type(void);
-        llvm::Type*         get_chime_object_ptr_type(void);
-        llvm::FunctionType* get_chime_function_type(void);
         
         llvm::AllocaInst*   insert_chime_object_alloca(void);
         
