@@ -472,13 +472,17 @@ namespace chime
         if (t->equal_to("next"))
         {
             node = new ast::next(this);
+            
+            node = this->parse_tailing_conditional(node);
+        }
+        else if (t->equal_to("try"))
+        {
+            node = new ast::Try(*this);
         }
         else
         {
-            assert(false);
+            assert(false && "Unhandled control statement");
         }
-        
-        node = this->parse_tailing_conditional(node);
         
         return node;
     }

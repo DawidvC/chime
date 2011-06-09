@@ -174,3 +174,18 @@ TEST_F(TokenTest, IsLiteral)
     token->set_value("false");
     ASSERT_TRUE(token->is_literal());
 }
+
+TEST_F(TokenTest, IsExceptionRelated)
+{
+    token->set_value("try");
+    ASSERT_TRUE(token->isExceptionRelated());
+    
+    token->set_value("catch");
+    ASSERT_TRUE(token->isExceptionRelated());
+    
+    token->set_value("finally");
+    ASSERT_TRUE(token->isExceptionRelated());
+    
+    token->set_value("throw");
+    ASSERT_TRUE(token->isExceptionRelated());
+}

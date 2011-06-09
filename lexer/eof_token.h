@@ -1,7 +1,7 @@
-#include "token.h"
+#ifndef EOF_TOKEN_H
+#define EOF_TOKEN_H
 
-#ifndef _EOF_TOKEN_H_
-#define _EOF_TOKEN_H_
+#include "lexer/token.h"
 
 namespace chime
 {
@@ -10,29 +10,28 @@ namespace chime
     public:
         virtual bool equal_to(const char*);
         
-        virtual bool empty(void);
-        virtual bool is_string(void);
-        virtual bool is_number(void);
-        virtual bool is_integer(void);
-        virtual bool is_floating_point(void);
-        virtual bool is_boolean(void);
-        virtual bool is_modifier(void);
-        virtual bool is_structural(void);
-        virtual bool is_conditional(void);
-        virtual bool is_loop(void);
-        virtual bool is_control(void);
-        virtual bool is_literal(void);
-        virtual bool is_identifier(void);
-        virtual bool is_entity(void);
-        virtual bool is_punctuation(void);
-        virtual bool is_reserved(void);
+        virtual bool empty(void) const;
+        virtual bool isString(void) const;
+        virtual bool isInteger(void) const;
+        virtual bool isFloatingPoint(void) const;
+        virtual bool isBoolean(void) const;
+        virtual bool isModifier(void) const;
+        virtual bool isStructural(void) const;
+        virtual bool isConditional(void) const;
+        virtual bool isLoop(void) const;
+        virtual bool isControl(void) const;
+        virtual bool isIdentifier(void) const;
+        virtual bool isType(void) const;
+        virtual bool isPunctuation(void) const;
+        virtual bool isReserved(void) const;
         virtual bool is_block_start(void);
         virtual bool is_ending(void) const;
-        virtual int precedence(void);
+        virtual bool isExceptionRelated(void) const;
+        virtual int  precedence(void) const;
         
         virtual long integer_value(void);
         virtual std::string string_value(void);
     };
 }
 
-#endif /* _EOF_TOKEN_H_ */
+#endif // EOF_TOKEN_H

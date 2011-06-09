@@ -26,6 +26,8 @@ ast::node* ParserTestsBase::parse(const char* input)
     
     _last_node = parser->parse();
     
+    //assert(parser->errors()->size() == 0 && "There should not be any errors after parsing");
+    
     parser->print_errors();
     
     delete parser;

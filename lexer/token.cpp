@@ -1,6 +1,6 @@
 #include <string>
 
-#include "token.h"
+#include "lexer/token.h"
 
 namespace chime
 {
@@ -48,19 +48,36 @@ namespace chime
         return _value.compare(s) == 0;
     }
     
-    bool token::empty(void)
+    bool token::empty(void) const
     {
         return _value.empty();
     }
     bool token::is_string(void)
     {
+        return this->isString();
+    }
+    
+    bool token::isString(void) const
+    {
         return _value[0] == '"';
     }
+    
     bool token::is_number(void)
     {
-        return this->is_floating_point() || this->is_integer();
+        return this->isNumber();
     }
+    
+    bool token::isNumber(void) const
+    {
+        return this->isFloatingPoint() || this->isInteger();
+    }
+    
     bool token::is_integer(void)
+    {
+        return this->isInteger();
+    }
+    
+    bool token::isInteger(void) const
     {
         char c;
         
@@ -68,25 +85,45 @@ namespace chime
         
         return (c >= '0' && c <= '9' );
     }
+    
     bool token::is_floating_point(void)
+    {
+        return this->isFloatingPoint();
+    }
+    
+    bool token::isFloatingPoint(void) const
     {
         char c;
         
-        if (!this->is_integer())    return false;
+        if (!this->isInteger())
+            return false;
         
         c = *_value.end();
-        if (c <= '0' || c >= '9' )  return false;
-
+        if (c <= '0' || c >= '9' )
+            return false;
+        
         return _value.find(".",0) != std::string::npos;
     }
+    
     bool token::is_boolean(void)
+    {
+        return this->isBoolean();
+    }
+    
+    bool token::isBoolean(void) const
     {
         if (_value == "true")   return true;
         if (_value == "false")  return true;
         
         return false;
     }
+    
     bool token::is_modifier(void)
+    {
+        return this->isModifier();
+    }
+    
+    bool token::isModifier(void) const
     {
         if (_value == "private")    return true;
         if (_value == "protected")  return true;
@@ -95,7 +132,13 @@ namespace chime
         
         return false;
     }
+    
     bool token::is_structural(void)
+    {
+        return this->isStructural();
+    }
+    
+    bool token::isStructural(void) const
     {
         if (_value == "method")         return true;
         if (_value == "class")          return true;
@@ -106,14 +149,26 @@ namespace chime
         
         return false;
     }
+    
     bool token::is_conditional(void)
+    {
+        return this->isConditional();
+    }
+    
+    bool token::isConditional(void) const
     {
         if (_value == "if")     return true;
         if (_value == "unless") return true;
         
         return false;
     }
+    
     bool token::is_loop(void)
+    {
+        return this->isLoop();
+    }
+    
+    bool token::isLoop(void) const
     {
         if (_value == "while") return true;
         if (_value == "until") return true;
@@ -121,52 +176,83 @@ namespace chime
         
         return false;
     }
+    
     bool token::is_control(void)
     {
-        if (_value == "for")        return true;
-        if (_value == "switch")     return true;
-        if (_value == "case")       return true;
-        if (_value == "break")      return true;
-        if (_value == "else")       return true;
-        if (_value == "return")     return true;
-        if (_value == "yield")      return true;
-        if (_value == "next")       return true;
+        return this->isControl();
+    }
+    
+    bool token::isControl(void) const
+    {
+        if (_value == "for")            return true;
+        if (_value == "switch")         return true;
+        if (_value == "case")           return true;
+        if (_value == "break")          return true;
+        if (_value == "else")           return true;
+        if (_value == "return")         return true;
+        if (_value == "yield")          return true;
+        if (_value == "next")           return true;
         
-        if (this->is_loop())        return true;
-        if (this->is_conditional()) return true;
+        if (this->isLoop())             return true;
+        if (this->isConditional())      return true;
+        if (this->isExceptionRelated()) return true;
         
         return false;
     }
+    
     bool token::is_literal(void)
     {
-        return this->is_string() || this->is_number() || this->is_boolean();
+        return this->isLiteral();
     }
+    
+    bool token::isLiteral(void) const
+    {
+        return this->isString() || this->isNumber() || this->isBoolean();
+    }
+    
     bool token::is_identifier(void)
     {
+        return this->isIdentifier();
+    }
+    
+    bool token::isIdentifier(void) const
+    {
         if (this->empty())          return false;
-        if (this->is_literal())     return false;
-        if (this->is_reserved())    return false;
+        if (this->isLiteral())      return false;
+        if (this->isReserved())     return false;
         if (this->precedence() > 0) return false;
-        if (this->is_punctuation()) return false;
-        if (this->is_type())        return false;
+        if (this->isPunctuation())  return false;
+        if (this->isType())         return false;
         
         return true;
     }
+    
     bool token::is_type(void)
+    {
+        return this->isType();
+    }
+    
+    bool token::isType(void) const
     {
         char c;
         
         if (this->empty())          return false;
-        if (this->is_literal())     return false;
-        if (this->is_reserved())    return false;
+        if (this->isLiteral())      return false;
+        if (this->isReserved())     return false;
         if (this->precedence() > 0) return false;
-        if (this->is_punctuation()) return false;
+        if (this->isPunctuation())  return false;
         
         c = *_value.begin();
         
         return (c >= 'A' && c <= 'Z' );
     }
+    
     bool token::is_punctuation(void)
+    {
+        return this->isPunctuation();
+    }
+    
+    bool token::isPunctuation(void) const
     {
         if (_value == "[")  return true;
         if (_value == "]")  return true;
@@ -182,16 +268,23 @@ namespace chime
         
         return false;
     }
+    
     bool token::is_reserved(void)
     {
-        if (this->is_control())     return true;
-        if (this->is_modifier())    return true;
-        if (this->is_structural())  return true;
-        if (this->is_punctuation()) return true;
-        if (this->is_boolean())     return true;
+        return this->isReserved();
+    }
+    
+    bool token::isReserved(void) const
+    {
+        if (this->isControl())     return true;
+        if (this->isModifier())    return true;
+        if (this->isStructural())  return true;
+        if (this->isPunctuation()) return true;
+        if (this->isBoolean())     return true;
         
         return false;
     }
+    
     bool token::is_block_start(void)
     {
         return _value == "do";
@@ -200,7 +293,16 @@ namespace chime
     {
         return (_value == ";") || (_value == "\n") || (_value == "}");
     }
-    int token::precedence(void)
+    bool token::isExceptionRelated(void) const
+    {
+        if (_value == "try")     return true;
+        if (_value == "catch")   return true;
+        if (_value == "finally") return true;
+        if (_value == "throw")   return true;
+        
+        return false;
+    }
+    int token::precedence(void) const
     {
         if (_value == ".")   return 60;
         if (_value == "*")   return 50;
