@@ -1,4 +1,4 @@
-#include "../../ast/ast.h"
+#include "ast/ast.h"
 
 void assert_import(ast::node* node);
 void assert_entity(const char* identifier, ast::node* node);
@@ -11,7 +11,6 @@ void assert_operator(const char* identifier, ast::node* node);
 void assert_method_call(const char* identifier, ast::node* node);
 void assert_literal(const char* value, ast::node* node);
 void assert_literal(int value, ast::node* node);
-void assert_block(ast::node* node);
 void assert_next(ast::node* node);
 void assert_if_statement(ast::node* node);
 

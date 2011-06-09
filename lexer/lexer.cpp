@@ -3,7 +3,7 @@
 #include <assert.h>
 
 #include "lexer.h"
-#include "eof_token.h"
+#include "lexer/eof_token.h"
 
 namespace chime
 {

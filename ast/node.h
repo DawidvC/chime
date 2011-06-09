@@ -7,6 +7,9 @@
 #include <vector>
 #include <string>
 #include <assert.h>
+#include <tr1/memory>
+
+using std::tr1::shared_ptr;
 
 #include "llvm/DerivedTypes.h"
 
@@ -33,7 +36,7 @@ namespace ast
         
         virtual std::string      node_name(void);
         virtual std::string      to_string(void);
-        virtual std::string      string_representation(int depth=0);
+        virtual std::string      stringRepresentation(int depth=0);
         void                     print(void);
         
         virtual llvm::Value*     codegen(chime::code_generator& generator);

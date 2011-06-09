@@ -2,7 +2,7 @@
 #define CODE_CONTAINER
 
 #include <string>
-#include "../node.h"
+#include "ast/node.h"
 #include "method_parameter.h"
 
 namespace ast

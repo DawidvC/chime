@@ -1,8 +1,7 @@
-#include <string>
-#include "../node.h"
-
 #ifndef OPERATOR_NODE
 #define OPERATOR_NODE
+
+#include "ast/node.h"
 
 namespace ast
 {

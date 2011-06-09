@@ -1,8 +1,7 @@
 #ifndef METHOD_DEFINITON
 #define METHOD_DEFINITON
 
-#include <string>
-#include "../common/code_container.h"
+#include "ast/common/code_container.h"
 
 namespace ast
 {

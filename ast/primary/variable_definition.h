@@ -1,9 +1,8 @@
-#include <string>
-#include "../node.h"
-#include "../primary/type_reference.h"
-
 #ifndef VARIABLE_DEFINITION
 #define VARIABLE_DEFINITION
+
+#include "ast/node.h"
+#include "ast/primary/type_reference.h"
 
 namespace ast
 {

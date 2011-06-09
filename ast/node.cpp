@@ -1,7 +1,7 @@
 #include "node.h"
 #include <string>
 #include <assert.h>
-#include "../lexer/token.h"
+#include "lexer/token.h"
 #import "structural/implementation.h"
 #import "structural/import.h"
 #import "primary/entity_reference.h"
@@ -57,7 +57,7 @@ namespace ast
     {
         return this->node_name();
     }
-    std::string node::string_representation(int depth)
+    std::string node::stringRepresentation(int depth)
     {
         std::string str;
         std::vector<ast::node*>::iterator i;
@@ -76,7 +76,7 @@ namespace ast
             }
             else
             {
-                str.append((*i)->string_representation(depth+1));
+                str.append((*i)->stringRepresentation(depth+1));
             }
         }
         
@@ -84,7 +84,7 @@ namespace ast
     }
     void node::print(void)
     {
-        fprintf(stderr, "%s\n", this->string_representation().c_str());
+        fprintf(stderr, "%s\n", this->stringRepresentation().c_str());
     }
     
     llvm::Value* node::codegen(chime::code_generator& generator)

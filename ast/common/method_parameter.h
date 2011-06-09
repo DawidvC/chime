@@ -1,9 +1,8 @@
-#include <string>
-#include "../node.h"
-#include "../primary/type_reference.h"
-
 #ifndef METHOD_PARAMETER
 #define METHOD_PARAMETER
+
+#include "ast/node.h"
+#include "ast/primary/type_reference.h"
 
 namespace ast
 {

@@ -2,7 +2,7 @@
 #define IF_STATEMENT
 
 #include <string>
-#include "../node.h"
+#include "ast/node.h"
 
 namespace ast
 {

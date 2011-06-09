@@ -1,9 +1,8 @@
 #ifndef IMPLEMENTATION_NODE
 #define IMPLEMENTATION_NODE
 
-#include <string>
-#include "../common/code_container.h"
-#include "../primary/type_reference.h"
+#include "ast/common/code_container.h"
+#include "ast/primary/type_reference.h"
 
 namespace ast
 {

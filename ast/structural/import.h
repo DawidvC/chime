@@ -1,8 +1,7 @@
-#include <string>
-#include "../node.h"
-
 #ifndef IMPORT_NODE
 #define IMPORT_NODE
+
+#include "ast/node.h"
 
 namespace ast
 {

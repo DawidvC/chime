@@ -1,5 +1,5 @@
 #include "block.h"
-#include "../../parser/parser.h"
+#include "parser/parser.h"
 
 namespace ast
 {

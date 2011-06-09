@@ -1,8 +1,7 @@
-#include <string>
-#include "ast/primary/entity_reference.h"
-
 #ifndef TYPE_REFERENCE
 #define TYPE_REFERENCE
+
+#include "ast/primary/entity_reference.h"
 
 namespace ast
 {

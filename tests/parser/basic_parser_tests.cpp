@@ -1,4 +1,4 @@
-#include "parser_tests_base.h"
+#include "tests/parser/parser_tests_base.h"
 #include "parser/parse_error.h"
 
 class BasicParserTest : public ParserTestsBase
@@ -136,9 +136,9 @@ TEST_F(BasicParserTest, AssignmentExpression)
     node = parse("a = b");
     op   = (ast::binary_operator*)node->child_at_index(0);
     
-    assert_operator("=", op);
-    assert_entity("a", op->left_operand());
-    assert_entity("b", op->right_operand());
+    ASSERT_OPERATOR("=", op);
+    ASSERT_ENTITY("a", op->left_operand());
+    ASSERT_ENTITY("b", op->right_operand());
 }
 
 TEST_F(BasicParserTest, ComplexOperatorExpression)
@@ -313,10 +313,10 @@ TEST_F(BasicParserTest, MethodCallWithBlock)
     
     call = (ast::method_call*)parse("call(a, b) do {}")->child_at_index(0);
     
-    assert_method_call("call", call);
-    assert_entity("a", call->child_at_index(0));
-    assert_entity("b", call->child_at_index(1));
-    assert_block(call->child_at_index(2));
+    ASSERT_METHOD_CALL("call", call);
+    ASSERT_ENTITY("a", call->child_at_index(0));
+    ASSERT_ENTITY("b", call->child_at_index(1));
+    ASSERT_BLOCK(call->child_at_index(2));
 }
 
 TEST_F(BasicParserTest, MethodCallWithBlockAndBody)
@@ -325,9 +325,9 @@ TEST_F(BasicParserTest, MethodCallWithBlockAndBody)
     
     call = (ast::method_call*)parse("call() do { a = \"string\" }")->child_at_index(0);
     
-    assert_method_call("call", call);
-    assert_block(call->child_at_index(0));
-    assert_operator("=", call->child_at_index(0)->child_at_index(0));
+    ASSERT_METHOD_CALL("call", call);
+    ASSERT_BLOCK(call->child_at_index(0));
+    ASSERT_OPERATOR("=", call->child_at_index(0)->child_at_index(0));
 }
 
 TEST_F(BasicParserTest, MethodCallWithBlockParameters)
@@ -336,8 +336,8 @@ TEST_F(BasicParserTest, MethodCallWithBlockParameters)
     
     call = parse_method_call("call() do (a) { }");
     
-    assert_method_call("call", call);
-    assert_block(call->child_at_index(0));
+    ASSERT_METHOD_CALL("call", call);
+    ASSERT_BLOCK(call->child_at_index(0));
 }
 
 TEST_F(BasicParserTest, MethodCallWithLablledParams)

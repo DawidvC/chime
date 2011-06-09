@@ -1,9 +1,8 @@
-#include <string>
-#include "../node.h"
-#include "../common/code_container.h"
-
 #ifndef BLOCK
 #define BLOCK
+
+#include "ast/node.h"
+#include "ast/common/code_container.h"
 
 namespace ast
 {

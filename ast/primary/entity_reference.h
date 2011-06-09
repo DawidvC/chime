@@ -1,8 +1,7 @@
-#include <string>
-#include "../node.h"
-
 #ifndef ENTITY_REFERENCE_NODE
 #define ENTITY_REFERENCE_NODE
+
+#include "ast/node.h"
 
 namespace ast
 {

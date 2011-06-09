@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "parse_helpers.h"
+#include "tests/parser/parse_helpers.h"
 
 void assert_import(ast::node* node)
 {
@@ -80,11 +80,6 @@ void assert_literal(int value, ast::node* node)
 {
     ASSERT_EQ("integer literal", node->node_name());
     ASSERT_EQ(value, ((ast::integer_literal*)node)->value());
-}
-
-void assert_block(ast::node* node)
-{
-    ASSERT_EQ("block", node->node_name());
 }
 
 void assert_next(ast::node* node)

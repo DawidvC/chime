@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
     
     if (print_ast)
     {
-        fprintf(stdout, "%s\n", node->string_representation().c_str());
+        fprintf(stdout, "%s\n", node->stringRepresentation().c_str());
         
         return 0;
     }

@@ -1,5 +1,5 @@
 #include <string>
-#include "../node.h"
+#include "ast/node.h"
 
 #ifndef METHOD_CALL
 #define METHOD_CALL

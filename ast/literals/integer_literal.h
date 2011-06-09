@@ -3,8 +3,7 @@
 #ifndef INTEGER_LITERAL
 #define INTEGER_LITERAL
 
-#include <string>
-#include "../node.h"
+#include "ast/node.h"
 
 namespace ast
 {
