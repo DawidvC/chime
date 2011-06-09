@@ -13,7 +13,7 @@ directory(BUILD_PATH)
 CLEAN.include("#{BUILD_PATH}/*")
 
 # target tasks
-multitask(:default => ['compiler:all', 'runtime:all', 'library:build', 'language:test'])
+task(:default => ['compiler:all', 'runtime:all', 'library:build', 'language:test'])
 
 desc("Print the build configuration variables")
 task(:print_config) do
@@ -52,7 +52,7 @@ namespace(:compiler) do
   
   # the explicit namespacing seems necessary for multitask for some
   # weird reason.  This could be a bug in rake.
-  multitask(:all => ['compiler:test', 'compiler:frontend'])
+  task(:all => ['compiler:test', 'compiler:frontend'])
 end
 
 namespace(:runtime) do
