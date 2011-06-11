@@ -12,7 +12,7 @@ namespace ast
     public:
         Finally(chime::parser& parser);
         
-        virtual std::string nodeName(void);
+        virtual std::string nodeName(void) const;
     };
 }
 

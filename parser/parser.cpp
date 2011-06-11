@@ -479,6 +479,12 @@ namespace chime
         {
             node = new ast::Try(*this);
         }
+        else if (t->equal_to("throw"))
+        {
+            node = new ast::Throw(*this);
+            
+            node = this->parse_tailing_conditional(node);
+        }
         else
         {
             assert(false && "Unhandled control statement");

@@ -43,7 +43,7 @@ namespace ast
             delete _exceptionVariable;
     }
     
-    std::string Catch::nodeName(void)
+    std::string Catch::nodeName(void) const
     {
         return std::string("catch");
     }

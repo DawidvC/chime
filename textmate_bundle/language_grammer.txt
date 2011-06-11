@@ -8,7 +8,7 @@
 			begin = '//';
 			end = '$\n?';
 		},
-		{	match = '\b(if|while|for|return|switch|case|default|else|next|do)\b';
+		{	match = '\b(if|while|for|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
 			name = 'keyword.control.chime';
 		},
 		{	match = '(namespace|implementation|interface|import)\s+([\w\.]+)';

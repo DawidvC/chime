@@ -15,7 +15,7 @@ namespace ast
         Catch(chime::parser& parser);
         virtual ~Catch();
         
-        virtual std::string nodeName(void);
+        virtual std::string nodeName(void) const;
     
     protected:
         ast::entity_reference* _exceptionVariable;

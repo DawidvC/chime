@@ -35,6 +35,7 @@ namespace ast
         unsigned int             child_count() const;
         
         virtual std::string      node_name(void);
+        virtual std::string      nodeName(void) const;
         virtual std::string      to_string(void);
         virtual std::string      stringRepresentation(int depth=0);
         void                     print(void);

@@ -1,7 +1,7 @@
-#include "basic_operator.h"
-
 #ifndef BINARY_OPERATOR_NODE
 #define BINARY_OPERATOR_NODE
+
+#include "basic_operator.h"
 
 namespace ast
 {

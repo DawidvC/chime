@@ -5,11 +5,6 @@
 
 namespace ast
 {
-    std::string ExceptionFlow::node_name(void)
-    {
-        return this->nodeName();
-    }
-    
     void ExceptionFlow::parseBody(chime::parser& parser)
     {
         ast::node* node;

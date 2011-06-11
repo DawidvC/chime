@@ -1,6 +1,6 @@
 // chime: try.cpp
 
-#include "ast/control/try.h"
+#include "try.h"
 #include "parser/parser.h"
 
 namespace ast
@@ -29,7 +29,7 @@ namespace ast
             delete _finallyBlock;
     }
     
-    std::string Try::nodeName(void)
+    std::string Try::nodeName(void) const
     {
         return std::string("try");
     }

@@ -50,6 +50,11 @@ namespace ast
     
     std::string node::node_name(void)
     {
+        return this->nodeName();
+    }
+    
+    std::string node::nodeName(void) const
+    {
         return std::string("node");
     }
     

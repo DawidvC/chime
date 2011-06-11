@@ -6,7 +6,6 @@
 #include "ast/control/exception_flow.h"
 #include "ast/control/catch.h"
 #include "ast/control/finally.h"
-#include <string>
 
 namespace ast
 {
@@ -16,7 +15,7 @@ namespace ast
         Try(chime::parser& parser);
         virtual ~Try();
         
-        virtual std::string nodeName(void);
+        virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0);
         
         std::vector<ast::Catch*>* getCatchBlocks(void) const;

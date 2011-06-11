@@ -12,7 +12,7 @@ namespace ast
         this->parseBody(parser);
     }
     
-    std::string Finally::nodeName(void)
+    std::string Finally::nodeName(void) const
     {
         return std::string("finally");
     }

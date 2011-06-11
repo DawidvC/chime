@@ -62,3 +62,13 @@ TEST_F(FlowControlParserTest, BasicTryFinally)
     ASSERT_FINALLY(node->getFinallyBlock());
     ASSERT_EQ(0, node->getCatchBlocks()->size());
 }
+
+TEST_F(FlowControlParserTest, ThrowStatement)
+{
+    ast::Throw* node;
+    
+    node = (ast::Throw*)parse("throw \"boom\"")->child_at_index(0);
+    
+    ASSERT_THROW_STATEMENT(node);
+    ASSERT_LITERAL_STRING("boom", node->child_at_index(0));
+}

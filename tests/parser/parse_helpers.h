@@ -51,6 +51,11 @@ void assert_if_statement(ast::node* node);
     ASSERT_EQ(0, ((ast::boolean_literal*)x)->value()); \
     } while (0)
 
+#define ASSERT_LITERAL_STRING(x, y) do { \
+    ASSERT_EQ("string literal", y->node_name()); \
+    ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
+    } while (0)
+
 #define ASSERT_TRY(x) do { \
     ASSERT_EQ("try", x->node_name()); \
     } while (0)
@@ -61,4 +66,8 @@ void assert_if_statement(ast::node* node);
 
 #define ASSERT_FINALLY(x) do { \
     ASSERT_EQ("finally", x->node_name()); \
+    } while (0)
+    
+#define ASSERT_THROW_STATEMENT(x) do { \
+    ASSERT_EQ("throw", x->node_name()); \
     } while (0)
