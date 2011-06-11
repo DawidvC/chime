@@ -11,10 +11,18 @@
 		{	match = '\b(if|while|for|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
 			name = 'keyword.control.chime';
 		},
-		{	match = '(namespace|implementation|interface|import)\s+([\w\.]+)';
+		{	match = '(namespace|import)\s+([\w\.]+)';
 			captures = {
 				1 = { name = 'keyword'; };
 				2 = { name = 'entity.name.type.chime'; };
+			};
+		},
+		{	match = '(implementation|interface)\s+([\w\.]+)\s*(:)\s*([\w\.]+)';
+			captures = {
+				1 = { name = 'keyword'; };
+				2 = { name = 'entity.name.type.chime'; };
+				3 = { name = 'keyword.operator'; };
+				4 = { name = 'entity.other.inherited-class'; };
 			};
 		},
 		{	match = '\b(self|super)\b';
@@ -39,12 +47,6 @@
 		{	match = ',\s*(\w+:)';
 			captures = {
 				1 = { name = 'support.function'; };
-			};
-		},
-		{	match = '(:)\s+(\w*)';
-			captures = {
-				1 = { name = 'keyword.operator'; };
-				2 = { name = 'entity.other.inherited-class'; };
 			};
 		},
 		{	name = 'string.quoted.double.untitled';
