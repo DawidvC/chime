@@ -17,11 +17,11 @@ namespace ast
         delete t;
     }
     
-    std::string string_literal::node_name(void)
+    std::string string_literal::node_name(void) const
     {
         return std::string("string literal");
     }
-    std::string string_literal::to_string(void)
+    std::string string_literal::to_string(void) const
     {
         std::string s;
         

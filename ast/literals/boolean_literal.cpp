@@ -22,11 +22,11 @@ namespace ast
         delete t;
     }
     
-    std::string boolean_literal::node_name(void)
+    std::string boolean_literal::node_name(void) const
     {
         return std::string("boolean literal");
     }
-    std::string boolean_literal::to_string(void)
+    std::string boolean_literal::to_string(void) const
     {
         std::stringstream s;
         

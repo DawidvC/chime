@@ -10,8 +10,8 @@ namespace ast
     public:
         binary_operator();
         
-        virtual std::string node_name(void);
-        virtual std::string to_string(void);
+        virtual std::string node_name(void) const;
+        virtual std::string to_string(void) const;
         
         ast::node* right_operand(void) const;
         void       right_operand(ast::node* op);

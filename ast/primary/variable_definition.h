@@ -12,8 +12,8 @@ namespace ast
         variable_definition(chime::parser* parser, ast::type_reference* type);
         virtual ~variable_definition();
         
-        virtual std::string node_name(void);
-        virtual std::string to_string(void);
+        virtual std::string node_name(void) const;
+        virtual std::string to_string(void) const;
         
         ast::type_reference* variable_type() const;
         void                 variable_type(ast::type_reference* n);

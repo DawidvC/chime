@@ -24,6 +24,7 @@ namespace chime
         
         std::vector<chime::parse_error*>* errors(void) const;
         void                              add_error(chime::parse_error* e);
+        void                              addError(const char* message);
         void                              print_errors(void) const;
         
         ast::node*  parse(void);

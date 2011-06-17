@@ -36,9 +36,11 @@ namespace chime
         void               current_method_target(llvm::Value* target);
         llvm::Value*       current_method_target(void);
         
-        llvm::Type*         get_c_string_ptr_type(void);
+        llvm::Type*        get_c_string_ptr_type(void);
         
-        llvm::AllocaInst*   insert_chime_object_alloca(void);
+        llvm::AllocaInst*  insert_chime_object_alloca(void);
+        
+        llvm::Value*       createCondition(llvm::Value* cond);
         
         llvm::Value*    call_chime_runtime_get_class(llvm::Value* class_name_ptr);
         llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);

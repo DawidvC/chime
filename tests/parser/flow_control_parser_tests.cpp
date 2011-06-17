@@ -15,15 +15,82 @@ TEST_F(FlowControlParserTest, BlockWithNext)
     assert_next(call->child_at_index(0)->child_at_index(0));
 }
 
+TEST_F(FlowControlParserTest, IfWithNoElse)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if true foo()")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_METHOD_CALL("foo", node->getBody().get());
+    ASSERT_TRUE(node->getElse() == NULL);
+}
+
+TEST_F(FlowControlParserTest, IfWithElse)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if true foo() else bar()")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_METHOD_CALL("foo", node->getBody().get());
+    ASSERT_METHOD_CALL("bar", node->getElse().get());
+}
+
+TEST_F(FlowControlParserTest, IfWithElseOnDifferentLines)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if true\n foo()\n else\n bar()")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_METHOD_CALL("foo", node->getBody().get());
+    ASSERT_METHOD_CALL("bar", node->getElse().get());
+}
+
+TEST_F(FlowControlParserTest, IfWithBracesAndNoElse)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if true { foo() }")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    
+    ASSERT_CODE_BLOCK(node->getBody().get());
+    ASSERT_METHOD_CALL("foo", ((ast::CodeBlock*)node->getBody().get())->childAtIndex(0));
+    
+    ASSERT_TRUE(node->getElse() == NULL);
+}
+
+TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if true\n{\n foo()\n}\nelse\n{\nbar()\n }")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    
+    ASSERT_CODE_BLOCK(node->getBody().get());
+    ASSERT_METHOD_CALL("foo", ((ast::CodeBlock*)node->getBody().get())->childAtIndex(0));
+    
+    ASSERT_CODE_BLOCK(node->getElse().get());
+    ASSERT_METHOD_CALL("bar", ((ast::CodeBlock*)node->getElse().get())->childAtIndex(0));
+}
+
 TEST_F(FlowControlParserTest, TailingIf)
 {
-    ast::if_statement* node;
+    ast::IfStatement* node;
     
-    node = (ast::if_statement*)parse("a = b if c")->child_at_index(0);
+    node = (ast::IfStatement*)parse("a = b if c")->child_at_index(0);
     
-    assert_if_statement(node);
-    ASSERT_ENTITY("c", node->condition());
-    ASSERT_OPERATOR("=", node->body());
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_ENTITY("c", node->getCondition().get());
+    ASSERT_OPERATOR("=", node->getBody().get());
 }
 
 TEST_F(FlowControlParserTest, BasicTryCatch)

@@ -12,8 +12,8 @@ namespace ast
         implementation(chime::parser* parser);
         virtual ~implementation();
         
-        virtual std::string node_name(void);
-        virtual std::string to_string(void);
+        virtual std::string node_name(void) const;
+        virtual std::string to_string(void) const;
         
         ast::type_reference* type_ref() const;
         void                 type_ref(ast::type_reference* node);

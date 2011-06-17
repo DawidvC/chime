@@ -34,7 +34,7 @@ namespace ast
         return std::string("try");
     }
     
-    std::string Try::stringRepresentation(int depth)
+    std::string Try::stringRepresentation(int depth) const
     {
         std::vector<ast::node*>::iterator i;
         std::string                       str;

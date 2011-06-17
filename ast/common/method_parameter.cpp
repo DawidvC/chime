@@ -41,11 +41,11 @@ namespace ast
             delete _type;
     }
     
-    std::string method_parameter::node_name(void)
+    std::string method_parameter::node_name(void) const
     {
         return std::string("method parameter");
     }
-    std::string method_parameter::to_string(void)
+    std::string method_parameter::to_string(void) const
     {
         std::string s;
         

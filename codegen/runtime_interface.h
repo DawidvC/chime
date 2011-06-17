@@ -21,6 +21,9 @@ namespace chime
         llvm::LLVMContext& getContext(void) const;
         llvm::IRBuilder<>* getBuilder(void) const;
         
+        // basic types
+        llvm::Type*         getCStringPtrType(void);
+        
         // types
         llvm::Type*         getChimeObjectPtrType(void);
         llvm::FunctionType* getChimeFunctionType(void);
@@ -29,19 +32,20 @@ namespace chime
         void         callChimeRuntimeInitialize(void);
         void         callChimeLibraryInitialize(void);
         
-        // llvm::Value* callChimeRuntimeGetClass(llvm::Value* class_name_ptr);
-        // 
-        // // object functions
-        // void         callChimeObjectSetFunction(llvm::Value* object_value, std::string name, llvm::Function* function, unsigned int arity);
-        // 
-        // llvm::Value* callChimeObjectInvoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);
-        // 
-        // // literal functions
-        // 
-        // llvm::Value* callChimeLiteralEncodeInteger(signed long value);
-        // llvm::Value* callChimeLiteralEncodeBoolean(unsigned char value);
-        // 
-        // llvm::Value* callChimeStringCreateWithCString(std::string str);
+        llvm::Value* callChimeRuntimeGetClass(llvm::Value* classNamePtr);
+        
+        // object functions
+        void         callChimeObjectSetFunction(llvm::Value* object_value, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity);
+        
+        llvm::Value* callChimeObjectInvoke(llvm::Value* objectValue, llvm::Value* namePtr, std::vector<llvm::Value*> args);
+        
+        // literal functions
+        llvm::Value* callChimeLiteralEncodeInteger(signed long value);
+        llvm::Value* callChimeLiteralEncodeBoolean(unsigned char value);
+        
+        llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr);
+        
+        llvm::Value* getChimeLiteralNull();
         
     protected:
         llvm::Module*       _module;
@@ -53,6 +57,14 @@ namespace chime
         
         llvm::Function*     _functionChimeRuntimeInitialize;
         llvm::Function*     _functionChimeLibraryInitialize;
+        llvm::Function*     _functionChimeRuntimeGetClass;
+        llvm::Function*     _functionChimeObjectSetFunction;
+        llvm::Function*     _functionChimeObjectInvoke;
+        llvm::Function*     _functionChimeLiteralEncodeInteger;
+        llvm::Function*     _functionChimeLiteralEncodeBoolean;
+        llvm::Function*     _functionChimeStringCreateWithCString;
+        
+        llvm::Value*        _literalNull;
     };
 }
 

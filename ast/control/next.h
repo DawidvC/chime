@@ -10,7 +10,7 @@ namespace ast
     public:
         next(chime::parser* parser);
         
-        virtual std::string node_name(void);
+        virtual std::string node_name(void) const;
     };
 }
 #endif

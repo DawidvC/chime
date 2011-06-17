@@ -48,7 +48,7 @@ namespace ast
         return (int)_children->size();
     }
     
-    std::string node::node_name(void)
+    std::string node::node_name(void) const
     {
         return this->nodeName();
     }
@@ -58,11 +58,11 @@ namespace ast
         return std::string("node");
     }
     
-    std::string node::to_string(void)
+    std::string node::to_string(void) const
     {
         return this->node_name();
     }
-    std::string node::stringRepresentation(int depth)
+    std::string node::stringRepresentation(int depth) const
     {
         std::string str;
         std::vector<ast::node*>::iterator i;

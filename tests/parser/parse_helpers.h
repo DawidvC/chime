@@ -12,7 +12,6 @@ void assert_method_call(const char* identifier, ast::node* node);
 void assert_literal(const char* value, ast::node* node);
 void assert_literal(int value, ast::node* node);
 void assert_next(ast::node* node);
-void assert_if_statement(ast::node* node);
 
 #define ASSERT_ENTITY(x, y) do { \
     ASSERT_EQ("entity reference", y->node_name()); \
@@ -23,6 +22,8 @@ void assert_if_statement(ast::node* node);
     ASSERT_EQ("type reference", y->node_name()); \
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
     } while (0)
+
+#define ASSERT_CODE_BLOCK(x) ASSERT_EQ("code block", x->nodeName());
 
 #define ASSERT_METHOD_DEFINITION(x, y) do { \
     ASSERT_EQ("method definition", y->node_name()); \
@@ -55,6 +56,8 @@ void assert_if_statement(ast::node* node);
     ASSERT_EQ("string literal", y->node_name()); \
     ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
     } while (0)
+
+#define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName());
 
 #define ASSERT_TRY(x) do { \
     ASSERT_EQ("try", x->node_name()); \

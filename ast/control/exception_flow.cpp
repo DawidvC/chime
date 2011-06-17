@@ -24,11 +24,7 @@ namespace ast
             
             if (!node)
             {
-                chime::parse_error* e;
-                
-                e = new chime::parse_error("try::parseBody: unable to get next node");
-                
-                parser.add_error(e);
+                parser.addError("ExceptionFlow::parseBody: unable to get next node");
                 break;
             }
             

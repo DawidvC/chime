@@ -14,11 +14,11 @@ namespace ast
         this->parse_body(parser, false);
     }
     
-    std::string method_definition::node_name(void)
+    std::string method_definition::node_name(void) const
     {
         return std::string("method definition");
     }
-    std::string method_definition::to_string(void)
+    std::string method_definition::to_string(void) const
     {
         std::string s;
         

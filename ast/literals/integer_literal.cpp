@@ -22,11 +22,11 @@ namespace ast
         delete t;
     }
     
-    std::string integer_literal::node_name(void)
+    std::string integer_literal::node_name(void) const
     {
         return std::string("integer literal");
     }
-    std::string integer_literal::to_string(void)
+    std::string integer_literal::to_string(void) const
     {
         std::stringstream s;
         

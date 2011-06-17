@@ -33,12 +33,12 @@ namespace ast
             delete _super_class;
     }
     
-    std::string implementation::node_name(void)
+    std::string implementation::node_name(void) const
     {
         return std::string("implementation");
     }
     
-    std::string implementation::to_string(void)
+    std::string implementation::to_string(void) const
     {
         std::string s;
         

@@ -1,44 +1,141 @@
 #include "if_statement.h"
-#include "../../parser/parser.h"
-#include <assert.h>
+#include "ast/common/code_block.h"
+#include "parser/parser.h"
+#include "codegen/code_generator.h"
 
 namespace ast
 {
-    if_statement::if_statement(chime::parser* parser, ast::node* body)
+    IfStatement::IfStatement(chime::parser& parser, ast::node* body)
     {
-        parser->next_token("if");
+        parser.next_token("if");
         
-        this->condition(parser->parse_expression());
+        this->setCondition(ast::NodeRef(parser.parse_expression()));
         
         if (body)
         {
-            this->body(body);
+            this->setBody(ast::NodeRef(body));
+        }
+        else
+        {
+            this->setBody(CodeBlock::nextBlock(parser));
+        }
+        
+        parser.advance_past_ending_tokens();
+        
+        if (parser.advance_token_if_equals("else"))
+        {
+            this->setElse(CodeBlock::nextBlock(parser));
         }
     }
     
-    std::string if_statement::node_name(void)
+    std::string IfStatement::nodeName(void) const
     {
         return std::string("if statement");
     }
     
-    ast::node* if_statement::condition(void) const
+    std::string IfStatement::stringRepresentation(int depth) const
     {
-        return this->child_at_index(0);
-    }
-    void if_statement::condition(ast::node* node)
-    {
-        assert(this->child_count() == 0);
+        std::string str;
         
-        this->add_child(node);
-    }
-    ast::node* if_statement::body(void) const
-    {
-        return this->child_at_index(1);
-    }
-    void if_statement::body(ast::node* node)
-    {
-        assert(this->child_count() == 1);
+        str.append(depth*2, ' ');
+        str.append(this->nodeName());
         
-        this->add_child(node);
+        str.append("\n");
+        str.append((depth+1)*2, ' ');
+        str.append("- condition:\n");
+        str.append(this->getCondition()->stringRepresentation(depth+2));
+        
+        str.append("\n");
+        str.append((depth+1)*2, ' ');
+        str.append("- then:\n");
+        str.append(this->getBody()->stringRepresentation(depth+2));
+        
+        if (this->getElse())
+        {
+            str.append("\n");
+            str.append((depth+1)*2, ' ');
+            str.append("- else:\n");
+            str.append(this->getElse()->stringRepresentation(depth+2));
+        }
+        
+        return str;
     }
+    
+    llvm::Value* IfStatement::codegen(chime::code_generator& generator)
+    {
+        llvm::Value*      conditionValue;
+        llvm::Value*      thenValue;
+        llvm::Value*      elseValue;
+        llvm::Function*   function;
+        llvm::BasicBlock* thenBlock;
+        llvm::BasicBlock* elseBlock;
+        llvm::BasicBlock* endBlock;
+        
+        // codegen the condition...
+        conditionValue = this->getCondition()->codegen(generator);
+        
+        // ... and wrap it up in a conditional test
+        conditionValue = generator.createCondition(conditionValue);
+        
+        function = generator.builder()->GetInsertBlock()->getParent();
+        
+        thenBlock  = llvm::BasicBlock::Create(generator.get_context(), "if.then", function);
+        elseBlock  = llvm::BasicBlock::Create(generator.get_context(), "if.else");
+        endBlock   = llvm::BasicBlock::Create(generator.get_context(), "if.end");
+        
+        generator.builder()->CreateCondBr(conditionValue, thenBlock, elseBlock);
+        
+        generator.builder()->SetInsertPoint(thenBlock);
+        
+        thenValue = this->getBody()->codegen(generator);
+        
+        generator.builder()->CreateBr(endBlock);
+        
+        thenBlock = generator.builder()->GetInsertBlock();
+        
+        function->getBasicBlockList().push_back(elseBlock);
+        generator.builder()->SetInsertPoint(elseBlock);
+        
+        elseValue = NULL;
+        if (this->getElse())
+        {
+            elseValue = this->getElse()->codegen(generator);
+            
+            generator.builder()->CreateBr(endBlock);
+            
+            elseBlock = generator.builder()->GetInsertBlock();
+        }
+        
+        function->getBasicBlockList().push_back(endBlock);
+        generator.builder()->SetInsertPoint(endBlock);
+        
+        return NULL;
+    }
+    
+    ast::NodeRef IfStatement::getCondition(void) const
+    {
+        return _condition;
+    }
+    void IfStatement::setCondition(ast::NodeRef node)
+    {
+        _condition = node;
+    }
+    ast::NodeRef IfStatement::getBody(void) const
+    {
+        return _body;
+    }
+    void IfStatement::setBody(ast::NodeRef node)
+    {
+        _body = node;
+    }
+    ast::NodeRef IfStatement::getElse(void) const
+    {
+        return _else;
+    }
+    void IfStatement::setElse(ast::NodeRef node)
+    {
+        _else = node;
+    }
+    
+    
 }

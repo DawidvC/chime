@@ -11,7 +11,7 @@ namespace ast
         import(chime::parser* parser);
         virtual ~import();
         
-        virtual std::string node_name(void);
+        virtual std::string node_name(void) const;
         
         ast::node* importand() const;
         void       importand(ast::node* n);

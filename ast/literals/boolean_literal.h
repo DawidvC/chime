@@ -10,8 +10,8 @@ namespace ast
     public:
         boolean_literal(chime::parser* parser);
         
-        virtual std::string node_name(void);
-        virtual std::string to_string(void);
+        virtual std::string node_name(void) const;
+        virtual std::string to_string(void) const;
         
         unsigned char value(void) const;
         void          value(unsigned char v);

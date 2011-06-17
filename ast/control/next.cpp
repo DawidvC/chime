@@ -8,7 +8,7 @@ namespace ast
         parser->next_token_value("next");
     }
     
-    std::string next::node_name(void)
+    std::string next::node_name(void) const
     {
         return std::string("next statement");
     }

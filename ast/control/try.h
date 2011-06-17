@@ -16,7 +16,7 @@ namespace ast
         virtual ~Try();
         
         virtual std::string nodeName(void) const;
-        virtual std::string stringRepresentation(int depth=0);
+        virtual std::string stringRepresentation(int depth=0) const;
         
         std::vector<ast::Catch*>* getCatchBlocks(void) const;
         void                      addCatchBlock(ast::Catch* node);

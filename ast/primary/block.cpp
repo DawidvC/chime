@@ -16,7 +16,7 @@ namespace ast
         this->parse_body(parser, false);
     }
     
-    std::string block::node_name(void)
+    std::string block::node_name(void) const
     {
         return std::string("block");
     }

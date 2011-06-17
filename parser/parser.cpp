@@ -29,12 +29,7 @@ namespace chime
         
         if (t == NULL)
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("Reached the end of the file unexpectedly");
-            
-            this->add_error(e);
-            
+            this->addError("Reached the end of the file unexpectedly");
             return NULL;
         }
         
@@ -126,6 +121,15 @@ namespace chime
         e->line(_lexer->current_line());
         
         this->errors()->push_back(e);
+    }
+    
+    void parser::addError(const char* message)
+    {
+        chime::parse_error* e;
+        
+        e = new chime::parse_error(message);
+        
+        this->add_error(e);
     }
     
     void parser::print_errors(void) const
@@ -485,6 +489,10 @@ namespace chime
             
             node = this->parse_tailing_conditional(node);
         }
+        else if  (t->equal_to("if"))
+        {
+            node = new ast::IfStatement(*this, NULL);
+        }
         else
         {
             assert(false && "Unhandled control statement");
@@ -505,7 +513,7 @@ namespace chime
         }
         else if (t->equal_to("if"))
         {
-            node = new ast::if_statement(this, body_node);
+            node = new ast::IfStatement(*this, body_node);
             
             this->advance_past_ending_tokens();
             return node;

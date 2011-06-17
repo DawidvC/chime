@@ -13,11 +13,11 @@ namespace ast
         this->parse_arguments(parser);
     }
     
-    std::string method_call::node_name(void)
+    std::string method_call::node_name(void) const
     {
         return std::string("method call");
     }
-    std::string method_call::to_string(void)
+    std::string method_call::to_string(void) const
     {
         std::string s;
         

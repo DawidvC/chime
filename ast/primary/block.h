@@ -11,7 +11,7 @@ namespace ast
     public:
         block(chime::parser* parser);
         
-        virtual std::string node_name(void);
+        virtual std::string node_name(void) const;
     };
 }
 

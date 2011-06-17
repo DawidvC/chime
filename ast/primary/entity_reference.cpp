@@ -19,11 +19,11 @@ namespace ast
     {
     }
     
-    std::string entity_reference::node_name(void)
+    std::string entity_reference::node_name(void) const
     {
         return std::string("entity reference");
     }
-    std::string entity_reference::to_string(void)
+    std::string entity_reference::to_string(void) const
     {
         std::string s;
         

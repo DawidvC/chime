@@ -18,7 +18,7 @@ namespace ast
     {
     }
     
-    std::string import::node_name(void)
+    std::string import::node_name(void) const
     {
         return std::string("import");
     }

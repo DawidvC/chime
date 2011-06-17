@@ -8,10 +8,9 @@
 #include <string>
 #include <assert.h>
 #include <tr1/memory>
+#include "llvm/DerivedTypes.h"
 
 using std::tr1::shared_ptr;
-
-#include "llvm/DerivedTypes.h"
 
 namespace chime
 {
@@ -34,10 +33,10 @@ namespace ast
         void                     replace_child_at_index(unsigned int i, ast::node* new_child);
         unsigned int             child_count() const;
         
-        virtual std::string      node_name(void);
+        virtual std::string      node_name(void) const;
         virtual std::string      nodeName(void) const;
-        virtual std::string      to_string(void);
-        virtual std::string      stringRepresentation(int depth=0);
+        virtual std::string      to_string(void) const;
+        virtual std::string      stringRepresentation(int depth=0) const;
         void                     print(void);
         
         virtual llvm::Value*     codegen(chime::code_generator& generator);
@@ -45,5 +44,8 @@ namespace ast
     protected:
         std::vector<ast::node*>* _children;
     };
+    
+    typedef shared_ptr<ast::node> NodeRef;
 }
+
 #endif

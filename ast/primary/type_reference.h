@@ -10,8 +10,8 @@ namespace ast
     public:
         type_reference(chime::parser* parser);
         
-        virtual std::string node_name(void);
-        virtual std::string to_string(void);
+        virtual std::string node_name(void) const;
+        virtual std::string to_string(void) const;
         
         virtual std::string identifier() const;
         virtual void identifier(std::string s);

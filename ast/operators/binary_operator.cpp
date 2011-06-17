@@ -9,11 +9,11 @@ namespace ast
     {
     }
     
-    std::string binary_operator::node_name(void)
+    std::string binary_operator::node_name(void) const
     {
         return std::string("binary operator");
     }
-    std::string binary_operator::to_string(void)
+    std::string binary_operator::to_string(void) const
     {
         std::string s;
         

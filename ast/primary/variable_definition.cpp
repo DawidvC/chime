@@ -19,11 +19,11 @@ namespace ast
         delete _type_ref;
     }
     
-    std::string variable_definition::node_name(void)
+    std::string variable_definition::node_name(void) const
     {
         return std::string("variable definition");
     }
-    std::string variable_definition::to_string(void)
+    std::string variable_definition::to_string(void) const
     {
         std::string s;
         
