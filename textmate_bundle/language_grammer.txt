@@ -5,9 +5,9 @@
 	foldingStopMarker = '(})';
 	patterns = (
 		{	name = 'comment.line.double-slash.chime';
-			begin = '//';
-			end = '$\n?';
-		},
+					match = '(^[ \t]+)?(\/\/).*$\n?';
+					captures = { 1 = { name = 'punctuation.definition.comment.chime'; }; };
+				},
 		{	match = '\b(if|while|for|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
 			name = 'keyword.control.chime';
 		},
