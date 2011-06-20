@@ -14,6 +14,18 @@ namespace ast
         delete _parameters;
     }
     
+    llvm::Value* code_container::codegen(chime::code_generator& generator)
+    {
+        std::vector<ast::node*>::iterator i;
+        
+        for (i = this->children()->begin(); i < this->children()->end(); ++i)
+        {
+            (*i)->codegen(generator);
+        }
+        
+        return NULL;
+    }
+    
     void code_container::add_parameter(method_parameter* param)
     {
         assert(param != NULL);

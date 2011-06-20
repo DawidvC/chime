@@ -36,9 +36,9 @@ ast::node* ParserTestsBase::parse(const char* input)
     return _last_node;
 }
 
-ast::implementation* ParserTestsBase::parse_implementation(const char *input)
+ast::Implementation* ParserTestsBase::parse_implementation(const char *input)
 {
-    return (ast::implementation*)this->parse(input)->child_at_index(0);
+    return (ast::Implementation*)this->parse(input)->child_at_index(0);
 }
 
 ast::method_definition* ParserTestsBase::parse_method_def(const char *input)

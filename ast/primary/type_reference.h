@@ -23,6 +23,8 @@ namespace ast
         
         void parse_parameters(chime::parser* parser);
     };
+    
+    typedef shared_ptr<ast::type_reference> TypeRef;
 }
 
 #endif

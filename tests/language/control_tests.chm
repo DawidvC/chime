@@ -1,4 +1,31 @@
-if 1 == 1
-  Assert.is_true(1 == 1)
-else
-  Assert.is_true(1 == 2)
+implementation ControlTests : Test.Case
+{
+    method setup()
+    {
+    }
+    
+    method teardown()
+    {
+    }
+    
+    method test_ifs_with_boolean_literals()
+    {
+        if false
+            Assert.is_true(false)
+        
+        if true
+            Assert.is_true(true)
+        else
+            Assert.is_true(false)
+        
+        if true
+        {
+            Assert.is_true(true)
+        }
+        else
+        {
+            Assert.is_true(false)
+        }
+    }
+}
+

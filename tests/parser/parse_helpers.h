@@ -3,10 +3,8 @@
 void assert_import(ast::node* node);
 void assert_entity(const char* identifier, ast::node* node);
 void assert_type(const char* identifier, ast::node* node);
-void assert_implementation(const char* identifier, const char* superclass, ast::node* node);
 void assert_variable_definition(const char* type, const char* identifier, ast::node* node);
 void assert_method_definition(const char* identifier, ast::node* node);
-void assert_method_parameter(const char* type, const char* label, const char* identifier, ast::method_parameter* node);
 void assert_operator(const char* identifier, ast::node* node);
 void assert_method_call(const char* identifier, ast::node* node);
 void assert_literal(const char* value, ast::node* node);
@@ -23,11 +21,23 @@ void assert_next(ast::node* node);
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
     } while (0)
 
+#define ASSERT_IMPLEMENTATION(x, y, z) do { \
+    ASSERT_EQ("implementation", z->node_name()); \
+    ASSERT_TYPE(x, ((ast::Implementation*)z)->getTypeRef().get()); \
+    } while (0)
+    
 #define ASSERT_CODE_BLOCK(x) ASSERT_EQ("code block", x->nodeName());
 
 #define ASSERT_METHOD_DEFINITION(x, y) do { \
     ASSERT_EQ("method definition", y->node_name()); \
     ASSERT_EQ(x, ((ast::method_definition*)y)->identifier()); \
+    } while (0)
+
+#define ASSERT_METHOD_PARAMETER(w, x, y, z) do { \
+    ASSERT_EQ("method parameter", ((ast::method_parameter*)z)->node_name()); \
+    ASSERT_EQ(y, ((ast::method_parameter*)z)->identifier()); \
+    if (w) ASSERT_TYPE((const char*)w, ((ast::method_parameter*)z)->type()); \
+    if (x) ASSERT_EQ((const char *)x, ((ast::method_parameter*)z)->label()); \
     } while (0)
 
 #define ASSERT_OPERATOR(x, y) do { \

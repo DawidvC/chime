@@ -1,7 +1,6 @@
 #ifndef CODE_CONTAINER
 #define CODE_CONTAINER
 
-#include <string>
 #include "ast/node.h"
 #include "method_parameter.h"
 
@@ -12,6 +11,8 @@ namespace ast
     public:
         code_container(void);
         virtual ~code_container();
+        
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
         void                            add_parameter(method_parameter* param);
         std::vector<method_parameter*>* parameters(void) const;

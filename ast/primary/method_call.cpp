@@ -88,6 +88,12 @@ namespace ast
         std::vector<llvm::Value*>         arguments;
         std::vector<ast::node*>::iterator i;
         
+        if (this->identifier().compare(std::string("new")) == 0)
+        {
+            return generator.getRuntime()->callChimeObjectCreate(target);
+        }
+        
+        
         for (i = this->children()->begin(); i < this->children()->end(); i++)
         {
             argument_value = (*i)->codegen(generator);

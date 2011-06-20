@@ -1,8 +1,8 @@
 // runtime_interface.h
 //
 
-#ifndef RUNTIME_INTERFACE
-#define RUNTIME_INTERFACE
+#ifndef RUNTIME_INTERFACE_H
+#define RUNTIME_INTERFACE_H
 
 #include "llvm/DerivedTypes.h"
 #include "llvm/Module.h"
@@ -32,10 +32,12 @@ namespace chime
         void         callChimeRuntimeInitialize(void);
         void         callChimeLibraryInitialize(void);
         
+        llvm::Value* callChimeRuntimeCreateClass(llvm::Value* classNamePtr, llvm::Value* superclassObjectPtr);
         llvm::Value* callChimeRuntimeGetClass(llvm::Value* classNamePtr);
         
         // object functions
-        void         callChimeObjectSetFunction(llvm::Value* object_value, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity);
+        llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);
+        void         callChimeObjectSetFunction(llvm::Value* objectValue, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity);
         
         llvm::Value* callChimeObjectInvoke(llvm::Value* objectValue, llvm::Value* namePtr, std::vector<llvm::Value*> args);
         
@@ -57,7 +59,9 @@ namespace chime
         
         llvm::Function*     _functionChimeRuntimeInitialize;
         llvm::Function*     _functionChimeLibraryInitialize;
+        llvm::Function*     _functionChimeRuntimeCreateClass;
         llvm::Function*     _functionChimeRuntimeGetClass;
+        llvm::Function*     _functionChimeObjectCreate;
         llvm::Function*     _functionChimeObjectSetFunction;
         llvm::Function*     _functionChimeObjectInvoke;
         llvm::Function*     _functionChimeLiteralEncodeInteger;
@@ -68,4 +72,4 @@ namespace chime
     };
 }
 
-#endif
+#endif // RUNTIME_INTERFACE_H

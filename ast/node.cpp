@@ -19,11 +19,16 @@ namespace ast
         delete _children;
     }
     
+    void node::addChild(ast::node* n)
+    {
+        assert(n != NULL);
+        
+        _children->push_back(n);
+    }
+    
     void node::add_child(ast::node* new_child)
     {
-        assert(new_child != NULL);
-        
-        _children->push_back(new_child);
+        this->addChild(new_child);
     }
     
     std::vector<ast::node*>* node::children(void) const
@@ -31,11 +36,16 @@ namespace ast
         return _children;
     }
     
-    ast::node* node::child_at_index(unsigned int i) const
+    ast::node* node::childAtIndex(unsigned int i) const
     {
-        assert(i < this->child_count());
+        assert(i < this->childCount());
         
         return (*_children)[i];
+    }
+    
+    ast::node* node::child_at_index(unsigned int i) const
+    {
+        return this->childAtIndex(i);
     }
     
     void node::replace_child_at_index(unsigned int i, ast::node* new_child)
@@ -43,9 +53,14 @@ namespace ast
         (*_children)[i] = new_child;
     }
     
+    unsigned int node::childCount() const
+    {
+        return _children->size();
+    }
+    
     unsigned int node::child_count() const
     {
-        return (int)_children->size();
+        return this->childCount();
     }
     
     std::string node::node_name(void) const

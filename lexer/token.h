@@ -2,6 +2,9 @@
 #define _TOKEN_H_
 
 #include <string>
+#include <tr1/memory>
+
+using std::tr1::shared_ptr;
 
 namespace chime
 {
@@ -62,6 +65,8 @@ namespace chime
     protected:
         std::string _value;
     };
+    
+    typedef shared_ptr<chime::token> TokenRef;
 }
 
 #endif /* _TOKEN_H_ */

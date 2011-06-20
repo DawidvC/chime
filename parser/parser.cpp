@@ -189,7 +189,7 @@ namespace chime
         }
         else if (t->equal_to("implementation"))
         {
-            node = new ast::implementation(this);
+            node = new ast::Implementation(*this);
         }
         else if (t->equal_to("method"))
         {

@@ -1,72 +1,120 @@
+// implementation.cpp
+
 #include "implementation.h"
-#include "../../parser/parser.h"
-#include <assert.h>
+#include "parser/parser.h"
+#include "codegen/code_generator.h"
 
 namespace ast
 {
-    implementation::implementation(chime::parser* parser) : code_container()
+    Implementation::Implementation(chime::parser& parser)
     {
         // parse the import statement
-        parser->next_token_value("implementation");
+        parser.next_token_value("implementation");
         
-        this->type_ref(new ast::type_reference(parser));
+        this->setTypeRef(TypeRef(new ast::type_reference(&parser)));
         
         // check for ": SuperClass"
-        if (parser->advance_token_if_equals(":"))
+        if (parser.advance_token_if_equals(":"))
         {
-            this->super_class(new ast::type_reference(parser));
+            this->setSuperclass(TypeRef(new ast::type_reference(&parser)));
         }
         else
         {
-            this->super_class(NULL);
+            this->setSuperclass(TypeRef());
         }
         
         // { body }
-        this->parse_body(parser, true);
-    }
-    
-    implementation::~implementation()
-    {
-        delete _type_ref;
+        parser.advance_past_ending_tokens();
+        parser.next_token_value("{");
         
-        if (_super_class)
-            delete _super_class;
+        _bodyBlock = new CodeBlock(parser, true);
+        
+        parser.advance_past_ending_tokens();
+        parser.next_token_value("}");
     }
     
-    std::string implementation::node_name(void) const
+    Implementation::~Implementation()
+    {
+    }
+    
+    std::string Implementation::nodeName(void) const
     {
         return std::string("implementation");
     }
     
-    std::string implementation::to_string(void) const
+    std::string Implementation::to_string(void) const
     {
         std::string s;
         
-        s += "implementation: " + this->type_ref()->identifier();
+        s += "implementation: " + this->getTypeRef()->identifier();
         
-        if (this->super_class())
-            s += " : " + this->super_class()->identifier();
+        if (this->getSuperclass().get())
+            s += " : " + this->getSuperclass()->identifier();
         
         return s;
     }
     
-    ast::type_reference* implementation::type_ref() const
+    llvm::Value* Implementation::codegen(chime::code_generator& generator)
     {
-        return _type_ref;
-    }
-    void implementation::type_ref(ast::type_reference* node)
-    {
-        assert(node != NULL);
+        llvm::Value*                  classNamePtr;
+        llvm::Value*                  superclassNamePtr;
+        llvm::Value*                  objectClassPtr;
+        llvm::Value*                  superclassPtr;
+        chime::ImplementationScopeRef scope;
         
-        _type_ref = node;
+        // first create the c-string name of the new class
+        classNamePtr = generator.make_constant_string(this->getTypeRef()->identifier());
+        
+        // if we have a superclass, create a c-string name for the superclass,
+        // and then get that class object
+        if (this->getSuperclass().get())
+        {
+            superclassNamePtr = generator.make_constant_string(this->getSuperclass()->identifier());
+        }
+        else
+        {
+            superclassNamePtr = generator.make_constant_string("Object");
+        }
+        
+        superclassPtr = generator.getRuntime()->callChimeRuntimeGetClass(superclassNamePtr);
+        
+        // now, create the new class
+        objectClassPtr = generator.getRuntime()->callChimeRuntimeCreateClass(classNamePtr, superclassPtr);
+        
+        // with it created, we can now create a new implementation scope and assign it
+        scope = chime::ImplementationScopeRef(new chime::ImplementationScope());
+        
+        scope->setTarget(objectClassPtr);
+        scope->setName(this->getTypeRef()->identifier());
+        
+        generator.setImplementationScope(scope);
+        
+        // and now, finally, we can actually codegen the internals of the implementation
+        _bodyBlock->codegen(generator);
+        
+        return objectClassPtr;
     }
     
-    ast::type_reference* implementation::super_class() const
+    ast::TypeRef Implementation::getTypeRef() const
     {
-        return _super_class;
+        return _typeRef;
     }
-    void implementation::super_class(ast::type_reference* node)
+    void Implementation::setTypeRef(ast::TypeRef node)
     {
-        _super_class = node;
+        _typeRef = node;
+    }
+    
+    ast::TypeRef Implementation::getSuperclass() const
+    {
+        return _superclass;
+    }
+    void Implementation::setSuperclass(ast::TypeRef node)
+    {
+        _superclass = node;
+    }
+    
+    CodeBlock* Implementation::getBody(void) const
+    {
+        return _bodyBlock;
     }
 }

@@ -5,7 +5,7 @@
 
 namespace ast
 {
-    CodeBlock::CodeBlock(chime::parser& parser)
+    CodeBlock::CodeBlock(chime::parser& parser, bool allowStructural)
     {
         ast::node* node;
         
@@ -17,7 +17,14 @@ namespace ast
             if (parser.look_ahead()->is_ending())
                 break;
             
-            node = parser.parse_without_structural();
+            if (allowStructural)
+            {
+                node = parser.parse_with_structural();
+            }
+            else
+            {
+                node = parser.parse_without_structural();
+            }
             
             if (!node)
             {
@@ -76,16 +83,16 @@ namespace ast
         return this->child_at_index(i);
     }
     
-    shared_ptr<ast::node> CodeBlock::nextBlock(chime::parser& parser)
+    NodeRef CodeBlock::nextBlock(chime::parser& parser)
     {
-        shared_ptr<ast::node> node;
+        NodeRef node;
         
         // first, advance past endings
         parser.advance_past_ending_tokens();
         
         if (parser.advance_token_if_equals("{"))
         {
-            node = shared_ptr<ast::node>(new ast::CodeBlock(parser));
+            node = NodeRef(new ast::CodeBlock(parser));
             
             parser.advance_past_ending_tokens();
             
@@ -93,7 +100,7 @@ namespace ast
         }
         else
         {
-            node = shared_ptr<ast::node>(parser.parse_expression());
+            node = NodeRef(parser.parse_expression());
         }
         
         return node;

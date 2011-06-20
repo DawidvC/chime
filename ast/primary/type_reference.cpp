@@ -64,6 +64,6 @@ namespace ast
         
         class_name_ptr = generator.make_constant_string(this->identifier());
         
-        return generator.call_chime_runtime_get_class(class_name_ptr);
+        return generator.getRuntime()->callChimeRuntimeGetClass(class_name_ptr);
     }
 }

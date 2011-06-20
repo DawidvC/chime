@@ -1,29 +1,34 @@
-// implementation LiteralTests : Test.Case
-// {
-//     method setup()
-//     {
-//     }
-//     
-//     method teardown()
-//     {
-//     }
-//     
-//     method test_boolean_literals()
-//     {
+implementation LiteralTests : Object
+{
+    method setup()
+    {
+    }
+    
+    method teardown()
+    {
+    }
+    
+    method test_boolean_literals()
+    {
         Assert.is_true(true)
         Assert.is_false(false)
         Assert.is_true(true == true)
         Assert.is_true(true != false)
         Assert.equal(true, to:true)
         Assert.equal(true, to:false)
-//     }
+    }
+
+    method test_integer_literals()
+    {
+        Assert.is_true((1 <=> 1) == 0)
+        Assert.is_true(1 == 1)
+        Assert.equal(1, to:1)
+        Assert.equal(1, to:2)
+        Assert.is_false(10 == 10)
+    }
+}
+
+//a = LiteralTests.new()
 //
-//     method test_integer_literals()
-//     {
-//         Assert.is_true((1 <=> 1) == 0)
-//         Assert.is_true(1 == 1)
-//         Assert.equal(1, to:1)
-//         Assert.equal(1, to:2)
-//         Assert.is_false(10 == 10)
-//     }
-// }
+//a.test_boolean_literals()
+LiteralTests.test_boolean_literals()

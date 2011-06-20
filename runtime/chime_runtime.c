@@ -48,7 +48,7 @@ void chime_runtime_initialize(void)
     
     chime_literal_initialize();
     
-    assert(chime_runtime_create_class("External", 0));
+    assert(chime_runtime_create_class("External", _object_class));
     assert(chime_runtime_create_class("Main", _object_class));
     
     chime_log_level = old_level; // restore logging after initialization
@@ -77,6 +77,11 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
     chime_object_t* class_object;
     chime_object_t* meta_class_object;
     
+    if (chime_log_level >= 5)
+        fprintf(stderr, "[runtime] Creating class '%s'\n", name);
+    
+    assert(!chime_object_is_literal(super_class) && "Cannot create a subclass of a literal");
+    
     class_object = chime_object_create(super_class);
     
     if (_string_class)
@@ -90,7 +95,7 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
     
     if (super_class == 0)
     {
-        assert(_root_meta_class);
+        assert(_root_meta_class && !_object_class);
         meta_class_object = _root_meta_class;
     }
     else

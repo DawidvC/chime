@@ -12,7 +12,9 @@ namespace chime
         
         _functionChimeRuntimeInitialize       = NULL;
         _functionChimeLibraryInitialize       = NULL;
+        _functionChimeRuntimeCreateClass      = NULL;
         _functionChimeRuntimeGetClass         = NULL;
+        _functionChimeObjectCreate            = NULL;
         _functionChimeObjectSetFunction       = NULL;
         _functionChimeObjectInvoke            = NULL;
         _functionChimeLiteralEncodeInteger    = NULL;
@@ -117,6 +119,44 @@ namespace chime
         this->getBuilder()->CreateCall(_functionChimeLibraryInitialize, "");
     }
     
+    llvm::Value* RuntimeInterface::callChimeRuntimeCreateClass(llvm::Value* classNamePtr, llvm::Value* superclassObjectPtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeRuntimeCreateClass == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getCStringPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeRuntimeCreateClass = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_runtime_create_class", this->getModule());
+            _functionChimeRuntimeCreateClass->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        llvm::LoadInst*           loadedObjectPtr;
+        std::vector<llvm::Value*> args;
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(superclassObjectPtr, "instance of superclass");
+        
+        args.push_back(classNamePtr);
+        args.push_back(loadedObjectPtr);
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "superclass object pointer");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeRuntimeCreateClass, args.begin(), args.end(), "create class");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
     llvm::Value* RuntimeInterface::callChimeRuntimeGetClass(llvm::Value* classNamePtr)
     {
         llvm::CallInst*   call;
@@ -148,6 +188,38 @@ namespace chime
     
 #pragma mark -
 #pragma mark Object Functions
+    llvm::Value* RuntimeInterface::callChimeObjectCreate(llvm::Value* classPtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        llvm::LoadInst*   loadedObjectPtr;
+        
+        if (_functionChimeObjectCreate == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectCreate = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_create", this->getModule());
+            _functionChimeObjectCreate->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(classPtr, "class instance for object create");
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "instance pointer");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeObjectCreate, loadedObjectPtr, "Object.new");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
     void RuntimeInterface::callChimeObjectSetFunction(llvm::Value* objectValue, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity)
     {
         llvm::CallInst* call;

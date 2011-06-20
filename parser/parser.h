@@ -1,9 +1,11 @@
-#include "../lexer/lexer.h"
-#include "parse_error.h"
-#include "../ast/ast.h"
+// parser.h
 
-#ifndef PARSER
-#define PARSER
+#ifndef PARSER_H
+#define PARSER_H
+
+#include "lexer/lexer.h"
+#include "parse_error.h"
+#include "ast/ast.h"
 
 namespace chime
 {
@@ -44,4 +46,4 @@ namespace chime
     };
 }
 
-#endif
+#endif // PARSER_H

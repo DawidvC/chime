@@ -16,7 +16,7 @@ protected:
     virtual chime::lexer* lex(const char* input);
     ast::node*            parse(const char *input);
     
-    ast::implementation*    parse_implementation(const char *input);
+    ast::Implementation*    parse_implementation(const char *input);
     ast::method_definition* parse_method_def(const char *input);
     ast::method_call*       parse_method_call(const char* input);
     

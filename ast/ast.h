@@ -1,5 +1,6 @@
 #include "node.h"
 #include "common/code_block.h"
+#include "common/method_parameter.h"
 #include "control/if_statement.h"
 #include "control/next.h"
 #include "control/try.h"

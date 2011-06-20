@@ -23,7 +23,7 @@ TEST_F(FileParserTests, BasicImplemenation)
     
     node = this->parse("basic_implementation.chm");
     
-    assert_implementation("Foo", "Bar", node->child_at_index(0));
+    ASSERT_IMPLEMENTATION("Foo", "Bar", node->child_at_index(0));
     ASSERT_EQ(1, (int)node->child_count());
 }
 

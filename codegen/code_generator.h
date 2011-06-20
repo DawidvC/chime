@@ -14,6 +14,7 @@
 
 #include "ast/node.h"
 #include "codegen/runtime_interface.h"
+#include "codegen/scopes/implementation_scope.h"
 
 namespace chime
 {
@@ -25,31 +26,30 @@ namespace chime
         
         llvm::IRBuilder<>* builder(void) const;
         llvm::Module*      module(void) const;
+        llvm::LLVMContext& getContext(void) const;
         llvm::LLVMContext& get_context(void) const;
         RuntimeInterface*  getRuntime(void) const;
+        
+        ImplementationScopeRef getImplementationScope(void) const;
+        void                   setImplementationScope(ImplementationScopeRef scope);
         
         llvm::Value*       make_constant_string(std::string str);
         
         void               set_value_for_identifier(std::string name, llvm::Value* value);
         llvm::Value*       value_for_identifier(std::string name);
         
-        void               current_method_target(llvm::Value* target);
-        llvm::Value*       current_method_target(void);
-        
         llvm::Type*        get_c_string_ptr_type(void);
         
         llvm::AllocaInst*  insert_chime_object_alloca(void);
         
         llvm::Value*       createCondition(llvm::Value* cond);
+        llvm::Function*    createFunction(const llvm::FunctionType* type, const std::string name);
         
-        llvm::Value*    call_chime_runtime_get_class(llvm::Value* class_name_ptr);
         llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);
-        llvm::Value*    call_chime_object_invoke_current_target(std::string name, std::vector<llvm::Value*> args);
         llvm::Value*    call_chime_literal_encode_integer(signed long value);
         llvm::Value*    call_chime_literal_encode_boolean(unsigned char value);
         llvm::Value*    get_chime_literal_null(void);
         llvm::Value*    call_chime_string_create_with_c_string(std::string str);
-        void            call_chime_object_set_function(llvm::Value* object_value, std::string name, llvm::Function* function, unsigned int arity);
         
         void generate(ast::node* node, const char* module_name);
         
@@ -57,7 +57,7 @@ namespace chime
         llvm::Module*                        _module;
         llvm::IRBuilder<>*                   _builder;
         std::map<std::string, llvm::Value*>* _scope_values;
-        llvm::Value*                         _current_method_target;
+        ImplementationScopeRef               _implementationScope;
         
         llvm::PointerType*                   _object_ptr_type;
         llvm::Type*                          _c_string_ptr_type;

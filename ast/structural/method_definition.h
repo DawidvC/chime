@@ -1,11 +1,15 @@
-#ifndef METHOD_DEFINITON
-#define METHOD_DEFINITON
+// chime: method_definition.h
 
-#include "ast/common/code_container.h"
+#ifndef METHOD_DEFINITON_H
+#define METHOD_DEFINITON_H
+
+#include "ast/node.h"
+#include "ast/common/parameter_set.h"
+#include "ast/common/code_block.h"
 
 namespace ast
 {
-    class method_definition : public code_container
+    class method_definition : public node
     {
     public:
         method_definition(chime::parser* parser);
@@ -15,12 +19,17 @@ namespace ast
         
         std::string         identifier() const;
         void                identifier(std::string s);
+        std::string         getName() const;
+        NodeRef             getBody() const;
+        ParameterSetRef     getParameters() const;
         
         llvm::Value*        codegen(chime::code_generator& generator);
         
     protected:
-        std::string _identifier;
+        std::string     _identifier;
+        NodeRef         _bodyBlock;
+        ParameterSetRef _parameters;
     };
 }
 
-#endif
+#endif // METHOD_DEFINITON_H

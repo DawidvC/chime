@@ -45,45 +45,45 @@ TEST_F(BasicParserTest, MultipleImports)
 
 TEST_F(BasicParserTest, SimpleImplementation)
 {
-    ast::implementation* node;
+    ast::Implementation* node;
     
     node = parse_implementation("implementation SomeClass {}");
     
-    assert_implementation("SomeClass", NULL, node);
+    ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
 }
 
 TEST_F(BasicParserTest, ImplementationWithSuperClass)
 {
-    ast::implementation* node;
+    ast::Implementation* node;
     
     node = parse_implementation("implementation SomeClass : SuperClass {}");
     
-    assert_implementation("SomeClass", "SuperClass", node);
+    ASSERT_IMPLEMENTATION("SomeClass", "SuperClass", node);
 }
 
 TEST_F(BasicParserTest, InstanceVariable)
 {
-    ast::implementation*       node;
+    ast::Implementation*       node;
     ast::variable_definition* ivar;
     
     node = parse_implementation("implementation SomeClass { Foo bar }");
     
-    assert_implementation("SomeClass", NULL, node);
+    ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
     
-    ivar = (ast::variable_definition*)node->child_at_index(0);
+    ivar = (ast::variable_definition*)node->getBody()->child_at_index(0);
     assert_variable_definition("Foo", "bar", ivar);
 }
 
 TEST_F(BasicParserTest, SimpleMethodDefinition)
 {
-    ast::implementation*    node;
+    ast::Implementation*    node;
     ast::method_definition* method;
     
     node = parse_implementation("implementation SomeClass { method new() { } }");
     
-    assert_implementation("SomeClass", NULL, node);
+    ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
     
-    method = (ast::method_definition*)node->child_at_index(0);
+    method = (ast::method_definition*)node->getBody()->child_at_index(0);
     assert_method_definition("new", method);
 }
 
@@ -94,7 +94,7 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneParameter)
     method = parse_method_def("method new(arg1) { }");
     
     assert_method_definition("new", method);
-    assert_method_parameter(NULL, NULL, "arg1", method->parameter_at_index(0));
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
 }
 
 TEST_F(BasicParserTest, MethodDefinitionWithOneTypedParameter)
@@ -104,7 +104,7 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneTypedParameter)
     method = parse_method_def("method new(Hash arg1) { }");
     
     assert_method_definition("new", method);
-    assert_method_parameter("Hash", NULL, "arg1", method->parameter_at_index(0));
+    ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
 }
 
 TEST_F(BasicParserTest, MethodDefinitionWithOneTypedLabelledParameter)
@@ -114,7 +114,7 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneTypedLabelledParameter)
     method = parse_method_def("method new(one:Hash arg1) { }");
     
     assert_method_definition("new", method);
-    assert_method_parameter("Hash", NULL, "arg1", method->parameter_at_index(0));
+    ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
 }
 
 TEST_F(BasicParserTest, MethodDefinitionWithTwoParameters)
@@ -124,8 +124,8 @@ TEST_F(BasicParserTest, MethodDefinitionWithTwoParameters)
     method = parse_method_def("method new(arg1, arg2) { }");
     
     assert_method_definition("new", method);
-    assert_method_parameter(NULL, NULL, "arg1", method->parameter_at_index(0));
-    assert_method_parameter(NULL, NULL, "arg2", method->parameter_at_index(1));
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg2", method->getParameters()->childAtIndex(1));
 }
 
 TEST_F(BasicParserTest, AssignmentExpression)
@@ -215,20 +215,19 @@ TEST_F(BasicParserTest, MethodParameter)
     method = parse_method_def("method foo(one:Bar baz) {}");
     
     assert_method_definition("foo", method);
-    assert_method_parameter("Bar", "one", "baz", method->parameter_at_index(0));
+    ASSERT_METHOD_PARAMETER("Bar", "one", "baz", method->getParameters()->childAtIndex(0));
 }
 
 TEST_F(BasicParserTest, ExpressionInMethodBody)
 {
-    ast::node*            node;
-    ast::binary_operator* op;
+    ast::method_definition* method;
+    ast::binary_operator*   op;
     
-    node = parse("method foo() { a = b }");
-    node = node->child_at_index(0); // get the method def
+    method = parse_method_def("method foo() { a = b }");
     
-    ASSERT_EQ(1, (int)node->child_count());
+    ASSERT_EQ(1, method->getBody()->child_count());
     
-    op = (ast::binary_operator*)node->child_at_index(0);
+    op = (ast::binary_operator*)method->getBody()->child_at_index(0);
     
     assert_operator("=", op);
 }
@@ -371,7 +370,7 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
     
     assert_method_definition("foo", method);
     
-    op = (ast::binary_operator*)method->child_at_index(0);
+    op = (ast::binary_operator*)method->getBody()->child_at_index(0);
     assert_operator(".", op);
     assert_type("Bar", op->left_operand());
     assert_method_call("baz", op->right_operand());

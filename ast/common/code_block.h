@@ -10,7 +10,7 @@ namespace ast
     class CodeBlock : public node
     {
     public:
-        CodeBlock(chime::parser& parser);
+        CodeBlock(chime::parser& parser, bool allowStructural=false);
         virtual ~CodeBlock();
         
         virtual std::string  nodeName(void) const;
@@ -19,9 +19,11 @@ namespace ast
         void                 addChild(const ast::node& node);
         ast::node*           childAtIndex(unsigned int i) const;
         
-        static shared_ptr<ast::node> nextBlock(chime::parser& parser);
+        static NodeRef       nextBlock(chime::parser& parser);
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };
+    
+    typedef shared_ptr<ast::CodeBlock> CodeBlockRef;
 }
 #endif // CODE_BLOCK_H
