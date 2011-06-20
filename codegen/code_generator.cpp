@@ -135,7 +135,7 @@ namespace chime
         loadedObjectPtr = this->builder()->CreateLoad(cond, "value being compared");
         
         zeroValue  = llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 0));
-        falseValue = llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 11));
+        falseValue = llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 10));
         
         zeroConstant  = llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, zeroValue, this->getRuntime()->getChimeObjectPtrType());
         falseConstant = llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, falseValue, this->getRuntime()->getChimeObjectPtrType());

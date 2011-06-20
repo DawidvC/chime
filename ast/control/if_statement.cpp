@@ -96,15 +96,17 @@ namespace ast
         function->getBasicBlockList().push_back(elseBlock);
         generator.builder()->SetInsertPoint(elseBlock);
         
+        // codegen the else block.  If there is no else, we just have it
+        // branch right to the end
         elseValue = NULL;
         if (this->getElse())
         {
             elseValue = this->getElse()->codegen(generator);
-            
-            generator.builder()->CreateBr(endBlock);
-            
-            elseBlock = generator.builder()->GetInsertBlock();
         }
+        
+        generator.builder()->CreateBr(endBlock);
+        
+        elseBlock = generator.builder()->GetInsertBlock();
         
         function->getBasicBlockList().push_back(endBlock);
         generator.builder()->SetInsertPoint(endBlock);
