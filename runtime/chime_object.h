@@ -15,7 +15,8 @@ typedef enum {
     CHIME_OBJECT_INVALID_TYPE = 0,
     CHIME_OBJECT_TYPE         = 1,
     CHIME_NULL_TYPE           = 2,
-    CHIME_INTEGER_TYPE        = 3
+    CHIME_INTEGER_TYPE        = 3,
+    CHIME_BOOLEAN_TYPE        = 4
 } chime_object_type_t;
 
 chime_object_t* chime_object_create(chime_object_t* object_class);
@@ -26,6 +27,7 @@ void            chime_object_destroy(chime_object_t* instance);
 chime_object_type_t chime_object_get_type(chime_object_t* instance);
 
 chime_object_t* chime_object_get_class(chime_object_t* instance);
+chime_object_t* chime_object_get_metaclass(chime_object_t* instance);
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name);
 void            chime_object_set_property(chime_object_t* instance, const char* name, chime_object_t* value);
 

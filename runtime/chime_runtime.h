@@ -20,8 +20,6 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
 chime_object_t* chime_runtime_get_class(const char* name);
 char*           chime_runtime_get_class_name(chime_object_t* instance);
 
-void            chime_runtime_set_instance_method(chime_object_t* class_instance, const char* name, chime_function_t function, unsigned long arity);
-
 #ifdef __cplusplus
 }
 #endif

@@ -31,6 +31,17 @@ TEST_F(RuntimeTests, InitializeRuntime)
     chime_object_destroy(object);
 }
 
+TEST_F(RuntimeTests, GetObjectType)
+{
+    chime_object_t* object;
+    
+    object = chime_object_create_with_name("Object");
+    
+    ASSERT_EQ(CHIME_OBJECT_TYPE, chime_object_get_type(object));
+    
+    chime_object_destroy(object);
+}
+
 static chime_object_t* RuntimeTestsFunctionNoArgs(chime_object_t* self, const char* method_name, ...)
 {
     return CHIME_LITERAL_NULL;
@@ -53,10 +64,13 @@ static chime_object_t* RuntimeTestsFunctionOneArg(chime_object_t* self, const ch
 TEST_F(RuntimeTests, InvokeMethod)
 {
     chime_object_t* object;
+    chime_object_t* objectClass;
     
-    object   = chime_object_create_with_name("Object");
+    objectClass = chime_runtime_get_class("Object");
     
-    chime_object_set_function(object, "test_method", RuntimeTestsFunctionNoArgs, 0);
+    chime_object_set_function(objectClass, "test_method", RuntimeTestsFunctionNoArgs, 0);
+    
+    object = chime_object_create(objectClass);
     
     ASSERT_TRUE(chime_object_invoke(object, "test_method") == CHIME_LITERAL_NULL);
     
@@ -66,12 +80,15 @@ TEST_F(RuntimeTests, InvokeMethod)
 TEST_F(RuntimeTests, InvokeMethodWithOneArg)
 {
     chime_object_t* object;
+    chime_object_t* objectClass;
     chime_object_t* argument;
     
-    object   = chime_object_create_with_name("Object");
-    argument = chime_object_create_with_name("Object");
+    objectClass = chime_runtime_get_class("Object");
     
-    chime_object_set_function(object, "test_method", RuntimeTestsFunctionOneArg, 1);
+    object   = chime_object_create(objectClass);
+    argument = chime_object_create(objectClass);
+    
+    chime_object_set_function(objectClass, "test_method", RuntimeTestsFunctionOneArg, 1);
     
     ASSERT_TRUE(chime_object_invoke(object, "test_method", argument) == argument);
     

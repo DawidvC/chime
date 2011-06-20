@@ -19,7 +19,10 @@ static chime_object_t* AssertIsTrue(chime_object_t* instance, const char* method
     va_end(arguments);
     
     if (a == CHIME_LITERAL_NULL || a == CHIME_LITERAL_FALSE)
+    {
         fprintf(stderr, "[Assert] is_true: failed\n");
+        chime_object_invoke(a, "print");
+    }
     
     return CHIME_LITERAL_NULL;
 }
@@ -72,7 +75,11 @@ static chime_object_t* AssertEqualTo(chime_object_t* instance, const char* metho
     va_end(arguments);
     
     if (chime_object_invoke(a, "<=>", b) != chime_literal_encode_integer(0))
+    {
         fprintf(stderr, "[Assert] equal:to: failed\n");
+        chime_object_invoke(a, "print");
+        chime_object_invoke(b, "print");
+    }
     
     return CHIME_LITERAL_NULL;
 }
@@ -80,12 +87,15 @@ static chime_object_t* AssertEqualTo(chime_object_t* instance, const char* metho
 void chime_assertion_initialize(void)
 {
     chime_object_t* assertion_class;
+    chime_object_t* assertion_metaclass;
     
     assertion_class = chime_runtime_create_class("Assert", _object_class);
     assert(assertion_class);
     
-    chime_object_set_function(assertion_class, "is_true",  AssertIsTrue,  1);
-    chime_object_set_function(assertion_class, "is_false", AssertIsFalse, 1);
-    chime_object_set_function(assertion_class, "is_null",  AssertIsNull,  1);
-    chime_object_set_function(assertion_class, "equal",    AssertEqualTo, 2);
+    assertion_metaclass = chime_object_get_class(assertion_class);
+    
+    chime_object_set_function(assertion_metaclass, "is_true",  AssertIsTrue,  1);
+    chime_object_set_function(assertion_metaclass, "is_false", AssertIsFalse, 1);
+    chime_object_set_function(assertion_metaclass, "is_null",  AssertIsNull,  1);
+    chime_object_set_function(assertion_metaclass, "equal",    AssertEqualTo, 2);
 }

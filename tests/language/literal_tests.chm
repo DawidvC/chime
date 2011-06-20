@@ -13,22 +13,16 @@ implementation LiteralTests : Object
         Assert.is_true(true)
         Assert.is_false(false)
         Assert.is_true(true == true)
-        Assert.is_true(true != false)
+        Assert.is_false(true == false)
         Assert.equal(true, to:true)
-        Assert.equal(true, to:false)
+        Assert.is_false(true == false)
     }
-
+    
     method test_integer_literals()
     {
         Assert.is_true((1 <=> 1) == 0)
         Assert.is_true(1 == 1)
+        Assert.is_false(1 == 2)
         Assert.equal(1, to:1)
-        Assert.equal(1, to:2)
-        Assert.is_false(10 == 10)
     }
 }
-
-//a = LiteralTests.new()
-//
-//a.test_boolean_literals()
-LiteralTests.test_boolean_literals()

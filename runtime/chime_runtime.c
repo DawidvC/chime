@@ -12,7 +12,7 @@ static chime_object_t*     _root_meta_class  = 0;
 chime_object_t*            _object_class     = 0;
 chime_object_t*            _string_class     = 0;
 chime_object_t*            _method_class     = 0;
-unsigned char              chime_log_level   = 5;
+unsigned char              chime_log_level   = 4;
 
 void chime_runtime_initialize(void)
 {
@@ -118,6 +118,9 @@ chime_object_t* chime_runtime_get_class(const char* name)
     
     if (chime_log_level >= 5)
         fprintf(stderr, "[runtime] Getting class '%s' => %p\n", name, object);
+    
+    if (chime_log_level >= 4 && object == CHIME_LITERAL_NULL)
+        fprintf(stderr, "[runtime] Getting class '%s' returned null\n", name);
     
     return object;
 }
