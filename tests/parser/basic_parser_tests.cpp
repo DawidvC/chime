@@ -23,24 +23,24 @@ TEST_F(BasicParserTest, ImportIdentifier)
     
     node = parse("import Yo.Dog")->child_at_index(0);
     
-    assert_import(node);
-    assert_type("Yo.Dog", ((ast::import*)node)->importand());
+    ASSERT_IMPORT(node);
+    ASSERT_TYPE("Yo.Dog", ((ast::Import*)node)->getImportand());
 }
 
 TEST_F(BasicParserTest, MultipleImports)
 {
     ast::node*   node;
-    ast::import* import;
+    ast::Import* import;
     
     node = parse("import Yo\nimport Sup\n");
     
-    import = (ast::import*)node->child_at_index(0);
-    assert_import(import);
-    assert_type("Yo", import->importand());
+    import = (ast::Import*)node->child_at_index(0);
+    ASSERT_IMPORT(import);
+    ASSERT_TYPE("Yo", import->getImportand());
     
-    import = (ast::import*)node->child_at_index(1);
-    assert_import(import);
-    assert_type("Sup", import->importand());
+    import = (ast::Import*)node->child_at_index(1);
+    ASSERT_IMPORT(import);
+    ASSERT_TYPE("Sup", import->getImportand());
 }
 
 TEST_F(BasicParserTest, SimpleImplementation)

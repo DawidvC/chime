@@ -185,7 +185,7 @@ namespace chime
         
         if (t->equal_to("import"))
         {
-            node = new ast::import(this);
+            node = new ast::Import(*this);
         }
         else if (t->equal_to("implementation"))
         {

@@ -1,11 +1,6 @@
 #include <gtest/gtest.h>
 #include "tests/parser/parse_helpers.h"
 
-void assert_import(ast::node* node)
-{
-    ASSERT_EQ("import", node->node_name());
-}
-
 void assert_entity(const char* identifier, ast::node* node)
 {
     ASSERT_EQ("entity reference", node->node_name());

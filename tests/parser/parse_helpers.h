@@ -1,6 +1,5 @@
 #include "ast/ast.h"
 
-void assert_import(ast::node* node);
 void assert_entity(const char* identifier, ast::node* node);
 void assert_type(const char* identifier, ast::node* node);
 void assert_variable_definition(const char* type, const char* identifier, ast::node* node);
@@ -10,6 +9,10 @@ void assert_method_call(const char* identifier, ast::node* node);
 void assert_literal(const char* value, ast::node* node);
 void assert_literal(int value, ast::node* node);
 void assert_next(ast::node* node);
+
+#define ASSERT_IMPORT(x) do { \
+    ASSERT_EQ("import", x->nodeName()); \
+    } while (0)
 
 #define ASSERT_ENTITY(x, y) do { \
     ASSERT_EQ("entity reference", y->node_name()); \

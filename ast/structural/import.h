@@ -1,20 +1,22 @@
-#ifndef IMPORT_NODE
-#define IMPORT_NODE
+// chime: import.h
+
+#ifndef IMPORT_NODE_H
+#define IMPORT_NODE_H
 
 #include "ast/node.h"
 
 namespace ast
 {
-    class import : public node
+    class Import : public node
     {
     public:
-        import(chime::parser* parser);
-        virtual ~import();
+        Import(chime::parser& parser);
+        virtual ~Import();
         
-        virtual std::string node_name(void) const;
+        virtual std::string nodeName(void) const;
         
-        ast::node* importand() const;
-        void       importand(ast::node* n);
+        ast::node* getImportand() const;
+        void       setImportand(ast::node* n);
     };
 }
 

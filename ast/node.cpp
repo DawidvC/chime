@@ -2,10 +2,10 @@
 #include <string>
 #include <assert.h>
 #include "lexer/token.h"
-#import "structural/implementation.h"
-#import "structural/import.h"
-#import "primary/entity_reference.h"
-#import "operators/binary_operator.h"
+#include "structural/implementation.h"
+#include "structural/import.h"
+#include "primary/entity_reference.h"
+#include "operators/binary_operator.h"
 
 namespace ast
 {

@@ -1,35 +1,34 @@
 #include "import.h"
-#include <assert.h>
-#include "../primary/type_reference.h"
-#include "../../parser/parser.h"
+#include "parser/parser.h"
+#include "ast/primary/type_reference.h"
 
 namespace ast
 {
-    import::import(chime::parser* parser)
+    Import::Import(chime::parser& parser)
     {
         // parse the import statement
-        parser->next_token_value("import");
+        parser.next_token_value("import");
         
-        this->importand(parser->parse_type());
-        parser->advance_past_ending_tokens();
+        this->setImportand(parser.parse_type());
+        parser.advance_past_ending_tokens();
     }
     
-    import::~import()
+    Import::~Import()
     {
     }
     
-    std::string import::node_name(void) const
+    std::string Import::nodeName(void) const
     {
         return std::string("import");
     }
     
-    ast::node* import::importand() const
+    ast::node* Import::getImportand() const
     {
-        return this->child_at_index(0);
+        return this->childAtIndex(0);
     }
-    void import::importand(ast::node* n)
+    void Import::setImportand(ast::node* n)
     {
-        assert(this->child_count() == 0);
+        assert(this->childCount() == 0);
         assert(n != NULL);
         
         _children->push_back(n);
