@@ -22,6 +22,7 @@ TEST_F(RuntimeLiteralTests, Null)
     object = CHIME_LITERAL_NULL;
     
     ASSERT_TRUE(object == 0);
+    ASSERT_TRUE(chime_object_is_literal(object));
 }
 
 TEST_F(RuntimeLiteralTests, Integer)

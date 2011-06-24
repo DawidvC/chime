@@ -23,8 +23,6 @@ chime_object_t* chime_string_create_with_c_string(const char* string)
     object = chime_object_create(_string_class);
     object->flags = (unsigned long)string;
     
-    //fprintf(stderr, "Creating string instance '%s' => %p\n", string, object);
-    
     return object;
 }
 

@@ -42,6 +42,17 @@ TEST_F(RuntimeTests, GetObjectType)
     chime_object_destroy(object);
 }
 
+TEST_F(RuntimeTests, GetNullType)
+{
+    chime_object_t* object;
+    
+    object = CHIME_LITERAL_NULL;
+    
+    ASSERT_EQ(CHIME_NULL_TYPE, chime_object_get_type(object));
+    
+    chime_object_destroy(object);
+}
+
 static chime_object_t* RuntimeTestsFunctionNoArgs(chime_object_t* self, const char* method_name, ...)
 {
     return CHIME_LITERAL_NULL;
@@ -93,4 +104,41 @@ TEST_F(RuntimeTests, InvokeMethodWithOneArg)
     ASSERT_TRUE(chime_object_invoke(object, "test_method", argument) == argument);
     
     chime_object_destroy(object);
+}
+
+TEST_F(RuntimeTests, InheritanceStructure)
+{
+    chime_object_t* object;
+    chime_object_t* objectClass;
+    chime_object_t* subobject;
+    chime_object_t* subobjectClass;
+    
+    objectClass = chime_runtime_get_class("Object");
+    object      = chime_object_create(objectClass);
+    
+    // make sure the object class is the one just created
+    ASSERT_TRUE(chime_object_get_class(object) == objectClass);
+    
+    // the Object class has a metaclass
+    ASSERT_TRUE(chime_object_get_class(objectClass) != 0);
+    
+    // the Object class has no superclass
+    ASSERT_TRUE(chime_object_get_superclass(objectClass) == 0);
+    
+    subobjectClass = chime_runtime_create_class("SubObject", objectClass);
+    
+    // the subobjectClass's superclass should be the objectClass
+    ASSERT_TRUE(chime_object_get_superclass(subobjectClass) == objectClass);
+    
+    // the superclass of the metaclass is the metaclass of the superclass
+    // (say that fives times fast)
+    ASSERT_TRUE(chime_object_get_superclass(chime_object_get_class(subobjectClass)) == chime_object_get_class(objectClass));
+    
+    subobject = chime_object_create(subobjectClass);
+    
+    // make sure the type is right
+    ASSERT_TRUE(chime_object_get_class(subobject) == subobjectClass);
+    
+    // make sure the super is Object
+    ASSERT_TRUE(chime_object_get_superclass(subobject) == objectClass);
 }

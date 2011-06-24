@@ -272,7 +272,7 @@ unsigned char chime_literal_decode_boolean(chime_object_t* object)
 
 unsigned char chime_object_is_literal(chime_object_t* object)
 {
-    return (unsigned long)object & 0x3;
+    return ((unsigned long)object & 0x3) || (object == CHIME_LITERAL_NULL);
 }
 
 unsigned char chime_object_is_integer(chime_object_t* object)

@@ -3,11 +3,22 @@
 #include "chime_object.h"
 #include "chime_object_internal.h"
 #include "chime_runtime.h"
+#include "chime_runtime_internal.h"
 #include "chime_literals.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <assert.h>
+
+static chime_object_t* ObjectClass(chime_object_t* instance, const char* method_name, ...);
+static chime_object_t* ObjectToString(chime_object_t* instance, const char* method_name, ...);
+
+void chime_object_initialize(void)
+{
+    chime_object_set_function(_object_class, "class",     ObjectClass,    0);
+    chime_object_set_function(_object_class, "to_string", ObjectToString, 0);
+}
 
 chime_object_t* chime_object_create(chime_object_t* object_class)
 {
@@ -29,7 +40,7 @@ chime_object_t* chime_object_create(chime_object_t* object_class)
         object->super_class = 0;
     }    
     
-    object->properties  = 0;
+    object->properties = 0;
     
     return object;
 }
@@ -51,7 +62,8 @@ chime_object_t* chime_object_create_with_name(const char* class_name)
 
 void chime_object_destroy(chime_object_t* object)
 {
-    assert(object);
+    if (chime_object_is_literal(object))
+        return;
     
     if (object->properties)
     {
@@ -101,22 +113,56 @@ chime_object_t* chime_object_get_class(chime_object_t* instance)
     return instance->self_class;
 }
 
-chime_object_t* chime_object_get_metaclass(chime_object_t* instance)
+chime_object_t* chime_object_get_superclass(chime_object_t* instance)
 {
-    chime_object_t* class;
+    switch (chime_object_get_type(instance))
+    {
+        case CHIME_OBJECT_TYPE:
+            break;
+        case CHIME_NULL_TYPE:
+        case CHIME_INTEGER_TYPE:
+        case CHIME_BOOLEAN_TYPE:
+            return chime_runtime_get_class("Object");
+            break;
+        default:
+            assert(0 && "This type of object isn't handled yet");
+            break;
+    }
     
-    class = chime_object_get_class(instance);
-    
-    return chime_object_get_class(class);
+    return instance->super_class;
 }
 
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name)
 {
+    // chime_object_t* property;
+    // chime_object_t* object;
+    // 
+    // if (instance->properties)
+    //     property = (chime_object_t*)chime_dictionary_get(instance->properties, name);
+    // else
+    // {
+    //     property = CHIME_LITERAL_NULL;
+    //     object   = chime_object_get_class(instance);
+    // }
+    // 
+    // // we now need to hunt up the inheritance chain for the right property
+    // while (property == CHIME_LITERAL_NULL)
+    // {
+    //     if (object->properties)
+    //     {
+    //         
+    //         continue;
+    //     }
+    //     
+    //     property = (chime_object_t*)chime_dictionary_get(object->properties, name);
+    //     object   = object->super_class;
+    // }
+    // 
+    // return property;
+    
     if (!instance->properties)
-    {
-        return 0;
-    }
-        
+        return CHIME_LITERAL_NULL;
+    
     return (chime_object_t*)chime_dictionary_get(instance->properties, name);
 }
 
@@ -159,9 +205,11 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
     chime_object_t*  method_object;
     chime_function_t function;
     chime_object_t*  result_object;
+    chime_object_t*  class_name;
     va_list          arguments;
     
     class_object = chime_object_get_class(instance);
+    class_name   =  ObjectToString(class_object, "to_string");
     
     if (chime_log_level >= 5)
         fprintf(stderr, "[runtime] invoking '%s' on %p of type %p\n", name, instance, class_object);
@@ -170,7 +218,7 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
     if (!method_object)
     {
         if (chime_log_level >= 4)
-            fprintf(stderr, "[runtime] method missing for '%s' on %p\n", name, instance);
+            fprintf(stderr, "[runtime] method missing for '%s' on %s\n", name, chime_string_to_c_string(class_name));
             
         return 0;
     }
@@ -204,7 +252,26 @@ static chime_object_t* ObjectClass(chime_object_t* instance, const char* method_
     return chime_object_get_class(instance);
 }
 
-static chime_object_t* ObjectName(chime_object_t* instance, const char* method_name, ...)
+static chime_object_t* ObjectToString(chime_object_t* instance, const char* method_name, ...)
 {
-    return chime_object_get_class(instance);
+    int             string_length;
+    char*           buffer;
+    chime_object_t* string;
+    
+    // we have to add the size of the "<:0x12345678>" to the string
+    string_length = strlen(method_name) + 13;
+    
+    buffer = malloc(string_length + 1);
+    
+    string = chime_object_get_property(instance, "name");
+    
+    snprintf(buffer, string_length, "<%s:%p>", chime_string_to_c_string(string), instance);
+    
+    string = chime_string_create_with_c_string(buffer);
+    
+    // here, we should free the buffer
+    // except right now the string class doesn't make a copy
+    // free(buffer);
+    
+    return string;
 }

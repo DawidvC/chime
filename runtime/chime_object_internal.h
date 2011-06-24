@@ -1,7 +1,11 @@
 // Chime Runtime: chime_object_internal.h
 
-#ifndef CHIME_OBJECT_INTERNAL
-#define CHIME_OBJECT_INTERNAL
+#ifndef CHIME_OBJECT_INTERNAL_H
+#define CHIME_OBJECT_INTERNAL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "collections/chime_dictionary.h"
 
@@ -18,4 +22,8 @@ struct _chime_object {
     chime_dictionary_t* properties;
 };
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif // CHIME_OBJECT_INTERNAL_H
