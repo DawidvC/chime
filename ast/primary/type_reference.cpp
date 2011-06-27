@@ -32,11 +32,11 @@ namespace ast
         }
     }
     
-    std::string type_reference::node_name(void) const
+    std::string type_reference::nodeName(void) const
     {
         return std::string("type reference");
     }
-    std::string type_reference::to_string(void) const
+    std::string type_reference::toString(void) const
     {
         std::string s;
         

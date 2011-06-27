@@ -1,17 +1,19 @@
-#ifndef TYPE_REFERENCE
-#define TYPE_REFERENCE
+// chime: type_reference.h
 
-#include "ast/primary/entity_reference.h"
+#ifndef TYPE_REFERENCE_H
+#define TYPE_REFERENCE_H
+
+#include "ast/node.h"
 
 namespace ast
 {
-    class type_reference : public entity_reference
+    class type_reference : public node
     {
     public:
         type_reference(chime::parser* parser);
         
-        virtual std::string node_name(void) const;
-        virtual std::string to_string(void) const;
+        virtual std::string nodeName(void) const;
+        virtual std::string toString(void) const;
         
         virtual std::string identifier() const;
         virtual void identifier(std::string s);
@@ -27,4 +29,4 @@ namespace ast
     typedef shared_ptr<ast::type_reference> TypeRef;
 }
 
-#endif
+#endif // TYPE_REFERENCE_H

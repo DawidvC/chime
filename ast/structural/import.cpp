@@ -45,10 +45,7 @@ namespace ast
     }
     void Import::setImportand(ast::node* n)
     {
-        assert(this->childCount() == 0);
-        assert(n != NULL);
-        
-        _children->push_back(n);
+        this->addChild(n);
     }
     
     llvm::Value* Import::codegen(chime::code_generator& generator)
@@ -68,13 +65,19 @@ namespace ast
         
         node = this->getImportand();
         
-        if (node->nodeName().compare(std::string("type reference")))
+        fprintf(stderr, "a %s\n", node->nodeName().c_str());
+        
+        if (node->nodeName().compare(std::string("type reference")) == 0)
         {
             generator.getImportedNamespaces()->push_back(static_cast<ast::type_reference*>(node)->identifier()); 
         }
+        else if (node->nodeName().compare(std::string("string literal")) == 0)
+        {
+            fprintf(stderr, "asked to import %s\n", static_cast<string_literal*>(node)->value().c_str());
+        }
         else
         {
-            assert(0 && "Currently, only type-reference imports are supported");
+            assert(0 && "Currently, only type-reference and string imports are supported");
         }
         
         return NULL;

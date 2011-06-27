@@ -20,7 +20,7 @@ void assert_next(ast::node* node);
     } while (0)
     
 #define ASSERT_TYPE(x, y) do { \
-    ASSERT_EQ("type reference", y->node_name()); \
+    ASSERT_EQ("type reference", y->nodeName()); \
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
     } while (0)
 

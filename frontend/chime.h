@@ -1,12 +1,12 @@
 // chime.h
 
-#include <vector>
+#ifndef CHIME_H
+#define CHIME_H
 
-#ifndef CHIME
-#define CHIME
+#include <vector>
 
 #include "../lexer/string_lexer.h"
 #include "../parser/parser.h"
 #include "../ast/ast.h"
 
-#endif
+#endif // CHIME_H

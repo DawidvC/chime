@@ -23,6 +23,8 @@ TEST_F(BasicParserTest, ImportIdentifier)
     
     node = parse("import Yo.Dog")->child_at_index(0);
     
+    node->print();
+    
     ASSERT_IMPORT(node);
     ASSERT_TYPE("Yo.Dog", ((ast::Import*)node)->getImportand());
 }

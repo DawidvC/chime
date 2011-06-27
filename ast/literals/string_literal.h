@@ -11,8 +11,8 @@ namespace ast
     public:
         string_literal(chime::parser* parser);
         
-        virtual std::string node_name(void) const;
-        virtual std::string to_string(void) const;
+        virtual std::string nodeName(void) const;
+        virtual std::string toString(void) const;
         
         std::string value(void) const;
         void value(std::string v);
