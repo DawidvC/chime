@@ -43,6 +43,16 @@ TEST_F(BasicParserTest, MultipleImports)
     ASSERT_TYPE("Sup", import->getImportand());
 }
 
+TEST_F(BasicParserTest, ImportString)
+{
+    ast::Import* import;
+    
+    import = (ast::Import*)parse("import \"a/file\"\n")->child_at_index(0);
+    
+    ASSERT_IMPORT(import);
+    ASSERT_LITERAL_STRING("a/file", import->getImportand());
+}
+
 TEST_F(BasicParserTest, SimpleImplementation)
 {
     ast::Implementation* node;

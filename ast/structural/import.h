@@ -15,9 +15,11 @@ namespace ast
         
         virtual std::string nodeName(void) const;
         
-        ast::node* getImportand() const;
-        void       setImportand(ast::node* n);
+        ast::node*   getImportand() const;
+        void         setImportand(ast::node* n);
+        
+        llvm::Value* codegen(chime::code_generator& generator);
     };
 }
 
-#endif
+#endif // IMPORT_NODE_H

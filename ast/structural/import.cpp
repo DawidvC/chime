@@ -1,15 +1,32 @@
 #include "import.h"
 #include "parser/parser.h"
+#include "codegen/code_generator.h"
 #include "ast/primary/type_reference.h"
+#include "ast/literals/string_literal.h"
 
 namespace ast
 {
     Import::Import(chime::parser& parser)
     {
+        chime::token* t;
+        
         // parse the import statement
         parser.next_token_value("import");
         
-        this->setImportand(parser.parse_type());
+        t = parser.look_ahead();
+        if (t->isString())
+        {
+            this->setImportand(new string_literal(&parser));
+        }
+        else if (t->isType())
+        {
+            this->setImportand(parser.parse_type());
+        }
+        else
+        {
+            parser.addError("import must be followed by a string or type");
+        }
+        
         parser.advance_past_ending_tokens();
     }
     
@@ -32,5 +49,34 @@ namespace ast
         assert(n != NULL);
         
         _children->push_back(n);
+    }
+    
+    llvm::Value* Import::codegen(chime::code_generator& generator)
+    {
+        // The import statement is a weird beast.  If it appears as a structural
+        // statement, it does not actually generate any code at all.  Instead,
+        // it just instructs the compiler to either compile and/or link in another
+        // binary.  This makes it possible to define your dependancies in terms
+        // of code, instead of build system instructions/scripts.
+        //
+        // But, when encountered as a non-structural element, it must be executed at
+        // runtime.  This is kind of like a dlopen call.
+        //
+        // For now, we'll just handle the static case.
+        
+        ast::node* node;
+        
+        node = this->getImportand();
+        
+        if (node->nodeName().compare(std::string("type reference")))
+        {
+            generator.getImportedNamespaces()->push_back(static_cast<ast::type_reference*>(node)->identifier()); 
+        }
+        else
+        {
+            assert(0 && "Currently, only type-reference imports are supported");
+        }
+        
+        return NULL;
     }
 }
