@@ -1,6 +1,6 @@
 {	scopeName = 'source.chime';
 	comment = 'This is textmate syntax grammer for chime';
-	fileTypes = ( 'chi', 'chm' );
+	fileTypes = ( 'chi', 'chm', 'chime' );
 	foldingStartMarker = '\b(namespace|interface|implementation|method|property)\b';
 	foldingStopMarker = '(})';
 	patterns = (
@@ -15,6 +15,11 @@
 			captures = {
 				1 = { name = 'keyword'; };
 				2 = { name = 'entity.name.type.chime'; };
+			};
+		},
+		{	match = '(import)\b';
+			captures = {
+				1 = { name = 'keyword'; };
 			};
 		},
 		{	match = '(implementation|interface)\s+([\w\.]+)\s*(:)\s*([\w\.]+)';
@@ -42,7 +47,12 @@
 			};
 		},
 		{	match = '\b([A-Z]\w+)\b';
-			name = 'support.type';
+			name = 'entity.name.type.chime';
+		},
+		{	match = '[\.\b]([\w]+)[\(\b]';
+			captures = {
+				1 = { name = 'support.function'; };
+			};
 		},
 		{	match = ',\s*(\w+:)';
 			captures = {

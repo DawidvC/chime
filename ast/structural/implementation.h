@@ -6,6 +6,7 @@
 #include "ast/node.h"
 #include "ast/primary/type_reference.h"
 #include "ast/common/code_block.h"
+#include "codegen/code_generator.h"
 
 namespace ast
 {
@@ -18,6 +19,7 @@ namespace ast
         virtual std::string nodeName(void) const;
         virtual std::string to_string(void) const;
         
+        llvm::Function*     createInitFunction(chime::code_generator& generator);
         llvm::Value*        codegen(chime::code_generator& generator);
         
         TypeRef    getTypeRef() const;

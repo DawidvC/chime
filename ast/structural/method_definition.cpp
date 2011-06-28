@@ -74,7 +74,7 @@ namespace ast
         // create the actual method body
         this->getBody()->codegen(generator);
         
-        generator.builder()->CreateRet(generator.get_chime_literal_null());
+        generator.builder()->CreateRet(generator.getRuntime()->getChimeLiteralNull());
         
         // before we continue, verify the function
         llvm::verifyFunction(*methodFunction);
@@ -82,7 +82,7 @@ namespace ast
         // restore the builder's position
         generator.builder()->SetInsertPoint(currentBlock);
         
-        // get the meta-class
+        // get the class object
         classObjectPtr = generator.getImplementationScope()->getTarget();
         
         // finally, install the method in the class

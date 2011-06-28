@@ -2,7 +2,6 @@
 
 #include "implementation.h"
 #include "parser/parser.h"
-#include "codegen/code_generator.h"
 
 namespace ast
 {
@@ -54,13 +53,44 @@ namespace ast
         return s;
     }
     
+    llvm::Function* Implementation::createInitFunction(chime::code_generator& generator)
+    {
+        llvm::Function*     initFunction;
+        llvm::FunctionType* functionType;
+        std::string         functionName;
+        
+        functionName = "init_" + this->getTypeRef()->identifier();
+        
+        functionType = generator.getRuntime()->getChimeModuleInitFunctionType();
+        
+        initFunction = generator.createFunction(functionType, functionName);
+        
+        return initFunction;
+    }
+    
     llvm::Value* Implementation::codegen(chime::code_generator& generator)
     {
         llvm::Value*                  classNamePtr;
         llvm::Value*                  superclassNamePtr;
         llvm::Value*                  objectClassPtr;
         llvm::Value*                  superclassPtr;
+        llvm::Function*   initFunction;
+        llvm::BasicBlock* basicBlock;
+        llvm::BasicBlock* currentBlock;
         chime::ImplementationScopeRef scope;
+        
+        // capture the current block
+        currentBlock = generator.builder()->GetInsertBlock();
+        
+        // create the class's initialization function, and add it to the
+        // generator's list
+        initFunction = this->createInitFunction(generator);
+        
+        generator.getInitFunctions()->push_back(initFunction);
+        
+        // setup our insertion point in the init function
+        basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", initFunction, 0);
+        generator.builder()->SetInsertPoint(basicBlock);
         
         // first create the c-string name of the new class
         classNamePtr = generator.make_constant_string(this->getTypeRef()->identifier());
@@ -92,7 +122,16 @@ namespace ast
         // and now, finally, we can actually codegen the internals of the implementation
         _bodyBlock->codegen(generator);
         
-        return objectClassPtr;
+        llvm::ReturnInst::Create(generator.getContext(), generator.builder()->GetInsertBlock());
+        //generator.builder()->CreateRet();
+        
+        // verify the function
+        llvm::verifyFunction(*initFunction);
+        
+        // restore the builder's position
+        generator.builder()->SetInsertPoint(currentBlock);
+        
+        return NULL;
     }
     
     ast::TypeRef Implementation::getTypeRef() const

@@ -9,6 +9,7 @@
 
 static chime_dictionary_t* _chime_classes   = 0;
 static chime_object_t*     _root_metaclass  = 0;
+chime_object_t*            _class_class     = 0;
 chime_object_t*            _object_class    = 0;
 chime_object_t*            _string_class    = 0;
 chime_object_t*            _method_class    = 0;
@@ -25,6 +26,11 @@ void chime_runtime_initialize(void)
     
     _chime_classes = chime_dictionary_create();
     assert(_chime_classes);
+    
+    _class_class = chime_object_create(0);
+    assert(_class_class);
+    
+    _class_class->self_class = _class_class;
     
     // create the root metaclass, which is needed to call
     // the chime_runtime_create_class function
@@ -162,4 +168,11 @@ char* chime_runtime_get_class_name(chime_object_t* instance)
     assert(name);
     
     return chime_string_to_c_string(name);
+}
+
+chime_object_t* chime_runtime_load(const char* name)
+{
+    fprintf(stderr, "Asked to load '%s'", name);
+    
+    return CHIME_LITERAL_TRUE;
 }

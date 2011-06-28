@@ -14,6 +14,7 @@ namespace chime
         _functionChimeLibraryInitialize       = NULL;
         _functionChimeRuntimeCreateClass      = NULL;
         _functionChimeRuntimeGetClass         = NULL;
+        _functionChimeRuntimeLoad             = NULL;
         _functionChimeObjectCreate            = NULL;
         _functionChimeObjectSetFunction       = NULL;
         _functionChimeObjectInvoke            = NULL;
@@ -84,7 +85,14 @@ namespace chime
         
         return _chimeFunctionType;
     }
-
+    
+    llvm::FunctionType* RuntimeInterface::getChimeModuleInitFunctionType(void)
+    {
+        std::vector<const llvm::Type*> functionArgs;
+        
+        return llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+    }
+    
 #pragma mark -
 #pragma mark Runtime Functions
     void RuntimeInterface::callChimeRuntimeInitialize(void)
@@ -179,6 +187,35 @@ namespace chime
         alloca->setAlignment(8);
         
         call = this->getBuilder()->CreateCall(_functionChimeRuntimeGetClass, classNamePtr, "class lookup");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeRuntimeLoad(llvm::Value* namePtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeRuntimeLoad == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getCStringPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeRuntimeLoad = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_runtime_load", this->getModule());
+            _functionChimeRuntimeLoad->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "load result");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeRuntimeLoad, namePtr, "load");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);
