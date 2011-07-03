@@ -24,6 +24,7 @@
 bool        print_ast;
 bool        emit_llvm_ir;
 const char* outputFileName;
+bool        compileAsMain;
 
 // std::string path_with_new_extension(std::string path, const char* extension)
 // {
@@ -37,19 +38,21 @@ void get_options(int argc, char* argv[])
     int32_t c;
     
     static struct option longopts[] = {
-        { NULL,         no_argument,       NULL, 'c' },
-        { "emit-llvm",  no_argument,       NULL, 'e' },
-        { "help",       no_argument,       NULL, 'h' },
-        { "output",     required_argument, NULL, 'o' },
-        { "print",      no_argument,       NULL, 'p' },
-        { NULL,         0,                 NULL, 0   }
+        { "compile",   no_argument,       NULL, 'c' },
+        { "emit-llvm", no_argument,       NULL, 'e' },
+        { "help",      no_argument,       NULL, 'h' },
+        { "main",      no_argument,       NULL, 'm' },
+        { "output",    required_argument, NULL, 'o' },
+        { "print",     no_argument,       NULL, 'p' },
+        { NULL,        0,                 NULL, 0   }
     };
     
     print_ast      = false;
     emit_llvm_ir   = false;
     outputFileName = NULL;
+    compileAsMain  = false;
     
-    while ((c = getopt_long(argc, argv, "ceho:p", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "cehmo:p", longopts, NULL)) != -1)
     {
         switch (c)
         {
@@ -57,6 +60,9 @@ void get_options(int argc, char* argv[])
                 break;
             case 'e':
                 emit_llvm_ir = true;
+                break;
+            case 'm':
+                compileAsMain = true;
                 break;
             case 'o':
                 outputFileName = optarg;
@@ -71,6 +77,7 @@ void get_options(int argc, char* argv[])
                 printf("  -c                run only compile and assemble steps\n");
                 printf("  -e (--emit-llvm)  create llvm IR\n");
                 printf("  -h (--help)       print this help message and exit\n");
+                printf("  -m (--main)       compile for program start\n");
                 printf("  -o (--output)     name of output file\n");
                 printf("  -p (--print)      print out the AST representation for the input file\n");
                 exit(0);
@@ -170,7 +177,7 @@ int main(int argc, char* argv[])
         return 0;
     }
     
-    generator->generate(node, "my module");
+    generator->generate(node, std::string(basename((char *)outputFileName)), compileAsMain);
     
     if (emit_llvm_ir)
     {

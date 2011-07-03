@@ -1,0 +1,18 @@
+import ControlTests
+import LiteralTests
+
+test = LiteralTests.new()
+
+test.setup()
+test.test_boolean_literals()
+test.teardown()
+
+test.setup()
+test.test_integer_literals()
+test.teardown()
+
+test = ControlTests.new()
+
+test.setup()
+test.test_ifs_with_boolean_literals()
+test.teardown()

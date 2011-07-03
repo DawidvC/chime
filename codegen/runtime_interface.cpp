@@ -223,6 +223,25 @@ namespace chime
         return alloca;
     }
     
+    llvm::Function* RuntimeInterface::createModuleInitFunction(const std::string& name)
+    {
+        std::vector<const llvm::Type*> functionArgs;
+        llvm::FunctionType*            functionType;
+        llvm::Function*                function;
+        
+        functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+        
+        function = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, name, this->getModule());
+        function->setCallingConv(llvm::CallingConv::C);
+        
+        return function;
+    }
+    
+    llvm::Value* RuntimeInterface::callModuleInitFunction(const std::string& name)
+    {
+        return NULL;
+    }
+    
 #pragma mark -
 #pragma mark Object Functions
     llvm::Value* RuntimeInterface::callChimeObjectCreate(llvm::Value* classPtr)

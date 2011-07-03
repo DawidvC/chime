@@ -65,11 +65,17 @@ namespace ast
         
         node = this->getImportand();
         
-        fprintf(stderr, "a %s\n", node->nodeName().c_str());
-        
         if (node->nodeName().compare(std::string("type reference")) == 0)
         {
-            generator.getImportedNamespaces()->push_back(static_cast<ast::type_reference*>(node)->identifier()); 
+            ast::type_reference* typeRef;
+            llvm::Value*         cStringPtr;
+            
+            typeRef    = static_cast<ast::type_reference*>(node);
+            cStringPtr = generator.make_constant_string(typeRef->identifier());
+            
+            //generator.getImportedNamespaces()->push_back(->identifier());
+            //generator.getRuntime()->callChimeRuntimeLoad(cStringPtr);
+            generator.callModuleInitFunction(typeRef->identifier());
         }
         else if (node->nodeName().compare(std::string("string literal")) == 0)
         {

@@ -172,7 +172,7 @@ char* chime_runtime_get_class_name(chime_object_t* instance)
 
 chime_object_t* chime_runtime_load(const char* name)
 {
-    fprintf(stderr, "Asked to load '%s'", name);
+    fprintf(stderr, "[runtime] loading '%s'\n", name);
     
     return CHIME_LITERAL_TRUE;
 }

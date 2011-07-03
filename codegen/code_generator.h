@@ -47,12 +47,13 @@ namespace chime
         llvm::Value*       createCondition(llvm::Value* cond);
         llvm::Function*    createFunction(const llvm::FunctionType* type, const std::string name);
         
+        llvm::Value*    callModuleInitFunction(const std::string& name);
         llvm::Value*    call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args);
         llvm::Value*    call_chime_literal_encode_integer(signed long value);
         llvm::Value*    call_chime_literal_encode_boolean(unsigned char value);
         llvm::Value*    call_chime_string_create_with_c_string(std::string str);
         
-        void generate(ast::node* node, const char* moduleName);
+        void generate(ast::node* node, const std::string& moduleName, bool asMain);
         
     protected:
         llvm::Module*                        _module;

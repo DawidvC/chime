@@ -39,6 +39,7 @@ namespace chime
         llvm::Value* callChimeRuntimeLoad(llvm::Value* namePtr);
         
         llvm::Function* createModuleInitFunction(const std::string& name);
+        llvm::Value*    callModuleInitFunction(const std::string& name);
         
         // object functions
         llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);

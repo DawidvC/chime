@@ -6,11 +6,12 @@ namespace chime
 {
     code_generator::code_generator()
     {
-        _module              = NULL;
-        _builder             = new llvm::IRBuilder<>(llvm::getGlobalContext());
-        _scope_values        = new std::map<std::string, llvm::Value*>();
-        _importedNamespaces  = new std::vector<std::string>();
-        _initFunctions       = new std::vector<llvm::Function*>();
+        _module               = NULL;
+        _builder              = new llvm::IRBuilder<>(llvm::getGlobalContext());
+        _scope_values         = new std::map<std::string, llvm::Value*>();
+        _importedNamespaces   = new std::vector<std::string>();
+        _initFunctions        = new std::vector<llvm::Function*>();
+        _internalInitFunction = NULL;
         
         _object_ptr_type     = NULL;
         _c_string_ptr_type   = NULL;
@@ -174,6 +175,34 @@ namespace chime
         function->setCallingConv(llvm::CallingConv::C);
         
         return function;
+    }
+    
+    llvm::Value* code_generator::callModuleInitFunction(const std::string& name)
+    {
+        llvm::Function*     initFunction;
+        llvm::FunctionType* functionType;
+        std::string         functionName;
+        
+        functionName = "init_" + name;
+        
+        functionType = this->getRuntime()->getChimeModuleInitFunctionType();
+        
+        initFunction = this->createFunction(functionType, functionName);
+        
+        // If there was already a function defined, llvm will automatically rename the
+        // new one.  We need to check here to make sure that didn't happen
+        // fprintf(stderr, "name = %s f->getName = %s\n", name.c_str(), initFunction->getName().c_str());
+        // if (initFunction->getName() != name)
+        // {
+        //     assert(0 && "This case needs to be handled");
+        // }
+        
+        llvm::CallInst* call;
+        
+        call = this->builder()->CreateCall(initFunction, "");
+        call->setTailCall(false);
+        
+        return NULL;
     }
     
     llvm::Value* code_generator::call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args)
@@ -378,6 +407,8 @@ namespace chime
         llvm::BasicBlock*                      currentBlock;
         std::vector<llvm::Function*>::iterator i;
         
+        assert(_internalInitFunction && "_internalInitFunction cannot be NULL");
+        
         // capture the current block
         currentBlock = this->builder()->GetInsertBlock();
         
@@ -390,8 +421,7 @@ namespace chime
             this->builder()->CreateCall((*i), "");
         }
         
-        llvm::ReturnInst::Create(this->getContext(), this->builder()->GetInsertBlock());
-        // this->builder()->CreateRet(this->getRuntime()->getChimeLiteralNull());
+        this->builder()->CreateRetVoid();
         
         // verify the function
         llvm::verifyFunction(*_internalInitFunction);
@@ -400,7 +430,7 @@ namespace chime
         this->builder()->SetInsertPoint(currentBlock);
     }
     
-    void code_generator::generate(ast::node* node, const char* moduleName)
+    void code_generator::generate(ast::node* node, const std::string& moduleName, bool asMain)
     {
         std::vector<ast::node*>::iterator i;
         
@@ -410,18 +440,39 @@ namespace chime
         
         _runtimeInterface = new RuntimeInterface(this->module(), this->builder());
         
-        this->generateMainFunction();
+        if (asMain)
+        {
+            this->generateMainFunction();
+        }
+        else
+        {
+            llvm::Function*   function;
+            llvm::BasicBlock* labelEntry;
+            
+            function = this->getRuntime()->createModuleInitFunction(moduleName);
+            
+            labelEntry = llvm::BasicBlock::Create(this->getContext(), "entry", function, 0);
+            this->builder()->SetInsertPoint(labelEntry);
+        }
         
+        // actually do the codegen
         for (i=node->children()->begin(); i < node->children()->end(); i++)
         {
             (*i)->codegen(*this);
         }
         
-        // by default, return a zero
-        this->builder()->CreateRet(llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 0, false)));
-        
-        // and now, generate all of the internal init calls
-        this->fillInInternalInitFunction();
+        if (asMain)
+        {
+            // by default, return a zero
+            this->builder()->CreateRet(llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 0, false)));
+            
+            // and now, generate all of the internal init calls
+            this->fillInInternalInitFunction();
+        }
+        else
+        {
+            this->builder()->CreateRetVoid();
+        }
         
         llvm::verifyModule(*this->module(), llvm::PrintMessageAction);
     }
