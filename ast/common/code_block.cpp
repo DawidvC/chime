@@ -100,7 +100,7 @@ namespace ast
         }
         else
         {
-            node = NodeRef(parser.parse_expression());
+            node = NodeRef(parser.parse_without_structural());
         }
         
         return node;

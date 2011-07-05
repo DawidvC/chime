@@ -82,6 +82,17 @@ TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
     ASSERT_METHOD_CALL("bar", ((ast::CodeBlock*)node->getElse().get())->childAtIndex(0));
 }
 
+TEST_F(FlowControlParserTest, IfWithNestedIf)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if true if false foo()")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_IF_STATEMENT(node->getBody().get());
+}
+
 TEST_F(FlowControlParserTest, TailingIf)
 {
     ast::IfStatement* node;
@@ -138,4 +149,25 @@ TEST_F(FlowControlParserTest, ThrowStatement)
     
     ASSERT_THROW_STATEMENT(node);
     ASSERT_LITERAL_STRING("boom", node->child_at_index(0));
+}
+
+TEST_F(FlowControlParserTest, ReturnInIfStatement)
+{
+    ast::IfStatement* node;
+    
+    node = (ast::IfStatement*)parse("if false\n  return")->child_at_index(0);
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_RETURN(node->getBody().get());
+    ASSERT_TRUE(node->getElse() == NULL);
+}
+
+TEST_F(FlowControlParserTest, ReturnVoidStatment)
+{
+    ast::method_definition* method;
+    
+    method = parse_method_def("method foo() { return }");
+    
+    ASSERT_METHOD_DEFINITION("foo", method);
+    ASSERT_RETURN(method->getBody()->childAtIndex(0));
 }

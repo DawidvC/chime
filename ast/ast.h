@@ -7,6 +7,7 @@
 #include "control/catch.h"
 #include "control/finally.h"
 #include "control/throw.h"
+#include "control/return.h"
 #include "literals/integer_literal.h"
 #include "literals/string_literal.h"
 #include "literals/boolean_literal.h"

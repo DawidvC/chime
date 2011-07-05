@@ -87,3 +87,7 @@ void assert_next(ast::node* node);
 #define ASSERT_THROW_STATEMENT(x) do { \
     ASSERT_EQ("throw", x->node_name()); \
     } while (0)
+
+#define ASSERT_RETURN(x) do { \
+    ASSERT_EQ("return", x->nodeName()); \
+    } while (0)

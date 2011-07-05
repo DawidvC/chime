@@ -489,9 +489,13 @@ namespace chime
             
             node = this->parse_tailing_conditional(node);
         }
-        else if  (t->equal_to("if"))
+        else if (t->equal_to("if"))
         {
             node = new ast::IfStatement(*this, NULL);
+        }
+        else if (t->equal_to("return"))
+        {
+            node = new ast::Return(*this);
         }
         else
         {
