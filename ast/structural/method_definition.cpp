@@ -58,6 +58,7 @@ namespace ast
         std::string       functionName;
         llvm::Value*      functionNameCStringPtr;
         llvm::BasicBlock* basicBlock;
+        llvm::BasicBlock* returnBlock;
         llvm::BasicBlock* currentBlock;
         llvm::Value*      classObjectPtr;
         
@@ -68,13 +69,29 @@ namespace ast
         
         methodFunction = generator.createFunction(generator.getRuntime()->getChimeFunctionType(), functionName);
         
+        // create the return code for the method
+        generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
+        
+        returnBlock = llvm::BasicBlock::Create(generator.getContext(), "return");
+        generator.getMethodScope()->setReturnBlock(returnBlock);
+        
+        generator.builder()->SetInsertPoint(returnBlock);
+        generator.builder()->CreateRet(generator.getRuntime()->getChimeLiteralNull());
+        
+        // setup the function entry
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", methodFunction, 0);
         generator.builder()->SetInsertPoint(basicBlock);
         
         // create the actual method body
         this->getBody()->codegen(generator);
         
-        generator.builder()->CreateRet(generator.getRuntime()->getChimeLiteralNull());
+        // now, add the return block on to the end
+        methodFunction->getBasicBlockList().push_back(generator.getMethodScope()->getReturnBlock());
+        
+        // finally create a branch to the return block
+        generator.builder()->CreateBr(generator.getMethodScope()->getReturnBlock());
+        
+        //generator.builder()->CreateRet(generator.getRuntime()->getChimeLiteralNull());
         
         // before we continue, verify the function
         llvm::verifyFunction(*methodFunction);

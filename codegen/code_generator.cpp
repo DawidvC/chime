@@ -70,15 +70,23 @@ namespace chime
     {
         return _implementationScope;
     }
+    void code_generator::setImplementationScope(ImplementationScopeRef scope)
+    {
+        _implementationScope = scope;
+    }
+    
+    MethodScopeRef code_generator::getMethodScope(void) const
+    {
+        return _methodScope;
+    }
+    void code_generator::setMethodScope(MethodScopeRef scope)
+    {
+        _methodScope = scope;
+    }
     
     std::vector<llvm::Function*>* code_generator::getInitFunctions(void) const
     {
         return _initFunctions;
-    }
-    
-    void code_generator::setImplementationScope(ImplementationScopeRef scope)
-    {
-        _implementationScope = scope;
     }
     
     llvm::Value* code_generator::make_constant_string(std::string str)

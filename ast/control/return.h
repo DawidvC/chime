@@ -11,6 +11,8 @@ namespace ast
         Return(chime::parser& parser);
         
         virtual std::string nodeName(void) const;
+        
+        virtual llvm::Value* codegen(chime::code_generator& generator);
     };
 }
 

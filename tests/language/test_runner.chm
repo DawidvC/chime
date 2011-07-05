@@ -14,6 +14,10 @@ test.teardown()
 test = ControlTests.new()
 
 test.setup()
+test.test_if_executes_only_next_statement()
+test.teardown()
+
+test.setup()
 test.test_ifs_with_boolean_literals()
 test.teardown()
 

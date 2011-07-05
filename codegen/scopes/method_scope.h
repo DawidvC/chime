@@ -10,9 +10,14 @@ namespace chime
     class MethodScope : public Scope
     {
     public:
-        MethodScope();
-        virtual ~MethodScope();
+        llvm::BasicBlock* getReturnBlock(void) const;
+        void              setReturnBlock(llvm::BasicBlock* block);
+    
+    protected:
+        llvm::BasicBlock* _returnBlock;
     };
+    
+    typedef std::tr1::shared_ptr<chime::MethodScope> MethodScopeRef;
 }
 
 #endif // METHOD_SCOPE_H

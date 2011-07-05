@@ -85,13 +85,17 @@ namespace ast
         
         generator.builder()->CreateCondBr(conditionValue, thenBlock, elseBlock);
         
+        // setup the then block
         generator.builder()->SetInsertPoint(thenBlock);
         
         thenValue = this->getBody()->codegen(generator);
         
-        generator.builder()->CreateBr(endBlock);
-        
-        thenBlock = generator.builder()->GetInsertBlock();
+        // branch to the end, unless we've encountered another terminator
+        // in the process of codegen (like a return statement)
+        if (!generator.builder()->GetInsertBlock()->getTerminator())
+        {
+            generator.builder()->CreateBr(endBlock);
+        }
         
         function->getBasicBlockList().push_back(elseBlock);
         generator.builder()->SetInsertPoint(elseBlock);
@@ -104,7 +108,11 @@ namespace ast
             elseValue = this->getElse()->codegen(generator);
         }
         
-        generator.builder()->CreateBr(endBlock);
+        // guard against duplicate terminators again here
+        if (!generator.builder()->GetInsertBlock()->getTerminator())
+        {
+            generator.builder()->CreateBr(endBlock);
+        }
         
         elseBlock = generator.builder()->GetInsertBlock();
         

@@ -15,6 +15,7 @@
 #include "ast/node.h"
 #include "codegen/runtime_interface.h"
 #include "codegen/scopes/implementation_scope.h"
+#include "codegen/scopes/method_scope.h"
 
 namespace chime
 {
@@ -33,6 +34,8 @@ namespace chime
         
         ImplementationScopeRef getImplementationScope(void) const;
         void                   setImplementationScope(ImplementationScopeRef scope);
+        MethodScopeRef         getMethodScope(void) const;
+        void                   setMethodScope(MethodScopeRef scope);
         std::vector<llvm::Function*>* getInitFunctions(void) const;
         
         llvm::Value*       make_constant_string(std::string str);
@@ -62,6 +65,7 @@ namespace chime
         std::vector<llvm::Function*>*        _initFunctions;
         llvm::Function*                      _internalInitFunction;
         ImplementationScopeRef               _implementationScope;
+        MethodScopeRef                       _methodScope;
         std::vector<std::string>*            _importedNamespaces;
         
         llvm::PointerType*                   _object_ptr_type;

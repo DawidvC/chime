@@ -1,5 +1,6 @@
 #include "return.h"
 #include "parser/parser.h"
+#include "codegen/code_generator.h"
 
 namespace ast
 {
@@ -13,5 +14,12 @@ namespace ast
     std::string Return::nodeName(void) const
     {
         return std::string("return");
+    }
+    
+    llvm::Value* Return::codegen(chime::code_generator& generator)
+    {
+        generator.builder()->CreateBr(generator.getMethodScope()->getReturnBlock());
+        
+        return NULL;
     }
 }
