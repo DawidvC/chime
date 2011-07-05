@@ -16,3 +16,5 @@ test = ControlTests.new()
 test.setup()
 test.test_ifs_with_boolean_literals()
 test.teardown()
+
+Assert.failures().print()

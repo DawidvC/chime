@@ -14,6 +14,7 @@ void                chime_dictionary_destroy(chime_dictionary_t* dictionary);
 
 void* chime_dictionary_get(chime_dictionary_t* dictionary, const char* key);
 void  chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void* value);
+void  chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key);
 
 #ifdef __cplusplus
 }

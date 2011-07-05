@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 chime_dictionary_t* chime_dictionary_create(void)
 {
@@ -56,6 +57,18 @@ void* chime_dictionary_get(chime_dictionary_t* dictionary, const char* key)
 
 void chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void* value)
 {
+    assert(dictionary);
+    
+    chime_dictionary_remove(dictionary, key);
+    
+    chime_array_add(dictionary->key_array,   (void*)key);
+    chime_array_add(dictionary->value_array, value);
+    
+    assert(chime_array_count(dictionary->key_array) == chime_array_count(dictionary->value_array));
+}
+
+void chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key)
+{
     unsigned long i;
     char*         current_key;
     
@@ -70,12 +83,10 @@ void chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void*
         {
             chime_array_remove(dictionary->key_array, i);
             chime_array_remove(dictionary->value_array, i);
+            
             break;
         }
     }
-    
-    chime_array_add(dictionary->key_array,   (void*)key);
-    chime_array_add(dictionary->value_array, value);
     
     assert(chime_array_count(dictionary->key_array) == chime_array_count(dictionary->value_array));
 }

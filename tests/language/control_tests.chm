@@ -8,6 +8,14 @@ implementation ControlTests : Test.Case
     {
     }
     
+    method test_if_executes_only_next_statement()
+    {
+        if true
+            return
+        
+        Assert.is_true(false)
+    }
+    
     method test_ifs_with_boolean_literals()
     {
         if false

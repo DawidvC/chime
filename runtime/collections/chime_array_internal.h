@@ -18,5 +18,6 @@ struct _chime_array {
 };
 
 chime_array_node_t* chime_array_node_create(void* p);
+void                chime_array_node_destroy(chime_array_node_t* node);
 
 #endif

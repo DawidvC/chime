@@ -27,7 +27,7 @@ void chime_array_destroy(chime_array_t* array)
     while (index)
     {
         chime_array_remove(array, index-1);
-        index--;
+        --index;
     }
     
     free(array);
@@ -42,6 +42,13 @@ chime_array_node_t* chime_array_node_create(void* p)
     node->pointer = p;
     
     return node;
+}
+
+void chime_array_node_destroy(chime_array_node_t* node)
+{
+    assert(node);
+    
+    free(node);
 }
 
 unsigned long chime_array_count(chime_array_t* array)
@@ -100,7 +107,35 @@ void chime_array_add(chime_array_t* array, void* value)
     node->next = new_node;
 }
 
-void* chime_array_remove(chime_array_t* array, unsigned long index)
+void chime_array_remove(chime_array_t* array, unsigned long index)
 {
-    return 0;
+    chime_array_node_t* node;
+    chime_array_node_t* prev_node;
+    unsigned long       i;
+    
+    assert(array);
+    assert(index < chime_array_count(array));
+    
+    node = array->head;
+    
+    if (index == 0)
+    {
+        array->head = array->head->next;
+        
+        chime_array_node_destroy(node);
+        
+        return;
+    }
+    
+    do
+    {
+        prev_node = node;
+        node      = node->next;
+        
+        ++i;
+    } while (node->next && (i < index - 1));
+    
+    prev_node->next = node->next;
+    
+    chime_array_node_destroy(node);
 }

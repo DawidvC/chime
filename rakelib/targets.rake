@@ -62,7 +62,22 @@ end
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchime.a")
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchimeruntime.a")
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/chime")
-file("#{BUILD_PATH}/language_test" => LANGUAGE_TEST_OBJECTS) do
+
+file("#{BUILD_PATH}/control_tests.o" => "tests/language/control_tests.chm") do
+  compile("tests/language/control_tests.chm", "#{BUILD_PATH}/control_tests.o")
+end
+
+file("#{BUILD_PATH}/literal_tests.o" => "tests/language/literal_tests.chm") do
+  compile("tests/language/literal_tests.chm", "#{BUILD_PATH}/literal_tests.o")
+end
+
+file("#{BUILD_PATH}/test_runner.o" => "tests/language/test_runner.chm") do
+  log("Compile", "#{BUILD_PATH}/test_runner.o")
+  sh("#{CHIME_COMPILER} -m -o #{BUILD_PATH}/test_runner.o tests/language/test_runner.chm", :verbose => false)
+end
+
+
+file("#{BUILD_PATH}/language_test" => ["#{BUILD_PATH}/control_tests.o", "#{BUILD_PATH}/literal_tests.o", "#{BUILD_PATH}/test_runner.o"]) do
   log("Link", "#{BUILD_PATH}/language_test")
-  sh("#{CHIME_LINKER} -o #{BUILD_PATH}/language_test #{LANGUAGE_TEST_OBJECTS}", :verbose => false)
+  sh("#{CHIME_LINKER} -o #{BUILD_PATH}/language_test #{BUILD_PATH}/control_tests.o #{BUILD_PATH}/literal_tests.o #{BUILD_PATH}/test_runner.o", :verbose => false)
 end

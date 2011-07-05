@@ -142,3 +142,24 @@ TEST_F(RuntimeTests, InheritanceStructure)
     // make sure the super is Object
     ASSERT_TRUE(chime_object_get_superclass(subobject) == objectClass);
 }
+
+TEST_F(RuntimeTests, OverwriteProperty)
+{
+    chime_object_t* object;
+    chime_object_t* test_prop;
+    
+    object    = chime_object_create_with_name("Object");
+    test_prop = chime_object_create_with_name("Object");
+    
+    chime_object_set_property(object, "test_prop", test_prop);
+    
+    ASSERT_EQ(test_prop, chime_object_get_property(object, "test_prop"));
+    
+    // now overwrite it with something
+    chime_object_set_property(object, "test_prop", CHIME_LITERAL_TRUE);
+    
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_property(object, "test_prop"));
+    
+    chime_object_destroy(object);
+    chime_object_destroy(test_prop);
+}

@@ -57,23 +57,3 @@ RUNTIME_OBJECTS       = dependencies_for_filelist(RUNTIME_SOURCES)
 RUNTIME_TEST_OBJECTS  = dependencies_for_filelist(RUNTIME_TEST_SOURCES)
 LIBRARY_OBJECTS       = dependencies_for_filelist(LIBRARY_SOURCES)
 
-LANGUAGE_TEST_OBJECTS = FileList.new()
-LANGUAGE_TEST_SOURCES.each do |source_file|
-  object_file = BUILD_PATH + '/' + source_file.ext('o')
-  object_dir  = File.dirname(object_file)
-  
-  dependencies = Array.new()
-  
-  dependencies << "#{BUILD_PATH}/rake_cache"
-  dependencies << source_file
-  dependencies << object_dir
-  dependencies << CHIME_COMPILER
-  
-  directory(object_dir)
-  file(object_file => dependencies) do
-    compile(source_file, object_file)
-  end
-  
-  LANGUAGE_TEST_OBJECTS << object_file
-end
-
