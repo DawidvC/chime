@@ -22,7 +22,7 @@
 				1 = { name = 'keyword'; };
 			};
 		},
-		{	match = '(implementation|interface)\s+([\w\.]+)\s*(:)\s*([\w\.]+)';
+		{	match = '(implementation|interface)\s+([\w\.]+)\s*(:)?\s*([\w\.]+)?';
 			captures = {
 				1 = { name = 'keyword'; };
 				2 = { name = 'entity.name.type.chime'; };
@@ -54,7 +54,7 @@
 				1 = { name = 'support.function'; };
 			};
 		},
-		{	match = ',\s*(\w+:)';
+		{	match = '[,;]\s*(\w+:)';
 			captures = {
 				1 = { name = 'support.function'; };
 			};
