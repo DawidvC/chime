@@ -26,9 +26,8 @@ namespace ast
         if (this->identifier() == "Function")
         {
             // ( parameters )
-            parser->next_token_value("(");
-            this->parse_parameters(parser);
-            parser->next_token_value(")");
+            if (parser->look_ahead()->equal_to("("))
+                _parameters = ParameterSetRef(new ParameterSet(*parser));
         }
     }
     
@@ -52,10 +51,6 @@ namespace ast
     void type_reference::identifier(std::string s)
     {
         _identifier = s;
-    }
-    
-    void type_reference::parse_parameters(chime::parser* parser)
-    {
     }
     
     llvm::Value* type_reference::codegen(chime::code_generator& generator)

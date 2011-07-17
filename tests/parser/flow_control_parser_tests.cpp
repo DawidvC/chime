@@ -12,7 +12,7 @@ TEST_F(FlowControlParserTest, BlockWithNext)
     
     ASSERT_METHOD_CALL("call", call);
     ASSERT_BLOCK(call->child_at_index(0));
-    assert_next(call->child_at_index(0)->child_at_index(0));
+    ASSERT_NEXT(call->child_at_index(0)->child_at_index(0));
 }
 
 TEST_F(FlowControlParserTest, IfWithNoElse)

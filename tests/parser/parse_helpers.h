@@ -3,12 +3,10 @@
 void assert_entity(const char* identifier, ast::node* node);
 void assert_type(const char* identifier, ast::node* node);
 void assert_variable_definition(const char* type, const char* identifier, ast::node* node);
-void assert_method_definition(const char* identifier, ast::node* node);
 void assert_operator(const char* identifier, ast::node* node);
 void assert_method_call(const char* identifier, ast::node* node);
 void assert_literal(const char* value, ast::node* node);
 void assert_literal(int value, ast::node* node);
-void assert_next(ast::node* node);
 
 #define ASSERT_IMPORT(x) do { \
     ASSERT_EQ("import", x->nodeName()); \
@@ -70,7 +68,9 @@ void assert_next(ast::node* node);
     ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
     } while (0)
 
-#define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName());
+#define ASSERT_IF_STATEMENT(x) do { \
+    ASSERT_EQ("if statement", x->nodeName()); \
+    } while (0)
 
 #define ASSERT_TRY(x) do { \
     ASSERT_EQ("try", x->node_name()); \
@@ -86,6 +86,10 @@ void assert_next(ast::node* node);
     
 #define ASSERT_THROW_STATEMENT(x) do { \
     ASSERT_EQ("throw", x->node_name()); \
+    } while (0)
+
+#define ASSERT_NEXT(x) do { \
+    ASSERT_EQ("next statement", x->nodeName()); \
     } while (0)
 
 #define ASSERT_RETURN(x) do { \

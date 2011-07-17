@@ -12,7 +12,7 @@ namespace ast
         method_parameter(chime::parser* parser);
         virtual ~method_parameter();
         
-        virtual std::string node_name(void) const;
+        virtual std::string nodeName(void) const;
         virtual std::string to_string(void) const;
         
         std::string          identifier() const;

@@ -20,12 +20,6 @@ void assert_variable_definition(const char* type, const char* identifier, ast::n
     assert_type(type, ((ast::variable_definition*)node)->variable_type());
 }
 
-void assert_method_definition(const char* identifier, ast::node* node)
-{
-    ASSERT_EQ("method definition", node->node_name());
-    ASSERT_EQ(identifier, ((ast::method_definition*)node)->identifier());
-}
-
 void assert_operator(const char* identifier, ast::node* node)
 {
     ASSERT_EQ("binary operator", node->node_name());
@@ -49,9 +43,3 @@ void assert_literal(int value, ast::node* node)
     ASSERT_EQ("integer literal", node->node_name());
     ASSERT_EQ(value, ((ast::integer_literal*)node)->value());
 }
-
-void assert_next(ast::node* node)
-{
-    ASSERT_EQ("next statement", node->node_name());
-}
-

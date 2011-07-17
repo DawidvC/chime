@@ -4,6 +4,7 @@
 #define TYPE_REFERENCE_H
 
 #include "ast/node.h"
+#include "ast/common/parameter_set.h"
 
 namespace ast
 {
@@ -21,9 +22,8 @@ namespace ast
         llvm::Value* codegen(chime::code_generator& generator);
         
     protected:
-        std::string _identifier;
-        
-        void parse_parameters(chime::parser* parser);
+        std::string     _identifier;
+        ParameterSetRef _parameters;
     };
     
     typedef shared_ptr<ast::type_reference> TypeRef;

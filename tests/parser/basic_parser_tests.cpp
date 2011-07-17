@@ -23,8 +23,6 @@ TEST_F(BasicParserTest, ImportIdentifier)
     
     node = parse("import Yo.Dog")->child_at_index(0);
     
-    node->print();
-    
     ASSERT_IMPORT(node);
     ASSERT_TYPE("Yo.Dog", ((ast::Import*)node)->getImportand());
 }
@@ -96,7 +94,7 @@ TEST_F(BasicParserTest, SimpleMethodDefinition)
     ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
     
     method = (ast::method_definition*)node->getBody()->child_at_index(0);
-    assert_method_definition("new", method);
+    ASSERT_METHOD_DEFINITION("new", method);
 }
 
 TEST_F(BasicParserTest, MethodDefinitionWithOneParameter)
@@ -105,7 +103,7 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneParameter)
     
     method = parse_method_def("method new(arg1) { }");
     
-    assert_method_definition("new", method);
+    ASSERT_METHOD_DEFINITION("new", method);
     ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
 }
 
@@ -115,7 +113,7 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneTypedParameter)
     
     method = parse_method_def("method new(Hash arg1) { }");
     
-    assert_method_definition("new", method);
+    ASSERT_METHOD_DEFINITION("new", method);
     ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
 }
 
@@ -125,7 +123,7 @@ TEST_F(BasicParserTest, MethodDefinitionWithOneTypedLabelledParameter)
     
     method = parse_method_def("method new(one:Hash arg1) { }");
     
-    assert_method_definition("new", method);
+    ASSERT_METHOD_DEFINITION("new", method);
     ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
 }
 
@@ -135,9 +133,20 @@ TEST_F(BasicParserTest, MethodDefinitionWithTwoParameters)
     
     method = parse_method_def("method new(arg1, arg2) { }");
     
-    assert_method_definition("new", method);
+    ASSERT_METHOD_DEFINITION("new", method);
     ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
     ASSERT_METHOD_PARAMETER(NULL, NULL, "arg2", method->getParameters()->childAtIndex(1));
+}
+
+TEST_F(BasicParserTest, MethodDefinitionWithFunction)
+{
+    ast::method_definition* method;
+    
+    method = parse_method_def("method foo(a, label:Function(data) block) {}");
+    
+    ASSERT_METHOD_DEFINITION("foo", method);
+    ASSERT_METHOD_PARAMETER(NULL,       NULL, "a",     method->getParameters()->childAtIndex(0));
+    ASSERT_METHOD_PARAMETER("Function", NULL, "block", method->getParameters()->childAtIndex(1));
 }
 
 TEST_F(BasicParserTest, AssignmentExpression)
@@ -217,7 +226,7 @@ TEST_F(BasicParserTest, TopLevelMethod)
     
     node = parse("method foo() {}");
     
-    assert_method_definition("foo", node->child_at_index(0));
+    ASSERT_METHOD_DEFINITION("foo", node->child_at_index(0));
 }
 
 TEST_F(BasicParserTest, MethodParameter)
@@ -226,7 +235,7 @@ TEST_F(BasicParserTest, MethodParameter)
     
     method = parse_method_def("method foo(one:Bar baz) {}");
     
-    assert_method_definition("foo", method);
+    ASSERT_METHOD_DEFINITION("foo", method);
     ASSERT_METHOD_PARAMETER("Bar", "one", "baz", method->getParameters()->childAtIndex(0));
 }
 
@@ -380,7 +389,7 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
     
     method = parse_method_def("method foo() { Bar.baz() }");
     
-    assert_method_definition("foo", method);
+    ASSERT_METHOD_DEFINITION("foo", method);
     
     op = (ast::binary_operator*)method->getBody()->child_at_index(0);
     assert_operator(".", op);
