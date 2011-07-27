@@ -3,6 +3,8 @@ import LiteralTests
 
 test = LiteralTests.new()
 
+test.methods().print()
+
 test.setup()
 test.test_boolean_literals()
 test.teardown()

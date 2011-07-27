@@ -209,7 +209,7 @@ chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, 
     va_list          arguments;
     
     class_object = chime_object_get_class(instance);
-    class_name   =  ObjectToString(class_object, "to_string");
+    class_name   = ObjectToString(class_object, "to_string");
     
     if (chime_log_level >= 5)
         fprintf(stderr, "[runtime] invoking '%s' on %p of type %p\n", name, instance, class_object);
