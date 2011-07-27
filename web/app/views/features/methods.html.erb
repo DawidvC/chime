@@ -37,7 +37,7 @@
 
 <span class="comment">// Labels are only optional for the first argument, but are</span>
 <span class="comment">// required for all others</span>
-<span class="keyword">method</span> <span class="function">method_six</span>(<span class="entity">Number</span>; <span class="entity">Number</span> a, <span class="entity">Number</span> <span class="function">with_number:</span>b)
+<span class="keyword">method</span> <span class="function">method_six</span>(<span class="entity">Number</span>; <span class="entity">Number</span> a, <span class="function">with_number:</span><span class="entity">Number</span> b)
 {
     <span class="keyword">return</span> a.<span class="function">value</span> + b
 }
@@ -49,7 +49,9 @@
 }
 
 
-<span class="comment">// the body method allows you to control how overriding will work</span>
+<span class="comment">// The body method allows you to control how overriding will work.</span>
+<span class="comment">// This can be really useful for pre- and post-conditions, and for </span>
+<span class="comment">// tightly controlling the interface between a subclass and its parent</span>
 <span class="keyword">method</span> <span class="function">method_eight</span>(<span class="entity">Integer</span>; <span class="entity">Integer</span> input)
 {
     <span class="entity">Integer</span> x
