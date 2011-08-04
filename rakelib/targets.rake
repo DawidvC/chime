@@ -7,6 +7,25 @@ file("#{BUILD_PATH}/rake_cache" => RAKE_SOURCES) do
   sh("touch #{BUILD_PATH}/rake_cache", :verbose => false)
 end
 
+# gtest binaries
+# You might be wondering why this heck this is done here.  Because the gtest libraries
+# use templates and macros like crazy, it's possible that changes to the compiler
+# configuration make for incompatible binaries.  The googletest team recommendation is to
+# rebuild these every time you need them, so there you go.
+file("#{BUILD_PATH}/libgtest.a" => ["#{BUILD_PATH}/rake_cache"]) do
+  compile("#{GTEST_PATH}/src/gtest-all.cc", "#{BUILD_PATH}/gtest-all.o")
+  
+  library("#{BUILD_PATH}/gtest-all.o", "#{BUILD_PATH}/libgtest.a")
+end
+
+file("#{BUILD_PATH}/libgtest_main.a" => ["#{BUILD_PATH}/rake_cache"]) do
+  compile("#{GTEST_PATH}/src/gtest_main.cc", "#{BUILD_PATH}/gtest_main.o")
+  
+  library("#{BUILD_PATH}/gtest_main.o", "#{BUILD_PATH}/libgtest_main.a")
+end
+
+task(:gtest => ["#{BUILD_PATH}/libgtest.a", "#{BUILD_PATH}/libgtest_main.a"])
+
 # test fixtures
 directory("#{BUILD_PATH}/tests/fixtures")
 
@@ -16,7 +35,7 @@ task(:test_fixtures => "#{BUILD_PATH}/tests/fixtures") do
 end
 
 # compiler test binary
-file("#{BUILD_PATH}/chime_test" => :test_fixtures)
+file("#{BUILD_PATH}/chime_test" => [:test_fixtures, :gtest])
 file("#{BUILD_PATH}/chime_test" => "#{BUILD_PATH}/libchimecompiler.a")
 file("#{BUILD_PATH}/chime_test" => TEST_OBJECTS) do
   log("Link", "#{BUILD_PATH}/chime_test")
@@ -26,8 +45,6 @@ end
 # compiler library
 file("#{BUILD_PATH}/libchimecompiler.a" => COMPILER_OBJECTS) do
   log("Library", "#{BUILD_PATH}/libchimecompiler.a")
-  # -r : add object files to the archive
-  # -s : add object-file index
   sh("#{ARCHIVER} #{BUILD_PATH}/libchimecompiler.a #{COMPILER_OBJECTS}", :verbose => false)
 end
 
@@ -45,6 +62,7 @@ file("#{BUILD_PATH}/libchimeruntime.a" => RUNTIME_OBJECTS) do
 end
 
 # runtime test binary
+file("#{BUILD_PATH}/runtime_test" => :gtest)
 file("#{BUILD_PATH}/runtime_test" => "#{BUILD_PATH}/libchimeruntime.a")
 file("#{BUILD_PATH}/runtime_test" => RUNTIME_TEST_OBJECTS) do
   log("Link", "#{BUILD_PATH}/runtime_test")

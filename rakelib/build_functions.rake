@@ -5,17 +5,22 @@ def compile(source_file, object_file)
   log("Compile", source_file.ext('o'))
   
   compiler = case File.extname(source_file)
-  when ".cpp"
+  when ".cpp", ".cc"
     CXX
   when ".c"
     CC
   when ".chm", ".chime"
     CHIME_COMPILER
   else
-    raise("Don't know how to compile #{path}")
+    raise("Don't know how to compile #{source_file}")
   end
   
   sh("#{compiler} -c -o #{object_file} #{source_file}", :verbose => false)
+end
+
+def library(object_files, library_file)
+  log("Library", library_file)
+  sh("#{ARCHIVER} #{library_file} #{object_files}", :verbose => false)
 end
 
 def execute_test_binary(path, filter=nil)
