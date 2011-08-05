@@ -10,8 +10,6 @@
 #include <tr1/memory>
 #include "llvm/DerivedTypes.h"
 
-using std::tr1::shared_ptr;
-
 namespace chime
 {
     class parser;
@@ -48,7 +46,7 @@ namespace ast
         std::vector<ast::node*>* _children;
     };
     
-    typedef shared_ptr<ast::node> NodeRef;
+    typedef std::tr1::shared_ptr<ast::node> NodeRef;
 }
 
 #endif

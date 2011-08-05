@@ -7,10 +7,29 @@ namespace ast
 {
     method_call::method_call(chime::parser* parser)
     {
+        chime::token* t;
+        
         this->identifier(parser->next_token_value());
         
-        // ( arguments )
-        this->parse_arguments(parser);
+        t = parser->look_ahead();
+        if (t->equal_to("="))
+        {
+            parser->next_token_value("=");
+            
+            // we have a property setter
+            this->identifier(this->identifier() + "=");
+            
+            this->add_child(parser->parse_expression());
+        }
+        else if (t->equal_to("("))
+        {
+            // ( arguments )
+            this->parse_arguments(parser);
+        }
+        else
+        {
+            assert(0 && "something funny happened while parsing a method_call");
+        }
     }
     
     std::string method_call::node_name(void) const

@@ -16,6 +16,6 @@ namespace ast
         virtual std::string  nodeName(void) const;
     };
     
-    typedef shared_ptr<ast::ParameterSet> ParameterSetRef;
+    typedef std::tr1::shared_ptr<ast::ParameterSet> ParameterSetRef;
 }
 #endif // PARAMETER_SET_H

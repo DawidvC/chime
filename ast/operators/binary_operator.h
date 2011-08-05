@@ -8,6 +8,10 @@ namespace ast
     class binary_operator : public basic_operator
     {
     public:
+        static ast::node* parse(chime::parser& parser, int precedence, ast::node* leftOperand);
+        static ast::node* parseRightOperand(chime::parser& parser);
+        
+    public:
         binary_operator();
         
         virtual std::string node_name(void) const;

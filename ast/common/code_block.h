@@ -24,6 +24,6 @@ namespace ast
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };
     
-    typedef shared_ptr<ast::CodeBlock> CodeBlockRef;
+    typedef std::tr1::shared_ptr<ast::CodeBlock> CodeBlockRef;
 }
 #endif // CODE_BLOCK_H

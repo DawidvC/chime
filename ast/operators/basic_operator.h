@@ -12,7 +12,7 @@ namespace ast
         virtual ~basic_operator();
         
         std::string identifier() const;
-        void identifier(std::string s);
+        void        identifier(std::string s);
         
     protected:
         std::string _identifier;

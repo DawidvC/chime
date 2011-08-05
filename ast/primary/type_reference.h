@@ -26,7 +26,7 @@ namespace ast
         ParameterSetRef _parameters;
     };
     
-    typedef shared_ptr<ast::type_reference> TypeRef;
+    typedef std::tr1::shared_ptr<ast::type_reference> TypeRef;
 }
 
 #endif // TYPE_REFERENCE_H

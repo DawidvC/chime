@@ -248,7 +248,7 @@ namespace chime
             }
             else if (t->precedence() > 0)
             {
-                return this->parse_binary_operator(0, node);
+                return ast::binary_operator::parse(*this, 0, node);
             }
             else
             {
@@ -374,50 +374,7 @@ namespace chime
             return NULL;
         }
         
-        return this->parse_binary_operator(0, node);
-    }
-    
-    ast::node* parser::parse_binary_operator(int precedence, ast::node* left_operand)
-    {
-        ast::binary_operator* node;
-        ast::node*            right_operand;
-        token*                t;
-        int                   current_precedence;
-        
-        while (true)
-        {
-            t = this->look_ahead();
-            if (t->empty())
-                return left_operand;
-            
-            if (t->is_ending())
-            {
-                return left_operand;
-            }
-            
-            // we have to store this, because t is just a look-ahead token,
-            // and may be removed by future parsing operations
-            current_precedence = t->precedence();
-            
-            if (current_precedence < precedence)
-                return left_operand;
-            
-            node = new ast::binary_operator();
-            node->identifier(this->next_token_value());
-            
-            right_operand = this->parse_primary();
-            
-            if (current_precedence < this->look_ahead()->precedence())
-            {
-                right_operand = this->parse_binary_operator(current_precedence+1, right_operand);
-            }
-            
-            node->left_operand(left_operand);
-            node->right_operand(right_operand);
-            left_operand = node;
-        }
-        
-        return left_operand;
+        return ast::binary_operator::parse(*this, 0, node);
     }
     
     ast::node* parser::parse_type(void)
@@ -431,7 +388,7 @@ namespace chime
         // we might have an operator on a type
         if (t->precedence() > 0)
         {
-            node = this->parse_binary_operator(0, node);
+            node = ast::binary_operator::parse(*this, 0, node);
         }
         
         return node;
