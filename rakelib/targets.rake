@@ -12,6 +12,7 @@ end
 
 # clean task
 CLEAN.include("#{BUILD_PATH}/*")
+CLEAN.include("tests/language/**/*.chc")
 
 # gtest binaries
 # You might be wondering why this heck this is done here.  Because the gtest libraries
