@@ -1,7 +1,9 @@
+#include "parser.h"
+#include "ast/ast.h"
+
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "parser.h"
 
 namespace chime
 {

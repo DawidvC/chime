@@ -1,11 +1,7 @@
 #include "node.h"
-#include <string>
-#include <assert.h>
 #include "lexer/token.h"
-#include "structural/implementation.h"
-#include "structural/import.h"
-#include "primary/entity_reference.h"
-#include "operators/binary_operator.h"
+
+#include <string>
 
 namespace ast
 {

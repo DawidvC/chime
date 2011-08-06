@@ -5,7 +5,6 @@
 
 #include "lexer/file_lexer.h"
 #include "parser/parser.h"
-#include "ast/ast.h"
 #include "codegen/code_generator.h"
 
 #include <llvm/Pass.h>

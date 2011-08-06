@@ -5,7 +5,7 @@
 
 #include "lexer/lexer.h"
 #include "parse_error.h"
-#include "ast/ast.h"
+#include "ast/node.h"
 
 namespace chime
 {

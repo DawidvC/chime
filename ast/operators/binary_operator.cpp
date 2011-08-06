@@ -2,6 +2,7 @@
 #include "parser/parser.h"
 #include "codegen/code_generator.h"
 #include "ast/primary/method_call.h"
+#include "ast/primary/entity_reference.h"
 
 namespace ast
 {

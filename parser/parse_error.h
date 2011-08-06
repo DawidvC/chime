@@ -1,7 +1,7 @@
-#include <string>
-
 #ifndef PARSE_ERROR
 #define PARSE_ERROR
+
+#include <string>
 
 namespace chime
 {

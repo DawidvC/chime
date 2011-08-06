@@ -1,10 +1,10 @@
-#include <gtest/gtest.h>
-#include "frontend/chime.h"
-#include "ast/ast.h"
-#include "tests/parser/parse_helpers.h"
-
 #ifndef PARSER_TEST_BASE
 #define PARSER_TEST_BASE
+
+#include <gtest/gtest.h>
+#include "lexer/string_lexer.h"
+#include "parser/parser.h"
+#include "tests/parser/parse_helpers.h"
 
 class ParserTestsBase : public testing::Test
 {
