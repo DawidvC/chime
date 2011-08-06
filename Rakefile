@@ -3,15 +3,10 @@ require 'rake/clean'
 
 BUILD_PATH = "/tmp/chime"
 LLVM_PATH  = "/usr/local"
-GTEST_PATH = "/Users/matt/Documents/programming/Third-Party/gtest-1.6.0"
+GTEST_PATH = "/usr/local/gtest-1.6.0"
 
 # this controls the verbosity of sh
 verbose(false)
-
-# basic tasks
-directory(BUILD_PATH)
-
-CLEAN.include("#{BUILD_PATH}/*")
 
 # target tasks
 task(:default => ['compiler:all', 'runtime:all', 'library:build', 'language:test'])
@@ -19,6 +14,7 @@ task(:default => ['compiler:all', 'runtime:all', 'library:build', 'language:test
 desc("Print the build configuration variables")
 task(:print_config) do
   puts("GTEST_PATH:         '#{GTEST_PATH}'")
+  puts("")
   puts("LLVM_PATH:          '#{LLVM_PATH}'")
   puts("LLVM_CONFIG:        '#{LLVM_CONFIG}'")
   puts("LLVM_CXX_FLAGS:     '#{LLVM_CXX_FLAGS}'")

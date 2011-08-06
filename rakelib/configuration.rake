@@ -4,7 +4,7 @@
 LLVM_CONFIG    = "#{LLVM_PATH}/bin/llvm-config"
 
 # gtest stuff
-GTEST_FLAGS = "-I#{GTEST_PATH} -I#{GTEST_PATH}/include"
+GTEST_FLAGS    = "-I#{GTEST_PATH} -I#{GTEST_PATH}/include"
 
 # core x86
 output         = `#{LLVM_CONFIG} --cppflags --ldflags --libs nativecodegen`.split("\n")
@@ -18,9 +18,9 @@ COMPILER_FLAGS = "-Wall -Werror -Wno-unused-function #{GTEST_FLAGS} -I#{Rake.ori
 LINKER_FLAGS   = ""
 
 # core compiler/linker stuff
-CC             = "/usr/bin/clang #{COMPILER_FLAGS}"
-CXX            = "/usr/bin/clang++ #{COMPILER_FLAGS} #{LLVM_CXX_FLAGS}"
-LINKER         = "/usr/bin/clang++ #{LINKER_FLAGS}"
+CC             = "#{BIN_UTILS_PATH}/clang #{COMPILER_FLAGS}"
+CXX            = "#{BIN_UTILS_PATH}/clang++ #{COMPILER_FLAGS} #{LLVM_CXX_FLAGS}"
+LINKER         = "#{BIN_UTILS_PATH}/clang++ #{LINKER_FLAGS}"
 
 # chime compiler stuff
 CHIME_LIBRARIES    = "-L#{BUILD_PATH} -lchimeruntime -lchime"

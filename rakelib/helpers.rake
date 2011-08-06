@@ -10,7 +10,10 @@ class String
 end
 
 def log(key, message)
-  filler = ' ' * (7 - key.length)
+  length = 7 - key.length
+  length = key.length if length < 0
+  
+  filler = ' ' * length
   
   puts(filler + "[#{key}]".bold + ": " + message)
 end
