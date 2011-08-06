@@ -6,6 +6,9 @@
 #include "lexer/lexer.h"
 #include "parse_error.h"
 #include "ast/node.h"
+#include "ast/Root.h"
+
+#include <tr1/memory>
 
 namespace chime
 {
@@ -29,7 +32,7 @@ namespace chime
         void                              addError(const char* message);
         void                              print_errors(void) const;
         
-        ast::node*  parse(void);
+        ast::Root*  parse(void);
         ast::node*  parse_with_structural(void);
         ast::node*  parse_without_structural(void);
         ast::node*  parse_primary(void);
@@ -39,10 +42,16 @@ namespace chime
         ast::node*  parse_control(void);
         ast::node*  parse_tailing_conditional(ast::node* body_node);
         
+        void        addSourceDependency(const std::string& dependency);
+        void        addBinaryDependency(const std::string& dependency);
+        
     protected:
+        ast::Root*                        _currentRoot;
         chime::lexer*                     _lexer;
         std::vector<chime::parse_error*>* _errors;
     };
+    
+    typedef std::tr1::shared_ptr<parser> ParserRef;
 }
 
 #endif // PARSER_H

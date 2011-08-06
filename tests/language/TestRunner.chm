@@ -1,5 +1,5 @@
-import ControlTests
-import LiteralTests
+import "ControlTests"
+import "LiteralTests"
 
 test = LiteralTests.new()
 

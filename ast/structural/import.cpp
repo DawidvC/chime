@@ -16,11 +16,26 @@ namespace ast
         t = parser.look_ahead();
         if (t->isString())
         {
-            this->setImportand(new string_literal(&parser));
+            string_literal* string;
+            
+            string = new string_literal(&parser);
+            
+            this->setImportand(string);
+            
+            // this needs to be smart and figure out if it's currently
+            // a structural element or not
+            parser.addSourceDependency(string->value());
         }
         else if (t->isType())
         {
-            this->setImportand(parser.parse_type());
+            type_reference* type;
+            
+            type = new ast::type_reference(&parser);
+            
+            this->setImportand(type);
+            
+            // again, the structural/non-structrual seperation needs to be made here
+            parser.addBinaryDependency(type->identifier());
         }
         else
         {
@@ -61,7 +76,7 @@ namespace ast
         //
         // For now, we'll just handle the static case.
         
-        ast::node* node;
+        ast::node*  node;
         
         node = this->getImportand();
         
@@ -79,7 +94,11 @@ namespace ast
         }
         else if (node->nodeName().compare(std::string("string literal")) == 0)
         {
-            fprintf(stderr, "asked to import %s\n", static_cast<string_literal*>(node)->value().c_str());
+            std::string typeIdentifier;
+            
+            typeIdentifier = static_cast<string_literal*>(node)->value();
+            
+            generator.callModuleInitFunction(typeIdentifier);
         }
         else
         {

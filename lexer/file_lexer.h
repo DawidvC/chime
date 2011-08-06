@@ -1,10 +1,10 @@
-#ifndef FILE_LEXER
-#define FILE_LEXER
+#ifndef FILE_LEXER_H
+#define FILE_LEXER_H
+
+#include "lexer.h"
 
 #include <fstream>
-#include <string>
-#include "lexer.h"
-#include "token.h"
+#include <tr1/memory>
 
 namespace chime
 {
@@ -22,6 +22,8 @@ namespace chime
         char next_char(void);
         char peek(void);
     };
+    
+    typedef std::tr1::shared_ptr<filelexer> FileLexerRef;
 }
 
-#endif
+#endif // FILE_LEXER_H

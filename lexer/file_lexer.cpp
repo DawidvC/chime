@@ -1,7 +1,6 @@
-#include <cstdio>
-#include <string>
-
 #include "file_lexer.h"
+
+#include <cstdio>
 
 namespace chime
 {

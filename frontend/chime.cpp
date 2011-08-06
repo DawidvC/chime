@@ -1,36 +1,21 @@
+#include "codegen/SourceFile.h"
+
 #include <cstdio>
 #include <string>
 #include <getopt.h>
-#include <libgen.h>
-
-#include "lexer/file_lexer.h"
-#include "parser/parser.h"
-#include "codegen/code_generator.h"
 
 #include <llvm/Pass.h>
 #include <llvm/PassManager.h>
 #include <llvm/Assembly/PrintModulePass.h>
 #include <llvm/Support/FormattedStream.h>
 
-// for emitting object files
-#include "llvm/Support/Host.h"
-#include "llvm/ADT/Triple.h"
-#include "llvm/Target/TargetData.h"
-#include "llvm/Target/TargetMachine.h"
-#include "llvm/Target/TargetRegistry.h"
-#include "llvm/Target/TargetSelect.h"
-
-bool        print_ast;
-bool        emit_llvm_ir;
-const char* outputFileName;
-bool        compileAsMain;
-
-// std::string path_with_new_extension(std::string path, const char* extension)
-// {
-//     path = path.substr(0, path.find_last_of("."));
-//     
-//     return path + extension;
-// }
+bool                              print_ast;
+bool                              emit_llvm_ir;
+std::string                       _inputFileName;
+const char*                       _outputFileName;
+bool                              compileAsMain;
+std::vector<chime::SourceFileRef> _compiledSources;
+std::vector<std::string>          _binaryDependencies;
 
 void get_options(int argc, char* argv[])
 {
@@ -46,10 +31,10 @@ void get_options(int argc, char* argv[])
         { NULL,        0,                 NULL, 0   }
     };
     
-    print_ast      = false;
-    emit_llvm_ir   = false;
-    outputFileName = NULL;
-    compileAsMain  = false;
+    print_ast       = false;
+    emit_llvm_ir    = false;
+    _outputFileName = NULL;
+    compileAsMain   = false;
     
     while ((c = getopt_long(argc, argv, "cehmo:p", longopts, NULL)) != -1)
     {
@@ -64,7 +49,7 @@ void get_options(int argc, char* argv[])
                 compileAsMain = true;
                 break;
             case 'o':
-                outputFileName = optarg;
+                _outputFileName = optarg;
                 break;
             case 'p':
                 print_ast = true;
@@ -90,11 +75,11 @@ void produce_ir(llvm::Module& module)
     llvm::PassManager  passManager;
     llvm::raw_ostream* stream;
     
-    if (outputFileName)
+    if (_outputFileName)
     {
         std::string errorString;
         
-        stream = new llvm::raw_fd_ostream(outputFileName, errorString, 0);
+        stream = new llvm::raw_fd_ostream(_outputFileName, errorString, 0);
     }
     else
     {
@@ -106,85 +91,127 @@ void produce_ir(llvm::Module& module)
     passManager.run(module);
 }
 
-void produce_object_file(llvm::Module& module)
+std::string resolvedPathForDependency(std::string name)
 {
-    llvm::PassManager    passManager;
-    std::string          errorString;
-    llvm::Triple         triple;
-    const llvm::Target*  target = 0;
-    llvm::TargetMachine* targetMachine;
-    std::string          featuresString;
-    llvm::raw_ostream*   stream;
+    // passthrough for inputFileName
+    if (name.compare(_inputFileName) == 0)
+        return name;
     
-    stream = new llvm::raw_fd_ostream(outputFileName, errorString, llvm::raw_fd_ostream::F_Binary);
+    // a leading slash means it is not relative
+    if (*name.begin() == '/')
+        return name + ".chm";
     
-    llvm::formatted_raw_ostream formatted_ostream(*stream);
+    return _inputFileName.substr(0, _inputFileName.find_last_of("/") + 1) + name + ".chm";
+}
+
+bool compile(chime::SourceFileRef sourceFile, bool asMain)
+{
+    std::vector<std::string>::iterator i;
+    std::vector<std::string>           dependencies;
+    std::string                        sourcePath;
     
-    // initialize the target and asm generator for just this machine
-    llvm::InitializeNativeTarget();
-    llvm::InitializeNativeTargetAsmPrinter();
+    fprintf(stdout, "[Compile] %s\n", sourceFile->getPath().c_str());
     
-    triple.setTriple(llvm::sys::getHostTriple());
-    
-    target = llvm::TargetRegistry::lookupTarget(triple.getTriple(), errorString);
-    
-    if (!target)
+    if (!sourceFile->writeObjectFile(asMain))
     {
-        fprintf(stderr, "crap %s\n", errorString.c_str());
+        fprintf(stderr, "Compilation failed\n");
+        
+        return false;
     }
     
-    targetMachine = target->createTargetMachine(triple.getTriple(), featuresString);
+    _compiledSources.push_back(sourceFile);
     
-    passManager.add(new llvm::TargetData((const llvm::TargetData)*targetMachine->getTargetData()));
+    // first, accumulate all the binary dependencies
+    dependencies = sourceFile->getBinaryDependencies();
     
-    targetMachine->setAsmVerbosityDefault(true);
+    _binaryDependencies.insert(_binaryDependencies.end(), dependencies.begin(), dependencies.end());
     
-    // llvm::TargetMachine::CGFT_ObjectFile
-    if (targetMachine->addPassesToEmitFile(passManager, formatted_ostream, llvm::TargetMachine::CGFT_ObjectFile, llvm::CodeGenOpt::None, false))
+    // now, compile all the source dependencies
+    dependencies = sourceFile->getSourceDependencies();
+    
+    for (i = dependencies.begin(); i < dependencies.end(); ++i)
     {
-        fprintf(stderr, "Target type does not support object file generation\n");
+        chime::SourceFileRef dependencySource;
+        std::string          dependencyPath;
+        
+        dependencyPath = resolvedPathForDependency((*i));
+        
+        dependencySource = chime::SourceFileRef(new chime::SourceFile(dependencyPath));
+        
+        if (!compile(dependencySource, false))
+        {
+            fprintf(stderr, "Sub compilation failed for %s\n", dependencySource->getPath().c_str());
+            
+            return false;
+        }
     }
     
-    passManager.run(module);
+    return true;
+}
+
+bool link(void)
+{
+    std::vector<chime::SourceFileRef>::iterator i;
+    std::string                                 linkCommand;
+    
+    linkCommand = std::string("/usr/bin/ld");
+    linkCommand.append(" -dynamic -arch x86_64 -macosx_version_min 10.6.0 -lcrt1.10.6.o -lSystem");
+    linkCommand.append(" -L/tmp/chime -lchimeruntime -lchime");
+    
+    for (i = _compiledSources.begin(); i < _compiledSources.end(); ++i)
+    {
+        linkCommand.append(" ");
+        linkCommand.append((*i)->getOutputFilePath());
+    }
+    
+    if (_outputFileName)
+    {
+        linkCommand.append(" -o ");
+        linkCommand.append(_outputFileName);
+    }
+    
+    if (system(linkCommand.c_str()) != 0)
+    {
+        fprintf(stderr, "Link failed\n");
+        fprintf(stderr, "Link command: %s\n", linkCommand.c_str());
+        
+        return false;
+    }
+    
+    return true;
 }
 
 int main(int argc, char* argv[])
 {
-    chime::parser*         parser;
-    chime::filelexer*      lexer;
-    ast::node*             node;
-    chime::code_generator* generator;
+    chime::SourceFileRef sourceFile;
     
     get_options(argc, argv);
     argc -= optind;
     argv += optind;
     
-    lexer     = new chime::filelexer(argv[0]);
-    parser    = new chime::parser(lexer);
-    generator = new chime::code_generator();
+    _inputFileName = std::string(argv[0]);
     
-    node = parser->parse();
-    if (!node)
-        return 1;
-    
-    parser->print_errors();
+    sourceFile = chime::SourceFileRef(new chime::SourceFile(_inputFileName));
     
     if (print_ast)
     {
-        fprintf(stdout, "%s\n", node->stringRepresentation().c_str());
+        fprintf(stdout, "%s\n", sourceFile->getASTRoot()->stringRepresentation().c_str());
         
         return 0;
     }
     
-    generator->generate(node, std::string(basename((char *)outputFileName)), compileAsMain);
-    
     if (emit_llvm_ir)
     {
-        produce_ir(*generator->module());
+        produce_ir(*sourceFile->getModule(true));
         return 0;
     }
     
-    produce_object_file(*generator->module());
+    // now actually begin the full compilation process
+    if (!compile(sourceFile, true))
+        return 1;
+    
+    if (!link())
+        return 1;
     
     return 0;
 }

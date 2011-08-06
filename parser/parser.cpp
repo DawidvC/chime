@@ -13,6 +13,8 @@ namespace chime
         _lexer->ignore_new_lines(false);
         
         _errors = new std::vector<chime::parse_error*>();
+        
+        _currentRoot = NULL;
     }
     
     parser::~parser()
@@ -152,11 +154,9 @@ namespace chime
     }
     
 #pragma mark *** Parsing Methods ***
-    ast::node* parser::parse(void)
+    ast::Root* parser::parse(void)
     {
-        ast::node* root;
-        
-        root = new ast::node();
+        _currentRoot = new ast::Root();
         
         while (true)
         {
@@ -168,10 +168,10 @@ namespace chime
             if (node == NULL)
                 break;
             
-            root->add_child(node);
+            _currentRoot->add_child(node);
         }
         
-        return root;
+        return _currentRoot;
     }
     
     ast::node* parser::parse_with_structural(void)
@@ -483,5 +483,19 @@ namespace chime
         }
         
         return body_node;
+    }
+    
+    void parser::addSourceDependency(const std::string& dependency)
+    {
+        assert(_currentRoot);
+        
+        _currentRoot->addSourceDependency(dependency);
+    }
+    
+    void parser::addBinaryDependency(const std::string& dependency)
+    {
+        assert(_currentRoot);
+        
+        _currentRoot->addBinaryDependency(dependency);
     }
 }
