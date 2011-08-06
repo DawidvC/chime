@@ -13,7 +13,6 @@ bool                              print_ast;
 bool                              emit_llvm_ir;
 std::string                       _inputFileName;
 const char*                       _outputFileName;
-bool                              compileAsMain;
 std::vector<chime::SourceFileRef> _compiledSources;
 std::vector<std::string>          _binaryDependencies;
 
@@ -25,7 +24,6 @@ void get_options(int argc, char* argv[])
         { "compile",   no_argument,       NULL, 'c' },
         { "emit-llvm", no_argument,       NULL, 'e' },
         { "help",      no_argument,       NULL, 'h' },
-        { "main",      no_argument,       NULL, 'm' },
         { "output",    required_argument, NULL, 'o' },
         { "print",     no_argument,       NULL, 'p' },
         { NULL,        0,                 NULL, 0   }
@@ -34,9 +32,8 @@ void get_options(int argc, char* argv[])
     print_ast       = false;
     emit_llvm_ir    = false;
     _outputFileName = NULL;
-    compileAsMain   = false;
     
-    while ((c = getopt_long(argc, argv, "cehmo:p", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "ceho:p", longopts, NULL)) != -1)
     {
         switch (c)
         {
@@ -44,9 +41,6 @@ void get_options(int argc, char* argv[])
                 break;
             case 'e':
                 emit_llvm_ir = true;
-                break;
-            case 'm':
-                compileAsMain = true;
                 break;
             case 'o':
                 _outputFileName = optarg;
@@ -61,7 +55,6 @@ void get_options(int argc, char* argv[])
                 printf("  -c                run only compile and assemble steps\n");
                 printf("  -e (--emit-llvm)  create llvm IR\n");
                 printf("  -h (--help)       print this help message and exit\n");
-                printf("  -m (--main)       compile for program start\n");
                 printf("  -o (--output)     name of output file\n");
                 printf("  -p (--print)      print out the AST representation for the input file\n");
                 exit(0);
