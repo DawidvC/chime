@@ -34,7 +34,5 @@ task(:print_config) do
   puts("BUILD_PATH:         '#{BUILD_PATH}'")
   puts("")
   puts("CHIME_COMPILER:     '#{CHIME_COMPILER}'")
-  puts("CHIME_LINKER:       '#{CHIME_LINKER}'")
   puts("CHIME_LIBRARIES:    '#{CHIME_LIBRARIES}'")
-  puts("CHIME_LINKER_FLAGS: '#{CHIME_LINKER_FLAGS}'")
 end

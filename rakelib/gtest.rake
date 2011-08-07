@@ -24,7 +24,6 @@ CLEAN.include("#{BUILD_PATH}/libgtest_main.a")
 # gtest binaries
 
 file("#{BUILD_PATH}/libgtest.a" => GTEST_RAKE_CACHE)
-file("#{BUILD_PATH}/libgtest.a" => "#{BUILD_PATH}/gtest")
 file("#{BUILD_PATH}/libgtest.a") do
   compile("#{GTEST_PATH}/src/gtest-all.cc", "#{BUILD_PATH}/gtest/gtest-all.o")
   
@@ -32,7 +31,6 @@ file("#{BUILD_PATH}/libgtest.a") do
 end
 
 file("#{BUILD_PATH}/libgtest_main.a" => GTEST_RAKE_CACHE)
-file("#{BUILD_PATH}/libgtest_main.a" => "#{BUILD_PATH}/gtest")
 file("#{BUILD_PATH}/libgtest_main.a") do
   compile("#{GTEST_PATH}/src/gtest_main.cc", "#{BUILD_PATH}/gtest/gtest_main.o")
   
