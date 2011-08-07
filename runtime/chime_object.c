@@ -13,11 +13,13 @@
 
 static chime_object_t* ObjectClass(chime_object_t* instance, const char* method_name, ...);
 static chime_object_t* ObjectToString(chime_object_t* instance, const char* method_name, ...);
+static chime_object_t* object_methods(chime_object_t* instance, const char* method_name, ...);
 
 void chime_object_initialize(void)
 {
     chime_object_set_function(_object_class, "class",     ObjectClass,    0);
     chime_object_set_function(_object_class, "to_string", ObjectToString, 0);
+    chime_object_set_function(_object_class, "methods",   object_methods, 0);
 }
 
 chime_object_t* chime_object_create(chime_object_t* object_class)
@@ -134,31 +136,8 @@ chime_object_t* chime_object_get_superclass(chime_object_t* instance)
 
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name)
 {
-    // chime_object_t* property;
-    // chime_object_t* object;
-    // 
-    // if (instance->properties)
-    //     property = (chime_object_t*)chime_dictionary_get(instance->properties, name);
-    // else
-    // {
-    //     property = CHIME_LITERAL_NULL;
-    //     object   = chime_object_get_class(instance);
-    // }
-    // 
-    // // we now need to hunt up the inheritance chain for the right property
-    // while (property == CHIME_LITERAL_NULL)
-    // {
-    //     if (object->properties)
-    //     {
-    //         
-    //         continue;
-    //     }
-    //     
-    //     property = (chime_object_t*)chime_dictionary_get(object->properties, name);
-    //     object   = object->super_class;
-    // }
-    // 
-    // return property;
+    if (!instance)
+        return CHIME_LITERAL_NULL;
     
     if (!instance->properties)
         return CHIME_LITERAL_NULL;
@@ -199,24 +178,47 @@ void chime_object_set_function(chime_object_t* instance, const char* name, chime
     chime_object_set_property(instance, name, method_object);
 }
 
-chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, ...)
+chime_object_t* chime_object_resolve_invoke(chime_object_t* instance, const char* name)
 {
     chime_object_t*  class_object;
     chime_object_t*  method_object;
-    chime_function_t function;
-    chime_object_t*  result_object;
-    chime_object_t*  class_name;
-    va_list          arguments;
+    
+    method_object = NULL;
     
     class_object = chime_object_get_class(instance);
-    class_name   = ObjectToString(class_object, "to_string");
     
-    if (chime_log_level >= 5)
-        fprintf(stderr, "[runtime] invoking '%s' on %p of type %p\n", name, instance, class_object);
+    assert(class_object);
     
-    method_object = chime_object_get_property(class_object, name);
+    // we now need to hunt up the inheritance chain for the right method
+    do
+    {
+        method_object = chime_object_get_property(class_object, name);
+        if (method_object)
+            break;
+        
+        class_object = chime_object_get_superclass(class_object);
+    } while (class_object);
+    
+    return method_object;
+}
+
+chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, ...)
+{
+    chime_function_t function;
+    chime_object_t*  method_object;
+    chime_object_t*  result_object;
+    va_list          arguments;
+    
+    method_object = chime_object_resolve_invoke(instance, name);
     if (!method_object)
     {
+        chime_object_t*  class_object;
+        chime_object_t*  class_name;
+        
+        class_object = chime_object_get_class(instance);
+        
+        class_name = ObjectToString(class_object, "to_string");
+        
         if (chime_log_level >= 4)
             fprintf(stderr, "[runtime] method missing for '%s' on %s\n", name, chime_string_to_c_string(class_name));
             
@@ -274,4 +276,9 @@ static chime_object_t* ObjectToString(chime_object_t* instance, const char* meth
     // free(buffer);
     
     return string;
+}
+
+static chime_object_t* object_methods(chime_object_t* instance, const char* method_name, ...)
+{
+    return CHIME_LITERAL_NULL;
 }

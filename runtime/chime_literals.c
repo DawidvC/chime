@@ -209,12 +209,12 @@ void chime_literal_initialize(void)
 {
     chime_object_t* new_class;
         
-    new_class = chime_runtime_create_class("Null", _object_class);
+    new_class = chime_runtime_create_object_subclass("Null");
     assert(new_class);
     
     chime_object_set_function(new_class, "print", NullPrint, 1);
     
-    new_class = chime_runtime_create_class("Integer", _object_class);
+    new_class = chime_runtime_create_object_subclass("Integer");
     assert(new_class);
     
     chime_object_set_function(new_class, "print", IntegerPrint, 1);
@@ -223,7 +223,7 @@ void chime_literal_initialize(void)
     chime_object_set_function(new_class, "<=>",   IntegerSpaceship, 2);
     chime_object_set_function(new_class, "==",    IntegerEquality, 2);
     
-    new_class = chime_runtime_create_class("Boolean", _object_class);
+    new_class = chime_runtime_create_object_subclass("Boolean");
     assert(new_class);
     
     chime_object_set_function(new_class, "print", BooleanPrint, 1);

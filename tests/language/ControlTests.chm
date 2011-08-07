@@ -1,13 +1,5 @@
 implementation ControlTests : Test.Case
 {
-    method setup()
-    {
-    }
-    
-    method teardown()
-    {
-    }
-    
     method test_if_executes_only_next_statement()
     {
         if true

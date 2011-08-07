@@ -1,7 +1,7 @@
-// Chime Runtime: test_case.h
+// Chime Library: test_case.h
 
-#ifndef CHIME_TEST_CASE
-#define CHIME_TEST_CASE
+#ifndef CHIME_TEST_CASE_H
+#define CHIME_TEST_CASE_H
 
 #include "runtime/chime_runtime.h"
 

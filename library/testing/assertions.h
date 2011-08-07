@@ -1,7 +1,7 @@
-// Chime Runtime: assertions.h
+// Chime Library: assertions.h
 
-#ifndef CHIME_ASSERTIONS
-#define CHIME_ASSERTIONS
+#ifndef CHIME_ASSERTIONS_H
+#define CHIME_ASSERTIONS_H
 
 #include "runtime/chime_runtime.h"
 

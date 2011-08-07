@@ -117,7 +117,7 @@ void chime_assertion_initialize(void)
     chime_object_t* assertion_class;
     chime_object_t* assertion_metaclass;
     
-    assertion_class = chime_runtime_create_class("Assert", _object_class);
+    assertion_class = chime_runtime_create_object_subclass("Assert");
     assert(assertion_class);
     
     // class methods

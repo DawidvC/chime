@@ -1,13 +1,5 @@
 implementation LiteralTests : Object
 {
-    method setup()
-    {
-    }
-    
-    method teardown()
-    {
-    }
-    
     method test_boolean_literals()
     {
         Assert.is_true(true)

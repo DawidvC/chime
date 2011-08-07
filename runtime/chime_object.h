@@ -36,6 +36,7 @@ void            chime_object_set_property(chime_object_t* instance, const char* 
 chime_function_t chime_object_get_function(chime_object_t* instance);
 void             chime_object_set_function(chime_object_t* instance, const char* name, chime_function_t function, unsigned long arity);
 
+chime_object_t* chime_object_resolve_invoke(chime_object_t* instance, const char* name);
 chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, ...);
 
 #ifdef __cplusplus

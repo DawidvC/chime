@@ -2,7 +2,7 @@
 
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
-#include "runtime/collections/chime_array.h"
+#include "runtime/collections/chime_runtime_array.h"
 #include "runtime/chime_object_internal.h"
 #include <assert.h>
 #include <stdio.h>
@@ -137,6 +137,11 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
     chime_dictionary_set(_chime_classes, name, class_object);
     
     return class_object;
+}
+
+chime_object_t* chime_runtime_create_object_subclass(const char* name)
+{
+    return chime_runtime_create_class(name, _object_class);
 }
 
 chime_object_t* chime_runtime_get_class(const char* name)
