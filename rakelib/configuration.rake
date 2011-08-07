@@ -14,7 +14,7 @@ LLVM_LIBRARIES = output[2]
 
 # Base stuff
 BIN_UTILS_PATH = "/usr/bin"
-COMPILER_FLAGS = "-Wall -Werror -Wno-unused-function #{GTEST_FLAGS} -I#{Rake.original_dir}"
+COMPILER_FLAGS = "-Wall -Werror -Wno-unused-function -DUSING_PREFIX_HEADERS #{GTEST_FLAGS} -I#{Rake.original_dir}"
 LINKER_FLAGS   = ""
 
 # core compiler/linker stuff

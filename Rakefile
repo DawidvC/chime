@@ -8,8 +8,11 @@ GTEST_PATH = "/usr/local/gtest-1.6.0"
 # this controls the verbosity of sh
 verbose(false)
 
+RAKE_FILES = FileList['Rakefile', 'rakelib/**/*.rake']
+
 # target tasks
-task(:default => ['compiler:all', 'runtime:all', 'library:build', 'language:test'])
+desc("Run all tests for all targets")
+task(:default => ['compiler:test', 'runtime:test', 'library:test', 'language:test'])
 
 desc("Print the build configuration variables")
 task(:print_config) do
@@ -34,50 +37,4 @@ task(:print_config) do
   puts("CHIME_LINKER:       '#{CHIME_LINKER}'")
   puts("CHIME_LIBRARIES:    '#{CHIME_LIBRARIES}'")
   puts("CHIME_LINKER_FLAGS: '#{CHIME_LINKER_FLAGS}'")
-end
-
-namespace(:compiler) do
-  desc("Build the main frontend binary, chime")
-  task(:frontend => ["#{BUILD_PATH}/chime"])
-  
-  desc("Build the chime compiler library")
-  task(:library => ["#{BUILD_PATH}/libchimecompiler.a"])
-  
-  desc("Run the compiler tests, with an optional filter parameter")
-  task(:test, [:filter] => ["#{BUILD_PATH}/chime_test"]) do |task, arguments|
-    execute_test_binary("#{BUILD_PATH}/chime_test", arguments[:filter])
-  end
-  
-  # the explicit namespacing seems necessary for multitask for some
-  # weird reason.  This could be a bug in rake.
-  task(:all => ['compiler:test', 'compiler:frontend'])
-end
-
-namespace(:runtime) do
-  desc("Build the runtime library")
-  task(:library => ["#{BUILD_PATH}/libchimeruntime.a"])
-  
-  desc("Run the runtime tests")
-  task(:test => ["#{BUILD_PATH}/runtime_test"]) do
-    execute_test_binary("#{BUILD_PATH}/runtime_test")
-  end
-  
-  task(:all => :test)
-end
-
-namespace(:library) do
-  desc("Build the core class library")
-  task(:build => ["#{BUILD_PATH}/libchime.a"])
-  
-  desc("Run the runtime tests")
-  task(:test => ["#{BUILD_PATH}/library_test"]) do
-    execute_test_binary("#{BUILD_PATH}/library_test")
-  end
-end
-
-namespace(:language) do
-  desc("Run the language tests")
-  task(:test => ["#{BUILD_PATH}/language_test"]) do
-    execute_test_binary("#{BUILD_PATH}/language_test")
-  end
 end
