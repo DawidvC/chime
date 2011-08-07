@@ -46,6 +46,9 @@
 				3 = { name = 'entity.name.function.chime'; };
 			};
 		},
+		{	match = '\b(get|set)\b';
+			name = 'keyword';
+		},
 		{	match = '\b([A-Z]\w+)\b';
 			name = 'entity.name.type.chime';
 		},

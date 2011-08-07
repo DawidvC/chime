@@ -1,13 +1,5 @@
 #include "ast/ast.h"
 
-void assert_entity(const char* identifier, ast::node* node);
-void assert_type(const char* identifier, ast::node* node);
-void assert_variable_definition(const char* type, const char* identifier, ast::node* node);
-void assert_operator(const char* identifier, ast::node* node);
-void assert_method_call(const char* identifier, ast::node* node);
-void assert_literal(const char* value, ast::node* node);
-void assert_literal(int value, ast::node* node);
-
 #define ASSERT_IMPORT(x) do { \
     ASSERT_EQ("import", x->nodeName()); \
     } while (0)
@@ -32,6 +24,17 @@ void assert_literal(int value, ast::node* node);
 #define ASSERT_METHOD_DEFINITION(x, y) do { \
     ASSERT_EQ("method definition", y->node_name()); \
     ASSERT_EQ(x, ((ast::method_definition*)y)->identifier()); \
+    } while (0)
+
+#define ASSERT_PROPERTY_DEFINITION(x, y) do { \
+    ASSERT_EQ("property definition", y->nodeName()); \
+    ASSERT_EQ(x, ((ast::PropertyDefinition*)y)->getIdentifier()); \
+    } while (0)
+
+#define ASSERT_VARIABLE_DEFINITION(x, y, z) do { \
+    ASSERT_EQ("variable definition", z->node_name()); \
+    ASSERT_EQ(y, ((ast::variable_definition*)z)->identifier()); \
+    ASSERT_TYPE(x, ((ast::variable_definition*)z)->variable_type()); \
     } while (0)
 
 #define ASSERT_METHOD_PARAMETER(w, x, y, z) do { \
@@ -66,6 +69,11 @@ void assert_literal(int value, ast::node* node);
 #define ASSERT_LITERAL_STRING(x, y) do { \
     ASSERT_EQ("string literal", y->node_name()); \
     ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
+    } while (0)
+
+#define ASSERT_LITERAL_INTEGER(x, y) do { \
+    ASSERT_EQ("integer literal", y->node_name()); \
+    ASSERT_EQ(x, ((ast::integer_literal*)y)->value()); \
     } while (0)
 
 #define ASSERT_IF_STATEMENT(x) do { \

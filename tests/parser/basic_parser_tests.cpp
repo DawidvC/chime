@@ -81,7 +81,7 @@ TEST_F(BasicParserTest, InstanceVariable)
     ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
     
     ivar = (ast::variable_definition*)node->getBody()->child_at_index(0);
-    assert_variable_definition("Foo", "bar", ivar);
+    ASSERT_VARIABLE_DEFINITION("Foo", "bar", ivar);
 }
 
 TEST_F(BasicParserTest, SimpleMethodDefinition)
@@ -210,14 +210,14 @@ TEST_F(BasicParserTest, AssignmentFromTypeMethodCall)
     
     op = (ast::binary_operator*)parse("a = Foo.Bar.baz()")->child_at_index(0);
     
-    assert_operator("=", op);
-    assert_entity("a", op->left_operand());
+    ASSERT_OPERATOR("=", op);
+    ASSERT_ENTITY("a", op->left_operand());
     
     op = (ast::binary_operator*)op->right_operand();
     
-    assert_operator(".", op);
-    assert_type("Foo.Bar", op->left_operand());
-    assert_method_call("baz", op->right_operand());
+    ASSERT_OPERATOR(".", op);
+    ASSERT_TYPE("Foo.Bar", op->left_operand());
+    ASSERT_METHOD_CALL("baz", op->right_operand());
 }
 
 TEST_F(BasicParserTest, TopLevelMethod)
@@ -250,7 +250,7 @@ TEST_F(BasicParserTest, ExpressionInMethodBody)
     
     op = (ast::binary_operator*)method->getBody()->child_at_index(0);
     
-    assert_operator("=", op);
+    ASSERT_OPERATOR("=", op);
 }
 
 TEST_F(BasicParserTest, MethodCall)
@@ -259,7 +259,7 @@ TEST_F(BasicParserTest, MethodCall)
     
     node = parse("call()");
     
-    assert_method_call("call", node->child_at_index(0));
+    ASSERT_METHOD_CALL("call", node->child_at_index(0));
 }
 
 TEST_F(BasicParserTest, TypeMethodCall)
@@ -270,9 +270,9 @@ TEST_F(BasicParserTest, TypeMethodCall)
     node = parse("Type.call()");
     op   = (ast::binary_operator*)node->child_at_index(0);
     
-    assert_operator(".", op);
-    assert_type("Type", op->left_operand());
-    assert_method_call("call", op->right_operand());
+    ASSERT_OPERATOR(".", op);
+    ASSERT_TYPE("Type", op->left_operand());
+    ASSERT_METHOD_CALL("call", op->right_operand());
 }
 
 TEST_F(BasicParserTest, NamespacedTypeMethodCall)
@@ -353,7 +353,7 @@ TEST_F(BasicParserTest, FunctionType)
     
     node = (ast::variable_definition*)parse("Function() a")->child_at_index(0);
     
-    assert_variable_definition("Function", "a", node);
+    ASSERT_VARIABLE_DEFINITION("Function", "a", node);
 }
 
 TEST_F(BasicParserTest, MethodCallWithBlock)
@@ -421,7 +421,17 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
     ASSERT_METHOD_DEFINITION("foo", method);
     
     op = (ast::binary_operator*)method->getBody()->child_at_index(0);
-    assert_operator(".", op);
-    assert_type("Bar", op->left_operand());
-    assert_method_call("baz", op->right_operand());
+    ASSERT_OPERATOR(".", op);
+    ASSERT_TYPE("Bar", op->left_operand());
+    ASSERT_METHOD_CALL("baz", op->right_operand());
+}
+
+TEST_F(BasicParserTest, PropertyWithGetAndSet)
+{
+    ast::PropertyDefinition* property;
+    
+    property = (ast::PropertyDefinition*)parse("property foo(value) { get { return a } set { a = value} }")->child_at_index(0);
+    
+    ASSERT_PROPERTY_DEFINITION("foo", property);
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "value", property->getParameters()->childAtIndex(0));
 }

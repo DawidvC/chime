@@ -20,3 +20,4 @@
 #include "structural/implementation.h"
 #include "structural/import.h"
 #include "structural/method_definition.h"
+#include "structural/PropertyDefinition.h"

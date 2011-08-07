@@ -197,6 +197,10 @@ namespace chime
         {
             node = new ast::method_definition(this);
         }
+        else if (t->equal_to("property"))
+        {
+            node = new ast::PropertyDefinition(*this);
+        }
         else
         {
             node = this->parse_without_structural();

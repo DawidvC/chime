@@ -8,7 +8,7 @@ namespace ast
 {
     method_definition::method_definition(chime::parser* parser)
     {
-        // method identifier
+        // "method identifier"
         parser->next_token_value("method");
         this->identifier(parser->next_token_value());
         

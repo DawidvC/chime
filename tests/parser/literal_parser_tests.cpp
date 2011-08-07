@@ -10,7 +10,7 @@ TEST_F(LiteralParserTest, String)
     
     node = parse("\"a string\"");
     
-    assert_literal("a string", node->child_at_index(0));
+    ASSERT_LITERAL_STRING("a string", node->child_at_index(0));
 }
 
 TEST_F(LiteralParserTest, Integer)
@@ -19,7 +19,7 @@ TEST_F(LiteralParserTest, Integer)
     
     node = parse("128");
     
-    assert_literal(128, node->child_at_index(0));
+    ASSERT_LITERAL_INTEGER(128, node->child_at_index(0));
 }
 
 TEST_F(LiteralParserTest, True)
