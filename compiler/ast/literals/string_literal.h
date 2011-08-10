@@ -1,11 +1,11 @@
-#ifndef STRING_LITERAL
-#define STRING_LITERAL
+#ifndef STRING_LITERAL_H
+#define STRING_LITERAL_H
 
-#include "compiler/ast/node.h"
+#include "Literal.h"
 
 namespace ast
 {
-    class string_literal : public node
+    class string_literal : public Literal
     {
     public:
         string_literal(chime::parser* parser);
@@ -23,4 +23,4 @@ namespace ast
     };
 }
 
-#endif
+#endif // STRING_LITERAL_H

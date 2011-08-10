@@ -72,7 +72,7 @@ namespace chime
     {
         return false;
     }
-    bool eof_token::is_ending(void) const
+    bool eof_token::isEnding(void) const
     {
         return true;
     }

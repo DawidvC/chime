@@ -112,8 +112,16 @@ namespace chime
     
     bool token::isBoolean(void) const
     {
-        if (_value == "true")   return true;
-        if (_value == "false")  return true;
+        if (_value == "true")  return true;
+        if (_value == "false") return true;
+        
+        return false;
+    }
+    
+    bool token::isInheritanceRelated(void) const
+    {
+        if (_value == "self")  return true;
+        if (_value == "super") return true;
         
         return false;
     }
@@ -207,7 +215,7 @@ namespace chime
     
     bool token::isLiteral(void) const
     {
-        return this->isString() || this->isNumber() || this->isBoolean();
+        return this->isString() || this->isNumber() || this->isBoolean() || this->isInheritanceRelated();
     }
     
     bool token::is_identifier(void)
@@ -276,11 +284,12 @@ namespace chime
     
     bool token::isReserved(void) const
     {
-        if (this->isControl())     return true;
-        if (this->isModifier())    return true;
-        if (this->isStructural())  return true;
-        if (this->isPunctuation()) return true;
-        if (this->isBoolean())     return true;
+        if (this->isControl())            return true;
+        if (this->isModifier())           return true;
+        if (this->isStructural())         return true;
+        if (this->isPunctuation())        return true;
+        if (this->isBoolean())            return true;
+        if (this->isInheritanceRelated()) return true;
         
         return false;
     }
@@ -290,6 +299,10 @@ namespace chime
         return _value == "do";
     }
     bool token::is_ending(void) const
+    {
+        return this->isEnding();
+    }
+    bool token::isEnding() const
     {
         return (_value == ";") || (_value == "\n") || (_value == "}");
     }

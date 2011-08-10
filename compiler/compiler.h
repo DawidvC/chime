@@ -15,6 +15,7 @@
 #include "compiler/ast/literals/integer_literal.h"
 #include "compiler/ast/literals/string_literal.h"
 #include "compiler/ast/literals/boolean_literal.h"
+#include "compiler/ast/literals/SelfLiteral.h"
 #include "compiler/ast/operators/basic_operator.h"
 #include "compiler/ast/operators/binary_operator.h"
 #include "compiler/ast/primary/type_reference.h"

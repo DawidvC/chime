@@ -39,3 +39,12 @@ TEST_F(LiteralParserTest, False)
     
     ASSERT_LITERAL_FALSE(node);
 }
+
+TEST_F(LiteralParserTest, Self)
+{
+    ast::node* node;
+    
+    node = parse("self")->child_at_index(0);
+    
+    ASSERT_LITERAL_SELF(node);
+}

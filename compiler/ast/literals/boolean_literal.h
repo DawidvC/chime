@@ -1,11 +1,11 @@
 #ifndef BOOLEAN_LITERAL
 #define BOOLEAN_LITERAL
 
-#include "compiler/ast/node.h"
+#include "Literal.h"
 
 namespace ast
 {
-    class boolean_literal : public node
+    class boolean_literal : public Literal
     {
     public:
         boolean_literal(chime::parser* parser);

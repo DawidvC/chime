@@ -12,12 +12,12 @@ namespace ast
         
         // "property identifier"
         parser.next_token_value("property");
-        _identifier = parser.next_token_value();
+        this->setIdentifier(parser.next_token_value());
         
         t = parser.look_ahead();
         if (t->equal_to("("))
         {
-            _parameters = ParameterSetRef(new ParameterSet(parser));
+            this->setParameters(ParameterSetRef(new ParameterSet(parser)));
         }
         
         parser.advance_past_ending_tokens();
@@ -69,11 +69,6 @@ namespace ast
         return std::string("unimplemented");
     }
     
-    std::string PropertyDefinition::getIdentifier() const
-    {
-        return _identifier;
-    }
-    
     CodeBlockRef PropertyDefinition::getGetBody() const
     {
         return _getBodyBlock;
@@ -84,13 +79,22 @@ namespace ast
         return _setBodyBlock;
     }
     
-    ParameterSetRef PropertyDefinition::getParameters() const
-    {
-        return _parameters;
-    }
-    
     llvm::Value* PropertyDefinition::codegen(chime::code_generator& generator)
     {
+        CodeBlockRef body;
+        
+        body = this->getGetBody();
+        if (body)
+        {
+            this->createMethod(generator, this->getIdentifier(), body, 0);
+        }
+        
+        body = this->getSetBody();
+        if (body)
+        {
+            this->createMethod(generator, this->getIdentifier() + "=", body, 1);
+        }
+        
         return NULL;
     }
 }

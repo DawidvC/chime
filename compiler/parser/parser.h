@@ -36,7 +36,6 @@ namespace chime
         ast::node*  parse_primary(void);
         ast::node*  parse_expression(void);
         ast::node*  parse_type(void);
-        ast::node*  parse_literal(void);
         ast::node*  parse_control(void);
         ast::node*  parse_tailing_conditional(ast::node* body_node);
         

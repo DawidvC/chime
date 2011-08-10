@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "compiler/ast/ast.h"
+#include "compiler/ast/literals/literal.h"
 
 #include <string>
 #include <vector>
@@ -195,7 +196,7 @@ namespace chime
         }
         else if (t->equal_to("method"))
         {
-            node = new ast::method_definition(this);
+            node = new ast::method_definition(*this);
         }
         else if (t->equal_to("property"))
         {
@@ -302,7 +303,7 @@ namespace chime
         }
         else if (t->is_literal())
         {
-            node = this->parse_literal();
+            node = ast::Literal::parse(*this);
         }
         else if (t->is_type())
         {
@@ -354,7 +355,7 @@ namespace chime
         }
         else if (t->is_literal())
         {
-            node = this->parse_literal();
+            node = ast::Literal::parse(*this);
         }
         else if (t->is_type())
         {
@@ -395,36 +396,6 @@ namespace chime
         if (t->precedence() > 0)
         {
             node = ast::binary_operator::parse(*this, 0, node);
-        }
-        
-        return node;
-    }
-    
-    ast::node* parser::parse_literal(void)
-    {
-        chime::token* t;
-        ast::node*    node;
-        
-        t = this->look_ahead();
-        if (t->is_floating_point())
-        {
-            assert(false);
-        }
-        else if (t->is_integer())
-        {
-            node = new ast::integer_literal(this);
-        }
-        else if (t->is_string())
-        {
-            node = new ast::string_literal(this);
-        }
-        else if (t->is_boolean())
-        {
-            node = new ast::boolean_literal(this);
-        }
-        else
-        {
-            assert(0 && "Unhandled literal!");
         }
         
         return node;

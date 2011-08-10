@@ -1,0 +1,31 @@
+implementation MethodTests : Test.Case
+{
+    method setup()
+    {
+    }
+    
+    property meaning_of_life(value)
+    {
+        get
+        {
+            return 42
+            
+        }
+        set
+        {
+        }
+    }
+    
+    method test_get_property()
+    {
+        Assert.equal(self.meaning_of_life, to:42)
+    }
+    
+    method test_set_property()
+    {
+        self.meaning_of_life.print()
+        //self.meaning_of_life = "Be to not, or be to"
+        
+        //Assert.equal(self.meaning_of_life, to:"Be to not, or be to")
+    }
+}

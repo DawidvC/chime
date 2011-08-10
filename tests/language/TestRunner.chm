@@ -1,5 +1,6 @@
 import "ControlTests"
 import "LiteralTests"
+import "MethodTests"
 
 test = LiteralTests.new()
 
@@ -21,6 +22,16 @@ test.teardown()
 
 test.setup()
 test.test_ifs_with_boolean_literals()
+test.teardown()
+
+test = MethodTests.new()
+
+test.setup()
+test.test_get_property()
+test.teardown()
+
+test.setup()
+test.test_set_property()
 test.teardown()
 
 Assert.failures().print()

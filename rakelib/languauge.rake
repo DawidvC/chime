@@ -12,6 +12,7 @@ end
 
 # Rules
 CLEAN.include("#{BUILD_PATH}/language_test")
+CLEAN.include('tests/language/**/*.chc')
 
 # language tests
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchime.a")

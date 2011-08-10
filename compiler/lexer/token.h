@@ -34,6 +34,7 @@ namespace chime
         virtual bool isFloatingPoint(void) const;
         virtual bool is_boolean(void);
         virtual bool isBoolean(void) const;
+        virtual bool isInheritanceRelated(void) const;
         virtual bool is_modifier(void);
         virtual bool isModifier(void) const;
         virtual bool is_structural(void);
@@ -56,6 +57,7 @@ namespace chime
         virtual bool isReserved(void) const;
         virtual bool is_block_start(void);
         virtual bool is_ending(void) const;
+        virtual bool isEnding() const;
         virtual bool isExceptionRelated(void) const;
         virtual int precedence(void) const;
         

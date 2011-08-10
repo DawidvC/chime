@@ -1,6 +1,4 @@
-#ifndef USING_PREFIX_HEADERS
-#    include "compiler/ast/ast.h"
-#endif
+#include "compiler/compiler.h"
 
 #define ASSERT_IMPORT(x) do { \
     ASSERT_EQ("import", x->nodeName()); \
@@ -24,8 +22,8 @@
 #define ASSERT_CODE_BLOCK(x) ASSERT_EQ("code block", x->nodeName());
 
 #define ASSERT_METHOD_DEFINITION(x, y) do { \
-    ASSERT_EQ("method definition", y->node_name()); \
-    ASSERT_EQ(x, ((ast::method_definition*)y)->identifier()); \
+    ASSERT_EQ("method definition", y->nodeName()); \
+    ASSERT_EQ(x, ((ast::method_definition*)y)->getIdentifier()); \
     } while (0)
 
 #define ASSERT_PROPERTY_DEFINITION(x, y) do { \
@@ -68,6 +66,8 @@
     ASSERT_EQ(0, ((ast::boolean_literal*)x)->value()); \
     } while (0)
 
+#define ASSERT_LITERAL_SELF(x) ASSERT_EQ("self literal", x->node_name())
+    
 #define ASSERT_LITERAL_STRING(x, y) do { \
     ASSERT_EQ("string literal", y->node_name()); \
     ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
@@ -77,6 +77,8 @@
     ASSERT_EQ("integer literal", y->node_name()); \
     ASSERT_EQ(x, ((ast::integer_literal*)y)->value()); \
     } while (0)
+
+
 
 #define ASSERT_IF_STATEMENT(x) do { \
     ASSERT_EQ("if statement", x->nodeName()); \

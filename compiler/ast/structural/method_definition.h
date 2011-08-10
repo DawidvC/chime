@@ -3,32 +3,24 @@
 #ifndef METHOD_DEFINITON_H
 #define METHOD_DEFINITON_H
 
-#include "compiler/ast/node.h"
-#include "compiler/ast/common/parameter_set.h"
-#include "compiler/ast/common/code_block.h"
+#include "FunctionDefinition.h"
 
 namespace ast
 {
-    class method_definition : public node
+    class method_definition : public FunctionDefinition
     {
     public:
-        method_definition(chime::parser* parser);
+        method_definition(chime::parser& parser);
         
-        virtual std::string node_name(void) const;
-        virtual std::string to_string(void) const;
+        virtual std::string nodeName(void) const;
+        virtual std::string stringRepresentation(int depth=0) const;
         
-        std::string         identifier() const;
-        void                identifier(std::string s);
-        std::string         getName() const;
         NodeRef             getBody() const;
-        ParameterSetRef     getParameters() const;
         
-        llvm::Value*        codegen(chime::code_generator& generator);
+        llvm::Value* codegen(chime::code_generator& generator);
         
     protected:
-        std::string     _identifier;
-        NodeRef         _bodyBlock;
-        ParameterSetRef _parameters;
+        NodeRef _bodyBlock;
     };
 }
 

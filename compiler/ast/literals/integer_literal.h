@@ -1,13 +1,13 @@
 // integer_literal.h
 
-#ifndef INTEGER_LITERAL
-#define INTEGER_LITERAL
+#ifndef INTEGER_LITERAL_H
+#define INTEGER_LITERAL_H
 
-#include "compiler/ast/node.h"
+#include "Literal.h"
 
 namespace ast
 {
-    class integer_literal : public node
+    class integer_literal : public Literal
     {
     public:
         integer_literal();
@@ -26,4 +26,4 @@ namespace ast
     };
 }
 
-#endif
+#endif // INTEGER_LITERAL_H

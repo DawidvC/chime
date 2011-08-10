@@ -239,6 +239,8 @@ namespace chime
         llvm::Value*    property_name_ptr;
         llvm::LoadInst* loaded_object_ptr;
         
+        assert(name.length() > 0);
+        
         property_name_ptr = this->make_constant_string(name);
         
         loaded_object_ptr = this->builder()->CreateLoad(object_value, "instance for object invoke");

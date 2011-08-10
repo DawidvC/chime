@@ -4,12 +4,12 @@
 
 namespace chime
 {
-    llvm::BasicBlock* MethodScope::getReturnBlock(void) const
+    llvm::Value* MethodScope::getSelfPointer(void) const
     {
-        return _returnBlock;
+        return _selfPointer;
     }
-    void MethodScope::setReturnBlock(llvm::BasicBlock* block)
+    void MethodScope::setSelfPointer(llvm::Value* value)
     {
-        _returnBlock = block;
+        _selfPointer = value;
     }
 }

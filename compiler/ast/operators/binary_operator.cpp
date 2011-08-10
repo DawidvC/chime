@@ -1,6 +1,7 @@
 #include "binary_operator.h"
 #include "compiler/ast/primary/method_call.h"
 #include "compiler/ast/primary/entity_reference.h"
+#include "compiler/ast/literals/literal.h"
 
 namespace ast
 {
@@ -76,15 +77,15 @@ namespace ast
             
             parser.next_token_value(")");
         }
-        else if (t->is_literal())
+        else if (t->isLiteral())
         {
-            node = parser.parse_literal();
+            node = ast::Literal::parse(parser);
         }
         else if (t->is_type())
         {
             node = parser.parse_type();
         }
-        else if (t->is_identifier())
+        else if (t->isIdentifier())
         {
             return new ast::entity_reference(&parser);
         }

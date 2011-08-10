@@ -10,11 +10,11 @@ namespace chime
     class MethodScope : public Scope
     {
     public:
-        llvm::BasicBlock* getReturnBlock(void) const;
-        void              setReturnBlock(llvm::BasicBlock* block);
+        llvm::Value*      getSelfPointer(void) const;
+        void              setSelfPointer(llvm::Value* value);
     
     protected:
-        llvm::BasicBlock* _returnBlock;
+        llvm::Value*      _selfPointer;
     };
     
     typedef std::tr1::shared_ptr<chime::MethodScope> MethodScopeRef;
