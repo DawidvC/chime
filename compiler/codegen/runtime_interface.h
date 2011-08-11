@@ -44,6 +44,8 @@ namespace chime
         // object functions
         llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);
         void         callChimeObjectSetFunction(llvm::Value* objectValue, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity);
+        llvm::Value* callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr);
+        void         callChimeObjectSetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr, llvm::Value* attributeValue);
         
         llvm::Value* callChimeObjectInvoke(llvm::Value* objectValue, llvm::Value* namePtr, std::vector<llvm::Value*> args);
         
@@ -70,6 +72,8 @@ namespace chime
         llvm::Function*     _functionChimeRuntimeLoad;
         llvm::Function*     _functionChimeObjectCreate;
         llvm::Function*     _functionChimeObjectSetFunction;
+        llvm::Function*     _functionChimeObjectGetAttribute;
+        llvm::Function*     _functionChimeObjectSetAttribute;
         llvm::Function*     _functionChimeObjectInvoke;
         llvm::Function*     _functionChimeLiteralEncodeInteger;
         llvm::Function*     _functionChimeLiteralEncodeBoolean;

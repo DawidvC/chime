@@ -21,6 +21,7 @@
 #include "operators/binary_operator.h"
 #include "primary/method_call.h"
 #include "primary/variable_definition.h"
+#include "structural/Attribute.h"
 #include "structural/implementation.h"
 #include "structural/import.h"
 #include "structural/method_definition.h"

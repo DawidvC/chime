@@ -10,7 +10,12 @@ namespace chime
     class ImplementationScope : public Scope
     {
     public:
-        void placeholder(void); // just here to remove a warning
+        std::vector<std::string> getInstanceVariableNames() const;
+        void                     addInstanceVariableName(const std::string& name);
+        bool                     containsInstanceVariableName(const std::string& name);
+    
+    private:
+        std::vector<std::string> _instanceVariableNames;
     };
     
     typedef std::tr1::shared_ptr<chime::ImplementationScope> ImplementationScopeRef;

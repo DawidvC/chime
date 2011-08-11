@@ -37,7 +37,6 @@ namespace chime
         virtual bool isInheritanceRelated(void) const;
         virtual bool is_modifier(void);
         virtual bool isModifier(void) const;
-        virtual bool is_structural(void);
         virtual bool isStructural(void) const;
         virtual bool is_conditional(void);
         virtual bool isConditional(void) const;

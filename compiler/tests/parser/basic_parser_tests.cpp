@@ -73,15 +73,15 @@ TEST_F(BasicParserTest, ImplementationWithSuperClass)
 
 TEST_F(BasicParserTest, InstanceVariable)
 {
-    ast::Implementation*       node;
-    ast::variable_definition* ivar;
+    ast::Implementation* node;
+    ast::Attribute*      ivar;
     
-    node = parse_implementation("implementation SomeClass { Foo bar }");
+    node = parse_implementation("implementation SomeClass { attribute bar }");
     
     ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
     
-    ivar = (ast::variable_definition*)node->getBody()->child_at_index(0);
-    ASSERT_VARIABLE_DEFINITION("Foo", "bar", ivar);
+    ivar = (ast::Attribute*)node->getBody()->child_at_index(0);
+    ASSERT_ATTRIBUTE("bar", ivar);
 }
 
 TEST_F(BasicParserTest, SimpleMethodDefinition)
@@ -427,6 +427,16 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
 }
 
 TEST_F(BasicParserTest, PropertyWithGetAndSet)
+{
+    ast::PropertyDefinition* property;
+    
+    property = (ast::PropertyDefinition*)parse("property foo(value) { get { return a } set { a = value} }")->child_at_index(0);
+    
+    ASSERT_PROPERTY_DEFINITION("foo", property);
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "value", property->getParameters()->childAtIndex(0));
+}
+
+TEST_F(BasicParserTest, Attribute)
 {
     ast::PropertyDefinition* property;
     

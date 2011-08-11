@@ -141,11 +141,6 @@ namespace chime
         return false;
     }
     
-    bool token::is_structural(void)
-    {
-        return this->isStructural();
-    }
-    
     bool token::isStructural(void) const
     {
         if (_value == "method")         return true;
@@ -154,6 +149,7 @@ namespace chime
         if (_value == "import")         return true;
         if (_value == "implementation") return true;
         if (_value == "interface")      return true;
+        if (_value == "attribute")      return true;
         
         return false;
     }

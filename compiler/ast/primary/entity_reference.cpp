@@ -45,6 +45,18 @@ namespace ast
     {
         llvm::Value* value;
         
+        if (generator.isEntityAnInstanceVariable(this->identifier()))
+        {
+            llvm::Value* self;
+            llvm::Value* attributeNameCStringPtr;
+            
+            attributeNameCStringPtr = generator.make_constant_string(this->identifier());
+            
+            self = generator.getMethodScope()->getSelfPointer();
+            
+            return generator.getRuntime()->callChimeObjectGetAttribute(self, attributeNameCStringPtr);
+        }
+        
         value = generator.value_for_identifier(this->identifier());
         
         if (!value)

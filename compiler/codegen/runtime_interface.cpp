@@ -17,6 +17,8 @@ namespace chime
         _functionChimeRuntimeLoad             = NULL;
         _functionChimeObjectCreate            = NULL;
         _functionChimeObjectSetFunction       = NULL;
+        _functionChimeObjectGetAttribute      = NULL;
+        _functionChimeObjectSetAttribute      = NULL;
         _functionChimeObjectInvoke            = NULL;
         _functionChimeLiteralEncodeInteger    = NULL;
         _functionChimeLiteralEncodeBoolean    = NULL;
@@ -307,6 +309,78 @@ namespace chime
         args.push_back(llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, arity, 10)));
         
         call = this->getBuilder()->CreateCall(_functionChimeObjectSetFunction, args.begin(), args.end(), "");
+        call->setTailCall(false);
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeObjectGetAttribute == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getCStringPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectGetAttribute = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_get_attribute", this->getModule());
+            _functionChimeObjectGetAttribute->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        llvm::LoadInst*           loadedObjectPtr;
+        std::vector<llvm::Value*> args;
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "instance for object get attribute");
+        
+        args.push_back(loadedObjectPtr);
+        args.push_back(attributeNamePtr);
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "object get attribute return");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeObjectGetAttribute, args.begin(), args.end(), "");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    void RuntimeInterface::callChimeObjectSetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr, llvm::Value* attributeValue)
+    {
+        llvm::CallInst* call;
+        
+        if (_functionChimeObjectSetAttribute == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getCStringPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectSetAttribute = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_set_attribute", this->getModule());
+            _functionChimeObjectSetAttribute->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        llvm::LoadInst*           loadedObjectPtr;
+        llvm::LoadInst*           loadedValuePtr;
+        std::vector<llvm::Value*> args;
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "instance for object set attribute");
+        loadedValuePtr  = this->getBuilder()->CreateLoad(attributeValue, "instance of value for object set attribute");
+        
+        args.push_back(loadedObjectPtr);
+        args.push_back(attributeNamePtr);
+        args.push_back(loadedValuePtr);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeObjectSetAttribute, args.begin(), args.end(), "");
         call->setTailCall(false);
     }
     

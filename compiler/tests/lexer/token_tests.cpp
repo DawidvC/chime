@@ -81,19 +81,22 @@ TEST_F(TokenTest, IsModifier)
 TEST_F(TokenTest, IsStructural)
 {
     token->set_value("method");
-    ASSERT_TRUE(token->is_structural());
+    ASSERT_TRUE(token->isStructural());
     
     token->set_value("class");
-    ASSERT_TRUE(token->is_structural());
+    ASSERT_TRUE(token->isStructural());
     
     token->set_value("import");
-    ASSERT_TRUE(token->is_structural());
+    ASSERT_TRUE(token->isStructural());
     
     token->set_value("interface");
-    ASSERT_TRUE(token->is_structural());
+    ASSERT_TRUE(token->isStructural());
     
     token->set_value("implementation");
-    ASSERT_TRUE(token->is_structural());
+    ASSERT_TRUE(token->isStructural());
+    
+    token->set_value("attribute");
+    ASSERT_TRUE(token->isStructural());
 }
 
 TEST_F(TokenTest, IsType)

@@ -1,18 +1,22 @@
 implementation MethodTests : Test.Case
 {
+    attribute meaning
+    
     method setup()
     {
+        meaning = 42
     }
     
     property meaning_of_life(value)
     {
         get
         {
-            return 42
-            
+            return meaning
         }
         set
         {
+            // method arguments don't work yet!
+            meaning = value
         }
     }
     
@@ -23,9 +27,8 @@ implementation MethodTests : Test.Case
     
     method test_set_property()
     {
-        self.meaning_of_life.print()
-        //self.meaning_of_life = "Be to not, or be to"
+        self.meaning_of_life = 43
         
-        //Assert.equal(self.meaning_of_life, to:"Be to not, or be to")
+        Assert.equal(self.meaning_of_life, to:43)
     }
 }

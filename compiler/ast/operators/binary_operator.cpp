@@ -142,9 +142,8 @@ namespace ast
         llvm::LoadInst*           object_load;
         std::vector<llvm::Value*> arguments;
         
-        l_value = this->left_operand()->codegen(generator);
-        assert(l_value != NULL);
-        
+        // operators are complex, because the runtime functions that are invoked
+        // depend on both the kinds of operator and operands
         if (this->identifier().compare(".") == 0)
         {
             ast::method_call* call;
@@ -152,23 +151,66 @@ namespace ast
             call = dynamic_cast<ast::method_call*>(this->right_operand());
             assert(call);
             
+            l_value = this->left_operand()->codegen(generator);
+            assert(l_value);
+            
             return call->codegen_with_target(l_value, generator);;
         }
+        else if (this->identifier().compare("=") == 0)
+        {
+            return this->codegen_assignment(generator);
+        }
         
+        // this is just a plain operator that we need to invoke as a method
+        l_value = this->left_operand()->codegen(generator);
         r_value = this->right_operand()->codegen(generator);
-        assert(r_value != NULL);
+        assert(l_value && r_value);
         
         object_load = generator.builder()->CreateLoad(r_value, "loaded r_value");
-        
-        if (this->identifier().compare("=") == 0)
-        {
-            generator.builder()->CreateStore(object_load, l_value, false);
-            
-            return l_value;
-        }
         
         arguments.push_back(object_load);
         
         return generator.call_chime_object_invoke(l_value, this->identifier(), arguments);
+    }
+    
+    llvm::Value* binary_operator::codegen_assignment(chime::code_generator& generator)
+    {
+        ast::entity_reference* entity;
+        llvm::Value*           lValue;
+        llvm::Value*           rValue;
+        llvm::LoadInst*        objectLoad;
+        
+        // assignments can happen only to entity references
+        entity = dynamic_cast<ast::entity_reference*>(this->left_operand());
+        
+        rValue = this->right_operand()->codegen(generator);
+        
+        // first, is it an instance variable?
+        if (generator.isEntityAnInstanceVariable(entity->identifier()))
+        {
+            llvm::Value* self;
+            llvm::Value* attributeNameCStringPtr;
+            
+            attributeNameCStringPtr = generator.make_constant_string(entity->identifier());
+            
+            self = generator.getMethodScope()->getSelfPointer();
+            
+            generator.getRuntime()->callChimeObjectSetAttribute(self, attributeNameCStringPtr, rValue);
+            
+            fprintf(stderr, "Assinging to ivar %s\n", entity->identifier().c_str());
+            
+            // the return of this statement isn't super obvious
+            return rValue;
+        }
+        
+        objectLoad = generator.builder()->CreateLoad(rValue, "loaded r_value");
+        
+        // this is just a regular old local variable
+        lValue = this->left_operand()->codegen(generator);
+        assert(lValue);
+        
+        generator.builder()->CreateStore(objectLoad, lValue, false);
+        
+        return lValue;
     }
 }

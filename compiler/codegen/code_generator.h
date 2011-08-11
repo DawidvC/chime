@@ -46,6 +46,7 @@ namespace chime
         
         void               set_value_for_identifier(std::string name, llvm::Value* value);
         llvm::Value*       value_for_identifier(std::string name);
+        bool               isEntityAnInstanceVariable(std::string name);
         
         llvm::Type*        get_c_string_ptr_type(void);
         

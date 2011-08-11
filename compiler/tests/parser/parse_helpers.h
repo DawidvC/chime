@@ -31,6 +31,11 @@
     ASSERT_EQ(x, ((ast::PropertyDefinition*)y)->getIdentifier()); \
     } while (0)
 
+#define ASSERT_ATTRIBUTE(x, y) do { \
+    ASSERT_EQ("attribute", y->nodeName()); \
+    ASSERT_EQ(x, ((ast::Attribute*)y)->getIdentifier()); \
+    } while (0)
+
 #define ASSERT_VARIABLE_DEFINITION(x, y, z) do { \
     ASSERT_EQ("variable definition", z->node_name()); \
     ASSERT_EQ(y, ((ast::variable_definition*)z)->identifier()); \

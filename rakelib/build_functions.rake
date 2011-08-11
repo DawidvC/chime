@@ -126,7 +126,7 @@ def define_dependencies_for_source(source_file, options={})
     File.open(dependency_cache_file, "w+") { |f| f.puts(cached_dependencies.join("\n")) }
   end
   
-  file(object_file => [object_dir, dependency_cache_file]) do
+  file(object_file => [object_dir, dependency_cache_file, source_file]) do
     compile(source_file, object_file, options)
   end
   

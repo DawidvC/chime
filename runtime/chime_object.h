@@ -31,7 +31,9 @@ chime_object_type_t chime_object_get_type(chime_object_t* instance);
 chime_object_t* chime_object_get_class(chime_object_t* instance);
 chime_object_t* chime_object_get_superclass(chime_object_t* instance);
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name);
+chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char* name);
 void            chime_object_set_property(chime_object_t* instance, const char* name, chime_object_t* value);
+void            chime_object_set_attribute(chime_object_t* instance, const char* name, chime_object_t* value);
 
 chime_function_t chime_object_get_function(chime_object_t* instance);
 void             chime_object_set_function(chime_object_t* instance, const char* name, chime_function_t function, unsigned long arity);

@@ -46,6 +46,12 @@
 				3 = { name = 'entity.name.function.chime'; };
 			};
 		},
+		{	match = '\s*(attribute)\s+(\w+)';
+			captures = {
+				1 = { name = 'keyword.attribute.chime'; };
+				2 = { name = 'variable.chime'; };
+			};
+		},
 		{	match = '\b(get|set)\b';
 			name = 'keyword';
 		},

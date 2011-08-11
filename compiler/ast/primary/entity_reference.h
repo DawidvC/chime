@@ -23,6 +23,8 @@ namespace ast
     protected:
         std::string _identifier;
     };
+    
+    typedef std::tr1::shared_ptr<ast::entity_reference> EntityRef;
 }
 
 #endif

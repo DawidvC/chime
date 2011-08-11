@@ -1,4 +1,4 @@
-implementation LiteralTests : Object
+implementation LiteralTests : Test.Case
 {
     method test_boolean_literals()
     {

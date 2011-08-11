@@ -125,6 +125,17 @@ namespace chime
         return (*_scope_values)[name];
     }
     
+    bool code_generator::isEntityAnInstanceVariable(std::string name)
+    {
+        if (!this->getImplementationScope())
+            return false;
+        
+        if (!this->getMethodScope())
+            return false;
+        
+        return this->getImplementationScope()->containsInstanceVariableName(name);
+    }
+    
     llvm::Type* code_generator::get_c_string_ptr_type(void)
     {
         if (!_c_string_ptr_type)
@@ -465,7 +476,7 @@ namespace chime
         }
         
         // actually do the codegen
-        for (i=node->children()->begin(); i < node->children()->end(); i++)
+        for (i=node->children()->begin(); i < node->children()->end(); ++i)
         {
             (*i)->codegen(*this);
         }

@@ -145,6 +145,12 @@ chime_object_t* chime_object_get_property(chime_object_t* instance, const char* 
     return (chime_object_t*)chime_dictionary_get(instance->properties, name);
 }
 
+chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char* name)
+{
+    return chime_object_get_property(instance, name);
+}
+
+
 void chime_object_set_property(chime_object_t* instance, const char* name, chime_object_t* value)
 {
     if (!instance->properties)
@@ -153,6 +159,11 @@ void chime_object_set_property(chime_object_t* instance, const char* name, chime
     }
     
     chime_dictionary_set(instance->properties, name, value);
+}
+
+void chime_object_set_attribute(chime_object_t* instance, const char* name, chime_object_t* value)
+{
+    chime_object_set_property(instance, name, value);
 }
 
 chime_function_t chime_object_get_function(chime_object_t* instance)

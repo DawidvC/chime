@@ -6,7 +6,7 @@ LANGUAGE_TEST_SOURCES = FileList['tests/language/**/*.chm']
 namespace(:language) do
   desc("Run the language tests")
   task(:test => "#{BUILD_PATH}/language_test") do
-    sh("#{BUILD_PATH}/language_test")
+    execute_test_binary("#{BUILD_PATH}/language_test")
   end
 end
 

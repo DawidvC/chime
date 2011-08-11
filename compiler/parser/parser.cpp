@@ -202,6 +202,10 @@ namespace chime
         {
             node = new ast::PropertyDefinition(*this);
         }
+        else if (t->equal_to("attribute"))
+        {
+            node = new ast::Attribute(*this);
+        }
         else
         {
             node = this->parse_without_structural();
