@@ -21,6 +21,9 @@ namespace chime
         
         llvm::Value* getTarget(void) const;
         void         setTarget(llvm::Value* target);
+        
+        llvm::AllocaInst* getValue(const std::string& name) const;
+        void              setValue(const std::string& name, llvm::AllocaInst* value);
     
     protected:
         std::map<std::string, llvm::AllocaInst*>* _values;

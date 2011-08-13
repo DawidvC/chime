@@ -3,7 +3,7 @@
 #ifndef CHIME_LITERALS
 #define CHIME_LITERALS
 
-#include "chime_object.h"
+#include "runtime/object/chime_object.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -2,24 +2,21 @@
 
 #include "chime_object.h"
 #include "chime_object_internal.h"
-#include "chime_runtime.h"
-#include "chime_runtime_internal.h"
-#include "chime_literals.h"
+#include "chime_object_methods.h"
+#include "runtime/chime_runtime.h"
+#include "runtime/chime_runtime_internal.h"
+#include "runtime/literals/chime_literal.h"
+
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
 #include <assert.h>
-
-static chime_object_t* ObjectClass(chime_object_t* instance, const char* method_name, ...);
-static chime_object_t* ObjectToString(chime_object_t* instance, const char* method_name, ...);
-static chime_object_t* object_methods(chime_object_t* instance, const char* method_name, ...);
 
 void chime_object_initialize(void)
 {
-    chime_object_set_function(_object_class, "class",     ObjectClass,    0);
-    chime_object_set_function(_object_class, "to_string", ObjectToString, 0);
-    chime_object_set_function(_object_class, "methods",   object_methods, 0);
+    chime_object_set_function(_object_class, "class",     object_class,     0);
+    chime_object_set_function(_object_class, "to_string", object_to_string, 0);
+    chime_object_set_function(_object_class, "methods",   object_methods,   0);
+    chime_object_set_function(_object_class, "==",        object_equals,    1);
 }
 
 chime_object_t* chime_object_create(chime_object_t* object_class)
@@ -166,12 +163,15 @@ void chime_object_set_attribute(chime_object_t* instance, const char* name, chim
     chime_object_set_property(instance, name, value);
 }
 
-chime_function_t chime_object_get_function(chime_object_t* instance)
+void* chime_object_get_function(chime_object_t* instance)
 {
-    return (chime_function_t)instance->properties;
+    if (!instance)
+        return 0;
+    
+    return (void*)instance->properties;
 }
 
-void chime_object_set_function(chime_object_t* instance, const char* name, chime_function_t function, unsigned long arity)
+void chime_object_set_function(chime_object_t* instance, const char* name, void* function, unsigned char arity)
 {
     chime_object_t* method_object;
     
@@ -183,7 +183,7 @@ void chime_object_set_function(chime_object_t* instance, const char* name, chime
     assert(arity <= 8);
     
     method_object = chime_object_create_with_name("Method");
-    method_object->properties = (void*)function;
+    method_object->properties = function;
     method_object->flags = arity;
     
     chime_object_set_property(instance, name, method_object);
@@ -197,7 +197,6 @@ chime_object_t* chime_object_resolve_invoke(chime_object_t* instance, const char
     method_object = NULL;
     
     class_object = chime_object_get_class(instance);
-    
     assert(class_object);
     
     // we now need to hunt up the inheritance chain for the right method
@@ -210,86 +209,72 @@ chime_object_t* chime_object_resolve_invoke(chime_object_t* instance, const char
         class_object = chime_object_get_superclass(class_object);
     } while (class_object);
     
+    if (!method_object)
+    {
+        chime_object_t* string;
+        
+        string = object_to_string(instance);
+        
+        if (chime_log_level >= 4)
+            fprintf(stderr, "[runtime] method missing for '%s' on %s\n", name, chime_string_to_c_string(string));
+    }
+    
     return method_object;
 }
 
-chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, ...)
+void* chime_object_resolve_function(chime_object_t* instance, const char* name)
 {
-    chime_function_t function;
-    chime_object_t*  method_object;
-    chime_object_t*  result_object;
-    va_list          arguments;
+    chime_object_t* method_object;
     
     method_object = chime_object_resolve_invoke(instance, name);
-    if (!method_object)
-    {
-        chime_object_t*  class_object;
-        chime_object_t*  class_name;
-        
-        class_object = chime_object_get_class(instance);
-        
-        class_name = ObjectToString(class_object, "to_string");
-        
-        if (chime_log_level >= 4)
-            fprintf(stderr, "[runtime] method missing for '%s' on %s\n", name, chime_string_to_c_string(class_name));
-            
-        return 0;
-    }
     
-    function = chime_object_get_function(method_object);
-    
-    va_start(arguments, name);
-    
-    switch (method_object->flags)
-    {
-        case 0:
-            result_object = function(instance, name);
-            break;
-        case 1:
-            result_object = function(instance, name, va_arg(arguments, chime_object_t*));
-            break;
-        case 2:
-            result_object = function(instance, name, va_arg(arguments, chime_object_t*), va_arg(arguments, chime_object_t*));
-            break;
-    }
-    
-    va_end(arguments);
-    
-    return result_object;
+    return chime_object_get_function(method_object);
 }
 
-#pragma mark -
-#pragma mark Method Definitions of Object
-static chime_object_t* ObjectClass(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* chime_object_invoke_0(chime_object_t* instance, const char* name)
 {
-    return chime_object_get_class(instance);
+    void* function;
+    
+    function = chime_object_resolve_function(instance, name);
+    
+    if (!function)
+        return CHIME_LITERAL_NULL;
+    
+    return ((chime_function_arg0_t)function)(instance);
 }
 
-static chime_object_t* ObjectToString(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* chime_object_invoke_1(chime_object_t* instance, const char* name, chime_object_t* arg1)
 {
-    int             string_length;
-    char*           buffer;
-    chime_object_t* string;
+    void* function;
     
-    // we have to add the size of the "<:0x12345678>" to the string
-    string_length = strlen(method_name) + 13;
+    function = chime_object_resolve_function(instance, name);
     
-    buffer = malloc(string_length + 1);
+    if (!function)
+        return CHIME_LITERAL_NULL;
     
-    string = chime_object_get_property(instance, "name");
-    
-    snprintf(buffer, string_length, "<%s:%p>", chime_string_to_c_string(string), instance);
-    
-    string = chime_string_create_with_c_string(buffer);
-    
-    // here, we should free the buffer
-    // except right now the string class doesn't make a copy
-    // free(buffer);
-    
-    return string;
+    return ((chime_function_arg1_t)function)(instance, arg1);
 }
 
-static chime_object_t* object_methods(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* chime_object_invoke_2(chime_object_t* instance, const char* name, chime_object_t* arg1, chime_object_t* arg2)
 {
-    return CHIME_LITERAL_NULL;
+    void* function;
+    
+    function = chime_object_resolve_function(instance, name);
+    
+    if (!function)
+        return CHIME_LITERAL_NULL;
+    
+    return ((chime_function_arg2_t)function)(instance, arg1, arg2);
+}
+
+chime_object_t* chime_object_invoke_3(chime_object_t* instance, const char* name, chime_object_t* arg1, chime_object_t* arg2, chime_object_t* arg3)
+{
+    void* function;
+    
+    function = chime_object_resolve_function(instance, name);
+    
+    if (!function)
+        return CHIME_LITERAL_NULL;
+    
+    return ((chime_function_arg3_t)function)(instance, arg1, arg2, arg3);
 }

@@ -4,7 +4,7 @@ import "MethodTests"
 
 test = LiteralTests.new()
 
-test.methods().print()
+//test.methods().print()
 
 test.setup()
 test.test_boolean_literals()
@@ -34,4 +34,4 @@ test.setup()
 test.test_set_property()
 test.teardown()
 
-Assert.failures().print()
+Assert.failure_count().print()

@@ -3,9 +3,12 @@
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/collections/chime_runtime_array.h"
-#include "runtime/chime_object_internal.h"
+#include "runtime/object/chime_object_internal.h"
+
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 static chime_dictionary_t* _chime_classes   = 0;
 static chime_object_t*     _root_metaclass  = 0;
@@ -99,8 +102,6 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
         // the root classes yet
         assert(_root_metaclass && !_object_class && "With a null superclass, the root cases should all be uninitialized");
         metaclass_object = _root_metaclass;
-        
-        chime_object_set_property(_root_metaclass, "name", chime_string_create_with_c_string("MetaObject"));
     }
     else
     {
@@ -111,8 +112,19 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
         
         if (_string_class)
         {
-            // This doesn't really work, because the name should really be "Meta" + name
-            chime_object_set_property(metaclass_object, "name", chime_string_create_with_c_string("MetaSomething"));
+            // Man, would a append function for chime_string be nice
+            
+            char* buffer;
+            int   string_length;
+            
+            string_length = strlen(name);
+            
+            buffer = malloc(string_length + 5);
+            bzero(buffer, string_length + 5);
+            
+            snprintf(buffer, string_length + 5, "Meta%s", name);
+            
+            chime_object_set_property(metaclass_object, "name", chime_string_create_with_c_string(buffer));
         }
     }
     
@@ -162,13 +174,13 @@ chime_object_t* chime_runtime_get_class(const char* name)
     return object;
 }
 
-char* chime_runtime_get_class_name(chime_object_t* instance)
+char* chime_runtime_get_class_name(chime_object_t* class_instance)
 {
     chime_object_t* name;
     
-    assert(instance);
+    assert(class_instance);
     
-    name = chime_object_get_property(instance, "name");
+    name = chime_object_get_property(class_instance, "name");
     
     assert(name);
     

@@ -139,6 +139,7 @@ namespace ast
     {
         llvm::Value*              l_value;
         llvm::Value*              r_value;
+        llvm::Value*              methodNamePtr;
         llvm::LoadInst*           object_load;
         std::vector<llvm::Value*> arguments;
         
@@ -170,7 +171,9 @@ namespace ast
         
         arguments.push_back(object_load);
         
-        return generator.call_chime_object_invoke(l_value, this->identifier(), arguments);
+        methodNamePtr = generator.make_constant_string(this->identifier());
+        
+        return generator.getRuntime()->callChimeObjectInvoke(l_value, methodNamePtr, arguments);
     }
     
     llvm::Value* binary_operator::codegen_assignment(chime::code_generator& generator)
@@ -184,6 +187,7 @@ namespace ast
         entity = dynamic_cast<ast::entity_reference*>(this->left_operand());
         
         rValue = this->right_operand()->codegen(generator);
+        assert(rValue);
         
         // first, is it an instance variable?
         if (generator.isEntityAnInstanceVariable(entity->identifier()))
@@ -196,8 +200,6 @@ namespace ast
             self = generator.getMethodScope()->getSelfPointer();
             
             generator.getRuntime()->callChimeObjectSetAttribute(self, attributeNameCStringPtr, rValue);
-            
-            fprintf(stderr, "Assinging to ivar %s\n", entity->identifier().c_str());
             
             // the return of this statement isn't super obvious
             return rValue;

@@ -20,6 +20,7 @@ namespace ast
         void                setParameters(ParameterSetRef params);
         
     protected:
+        void                codegenMethodParameters(chime::code_generator& generator, llvm::Function* function);
         llvm::Value*        createMethod(chime::code_generator& generator, const std::string& name, NodeRef body, unsigned int arity);
         
     private:

@@ -41,7 +41,7 @@ void* chime_dictionary_get(chime_dictionary_t* dictionary, const char* key)
     unsigned long i;
     char*         current_key;
     
-    for (i = 0; i < chime_dictionary_count(dictionary); i++)
+    for (i = 0; i < chime_dictionary_count(dictionary); ++i)
     {
         current_key = chime_runtime_array_get(dictionary->key_array, i);
         

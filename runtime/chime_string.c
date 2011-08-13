@@ -2,7 +2,8 @@
 
 #include "chime_string.h"
 #include "chime_runtime.h"
-#include "chime_runtime_internal.h"
+#include "runtime/chime_runtime_internal.h"
+#include "runtime/object/chime_object_internal.h"
 #include <stdio.h>
 #include <assert.h>
 
@@ -19,6 +20,9 @@ void chime_string_initialize(void)
 chime_object_t* chime_string_create_with_c_string(const char* string)
 {
     chime_object_t* object;
+    
+    assert(_string_class);
+    assert(string);
     
     object = chime_object_create(_string_class);
     object->flags = (unsigned long)string;

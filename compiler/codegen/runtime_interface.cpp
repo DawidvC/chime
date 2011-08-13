@@ -19,7 +19,10 @@ namespace chime
         _functionChimeObjectSetFunction       = NULL;
         _functionChimeObjectGetAttribute      = NULL;
         _functionChimeObjectSetAttribute      = NULL;
-        _functionChimeObjectInvoke            = NULL;
+        _functionChimeObjectInvoke0           = NULL;
+        _functionChimeObjectInvoke1           = NULL;
+        _functionChimeObjectInvoke2           = NULL;
+        _functionChimeObjectInvoke3           = NULL;
         _functionChimeLiteralEncodeInteger    = NULL;
         _functionChimeLiteralEncodeBoolean    = NULL;
         _functionChimeStringCreateWithCString = NULL;
@@ -71,21 +74,6 @@ namespace chime
         _objectPtrType = llvm::PointerType::get(objectStructType, 0);
         
         return _objectPtrType;
-    }
-    
-    llvm::FunctionType* RuntimeInterface::getChimeFunctionType(void)
-    {
-        std::vector<const llvm::Type*> functionArgs;
-        
-        if (_chimeFunctionType)
-            return _chimeFunctionType;
-        
-        functionArgs.push_back(this->getChimeObjectPtrType());
-        functionArgs.push_back(this->getCStringPtrType());
-        
-        _chimeFunctionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, true);
-        
-        return _chimeFunctionType;
     }
     
     llvm::FunctionType* RuntimeInterface::getChimeModuleInitFunctionType(void)
@@ -281,6 +269,9 @@ namespace chime
     void RuntimeInterface::callChimeObjectSetFunction(llvm::Value* objectValue, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity)
     {
         llvm::CallInst* call;
+        llvm::Type*     voidPtrType;
+        
+        voidPtrType = llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0);
         
         if (_functionChimeObjectSetFunction == NULL)
         {
@@ -289,7 +280,7 @@ namespace chime
             
             functionArgs.push_back(this->getChimeObjectPtrType());
             functionArgs.push_back(this->getCStringPtrType());
-            functionArgs.push_back(llvm::PointerType::get(this->getChimeFunctionType(), 0));
+            functionArgs.push_back(voidPtrType);
             functionArgs.push_back(llvm::IntegerType::get(this->getContext(), 64));
             
             functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
@@ -300,12 +291,15 @@ namespace chime
         
         llvm::LoadInst*           loadedObjectPtr;
         std::vector<llvm::Value*> args;
+        llvm::Constant*           functionPtr;
         
         loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "instance for object set function");
         
+        functionPtr = llvm::ConstantExpr::getCast(llvm::Instruction::BitCast, function, voidPtrType);
+        
         args.push_back(loadedObjectPtr);
         args.push_back(propertyNamePtr);
-        args.push_back(function);
+        args.push_back(functionPtr);
         args.push_back(llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, arity, 10)));
         
         call = this->getBuilder()->CreateCall(_functionChimeObjectSetFunction, args.begin(), args.end(), "");
@@ -389,8 +383,9 @@ namespace chime
         llvm::CallInst*                     call;
         std::vector<llvm::Value*>::iterator it;
         llvm::AllocaInst*                   alloca;
+        llvm::Function*                     invokeFunction;
         
-        if (_functionChimeObjectInvoke == NULL)
+        if (_functionChimeObjectInvoke0 == NULL)
         {
             std::vector<const llvm::Type*> functionArgs;
             llvm::FunctionType*            functionType;
@@ -398,15 +393,39 @@ namespace chime
             functionArgs.push_back(this->getChimeObjectPtrType());
             functionArgs.push_back(this->getCStringPtrType());
             
-            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, true);
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
             
-            _functionChimeObjectInvoke = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_invoke", this->getModule());
-            _functionChimeObjectInvoke->setCallingConv(llvm::CallingConv::C);
+            // make the 0 arg version
+            _functionChimeObjectInvoke0 = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_invoke_0", this->getModule());
+            _functionChimeObjectInvoke0->setCallingConv(llvm::CallingConv::C);
+            
+            // 1 arg version
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectInvoke1 = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_invoke_1", this->getModule());
+            _functionChimeObjectInvoke1->setCallingConv(llvm::CallingConv::C);
+            
+            // 2 arg version
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectInvoke2 = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_invoke_2", this->getModule());
+            _functionChimeObjectInvoke2->setCallingConv(llvm::CallingConv::C);
+            
+            // 3 arg version
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectInvoke3 = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_invoke_3", this->getModule());
+            _functionChimeObjectInvoke3->setCallingConv(llvm::CallingConv::C);
         }
         
         llvm::LoadInst* loadedObjectPtr;
         
         loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "instance for object invoke");
+        
+        assert(args.size() <= 5 && "A max of 3 arguments + self and name are supported at the moment");
         
         // grab an iterator and do some insertions such that
         // the object comes first, followed by the property, followed
@@ -418,7 +437,18 @@ namespace chime
         alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "object invoke return");
         alloca->setAlignment(8);
         
-        call = this->getBuilder()->CreateCall(_functionChimeObjectInvoke, args.begin(), args.end(), "object invoke");
+        switch (args.size() - 2) // because self and name are always included
+        {
+            case 0: invokeFunction = _functionChimeObjectInvoke0; break;
+            case 1: invokeFunction = _functionChimeObjectInvoke1; break;
+            case 2: invokeFunction = _functionChimeObjectInvoke2; break;
+            case 3: invokeFunction = _functionChimeObjectInvoke3; break;
+            default:
+                assert(0 && "More than three arguments unsupported right now!");
+                break;
+        }
+        
+        call = this->getBuilder()->CreateCall(invokeFunction, args.begin(), args.end(), "object invoke");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);

@@ -101,6 +101,7 @@ namespace ast
     {
         llvm::Value*      argument_value;
         llvm::LoadInst*   object_load;
+        llvm::Value*      methodNamePtr;
         
         std::vector<llvm::Value*>         arguments;
         std::vector<ast::node*>::iterator i;
@@ -122,6 +123,8 @@ namespace ast
             arguments.push_back(object_load);
         }
         
-        return generator.call_chime_object_invoke(target, this->identifier(), arguments);
+        methodNamePtr = generator.make_constant_string(this->identifier());
+        
+        return generator.getRuntime()->callChimeObjectInvoke(target, methodNamePtr, arguments);
     }
 }

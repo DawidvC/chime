@@ -1,111 +1,76 @@
 // Chime Runtime: assertions.c
 
-#include "library/testing/assertions.h"
+#include "assertions.h"
 #include "runtime/chime_runtime_internal.h"
-#include "runtime/chime_literals.h"
+#include "runtime/literals/chime_literal.h"
 #include <stdio.h>
 #include <assert.h>
-#include <stdarg.h>
 
-static chime_object_t* AssertIsTrue(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* assert_class_is_true(chime_object_t* instance, chime_object_t* object)
 {
-    chime_object_t* a;
-    va_list         arguments;
-    
-    va_start(arguments, method_name);
-    
-    a = va_arg(arguments, chime_object_t*);
-    
-    va_end(arguments);
-    
-    if (a == CHIME_LITERAL_NULL || a == CHIME_LITERAL_FALSE)
+    if (object == CHIME_LITERAL_NULL || object == CHIME_LITERAL_FALSE)
     {
         fprintf(stderr, "[Assert] is_true: failed\n");
-        chime_object_invoke(instance, "increment_failure_count");
+        chime_object_invoke_0(instance, "increment_failure_count");
         
-        chime_object_invoke(a, "print");
+        chime_object_invoke_0(object, "print");
     }
     
     return CHIME_LITERAL_NULL;
 }
 
-static chime_object_t* AssertIsFalse(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* assert_class_is_false(chime_object_t* instance, chime_object_t* object)
 {
-    chime_object_t* a;
-    va_list         arguments;
-    
-    va_start(arguments, method_name);
-    
-    a = va_arg(arguments, chime_object_t*);
-    
-    va_end(arguments);
-    
-    if (!(a == CHIME_LITERAL_NULL || a == CHIME_LITERAL_FALSE))
+    if (!(object == CHIME_LITERAL_NULL || object == CHIME_LITERAL_FALSE))
     {
         fprintf(stderr, "[Assert] is_false: failed\n");
-        chime_object_invoke(instance, "increment_failure_count");
+        chime_object_invoke_0(instance, "increment_failure_count");
+        
+        chime_object_invoke_0(object, "print");
     }
     
     return CHIME_LITERAL_NULL;
 }
 
-static chime_object_t* AssertIsNull(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* assert_class_is_null(chime_object_t* instance, chime_object_t* object)
 {
-    chime_object_t* a;
-    va_list         arguments;
-    
-    va_start(arguments, method_name);
-    
-    a = va_arg(arguments, chime_object_t*);
-    
-    va_end(arguments);
-    
-    if (a != CHIME_LITERAL_NULL)
+    if (object != CHIME_LITERAL_NULL)
     {
         fprintf(stderr, "[Assert] is_null: failed\n");
-        chime_object_invoke(instance, "increment_failure_count");
+        chime_object_invoke_0(instance, "increment_failure_count");
+        
+        chime_object_invoke_0(object, "print");
     }
     
     return CHIME_LITERAL_NULL;
 }
 
-static chime_object_t* AssertEqualTo(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* assert_class_equal_to(chime_object_t* instance, chime_object_t* a, chime_object_t* b)
 {
-    va_list         arguments;
-    chime_object_t* a;
-    chime_object_t* b;
-    
-    va_start(arguments, method_name);
-    
-    a = va_arg(arguments, chime_object_t*);
-    b = va_arg(arguments, chime_object_t*);
-    
-    va_end(arguments);
-    
-    if (chime_object_invoke(a, "<=>", b) != chime_literal_encode_integer(0))
+    if (chime_object_invoke_1(a, "<=>", b) != chime_literal_encode_integer(0))
     {
         fprintf(stderr, "[Assert] equal:to: failed\n");
-        chime_object_invoke(instance, "increment_failure_count");
+        chime_object_invoke_0(instance, "increment_failure_count");
         
-        chime_object_invoke(a, "print");
-        chime_object_invoke(b, "print");
+        chime_object_invoke_0(a, "print");
+        chime_object_invoke_0(b, "print");
     }
     
     return CHIME_LITERAL_NULL;
 }
 
-static chime_object_t* GetFailures(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* assert_class_failure_count(chime_object_t* instance)
 {
     return chime_object_get_property(instance, "failure_count");
 }
 
-static chime_object_t* IncrementFailureCount(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* assert_class_increment_failure_count(chime_object_t* instance)
 {
     chime_object_t* failure_count;
     
     failure_count = chime_object_get_property(instance, "failure_count");
     
-    failure_count = chime_object_invoke(failure_count, "+", chime_literal_encode_integer(1));
+    failure_count = chime_object_invoke_1(failure_count, "+", chime_literal_encode_integer(1));
     
     chime_object_set_property(instance, "failure_count", failure_count);
     
@@ -123,13 +88,13 @@ void chime_assertion_initialize(void)
     // class methods
     assertion_metaclass = chime_object_get_class(assertion_class);
     
-    chime_object_set_function(assertion_metaclass, "is_true",  AssertIsTrue,  1);
-    chime_object_set_function(assertion_metaclass, "is_false", AssertIsFalse, 1);
-    chime_object_set_function(assertion_metaclass, "is_null",  AssertIsNull,  1);
-    chime_object_set_function(assertion_metaclass, "equal",    AssertEqualTo, 2);
+    chime_object_set_function(assertion_metaclass, "is_true",  assert_class_is_true,  1);
+    chime_object_set_function(assertion_metaclass, "is_false", assert_class_is_false, 1);
+    chime_object_set_function(assertion_metaclass, "is_null",  assert_class_is_null,  1);
+    chime_object_set_function(assertion_metaclass, "equal",    assert_class_equal_to, 2);
     
-    chime_object_set_function(assertion_metaclass, "failures", GetFailures,   0);
-    chime_object_set_function(assertion_metaclass, "increment_failure_count", IncrementFailureCount, 0);
+    chime_object_set_function(assertion_metaclass, "failure_count", assert_class_failure_count,   0);
+    chime_object_set_function(assertion_metaclass, "increment_failure_count", assert_class_increment_failure_count, 0);
     
     chime_object_set_property(assertion_class, "failure_count", chime_literal_encode_integer(0));
 }

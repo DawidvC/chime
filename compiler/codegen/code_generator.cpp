@@ -122,6 +122,15 @@ namespace chime
     
     llvm::Value* code_generator::value_for_identifier(std::string name)
     {
+        llvm::Value* value;
+        
+        if (this->getMethodScope())
+        {
+            value = this->getMethodScope()->getValue(name);
+            if (value)
+                return value;
+        }
+        
         return (*_scope_values)[name];
     }
     
@@ -221,56 +230,6 @@ namespace chime
         call->setTailCall(false);
         
         return NULL;
-    }
-    
-    llvm::Value* code_generator::call_chime_object_invoke(llvm::Value* object_value, std::string name, std::vector<llvm::Value*> args)
-    {
-        llvm::Function*                     function_chime_object_invoke;
-        llvm::CallInst*                     call;
-        std::vector<llvm::Value*>::iterator it;
-        llvm::AllocaInst*                   alloca;
-        
-        function_chime_object_invoke = (llvm::Function*)this->value_for_identifier("chime_object_invoke");
-        if (function_chime_object_invoke == NULL)
-        {
-            std::vector<const llvm::Type*> function_args;
-            llvm::FunctionType*            function_type;
-            
-            function_args.push_back(this->getRuntime()->getChimeObjectPtrType());
-            function_args.push_back(this->get_c_string_ptr_type());
-            
-            function_type = llvm::FunctionType::get(this->getRuntime()->getChimeObjectPtrType(), function_args, true);
-            
-            function_chime_object_invoke = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_object_invoke", this->module());
-            function_chime_object_invoke->setCallingConv(llvm::CallingConv::C);
-            
-            this->set_value_for_identifier("chime_object_invoke", function_chime_object_invoke);
-        }
-        
-        llvm::Value*    property_name_ptr;
-        llvm::LoadInst* loaded_object_ptr;
-        
-        assert(name.length() > 0);
-        
-        property_name_ptr = this->make_constant_string(name);
-        
-        loaded_object_ptr = this->builder()->CreateLoad(object_value, "instance for object invoke");
-        
-        // grab an iterator and do some insertions such that
-        // the object comes first, followed by the property, followed
-        // by whatever arguments were supplied
-        it = args.begin();
-        it = args.insert(it, property_name_ptr);
-        args.insert(it, loaded_object_ptr);
-        
-        alloca = this->insert_chime_object_alloca();
-        
-        call = this->builder()->CreateCall(function_chime_object_invoke, args.begin(), args.end(), "object invoke");
-        call->setTailCall(false);
-        
-        this->builder()->CreateStore(call, alloca, false);
-        
-        return alloca;
     }
     
     llvm::Value* code_generator::call_chime_literal_encode_integer(signed long value)

@@ -2,6 +2,7 @@
 
 #include "chime_runtime_array.h"
 #include "chime_runtime_array_internal.h"
+
 #include <stdlib.h>
 #include <assert.h>
 
@@ -68,10 +69,12 @@ void* chime_runtime_array_get(chime_runtime_array_t* array, unsigned long index)
     
     node = array->head;
     
-    for (i = 0; i < index; i++)
+    for (i = 0; i < index; ++i)
     {
         node = node->next;
     }
+    
+    assert(node);
     
     return node->pointer;
 }
@@ -85,6 +88,7 @@ void chime_runtime_array_add(chime_runtime_array_t* array, void* value)
     
     // make our new node and increase the array's account
     new_node = chime_runtime_array_node_create(value);
+    assert(new_node);
     
     array->count++;
     
@@ -111,12 +115,14 @@ void chime_runtime_array_remove(chime_runtime_array_t* array, unsigned long inde
 {
     chime_runtime_array_node_t* node;
     chime_runtime_array_node_t* prev_node;
-    unsigned long       i;
+    unsigned long               i;
     
     assert(array);
     assert(index < chime_runtime_array_count(array));
     
     node = array->head;
+    
+    array->count--; // decrease the count, this is an important step!
     
     if (index == 0)
     {

@@ -15,7 +15,6 @@ implementation MethodTests : Test.Case
         }
         set
         {
-            // method arguments don't work yet!
             meaning = value
         }
     }

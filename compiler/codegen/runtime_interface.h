@@ -26,7 +26,6 @@ namespace chime
         
         // types
         llvm::Type*         getChimeObjectPtrType(void);
-        llvm::FunctionType* getChimeFunctionType(void);
         llvm::FunctionType* getChimeModuleInitFunctionType(void);
         
         // runtime functions
@@ -74,7 +73,10 @@ namespace chime
         llvm::Function*     _functionChimeObjectSetFunction;
         llvm::Function*     _functionChimeObjectGetAttribute;
         llvm::Function*     _functionChimeObjectSetAttribute;
-        llvm::Function*     _functionChimeObjectInvoke;
+        llvm::Function*     _functionChimeObjectInvoke0;
+        llvm::Function*     _functionChimeObjectInvoke1;
+        llvm::Function*     _functionChimeObjectInvoke2;
+        llvm::Function*     _functionChimeObjectInvoke3;
         llvm::Function*     _functionChimeLiteralEncodeInteger;
         llvm::Function*     _functionChimeLiteralEncodeBoolean;
         llvm::Function*     _functionChimeStringCreateWithCString;

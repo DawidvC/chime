@@ -1,13 +1,13 @@
 // Chime Runtime: test_case.c
 
 #include "library/testing/test_case.h"
-#include "runtime/chime_literals.h"
+#include "runtime/literals/chime_literal.h"
 #include <stdio.h>
 #include <assert.h>
 #include <stdarg.h>
 
-static chime_object_t* test_case_setup(chime_object_t* instance, const char* method_name, ...);
-static chime_object_t* test_case_teardown(chime_object_t* instance, const char* method_name, ...);
+static chime_object_t* test_case_setup(chime_object_t* instance);
+static chime_object_t* test_case_teardown(chime_object_t* instance);
 
 void chime_test_case_initialize(void)
 {
@@ -21,12 +21,12 @@ void chime_test_case_initialize(void)
 }
 
 // object functions
-static chime_object_t* test_case_setup(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* test_case_setup(chime_object_t* instance)
 {
     return CHIME_LITERAL_NULL;
 }
 
-static chime_object_t* test_case_teardown(chime_object_t* instance, const char* method_name, ...)
+chime_object_t* test_case_teardown(chime_object_t* instance)
 {
     return CHIME_LITERAL_NULL;
 }

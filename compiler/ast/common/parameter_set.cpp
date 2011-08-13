@@ -36,4 +36,14 @@ namespace ast
     {
         return std::string("parameter set");
     }
+    
+    unsigned int ParameterSet::length() const
+    {
+        return this->childCount();
+    }
+    
+    ast::method_parameter* ParameterSet::parameterAtIndex(unsigned int i) const
+    {
+        return static_cast<ast::method_parameter*>(this->childAtIndex(i));
+    }
 }

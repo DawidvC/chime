@@ -47,4 +47,14 @@ namespace chime
         
         _target = target;
     }
+    
+    llvm::AllocaInst* Scope::getValue(const std::string& name) const
+    {
+        return (*_values)[name];
+    }
+    
+    void Scope::setValue(const std::string& name, llvm::AllocaInst* value)
+    {
+        (*_values)[name] = value;
+    }
 }

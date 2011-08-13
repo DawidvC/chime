@@ -53,23 +53,14 @@ TEST_F(RuntimeTests, GetNullType)
     chime_object_destroy(object);
 }
 
-static chime_object_t* RuntimeTestsFunctionNoArgs(chime_object_t* self, const char* method_name, ...)
+static chime_object_t* RuntimeTestsFunctionNoArgs(chime_object_t* self)
 {
     return CHIME_LITERAL_NULL;
 }
 
-static chime_object_t* RuntimeTestsFunctionOneArg(chime_object_t* self, const char* method_name, ...)
+static chime_object_t* RuntimeTestsFunctionOneArg(chime_object_t* self, chime_object_t* arg1)
 {
-    va_list         arguments;
-    chime_object_t* object;
-    
-    va_start(arguments, method_name);
-    
-    object = va_arg(arguments, chime_object_t*);
-    
-    va_end(arguments);
-    
-    return object;
+    return arg1;
 }
 
 TEST_F(RuntimeTests, InvokeMethod)
@@ -79,11 +70,11 @@ TEST_F(RuntimeTests, InvokeMethod)
     
     objectClass = chime_runtime_get_class("Object");
     
-    chime_object_set_function(objectClass, "test_method", RuntimeTestsFunctionNoArgs, 0);
+    chime_object_set_function(objectClass, "test_method", (void*)RuntimeTestsFunctionNoArgs, 0);
     
     object = chime_object_create(objectClass);
     
-    ASSERT_TRUE(chime_object_invoke(object, "test_method") == CHIME_LITERAL_NULL);
+    ASSERT_TRUE(chime_object_invoke_0(object, "test_method") == CHIME_LITERAL_NULL);
     
     chime_object_destroy(object);
 }
@@ -99,9 +90,9 @@ TEST_F(RuntimeTests, InvokeMethodWithOneArg)
     object   = chime_object_create(objectClass);
     argument = chime_object_create(objectClass);
     
-    chime_object_set_function(objectClass, "test_method", RuntimeTestsFunctionOneArg, 1);
+    chime_object_set_function(objectClass, "test_method", (void*)RuntimeTestsFunctionOneArg, 1);
     
-    ASSERT_TRUE(chime_object_invoke(object, "test_method", argument) == argument);
+    ASSERT_TRUE(chime_object_invoke_1(object, "test_method", argument) == argument);
     
     chime_object_destroy(object);
 }

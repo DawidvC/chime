@@ -26,23 +26,65 @@ namespace ast
         _parameters = params;
     }
     
+    void FunctionDefinition::codegenMethodParameters(chime::code_generator& generator, llvm::Function* function)
+    {
+        unsigned int                 i;
+        ast::method_parameter*       param;
+        llvm::Function::arg_iterator args;
+        llvm::AllocaInst*            alloca;
+        
+        // first, deal with self
+        args = function->arg_begin();
+        
+        alloca = generator.insert_chime_object_alloca();
+        generator.builder()->CreateStore(args, alloca, false);
+        
+        generator.getMethodScope()->setSelfPointer(alloca);
+        
+        // Careful here.  Properties define two methods, one that has params and one that does not.  The
+        // safest thing to do here is to iterate over the function arguments, and fill in as we go
+        ++args; // advance past the self argument
+        
+        for (i = 0; args != function->arg_end(); ++args, ++i)
+        {
+            param = static_cast<ast::method_parameter*>(_parameters->childAtIndex(i));
+            
+            alloca = generator.insert_chime_object_alloca();
+            generator.builder()->CreateStore(args, alloca, false);
+            generator.getMethodScope()->setValue(param->identifier(), alloca);
+        }
+    }
+    
     llvm::Value* FunctionDefinition::createMethod(chime::code_generator& generator, const std::string& name, NodeRef body, unsigned int arity)
     {
-        llvm::Function*              methodFunction;
-        llvm::Function::arg_iterator args;
-        std::string                  functionName;
-        llvm::Value*                 functionNameCStringPtr;
-        llvm::BasicBlock*            basicBlock;
-        llvm::BasicBlock*            currentBlock;
-        llvm::Value*                 classObjectPtr;
-        llvm::AllocaInst*            alloca;
+        llvm::Function*                methodFunction;
+        std::string                    functionName;
+        llvm::Value*                   functionNameCStringPtr;
+        llvm::BasicBlock*              basicBlock;
+        llvm::BasicBlock*              currentBlock;
+        llvm::Value*                   classObjectPtr;
+        std::vector<const llvm::Type*> functionArgs;
+        llvm::FunctionType*            functionType;
+        
+        // setup the function type
+        functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is self
+        
+        // add another object pointer for every argument the function takes
+        for (int i = 0; i < arity; ++i)
+        {
+            functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType());
+        }
+        
+        functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), functionArgs, false);
+        
+        // setup for creating the function itself
         
         currentBlock = generator.builder()->GetInsertBlock();
         
         functionName           = generator.getImplementationScope()->getName() + "." + name;
         functionNameCStringPtr = generator.make_constant_string(name);
         
-        methodFunction = generator.createFunction(generator.getRuntime()->getChimeFunctionType(), functionName);
+        methodFunction = generator.createFunction(functionType, functionName);
         
         // create the return code for the method
         generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
@@ -52,13 +94,7 @@ namespace ast
         generator.builder()->SetInsertPoint(basicBlock);
         
         // deal with the arguments
-        args = methodFunction->arg_begin();
-        
-        alloca = generator.insert_chime_object_alloca();
-        
-        generator.builder()->CreateStore(args++, alloca, false);
-        
-        generator.getMethodScope()->setSelfPointer(alloca);
+        this->codegenMethodParameters(generator, methodFunction);
         
         // create the actual method body
         body->codegen(generator);

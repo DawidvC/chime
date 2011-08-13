@@ -4,10 +4,12 @@
 #define TYPE_REFERENCE_H
 
 #include "compiler/ast/node.h"
-#include "compiler/ast/common/parameter_set.h"
 
 namespace ast
 {
+    class ParameterSet;
+    typedef std::tr1::shared_ptr<ast::ParameterSet> ParameterSetRef;
+    
     class type_reference : public node
     {
     public:

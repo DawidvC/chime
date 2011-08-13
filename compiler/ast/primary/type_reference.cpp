@@ -1,4 +1,5 @@
 #include "type_reference.h"
+#include "compiler/ast/common/parameter_set.h"
 
 namespace ast
 {

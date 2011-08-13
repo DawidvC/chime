@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#include "collections/chime_dictionary.h"
+#include "runtime/collections/chime_dictionary.h"
 
 struct _chime_object {
     // bookkeeping

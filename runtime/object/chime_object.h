@@ -9,7 +9,10 @@ extern "C" {
 
 typedef struct _chime_object chime_object_t;
 
-typedef chime_object_t*	(*chime_function_t)(chime_object_t*, const char*, ...);
+typedef chime_object_t* (*chime_function_arg0_t)(chime_object_t*);
+typedef chime_object_t* (*chime_function_arg1_t)(chime_object_t*, chime_object_t*);
+typedef chime_object_t* (*chime_function_arg2_t)(chime_object_t*, chime_object_t*, chime_object_t*);
+typedef chime_object_t* (*chime_function_arg3_t)(chime_object_t*, chime_object_t*, chime_object_t*, chime_object_t*);
 
 typedef enum {
     CHIME_OBJECT_INVALID_TYPE = 0,
@@ -35,11 +38,14 @@ chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char*
 void            chime_object_set_property(chime_object_t* instance, const char* name, chime_object_t* value);
 void            chime_object_set_attribute(chime_object_t* instance, const char* name, chime_object_t* value);
 
-chime_function_t chime_object_get_function(chime_object_t* instance);
-void             chime_object_set_function(chime_object_t* instance, const char* name, chime_function_t function, unsigned long arity);
+void*           chime_object_get_function(chime_object_t* instance);
+void            chime_object_set_function(chime_object_t* instance, const char* name, void* function, unsigned char arity);
 
 chime_object_t* chime_object_resolve_invoke(chime_object_t* instance, const char* name);
-chime_object_t* chime_object_invoke(chime_object_t* instance, const char* name, ...);
+chime_object_t* chime_object_invoke_0(chime_object_t* instance, const char* name);
+chime_object_t* chime_object_invoke_1(chime_object_t* instance, const char* name, chime_object_t* arg1);
+chime_object_t* chime_object_invoke_2(chime_object_t* instance, const char* name, chime_object_t* arg1, chime_object_t* arg2);
+chime_object_t* chime_object_invoke_3(chime_object_t* instance, const char* name, chime_object_t* arg1, chime_object_t* arg2, chime_object_t* arg3);
 
 #ifdef __cplusplus
 }
