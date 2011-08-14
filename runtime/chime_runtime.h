@@ -4,7 +4,6 @@
 #define CHIME_RUNTIME
 
 #include "runtime/object/chime_object.h"
-#include "chime_string.h"
 #include "runtime/literals/chime_literal.h"
 
 #ifdef __cplusplus

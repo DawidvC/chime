@@ -1,0 +1,17 @@
+implementation ReflectionTests : Test.Case
+{
+    method test_class_name()
+    {
+        Assert.equal("ReflectionTests", to:ReflectionTests.name)
+    }
+    
+    method test_self_class()
+    {
+        Assert.equal(ReflectionTests, to:self.class)
+    }
+    
+    method test_self_class_name()
+    {
+        Assert.equal("ReflectionTests", to:self.class.name)
+    }
+}

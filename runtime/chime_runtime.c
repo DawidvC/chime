@@ -4,6 +4,8 @@
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/object/chime_object_internal.h"
+#include "runtime/class/chime_class_methods.h"
+#include "runtime/string/chime_string.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -58,11 +60,14 @@ void chime_runtime_initialize(void)
     chime_string_initialize();
     
     // now go back and fix up the first classes, as they are missing the name properties
-    chime_object_set_property(_root_metaclass,  "name", chime_string_create_with_c_string("MetaClass"));
-    chime_object_set_property(_object_class,    "name", chime_string_create_with_c_string("Object"));
-    chime_object_set_property(_string_class,    "name", chime_string_create_with_c_string("String"));
-    chime_object_set_property(_method_class,    "name", chime_string_create_with_c_string("Method"));
-    chime_object_set_property(_undefined_class, "name", chime_string_create_with_c_string("Undefined"));
+    chime_object_set_property(_root_metaclass,  "_name", chime_string_create_with_c_string("MetaClass"));
+    chime_object_set_property(_object_class,    "_name", chime_string_create_with_c_string("Object"));
+    chime_object_set_property(_string_class,    "_name", chime_string_create_with_c_string("String"));
+    chime_object_set_property(_method_class,    "_name", chime_string_create_with_c_string("Method"));
+    chime_object_set_property(_undefined_class, "_name", chime_string_create_with_c_string("Undefined"));
+    
+    chime_object_set_function(_root_metaclass,  "name", class_name,    0); 
+    chime_object_set_function(_root_metaclass,  "<=>",  class_compare, 1);
     
     chime_literal_initialize();
     
@@ -124,7 +129,7 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
             
             snprintf(buffer, string_length + 5, "Meta%s", name);
             
-            chime_object_set_property(metaclass_object, "name", chime_string_create_with_c_string(buffer));
+            chime_object_set_property(metaclass_object, "_name", chime_string_create_with_c_string(buffer));
         }
     }
     
@@ -142,7 +147,7 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
         chime_object_t* string_object;
         
         string_object = chime_string_create_with_c_string(name);
-        chime_object_set_property(class_object, "name", string_object);
+        chime_object_set_property(class_object, "_name", string_object);
     }
     
     // store it in our class dictionary so we can look it up later by name
@@ -180,7 +185,7 @@ char* chime_runtime_get_class_name(chime_object_t* class_instance)
     
     assert(class_instance);
     
-    name = chime_object_get_property(class_instance, "name");
+    name = class_name(class_instance);
     
     assert(name);
     

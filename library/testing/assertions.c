@@ -10,7 +10,7 @@ chime_object_t* assert_class_is_true(chime_object_t* instance, chime_object_t* o
 {
     if (object == CHIME_LITERAL_NULL || object == CHIME_LITERAL_FALSE)
     {
-        fprintf(stderr, "[Assert] is_true: failed\n");
+        fprintf(stderr, "[Assert] is_true: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
         chime_object_invoke_0(object, "print");
@@ -23,7 +23,7 @@ chime_object_t* assert_class_is_false(chime_object_t* instance, chime_object_t* 
 {
     if (!(object == CHIME_LITERAL_NULL || object == CHIME_LITERAL_FALSE))
     {
-        fprintf(stderr, "[Assert] is_false: failed\n");
+        fprintf(stderr, "[Assert] is_false: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
         chime_object_invoke_0(object, "print");
@@ -36,7 +36,7 @@ chime_object_t* assert_class_is_null(chime_object_t* instance, chime_object_t* o
 {
     if (object != CHIME_LITERAL_NULL)
     {
-        fprintf(stderr, "[Assert] is_null: failed\n");
+        fprintf(stderr, "[Assert] is_null: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
         chime_object_invoke_0(object, "print");
@@ -49,7 +49,7 @@ chime_object_t* assert_class_equal_to(chime_object_t* instance, chime_object_t* 
 {
     if (chime_object_invoke_1(a, "<=>", b) != chime_literal_encode_integer(0))
     {
-        fprintf(stderr, "[Assert] equal:to: failed\n");
+        fprintf(stderr, "[Assert] equal:to: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
         chime_object_invoke_0(a, "print");

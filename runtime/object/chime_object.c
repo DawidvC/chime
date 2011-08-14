@@ -5,6 +5,7 @@
 #include "chime_object_methods.h"
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/string/chime_string.h"
 #include "runtime/literals/chime_literal.h"
 
 #include <stdlib.h>
@@ -13,10 +14,11 @@
 
 void chime_object_initialize(void)
 {
-    chime_object_set_function(_object_class, "class",     object_class,     0);
-    chime_object_set_function(_object_class, "to_string", object_to_string, 0);
-    chime_object_set_function(_object_class, "methods",   object_methods,   0);
-    chime_object_set_function(_object_class, "==",        object_equals,    1);
+    chime_object_set_function(_object_class, "class",     object_class,        0);
+    chime_object_set_function(_object_class, "to_string", object_to_string,    0);
+    chime_object_set_function(_object_class, "methods",   object_methods,      0);
+    chime_object_set_function(_object_class, "==",        object_equals,       1);
+    chime_object_set_function(_object_class, ">",         object_greater_than, 1);
 }
 
 chime_object_t* chime_object_create(chime_object_t* object_class)

@@ -1,6 +1,7 @@
 import "ControlTests"
 import "LiteralTests"
 import "MethodTests"
+import "ReflectionTests"
 
 test = LiteralTests.new()
 
@@ -32,6 +33,20 @@ test.teardown()
 
 test.setup()
 test.test_set_property()
+test.teardown()
+
+test = ReflectionTests.new()
+
+test.setup()
+test.test_class_name()
+test.teardown()
+
+test.setup()
+test.test_self_class()
+test.teardown()
+
+test.setup()
+test.test_self_class_name()
 test.teardown()
 
 Assert.failure_count().print()

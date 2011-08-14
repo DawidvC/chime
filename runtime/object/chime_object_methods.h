@@ -13,6 +13,7 @@ chime_object_t* object_class(chime_object_t* instance);
 chime_object_t* object_to_string(chime_object_t* instance);
 chime_object_t* object_methods(chime_object_t* instance);
 chime_object_t* object_equals(chime_object_t* instance, chime_object_t* other);
+chime_object_t* object_greater_than(chime_object_t* instance, chime_object_t* other);
 
 #ifdef __cplusplus
 }
