@@ -16,6 +16,8 @@ chime_dictionary_t* chime_dictionary_create(void)
     dictionary->key_array   = chime_runtime_array_create();
     dictionary->value_array = chime_runtime_array_create();
     
+    assert(dictionary);
+    
     return dictionary;
 }
 
@@ -74,7 +76,7 @@ void chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key)
     
     assert(dictionary);
     
-    for (i = 0; i < chime_dictionary_count(dictionary); i++)
+    for (i = 0; i < chime_dictionary_count(dictionary); ++i)
     {
         current_key = chime_runtime_array_get(dictionary->key_array, i);
         
@@ -89,4 +91,11 @@ void chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key)
     }
     
     assert(chime_runtime_array_count(dictionary->key_array) == chime_runtime_array_count(dictionary->value_array));
+}
+
+char* chime_dictionary_get_key(chime_dictionary_t* dictionary, void* value)
+{
+    assert(NULL);
+    
+    return NULL;
 }

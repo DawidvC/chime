@@ -2,33 +2,26 @@
 
 #include "chime_literal.h"
 #include "runtime/chime_runtime.h"
-#include "runtime/chime_runtime_internal.h"
 #include "chime_literal_methods.h"
 #include <stdio.h>
 #include <assert.h>
 
 void chime_literal_initialize(void)
 {
-    chime_object_t* new_class;
+    chime_class_t* klass;
         
-    new_class = chime_runtime_create_object_subclass("Null");
-    assert(new_class);
+    klass = chime_class_create_object_subclass("Null");
+    chime_class_set_instance_method(klass, "print", null_print);
     
-    chime_object_set_function(new_class, "print", null_print, 0);
+    klass = chime_class_create_object_subclass("Integer");
+    chime_class_set_instance_method(klass, "print", integer_print);
+    chime_class_set_instance_method(klass, "+",     integer_add);
+    chime_class_set_instance_method(klass, "*",     integer_multiply);
+    chime_class_set_instance_method(klass, "<=>",   integer_compare);
     
-    new_class = chime_runtime_create_object_subclass("Integer");
-    assert(new_class);
-    
-    chime_object_set_function(new_class, "print", integer_print, 0);
-    chime_object_set_function(new_class, "+",     integer_add, 1);
-    chime_object_set_function(new_class, "*",     integer_multiply, 1);
-    chime_object_set_function(new_class, "<=>",   integer_compare, 1);
-    
-    new_class = chime_runtime_create_object_subclass("Boolean");
-    assert(new_class);
-    
-    chime_object_set_function(new_class, "print", boolean_print, 0);
-    chime_object_set_function(new_class, "<=>",   boolean_compare, 1);
+    klass = chime_class_create_object_subclass("Boolean");
+    chime_class_set_instance_method(klass, "print", boolean_print);
+    chime_class_set_instance_method(klass, "<=>",   boolean_compare);
 }
 
 chime_object_t* chime_literal_encode_integer(signed long value)

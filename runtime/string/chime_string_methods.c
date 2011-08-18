@@ -14,7 +14,7 @@ chime_object_t* string_to_string(chime_object_t* instance)
 
 chime_object_t* string_print(chime_object_t* instance)
 {
-    fprintf(stdout, "<String: %s>\n", chime_string_to_c_string(instance));
+    fprintf(stdout, "%s\n", chime_string_to_c_string(instance));
     
     return CHIME_LITERAL_NULL;
 }

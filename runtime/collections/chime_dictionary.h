@@ -12,9 +12,12 @@ typedef struct _chime_dictionary chime_dictionary_t;
 chime_dictionary_t* chime_dictionary_create(void);
 void                chime_dictionary_destroy(chime_dictionary_t* dictionary);
 
-void* chime_dictionary_get(chime_dictionary_t* dictionary, const char* key);
-void  chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void* value);
-void  chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key);
+unsigned long chime_dictionary_count(chime_dictionary_t* dictionary);
+void*         chime_dictionary_get(chime_dictionary_t* dictionary, const char* key);
+void          chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void* value);
+void          chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key);
+
+char* chime_dictionary_get_key(chime_dictionary_t* dictionary, void* value);
 
 #ifdef __cplusplus
 }

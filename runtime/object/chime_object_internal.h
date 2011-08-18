@@ -7,20 +7,17 @@
 extern "C" {
 #endif
 
+#include "runtime/class/chime_class.h"
 #include "runtime/collections/chime_dictionary.h"
 
 struct _chime_object {
-    // bookkeeping
-    unsigned long flags;
-    unsigned long reference_count;
-    
-    // inheritance
-    struct _chime_object* self_class;
-    struct _chime_object* super_class;
-    
-    // properties
-    chime_dictionary_t* properties;
+    struct _chime_class* self_class;
+    unsigned long        flags;
+    chime_dictionary_t*  methods;
+    chime_dictionary_t*  variables;
 };
+
+chime_dictionary_t* chime_object_get_methods(struct _chime_object* instance);
 
 #ifdef __cplusplus
 }

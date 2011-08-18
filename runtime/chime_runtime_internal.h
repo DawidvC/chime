@@ -3,9 +3,14 @@
 #ifndef CHIME_RUNTIME_INTERNAL
 #define CHIME_RUNTIME_INTERNAL
 
-extern chime_object_t* _object_class;
-extern chime_object_t* _string_class;
+#include "runtime/collections/chime_dictionary.h"
+#include "runtime/class/chime_class.h"
 
-void chime_initialize_class_heirarchy(void);
+extern chime_dictionary_t* _chime_classes;
+
+extern chime_class_t*      _object_class;
+extern chime_class_t*      _method_class;
+extern chime_class_t*      _string_class;
+extern chime_class_t*      _array_class;
 
 #endif

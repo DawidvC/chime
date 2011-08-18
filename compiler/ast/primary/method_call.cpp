@@ -108,11 +108,6 @@ namespace ast
         
         assert(target);
         
-        if (this->identifier().compare(std::string("new")) == 0)
-        {
-            return generator.getRuntime()->callChimeObjectCreate(target);
-        }
-        
         for (i = this->children()->begin(); i < this->children()->end(); ++i)
         {
             argument_value = (*i)->codegen(generator);

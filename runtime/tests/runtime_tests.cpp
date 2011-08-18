@@ -17,7 +17,7 @@ protected:
 
 TEST_F(RuntimeTests, InitializeRuntime)
 {
-    chime_object_t* object_class;
+    chime_class_t*  object_class;
     chime_object_t* object;
     
     object_class = chime_runtime_get_class("Object");
@@ -66,13 +66,13 @@ static chime_object_t* RuntimeTestsFunctionOneArg(chime_object_t* self, chime_ob
 TEST_F(RuntimeTests, InvokeMethod)
 {
     chime_object_t* object;
-    chime_object_t* objectClass;
+    chime_class_t*  object_class;
     
-    objectClass = chime_runtime_get_class("Object");
+    object_class = chime_runtime_get_class("Object");
     
-    chime_object_set_function(objectClass, "test_method", (void*)RuntimeTestsFunctionNoArgs, 0);
+    chime_class_set_instance_method(object_class, "test_method", (void*)RuntimeTestsFunctionNoArgs);
     
-    object = chime_object_create(objectClass);
+    object = chime_object_create(object_class);
     
     ASSERT_TRUE(chime_object_invoke_0(object, "test_method") == CHIME_LITERAL_NULL);
     
@@ -82,56 +82,60 @@ TEST_F(RuntimeTests, InvokeMethod)
 TEST_F(RuntimeTests, InvokeMethodWithOneArg)
 {
     chime_object_t* object;
-    chime_object_t* objectClass;
+    chime_class_t*  object_class;
     chime_object_t* argument;
     
-    objectClass = chime_runtime_get_class("Object");
+    object_class = chime_runtime_get_class("Object");
     
-    object   = chime_object_create(objectClass);
-    argument = chime_object_create(objectClass);
+    object   = chime_object_create(object_class);
+    argument = chime_object_create(object_class);
     
-    chime_object_set_function(objectClass, "test_method", (void*)RuntimeTestsFunctionOneArg, 1);
+    chime_class_set_instance_method(object_class, "test_method", (void*)RuntimeTestsFunctionOneArg);
     
     ASSERT_TRUE(chime_object_invoke_1(object, "test_method", argument) == argument);
     
+    chime_object_destroy(argument);
     chime_object_destroy(object);
 }
 
 TEST_F(RuntimeTests, InheritanceStructure)
 {
     chime_object_t* object;
-    chime_object_t* objectClass;
+    chime_class_t*  object_class;
     chime_object_t* subobject;
-    chime_object_t* subobjectClass;
+    chime_class_t*  subobject_class;
     
-    objectClass = chime_runtime_get_class("Object");
-    object      = chime_object_create(objectClass);
+    object_class = chime_runtime_get_class("Object");
+    object       = chime_object_create(object_class);
     
     // make sure the object class is the one just created
-    ASSERT_TRUE(chime_object_get_class(object) == objectClass);
+    ASSERT_TRUE((chime_class_t*)chime_object_get_class(object) == object_class);
     
     // the Object class has a metaclass
-    ASSERT_TRUE(chime_object_get_class(objectClass) != 0);
+    ASSERT_TRUE(chime_class_get_class(object_class) != 0);
     
     // the Object class has no superclass
-    ASSERT_TRUE(chime_object_get_superclass(objectClass) == 0);
+    ASSERT_TRUE(chime_class_get_superclass(object_class) == 0);
     
-    subobjectClass = chime_runtime_create_class("SubObject", objectClass);
+    subobject_class = chime_class_create("SubObject", object_class);
     
     // the subobjectClass's superclass should be the objectClass
-    ASSERT_TRUE(chime_object_get_superclass(subobjectClass) == objectClass);
+    ASSERT_TRUE(chime_class_get_superclass(subobject_class) == object_class);
     
     // the superclass of the metaclass is the metaclass of the superclass
     // (say that fives times fast)
-    ASSERT_TRUE(chime_object_get_superclass(chime_object_get_class(subobjectClass)) == chime_object_get_class(objectClass));
+    ASSERT_TRUE(chime_class_get_superclass(chime_class_get_class(subobject_class)) == chime_class_get_class(object_class));
     
-    subobject = chime_object_create(subobjectClass);
+    subobject = chime_object_create(subobject_class);
     
     // make sure the type is right
-    ASSERT_TRUE(chime_object_get_class(subobject) == subobjectClass);
+    ASSERT_TRUE((chime_class_t*)chime_object_get_class(subobject) == subobject_class);
     
     // make sure the super is Object
-    ASSERT_TRUE(chime_object_get_superclass(subobject) == objectClass);
+    ASSERT_TRUE((chime_class_t*)chime_object_get_superclass(subobject) == object_class);
+    
+    chime_object_destroy(subobject);
+    chime_object_destroy(object);
 }
 
 TEST_F(RuntimeTests, OverwriteProperty)

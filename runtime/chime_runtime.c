@@ -4,22 +4,21 @@
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/object/chime_object_internal.h"
-#include "runtime/class/chime_class_methods.h"
 #include "runtime/string/chime_string.h"
+#include "runtime/array/chime_array.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static chime_dictionary_t* _chime_classes   = 0;
-static chime_object_t*     _root_metaclass  = 0;
-chime_object_t*            _class_class     = 0;
-chime_object_t*            _object_class    = 0;
-chime_object_t*            _string_class    = 0;
-chime_object_t*            _method_class    = 0;
-chime_object_t*            _undefined_class = 0;
-unsigned char              chime_log_level  = 4;
+chime_dictionary_t* _chime_classes   = NULL;
+chime_class_t*      _object_class    = NULL;
+chime_class_t*      _string_class    = NULL;
+chime_class_t*      _array_class     = NULL;
+chime_class_t*      _method_class    = NULL;
+chime_class_t*      _undefined_class = NULL;
+unsigned char       chime_log_level  = 4;
 
 void chime_runtime_initialize(void)
 {
@@ -30,16 +29,32 @@ void chime_runtime_initialize(void)
     chime_log_level = 3;
     
     _chime_classes = chime_dictionary_create();
-    assert(_chime_classes);
     
-    _class_class = chime_object_create(0);
-    assert(_class_class);
+    chime_object_initialize(); // set up the root classes and their base methods
     
-    _class_class->self_class = _class_class;
+    chime_literal_initialize();
+    
+    chime_string_initialize();
+    
+    chime_array_initialize();
+    
+    chime_log_level = old_level;
+}
+
+#if 0
+void chime_runtime_initialize(void)
+{
+    unsigned char old_level;
+    
+    // save original logging level
+    old_level = chime_log_level;
+    chime_log_level = 3;
+    
+    _chime_classes = chime_dictionary_create();
     
     // create the root metaclass, which is needed to call
     // the chime_runtime_create_class function
-    _root_metaclass = chime_object_create(0);
+    _metaclass = chime_class_create("MetaClass", 0);
     assert(_root_metaclass);
     
     // create the root class
@@ -51,6 +66,12 @@ void chime_runtime_initialize(void)
     
     _undefined_class = chime_runtime_create_class("Undefined", _object_class);
     assert(_undefined_class);
+    
+    // now we need some core methods on the metaclass to continue
+    chime_object_set_function(_root_metaclass,  "new",     class_new,     0); 
+    chime_object_set_function(_root_metaclass,  "name",    class_name,    0); 
+    chime_object_set_function(_root_metaclass,  "<=>",     class_compare, 1);
+    chime_object_set_function(_root_metaclass,  "methods", class_methods, 0);
     
     // once the root objects are created, we can finish up with the object
     // class
@@ -66,32 +87,31 @@ void chime_runtime_initialize(void)
     chime_object_set_property(_method_class,    "_name", chime_string_create_with_c_string("Method"));
     chime_object_set_property(_undefined_class, "_name", chime_string_create_with_c_string("Undefined"));
     
-    chime_object_set_function(_root_metaclass,  "name", class_name,    0); 
-    chime_object_set_function(_root_metaclass,  "<=>",  class_compare, 1);
-    
     chime_literal_initialize();
+    
+    chime_array_initialize();
     
     assert(chime_runtime_create_class("External", _object_class));
     assert(chime_runtime_create_class("Main", _object_class));
     
     chime_log_level = old_level; // restore logging after initialization
 }
+#endif
 
 void chime_runtime_destroy(void)
 {
-    chime_object_destroy(_root_metaclass);
-    _root_metaclass = NULL;
-    
     // this should also remove all of the contained objects
     chime_dictionary_destroy(_chime_classes);
     _chime_classes = NULL;
     
     _object_class    = NULL;
     _string_class    = NULL;
+    _array_class     = NULL;
     _method_class    = NULL;
     _undefined_class = NULL;
 }
 
+#if 0
 chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* superclass)
 {
     chime_object_t* class_object;
@@ -155,41 +175,45 @@ chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* sup
     
     return class_object;
 }
+#endif
 
-chime_object_t* chime_runtime_create_object_subclass(const char* name)
+chime_class_t* chime_runtime_get_class(const char* name)
 {
-    return chime_runtime_create_class(name, _object_class);
-}
-
-chime_object_t* chime_runtime_get_class(const char* name)
-{
-    chime_object_t* object;
+    chime_class_t* klass;
     
-    object = chime_dictionary_get(_chime_classes, name);
+    klass = chime_dictionary_get(_chime_classes, name);
     
     if (chime_log_level >= 5)
-        fprintf(stderr, "[runtime] Getting class '%s' => '%s'\n", name, chime_runtime_get_class_name(object));
+        fprintf(stderr, "[runtime] Getting class '%s' => '%s'\n", name, chime_runtime_get_class_name(klass));
     
-    if (chime_log_level >= 4 && object == CHIME_LITERAL_NULL)
+    if (chime_log_level >= 4 && klass == NULL)
     {
         fprintf(stderr, "[runtime] Getting class '%s' returned null\n", name);
-        object = _undefined_class;
+        klass = _undefined_class;
     }
     
-    return object;
+    return klass;
 }
 
-char* chime_runtime_get_class_name(chime_object_t* class_instance)
+char* chime_runtime_get_class_name(chime_class_t* klass)
 {
     chime_object_t* name;
     
-    assert(class_instance);
+    assert(klass);
     
-    name = class_name(class_instance);
+    // somehow look up or produce the name here
+    name = chime_string_create_with_c_string("HowDoWeDoThis");
     
     assert(name);
     
     return chime_string_to_c_string(name);
+}
+
+chime_object_t* chime_runtime_instantiate(chime_class_t* klass)
+{
+    assert(klass);
+    
+    return chime_object_invoke_0((chime_object_t*)klass, "new");
 }
 
 chime_object_t* chime_runtime_load(const char* name)

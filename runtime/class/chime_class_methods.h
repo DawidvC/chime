@@ -9,8 +9,10 @@
 extern "C" {
 #endif
 
+chime_object_t* class_new(chime_object_t* instance);
 chime_object_t* class_name(chime_object_t* instance);
 chime_object_t* class_compare(chime_object_t* instance, chime_object_t* other);
+chime_object_t* class_methods(chime_object_t* instance);
 
 #ifdef __cplusplus
 }
