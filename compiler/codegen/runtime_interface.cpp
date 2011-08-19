@@ -10,22 +10,22 @@ namespace chime
         _objectPtrType     = NULL;
         _chimeFunctionType = NULL;
         
-        _functionChimeRuntimeInitialize       = NULL;
-        _functionChimeLibraryInitialize       = NULL;
-        _functionChimeRuntimeCreateClass      = NULL;
-        _functionChimeRuntimeGetClass         = NULL;
-        _functionChimeRuntimeLoad             = NULL;
-        _functionChimeObjectCreate            = NULL;
-        _functionChimeObjectSetFunction       = NULL;
-        _functionChimeObjectGetAttribute      = NULL;
-        _functionChimeObjectSetAttribute      = NULL;
-        _functionChimeObjectInvoke0           = NULL;
-        _functionChimeObjectInvoke1           = NULL;
-        _functionChimeObjectInvoke2           = NULL;
-        _functionChimeObjectInvoke3           = NULL;
-        _functionChimeLiteralEncodeInteger    = NULL;
-        _functionChimeLiteralEncodeBoolean    = NULL;
-        _functionChimeStringCreateWithCString = NULL;
+        _functionChimeRuntimeInitialize        = NULL;
+        _functionChimeLibraryInitialize        = NULL;
+        _functionChimeRuntimeCreateClass       = NULL;
+        _functionChimeRuntimeGetClass          = NULL;
+        _functionChimeRuntimeLoad              = NULL;
+        _functionChimeObjectCreate             = NULL;
+        _functionChimeRuntimeSetInstanceMethod = NULL;
+        _functionChimeObjectGetAttribute       = NULL;
+        _functionChimeObjectSetAttribute       = NULL;
+        _functionChimeObjectInvoke0            = NULL;
+        _functionChimeObjectInvoke1            = NULL;
+        _functionChimeObjectInvoke2            = NULL;
+        _functionChimeObjectInvoke3            = NULL;
+        _functionChimeLiteralEncodeInteger     = NULL;
+        _functionChimeLiteralEncodeBoolean     = NULL;
+        _functionChimeStringCreateWithCString  = NULL;
         
         _literalNull = NULL;
     }
@@ -74,6 +74,22 @@ namespace chime
         _objectPtrType = llvm::PointerType::get(objectStructType, 0);
         
         return _objectPtrType;
+    }
+    
+    llvm::Type* RuntimeInterface::getChimeClassPtrType(void)
+    {
+        llvm::OpaqueType* classStructType;
+        
+        if (_classPtrType)
+            return _classPtrType;
+            
+        classStructType = llvm::OpaqueType::get(this->getContext());
+        
+        this->getModule()->addTypeName("struct._chime_class", classStructType);
+         
+        _classPtrType = llvm::PointerType::get(classStructType, 0);
+        
+        return _classPtrType;
     }
     
     llvm::FunctionType* RuntimeInterface::getChimeModuleInitFunctionType(void)
@@ -232,6 +248,44 @@ namespace chime
         return NULL;
     }
     
+    void RuntimeInterface::callChimeRuntimeSetInstanceMethod(llvm::Value* classValue, llvm::Value* functionNamePtr, llvm::Function* function)
+    {
+        llvm::CallInst* call;
+        llvm::Type*     voidPtrType;
+        
+        voidPtrType = llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0);
+        
+        if (_functionChimeRuntimeSetInstanceMethod == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getCStringPtrType());
+            functionArgs.push_back(voidPtrType);
+            
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+            
+            _functionChimeRuntimeSetInstanceMethod = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_runtime_set_instance_method", this->getModule());
+            _functionChimeRuntimeSetInstanceMethod->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        llvm::LoadInst*           loadedObjectPtr;
+        std::vector<llvm::Value*> args;
+        llvm::Constant*           functionPtr;
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(classValue, "instance for object set function");
+        
+        functionPtr = llvm::ConstantExpr::getCast(llvm::Instruction::BitCast, function, voidPtrType);
+        
+        args.push_back(loadedObjectPtr);
+        args.push_back(functionNamePtr);
+        args.push_back(functionPtr);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeRuntimeSetInstanceMethod, args.begin(), args.end(), "");
+        call->setTailCall(false);
+    }
+    
 #pragma mark -
 #pragma mark Object Functions
     llvm::Value* RuntimeInterface::callChimeObjectCreate(llvm::Value* classPtr)
@@ -264,46 +318,6 @@ namespace chime
         this->getBuilder()->CreateStore(call, alloca, false);
         
         return alloca;
-    }
-    
-    void RuntimeInterface::callChimeObjectSetFunction(llvm::Value* objectValue, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity)
-    {
-        llvm::CallInst* call;
-        llvm::Type*     voidPtrType;
-        
-        voidPtrType = llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0);
-        
-        if (_functionChimeObjectSetFunction == NULL)
-        {
-            std::vector<const llvm::Type*> functionArgs;
-            llvm::FunctionType*            functionType;
-            
-            functionArgs.push_back(this->getChimeObjectPtrType());
-            functionArgs.push_back(this->getCStringPtrType());
-            functionArgs.push_back(voidPtrType);
-            functionArgs.push_back(llvm::IntegerType::get(this->getContext(), 64));
-            
-            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
-            
-            _functionChimeObjectSetFunction = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_set_function", this->getModule());
-            _functionChimeObjectSetFunction->setCallingConv(llvm::CallingConv::C);
-        }
-        
-        llvm::LoadInst*           loadedObjectPtr;
-        std::vector<llvm::Value*> args;
-        llvm::Constant*           functionPtr;
-        
-        loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "instance for object set function");
-        
-        functionPtr = llvm::ConstantExpr::getCast(llvm::Instruction::BitCast, function, voidPtrType);
-        
-        args.push_back(loadedObjectPtr);
-        args.push_back(propertyNamePtr);
-        args.push_back(functionPtr);
-        args.push_back(llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, arity, 10)));
-        
-        call = this->getBuilder()->CreateCall(_functionChimeObjectSetFunction, args.begin(), args.end(), "");
-        call->setTailCall(false);
     }
     
     llvm::Value* RuntimeInterface::callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr)

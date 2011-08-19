@@ -79,22 +79,17 @@ chime_object_t* assert_class_increment_failure_count(chime_object_t* instance)
 
 void chime_assertion_initialize(void)
 {
-    chime_object_t* assertion_class;
-    chime_object_t* assertion_metaclass;
+    chime_class_t* assertion_class;
     
-    assertion_class = chime_runtime_create_object_subclass("Assert");
-    assert(assertion_class);
+    assertion_class = chime_class_create_object_subclass("Assert");
     
-    // class methods
-    assertion_metaclass = chime_object_get_class(assertion_class);
+    chime_class_set_class_method(assertion_class, "is_true",  assert_class_is_true);
+    chime_class_set_class_method(assertion_class, "is_false", assert_class_is_false);
+    chime_class_set_class_method(assertion_class, "is_null",  assert_class_is_null);
+    chime_class_set_class_method(assertion_class, "equal",    assert_class_equal_to);
     
-    chime_object_set_function(assertion_metaclass, "is_true",  assert_class_is_true,  1);
-    chime_object_set_function(assertion_metaclass, "is_false", assert_class_is_false, 1);
-    chime_object_set_function(assertion_metaclass, "is_null",  assert_class_is_null,  1);
-    chime_object_set_function(assertion_metaclass, "equal",    assert_class_equal_to, 2);
+    chime_class_set_class_method(assertion_class, "failure_count",           assert_class_failure_count);
+    chime_class_set_class_method(assertion_class, "increment_failure_count", assert_class_increment_failure_count);
     
-    chime_object_set_function(assertion_metaclass, "failure_count", assert_class_failure_count,   0);
-    chime_object_set_function(assertion_metaclass, "increment_failure_count", assert_class_increment_failure_count, 0);
-    
-    chime_object_set_property(assertion_class, "failure_count", chime_literal_encode_integer(0));
+    chime_object_set_property((chime_object_t*)assertion_class, "failure_count", chime_literal_encode_integer(0));
 }

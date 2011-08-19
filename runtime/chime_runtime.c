@@ -2,6 +2,7 @@
 
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/class/chime_class.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/object/chime_object_internal.h"
 #include "runtime/string/chime_string.h"
@@ -109,6 +110,16 @@ void chime_runtime_destroy(void)
     _array_class     = NULL;
     _method_class    = NULL;
     _undefined_class = NULL;
+}
+
+chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* superclass)
+{
+    return (chime_object_t*)chime_class_create(name, (chime_class_t*)superclass);
+}
+
+void chime_runtime_set_instance_method(chime_object_t* klass, const char* name, void* function)
+{
+    chime_class_set_instance_method((chime_class_t*)klass, name, function);
 }
 
 #if 0

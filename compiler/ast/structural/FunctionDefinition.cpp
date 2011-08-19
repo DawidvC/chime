@@ -115,7 +115,7 @@ namespace ast
         classObjectPtr = generator.getImplementationScope()->getTarget();
         
         // finally, install the method in the class
-        generator.getRuntime()->callChimeObjectSetFunction(classObjectPtr, functionNameCStringPtr, methodFunction, arity);
+        generator.getRuntime()->callChimeRuntimeSetInstanceMethod(classObjectPtr, functionNameCStringPtr, methodFunction);
         
         return NULL;
     }

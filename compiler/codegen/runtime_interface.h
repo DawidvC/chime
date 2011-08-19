@@ -26,6 +26,7 @@ namespace chime
         
         // types
         llvm::Type*         getChimeObjectPtrType(void);
+        llvm::Type*         getChimeClassPtrType(void);
         llvm::FunctionType* getChimeModuleInitFunctionType(void);
         
         // runtime functions
@@ -40,9 +41,10 @@ namespace chime
         llvm::Function* createModuleInitFunction(const std::string& name);
         llvm::Value*    callModuleInitFunction(const std::string& name);
         
+        void            callChimeRuntimeSetInstanceMethod(llvm::Value* classValue, llvm::Value* functionNamePtr, llvm::Function* function);
+        
         // object functions
         llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);
-        void         callChimeObjectSetFunction(llvm::Value* objectValue, llvm::Value* propertyNamePtr, llvm::Function* function, unsigned int arity);
         llvm::Value* callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr);
         void         callChimeObjectSetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr, llvm::Value* attributeValue);
         
@@ -61,6 +63,7 @@ namespace chime
         llvm::IRBuilder<>*  _builder;
         
         llvm::PointerType*  _objectPtrType;
+        llvm::PointerType*  _classPtrType;
         llvm::Type*         _cStringPtrType;
         llvm::FunctionType* _chimeFunctionType;
         
@@ -70,7 +73,7 @@ namespace chime
         llvm::Function*     _functionChimeRuntimeGetClass;
         llvm::Function*     _functionChimeRuntimeLoad;
         llvm::Function*     _functionChimeObjectCreate;
-        llvm::Function*     _functionChimeObjectSetFunction;
+        llvm::Function*     _functionChimeRuntimeSetInstanceMethod;
         llvm::Function*     _functionChimeObjectGetAttribute;
         llvm::Function*     _functionChimeObjectSetAttribute;
         llvm::Function*     _functionChimeObjectInvoke0;
