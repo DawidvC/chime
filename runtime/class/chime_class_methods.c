@@ -5,7 +5,9 @@
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/literals/chime_literal.h"
+#include "runtime/string/chime_string.h"
 
+#include <stdio.h>
 #include <assert.h>
 
 chime_object_t* class_new(chime_object_t* instance)
@@ -15,7 +17,11 @@ chime_object_t* class_new(chime_object_t* instance)
 
 chime_object_t* class_name(chime_object_t* instance)
 {
-    return chime_object_get_property(instance, "_name");
+    chime_object_t* string;
+    
+    string = chime_string_create_with_c_string(chime_runtime_get_class_name((chime_class_t*)instance));
+    
+    return string;
 }
 
 chime_object_t* class_compare(chime_object_t* instance, chime_object_t* other)

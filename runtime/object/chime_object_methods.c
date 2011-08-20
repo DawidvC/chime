@@ -31,7 +31,7 @@ chime_object_t* object_to_string(chime_object_t* instance)
     chime_object_t* string;
     
     class      = chime_object_get_class(instance);
-    class_name = chime_runtime_get_class_name((chime_class_t*)class);
+    class_name = chime_class_get_name((chime_class_t*)class);
     
     // we have to add the size of the "<:0x12345678>" to the string
     string_length = strlen(class_name) + sizeof(void*) + 6;

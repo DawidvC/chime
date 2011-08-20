@@ -95,7 +95,18 @@ void chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key)
 
 char* chime_dictionary_get_key(chime_dictionary_t* dictionary, void* value)
 {
-    assert(NULL);
+    unsigned long i;
+    char*         current_value;
     
-    return NULL;
+    for (i = 0; i < chime_dictionary_count(dictionary); ++i)
+    {
+        current_value = chime_runtime_array_get(dictionary->value_array, i);
+        
+        if (current_value == value)
+        {
+            return chime_runtime_array_get(dictionary->key_array, i);
+        }
+    }
+    
+    return 0;
 }

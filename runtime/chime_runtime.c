@@ -208,16 +208,15 @@ chime_class_t* chime_runtime_get_class(const char* name)
 
 char* chime_runtime_get_class_name(chime_class_t* klass)
 {
-    chime_object_t* name;
+    char* name;
     
     assert(klass);
     
-    // somehow look up or produce the name here
-    name = chime_string_create_with_c_string("HowDoWeDoThis");
+    name = chime_dictionary_get_key(_chime_classes, klass);
+    if (!name)
+        return "UndefinedClassName";
     
-    assert(name);
-    
-    return chime_string_to_c_string(name);
+    return name;
 }
 
 chime_object_t* chime_runtime_instantiate(chime_class_t* klass)
