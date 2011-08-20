@@ -19,6 +19,7 @@
 #include "literals/boolean_literal.h"
 #include "operators/basic_operator.h"
 #include "operators/binary_operator.h"
+#include "operators/IndexOperator.h"
 #include "primary/method_call.h"
 #include "primary/variable_definition.h"
 #include "structural/Attribute.h"

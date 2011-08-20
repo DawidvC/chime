@@ -373,6 +373,11 @@ namespace chime
             }
             
             node = new ast::entity_reference(this);
+            
+            if (this->look_ahead(1)->equal_to("["))
+            {
+                node = ast::IndexOperator::parse(*this, node);
+            }
         }
         else
         {

@@ -18,7 +18,7 @@ namespace ast
         virtual ~Implementation();
         
         virtual std::string nodeName(void) const;
-        virtual std::string to_string(void) const;
+        virtual std::string stringRepresentation(int depth=0) const;
         
         llvm::Function*     createInitFunction(chime::code_generator& generator);
         llvm::Value*        codegen(chime::code_generator& generator);

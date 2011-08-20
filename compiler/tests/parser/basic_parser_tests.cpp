@@ -347,6 +347,17 @@ TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
     ASSERT_ENTITY("b", op->right_operand());
 }
 
+TEST_F(BasicParserTest, IndexerCall)
+{
+    ast::IndexOperator* op;
+    
+    op = (ast::IndexOperator*)parse("foo[123]")->child_at_index(0);
+    
+    ASSERT_EQ("Index Operator", op->nodeName());
+    ASSERT_LITERAL_INTEGER(123, op->getArgument().get());
+    ASSERT_ENTITY("foo", op->getOperand().get());
+}
+
 TEST_F(BasicParserTest, FunctionType)
 {
     ast::variable_definition* node;

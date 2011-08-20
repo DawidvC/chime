@@ -43,11 +43,13 @@ namespace ast
         return std::string("implementation");
     }
     
-    std::string Implementation::to_string(void) const
+    std::string Implementation::stringRepresentation(int depth) const
     {
         std::string s;
         
-        s += "implementation: " + this->getTypeRef()->identifier();
+        s.append(depth*2, ' ');
+        s.append("implementation: ");
+        s.append(this->getTypeRef()->identifier());
         
         if (this->getSuperclass().get())
             s += " : " + this->getSuperclass()->identifier();
