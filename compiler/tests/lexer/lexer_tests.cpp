@@ -374,3 +374,10 @@ TEST_F(LexerTest, SpaceshipOperator)
     const char *tokens[] = {"x", "<=>", "y", NULL};
     ExpectTokens(tokens);
 }
+TEST_F(LexerTest, IndexerMethodCall)
+{
+    lex("foo[123]");
+    
+    const char *tokens[] = {"foo", "[", "123", "]", NULL};
+    ExpectTokens(tokens);
+}

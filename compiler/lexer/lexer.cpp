@@ -177,18 +177,20 @@ namespace chime
 					}
 						
 					break;
-				case '{':
-				case '}':
-				case '(':
-				case ')':
-				case ';':
-				case ':':
-				case ',':
-				case '+':
-				case '-':
-				case '*':
-				case '|':
-					if (t->empty())
+                case '{':
+                case '}':
+                case '(':
+                case ')':
+                case ';':
+                case ':':
+                case ',':
+                case '+':
+                case '-':
+                case '*':
+                case '|':
+                case '[':
+                case ']':
+                    if (t->empty())
                         t->set_value(this->next_char());
                     
 					return t;
