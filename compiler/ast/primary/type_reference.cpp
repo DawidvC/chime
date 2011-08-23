@@ -33,13 +33,15 @@ namespace ast
     {
         return std::string("type reference");
     }
-    std::string type_reference::toString(void) const
+    std::string type_reference::stringRepresentation(int depth) const
     {
-        std::string s;
+        std::string str;
         
-        s += "type: " + this->identifier();
+        str.append(depth*2, ' ');
+        str.append("type: ");
+        str.append(this->identifier());
         
-        return s;
+        return str;
     }
     
     std::string type_reference::identifier() const

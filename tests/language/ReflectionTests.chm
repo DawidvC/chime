@@ -14,4 +14,17 @@ implementation ReflectionTests : Test.Case
     {
         Assert.equal("ReflectionTests", to:self.class.name)
     }
+    
+    method test_method_names()
+    {
+        methods = Object.new().methods
+        
+        Assert.equal(methods.length, to:5)
+        
+        Assert.equal(methods[0].name, to:"class")
+        Assert.equal(methods[1].name, to:"to_string")
+        Assert.equal(methods[2].name, to:"methods")
+        Assert.equal(methods[3].name, to:"==")
+        Assert.equal(methods[4].name, to:">")
+    }
 }

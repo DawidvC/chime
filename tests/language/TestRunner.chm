@@ -5,20 +5,26 @@ import "ReflectionTests"
 
 test = LiteralTests.new()
 
-//test.methods().print()
-
 test.setup()
-test.test_boolean_literals()
+test.test_boolean_literal_comparisons()
 test.teardown()
 
 test.setup()
-test.test_integer_literals()
+test.test_integer_literal_comparisons()
 test.teardown()
 
 test = ControlTests.new()
 
 test.setup()
 test.test_if_executes_only_next_statement()
+test.teardown()
+
+test.setup()
+test.test_if_executes_on_true_expression()
+test.teardown()
+
+test.setup()
+test.test_if_executes_on_true_expression_with_local_variable()
 test.teardown()
 
 test.setup()
@@ -49,4 +55,9 @@ test.setup()
 test.test_self_class_name()
 test.teardown()
 
+test.setup()
+test.test_method_names()
+test.teardown()
+
+"*** Failure Count ***".print()
 Assert.failure_count().print()

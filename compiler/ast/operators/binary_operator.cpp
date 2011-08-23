@@ -155,7 +155,7 @@ namespace ast
             l_value = this->left_operand()->codegen(generator);
             assert(l_value);
             
-            return call->codegen_with_target(l_value, generator);;
+            return call->codegen_with_target(l_value, generator);
         }
         else if (this->identifier().compare("=") == 0)
         {

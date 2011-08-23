@@ -1,6 +1,6 @@
 implementation LiteralTests : Test.Case
 {
-    method test_boolean_literals()
+    method test_boolean_literal_comparisons()
     {
         Assert.is_true(true)
         Assert.is_false(false)
@@ -10,11 +10,13 @@ implementation LiteralTests : Test.Case
         Assert.is_false(true == false)
     }
     
-    method test_integer_literals()
+    method test_integer_literal_comparisons()
     {
         Assert.is_true((1 <=> 1) == 0)
         Assert.is_true(1 == 1)
         Assert.is_false(1 == 2)
         Assert.equal(1, to:1)
+        
+        Assert.is_false(0 > 1)
     }
 }

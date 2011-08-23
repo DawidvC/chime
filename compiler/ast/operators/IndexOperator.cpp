@@ -46,8 +46,25 @@ namespace ast
         _argument = node;
     }
     
-    llvm::Value* IndexOperator::codegen(chime::code_generator&)
+    llvm::Value* IndexOperator::codegen(chime::code_generator& generator)
     {
-        return NULL;
+        llvm::Value*              argumentValue;
+        llvm::Value*              targetValue;
+        llvm::LoadInst*           objectLoad;
+        llvm::Value*              methodNamePtr;
+        std::vector<llvm::Value*> arguments;
+        
+        argumentValue = this->getArgument()->codegen(generator);
+        assert(argumentValue);
+        
+        targetValue = this->getOperand()->codegen(generator);
+        
+        objectLoad = generator.builder()->CreateLoad(argumentValue, "loaded argument");
+        
+        arguments.push_back(objectLoad);
+        
+        methodNamePtr = generator.make_constant_string("[]");
+        
+        return generator.getRuntime()->callChimeObjectInvoke(targetValue, methodNamePtr, arguments);
     }
 }

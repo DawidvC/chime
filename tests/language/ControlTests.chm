@@ -8,6 +8,22 @@ implementation ControlTests : Test.Case
         Assert.is_true(false)
     }
     
+    method test_if_executes_on_true_expression()
+    {
+        if (0 > 1)
+            Assert.is_true(false)
+    }
+    
+    method test_if_executes_on_true_expression_with_local_variable()
+    {
+        a = 1
+        
+        if (a > 0)
+            return
+        
+        Assert.is_true(false)
+    }
+    
     method test_ifs_with_boolean_literals()
     {
         if false

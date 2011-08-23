@@ -3,6 +3,8 @@
 #ifndef CHIME_DICTIONARY
 #define CHIME_DICTIONARY
 
+#include "chime_runtime_array.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +19,9 @@ void*         chime_dictionary_get(chime_dictionary_t* dictionary, const char* k
 void          chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void* value);
 void          chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key);
 
-char*         chime_dictionary_get_key(chime_dictionary_t* dictionary, void* value);
+chime_runtime_array_t* chime_dictionary_get_keys(chime_dictionary_t* dictionary);
+
+char*                  chime_dictionary_get_key(chime_dictionary_t* dictionary, void* value);
 
 #ifdef __cplusplus
 }

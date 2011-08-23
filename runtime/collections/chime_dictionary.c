@@ -93,6 +93,13 @@ void chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key)
     assert(chime_runtime_array_count(dictionary->key_array) == chime_runtime_array_count(dictionary->value_array));
 }
 
+chime_runtime_array_t* chime_dictionary_get_keys(chime_dictionary_t* dictionary)
+{
+    assert(dictionary);
+    
+    return dictionary->key_array;
+}
+
 char* chime_dictionary_get_key(chime_dictionary_t* dictionary, void* value)
 {
     unsigned long i;
