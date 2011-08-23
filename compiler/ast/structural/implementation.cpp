@@ -45,16 +45,20 @@ namespace ast
     
     std::string Implementation::stringRepresentation(int depth) const
     {
-        std::string s;
+        std::string                       str;
+        std::vector<ast::node*>::iterator i;
         
-        s.append(depth*2, ' ');
-        s.append("implementation: ");
-        s.append(this->getTypeRef()->identifier());
+        str.append(depth*2, ' ');
+        str.append("implementation: ");
+        str.append(this->getTypeRef()->identifier());
         
         if (this->getSuperclass().get())
-            s += " : " + this->getSuperclass()->identifier();
+            str += " : " + this->getSuperclass()->identifier();
         
-        return s;
+        str.append("\n");
+        str.append(this->getBody()->stringRepresentation(depth+1));
+        
+        return str;
     }
     
     llvm::Function* Implementation::createInitFunction(chime::code_generator& generator)

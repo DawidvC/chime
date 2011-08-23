@@ -22,13 +22,17 @@ namespace ast
     }
     std::string method_definition::stringRepresentation(int depth) const
     {
-        std::string s;
+        std::string str;
         
-        s.append(depth*2, ' ');
-        s.append("method: ");
-        s.append(this->getIdentifier());
+        str.append(depth*2, ' ');
+        str.append("method: ");
+        str.append(this->getIdentifier());
         
-        return s;
+        str.append("\n");
+        
+        str.append(this->getBody()->stringRepresentation(depth+1));
+        
+        return str;
     }
     
     NodeRef method_definition::getBody(void) const
