@@ -54,6 +54,8 @@
     ASSERT_EQ(x, ((ast::binary_operator*)y)->identifier()); \
     } while (0)
 
+#define ASSERT_INDEXER(x) ASSERT_EQ("Index Operator", x->nodeName())
+    
 #define ASSERT_METHOD_CALL(x, y) do { \
     ASSERT_EQ("method call", y->node_name()); \
     ASSERT_EQ(x, ((ast::method_call*)y)->identifier()); \

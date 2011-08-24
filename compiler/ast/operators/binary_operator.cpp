@@ -2,6 +2,7 @@
 #include "compiler/ast/primary/method_call.h"
 #include "compiler/ast/primary/entity_reference.h"
 #include "compiler/ast/literals/literal.h"
+#include "IndexOperator.h"
 
 namespace ast
 {
@@ -46,6 +47,13 @@ namespace ast
             node->left_operand(leftOperand);
             node->right_operand(rightOperand);
             leftOperand = node;
+            
+            // this needs to be done in a loop, to account for
+            // multiple levels
+            while (parser.look_ahead(1)->equal_to("["))
+            {
+                leftOperand = ast::IndexOperator::parse(parser, leftOperand);
+            }
         }
         
         return leftOperand;
@@ -87,7 +95,7 @@ namespace ast
         }
         else if (t->isIdentifier())
         {
-            return new ast::entity_reference(&parser);
+            node = new ast::entity_reference(&parser);
         }
         else
         {

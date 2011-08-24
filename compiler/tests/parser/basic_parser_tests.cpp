@@ -353,9 +353,26 @@ TEST_F(BasicParserTest, IndexerCall)
     
     op = (ast::IndexOperator*)parse("foo[123]")->child_at_index(0);
     
-    ASSERT_EQ("Index Operator", op->nodeName());
+    ASSERT_INDEXER(op);
     ASSERT_LITERAL_INTEGER(123, op->getArgument().get());
     ASSERT_ENTITY("foo", op->getOperand().get());
+}
+
+TEST_F(BasicParserTest, IndexerOnMethod)
+{
+    ast::binary_operator* op;
+    ast::IndexOperator*   indexer;
+    
+    indexer = (ast::IndexOperator*)parse("foo.bar[123]")->child_at_index(0);
+    
+    ASSERT_INDEXER(indexer);
+    ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
+    
+    op = static_cast<ast::binary_operator*>(indexer->getOperand().get());
+    
+    ASSERT_OPERATOR(".", op);
+    ASSERT_ENTITY("foo", op->left_operand());
+    ASSERT_METHOD_CALL("bar", op->right_operand());
 }
 
 TEST_F(BasicParserTest, FunctionType)

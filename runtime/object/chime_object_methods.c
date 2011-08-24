@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
 
 chime_object_t* object_class(chime_object_t* instance)
 {
@@ -20,6 +21,21 @@ chime_object_t* object_class(chime_object_t* instance)
 chime_object_t* object_methods(chime_object_t* instance)
 {
     return class_methods(object_class(instance));
+}
+
+chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_name)
+{
+    char* method;
+    
+    assert(instance);
+    assert(method_name);
+    
+    method = chime_string_to_c_string(method_name);
+    assert(method);
+    
+    fprintf(stderr, "About to try to invoke %s\n", method);
+    
+    return chime_object_invoke_0(instance, method);
 }
 
 chime_object_t* object_to_string(chime_object_t* instance)
