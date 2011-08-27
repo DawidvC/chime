@@ -108,6 +108,9 @@ def define_dependencies_for_source(source_file, options={})
   cached_dependencies = []
   if File.exist?(dependency_cache_file)
     File.open(dependency_cache_file, "r") { |f| cached_dependencies = f.read().split() }
+    
+    # check to make sure all cached files all still exist!
+    cached_dependencies.clear() if cached_dependencies.any? { |dep| !File.exist?(dep) }
   end
   
   file(dependency_cache_file => object_dir)

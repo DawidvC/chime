@@ -3,6 +3,9 @@
 #include "chime_literal_methods.h"
 #include "chime_literal.h"
 #include "runtime/chime_runtime.h"
+#include "runtime/string/chime_string.h"
+#include "runtime/closure/chime_closure.h"
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -24,6 +27,29 @@ chime_object_t* integer_print(chime_object_t* instance)
     assert(chime_object_is_integer(instance));
     
     fprintf(stdout, "<Integer: %ld>\n", chime_literal_decode_integer(instance));
+    
+    return CHIME_LITERAL_NULL;
+}
+
+chime_object_t* integer_times(chime_object_t* instance, chime_object_t* function)
+{
+    signed long value;
+    signed long i;
+    
+    assert(chime_object_is_integer(instance));
+    
+    value = chime_literal_decode_integer(instance);
+    if (value < 0)
+    {
+        fprintf(stderr, "[runtime] Integer#times doesn't work on negative integers\n");
+        return CHIME_LITERAL_NULL;
+    }
+        
+    // ok, so, what we need to is simply iterate on the block
+    for (i = 0; i < value; ++i)
+    {
+        chime_closure_invoke((chime_closure_t*)function, CHIME_LITERAL_NULL);
+    }
     
     return CHIME_LITERAL_NULL;
 }

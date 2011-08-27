@@ -27,6 +27,7 @@ namespace chime
         // types
         llvm::Type*         getChimeObjectPtrType(void);
         llvm::Type*         getChimeClassPtrType(void);
+        llvm::Type*         getChimeClosurePtrType(void);
         llvm::FunctionType* getChimeModuleInitFunctionType(void);
         
         // runtime functions
@@ -58,12 +59,16 @@ namespace chime
         
         llvm::Value* getChimeLiteralNull();
         
+        // closure functions
+        llvm::Value* callChimeClosureCreate(llvm::Function* function);
+        
     protected:
         llvm::Module*       _module;
         llvm::IRBuilder<>*  _builder;
         
         llvm::PointerType*  _objectPtrType;
         llvm::PointerType*  _classPtrType;
+        llvm::PointerType*  _closurePtrType;
         llvm::Type*         _cStringPtrType;
         llvm::FunctionType* _chimeFunctionType;
         
@@ -83,6 +88,7 @@ namespace chime
         llvm::Function*     _functionChimeLiteralEncodeInteger;
         llvm::Function*     _functionChimeLiteralEncodeBoolean;
         llvm::Function*     _functionChimeStringCreateWithCString;
+        llvm::Function*     _functionChimeClosureCreate;
         
         llvm::Value*        _literalNull;
     };

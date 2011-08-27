@@ -4,15 +4,18 @@ class FlowControlParserTest : public ParserTestsBase
 {
 };
 
-TEST_F(FlowControlParserTest, BlockWithNext)
+TEST_F(FlowControlParserTest, ClosureWithNext)
 {
     ast::method_call* call;
+    ast::Closure*     closure;
     
-    call = (ast::method_call*)parse("call() do (a) { next }")->child_at_index(0);
+    call = parse_method_call("call() do (a) { next }");
     
     ASSERT_METHOD_CALL("call", call);
-    ASSERT_BLOCK(call->child_at_index(0));
-    ASSERT_NEXT(call->child_at_index(0)->child_at_index(0));
+    
+    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    ASSERT_CLOSURE(closure);
+    ASSERT_NEXT(closure->getBody()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, IfWithNoElse)

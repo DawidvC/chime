@@ -393,18 +393,21 @@ TEST_F(BasicParserTest, MethodCallWithBlock)
     ASSERT_METHOD_CALL("call", call);
     ASSERT_ENTITY("a", call->child_at_index(0));
     ASSERT_ENTITY("b", call->child_at_index(1));
-    ASSERT_BLOCK(call->child_at_index(2));
+    ASSERT_CLOSURE(call->child_at_index(2));
 }
 
 TEST_F(BasicParserTest, MethodCallWithBlockAndBody)
 {
     ast::method_call* call;
+    ast::Closure*     closure;
     
-    call = (ast::method_call*)parse("call() do { a = \"string\" }")->child_at_index(0);
+    call = parse_method_call("call() do { a = \"string\" }");
     
     ASSERT_METHOD_CALL("call", call);
-    ASSERT_BLOCK(call->child_at_index(0));
-    ASSERT_OPERATOR("=", call->child_at_index(0)->child_at_index(0));
+    
+    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    ASSERT_CLOSURE(closure);
+    ASSERT_OPERATOR("=", closure->getBody()->childAtIndex(0));
 }
 
 TEST_F(BasicParserTest, MethodCallWithBlockParameters)
@@ -414,7 +417,7 @@ TEST_F(BasicParserTest, MethodCallWithBlockParameters)
     call = parse_method_call("call() do (a) { }");
     
     ASSERT_METHOD_CALL("call", call);
-    ASSERT_BLOCK(call->child_at_index(0));
+    ASSERT_CLOSURE(call->child_at_index(0));
 }
 
 TEST_F(BasicParserTest, MethodCallWithLablledParams)
@@ -436,7 +439,7 @@ TEST_F(BasicParserTest, MethodCallWithLabelledBlock)
     
     ASSERT_METHOD_CALL("on_queue", call);
     ASSERT_ENTITY("queue", call->child_at_index(0));
-    ASSERT_BLOCK(call->child_at_index(1));
+    ASSERT_CLOSURE(call->child_at_index(1));
 }
 
 TEST_F(BasicParserTest, MethodWithOperatorsOnType)

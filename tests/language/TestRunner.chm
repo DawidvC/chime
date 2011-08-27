@@ -2,6 +2,23 @@ import "ControlTests"
 import "LiteralTests"
 import "MethodTests"
 import "ReflectionTests"
+import "ClosureTests"
+
+test = LiteralTests.new()
+
+// test.methods.length.print()
+// 
+// original_count = Assert.failure_count()
+// 
+// test.setup()
+// test.invoke(test.methods[0].name)
+// test.teardown()
+// 
+// if (Assert.failure_count() > original_count)
+// {
+//     test.methods[0].name.print()
+//     "Failed".print()
+// }
 
 test = LiteralTests.new()
 
@@ -57,6 +74,12 @@ test.teardown()
 
 test.setup()
 test.test_method_names()
+test.teardown()
+
+test = ClosureTests.new()
+
+test.setup()
+test.test_integer_iterator()
 test.teardown()
 
 "*** Failure Count ***".print()

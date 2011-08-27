@@ -1,0 +1,14 @@
+implementation ClosureTests : Test.Case
+{
+    method test_integer_iterator()
+    {
+        count = 0
+        
+        10.times() do
+        {
+            //count = count + 1
+        }
+        
+        Assert.equal(10, to:count)
+    }
+}

@@ -14,6 +14,7 @@ namespace chime
         void              setSelfPointer(llvm::Value* value);
     
     protected:
+        std::string       _name;
         llvm::Value*      _selfPointer;
     };
     

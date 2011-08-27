@@ -15,6 +15,7 @@ void chime_literal_initialize(void)
     
     klass = chime_class_create_object_subclass("Integer");
     chime_class_set_instance_method(klass, "print", integer_print);
+    chime_class_set_instance_method(klass, "times", integer_times);
     chime_class_set_instance_method(klass, "+",     integer_add);
     chime_class_set_instance_method(klass, "*",     integer_multiply);
     chime_class_set_instance_method(klass, "<=>",   integer_compare);

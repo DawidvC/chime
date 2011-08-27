@@ -61,7 +61,7 @@
     ASSERT_EQ(x, ((ast::method_call*)y)->identifier()); \
     } while (0)
 
-#define ASSERT_BLOCK(x) ASSERT_EQ("block", x->node_name())
+#define ASSERT_CLOSURE(x) ASSERT_EQ("Closure", x->nodeName())
 
 #define ASSERT_LITERAL_TRUE(x) do { \
     ASSERT_EQ("boolean literal", x->node_name()); \

@@ -88,6 +88,7 @@ namespace ast
         
         // create the return code for the method
         generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
+        generator.getMethodScope()->setName(this->getIdentifier());
         
         // setup the function entry
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", methodFunction, 0);

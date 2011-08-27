@@ -1,5 +1,5 @@
 #include "method_call.h"
-#include "block.h"
+#include "Closure.h"
 
 namespace ast
 {
@@ -93,7 +93,7 @@ namespace ast
         
         if (parser->look_ahead()->equal_to("do"))
         {
-            this->add_child(new ast::block(parser));
+            this->add_child(new ast::Closure(*parser));
         }
     }
     

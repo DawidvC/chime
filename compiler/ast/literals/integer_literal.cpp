@@ -46,6 +46,6 @@ namespace ast
     
     llvm::Value* integer_literal::codegen(chime::code_generator& generator)
     {
-        return generator.call_chime_literal_encode_integer(this->value());
+        return generator.getRuntime()->callChimeLiteralEncodeInteger(this->value());
     }
 }

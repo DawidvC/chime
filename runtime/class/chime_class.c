@@ -66,6 +66,9 @@ void chime_class_destroy(chime_class_t* klass)
     
     // should remove from _chime_classes here, but we don't know the key
     
+    chime_dictionary_destroy(klass->object.methods);
+    chime_dictionary_destroy(klass->object.variables);
+    
     free(klass);
 }
 

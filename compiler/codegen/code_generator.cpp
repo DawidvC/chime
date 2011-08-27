@@ -232,42 +232,6 @@ namespace chime
         return NULL;
     }
     
-    llvm::Value* code_generator::call_chime_literal_encode_integer(signed long value)
-    {
-        llvm::Function*   function_chime_literal_encode_integer;
-        llvm::CallInst*   call;
-        llvm::AllocaInst* alloca;
-        
-        function_chime_literal_encode_integer = (llvm::Function*)this->value_for_identifier("chime_literal_encode_integer");
-        if (function_chime_literal_encode_integer == NULL)
-        {
-            std::vector<const llvm::Type*> function_args;
-            llvm::FunctionType*            function_type;
-            
-            function_args.push_back(llvm::IntegerType::get(this->get_context(), 64));
-            
-            function_type = llvm::FunctionType::get(this->getRuntime()->getChimeObjectPtrType(), function_args, false);
-            
-            function_chime_literal_encode_integer = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_literal_encode_integer", this->module());
-            function_chime_literal_encode_integer->setCallingConv(llvm::CallingConv::C);
-            
-            this->set_value_for_identifier("chime_literal_encode_integer", function_chime_literal_encode_integer);
-        }
-        
-        llvm::Value* integer_value;
-        
-        alloca = this->insert_chime_object_alloca();
-        
-        integer_value = llvm::ConstantInt::get(this->get_context(), llvm::APInt(64, value, 10));
-        
-        call = this->builder()->CreateCall(function_chime_literal_encode_integer, integer_value, "encode integer");
-        call->setTailCall(false);
-        
-        this->builder()->CreateStore(call, alloca, false);
-        
-        return alloca;
-    }
-    
     llvm::Value* code_generator::call_chime_literal_encode_boolean(unsigned char value)
     {
         llvm::Function*   function_chime_literal_encode_boolean;

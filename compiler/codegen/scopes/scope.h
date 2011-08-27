@@ -24,6 +24,8 @@ namespace chime
         
         llvm::AllocaInst* getValue(const std::string& name) const;
         void              setValue(const std::string& name, llvm::AllocaInst* value);
+        
+        std::string  createNewAnonymousFunctionName();
     
     protected:
         std::map<std::string, llvm::AllocaInst*>* _values;
@@ -31,6 +33,7 @@ namespace chime
         
         llvm::Value* _target;
         std::string  _name;
+        int          _anonymousFunctionCount;
     };
     
     typedef std::tr1::shared_ptr<chime::Scope> ScopeRef;

@@ -9,6 +9,7 @@ namespace chime
         
         _objectPtrType     = NULL;
         _chimeFunctionType = NULL;
+        _closurePtrType    = NULL;
         
         _functionChimeRuntimeInitialize        = NULL;
         _functionChimeLibraryInitialize        = NULL;
@@ -26,6 +27,7 @@ namespace chime
         _functionChimeLiteralEncodeInteger     = NULL;
         _functionChimeLiteralEncodeBoolean     = NULL;
         _functionChimeStringCreateWithCString  = NULL;
+        _functionChimeClosureCreate            = NULL;
         
         _literalNull = NULL;
     }
@@ -90,6 +92,22 @@ namespace chime
         _classPtrType = llvm::PointerType::get(classStructType, 0);
         
         return _classPtrType;
+    }
+    
+    llvm::Type* RuntimeInterface::getChimeClosurePtrType(void)
+    {
+        llvm::OpaqueType* closureStructType;
+        
+        if (_closurePtrType)
+            return _closurePtrType;
+            
+        closureStructType = llvm::OpaqueType::get(this->getContext());
+        
+        this->getModule()->addTypeName("struct._chime_closure", closureStructType);
+         
+        _closurePtrType = llvm::PointerType::get(closureStructType, 0);
+        
+        return _closurePtrType;
     }
     
     llvm::FunctionType* RuntimeInterface::getChimeModuleInitFunctionType(void)
@@ -575,5 +593,44 @@ namespace chime
         }
         
         return _literalNull;
+    }
+
+#pragma mark -
+#pragma mark Closure Functions
+    llvm::Value* RuntimeInterface::callChimeClosureCreate(llvm::Function* function)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        llvm::Type*       voidPtrType;
+        
+        // a generic pointer (llvm does not support the void* type)
+        voidPtrType = llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0);
+        
+        if (_functionChimeClosureCreate == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(voidPtrType);
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeClosureCreate = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_closure_create", this->getModule());
+            _functionChimeClosureCreate->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        llvm::Constant* functionPtr;
+        
+        functionPtr = llvm::ConstantExpr::getCast(llvm::Instruction::BitCast, function, voidPtrType);
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "new closure");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeClosureCreate, functionPtr, "create closure");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
     }
 }

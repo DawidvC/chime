@@ -2,6 +2,8 @@
 
 #include "scope.h"
 
+#include <sstream>
+
 namespace chime
 {
     Scope::Scope()
@@ -11,6 +13,8 @@ namespace chime
         
         _target    = NULL;
         _name      = "Scope";
+        
+        _anonymousFunctionCount = 1;
     }
     
     Scope::~Scope()
@@ -56,5 +60,18 @@ namespace chime
     void Scope::setValue(const std::string& name, llvm::AllocaInst* value)
     {
         (*_values)[name] = value;
+    }
+    
+    std::string Scope::createNewAnonymousFunctionName()
+    {
+        std::stringstream s;
+        
+        s << this->getName();
+        s << "_anonymous_";
+        s << _anonymousFunctionCount;
+        
+        _anonymousFunctionCount += 1;
+        
+        return s.str();
     }
 }

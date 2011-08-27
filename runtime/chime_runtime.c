@@ -7,6 +7,7 @@
 #include "runtime/object/chime_object_internal.h"
 #include "runtime/string/chime_string.h"
 #include "runtime/array/chime_array.h"
+#include "runtime/closure/chime_closure.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -38,6 +39,8 @@ void chime_runtime_initialize(void)
     chime_string_initialize();
     
     chime_array_initialize();
+    
+    chime_closure_initialize();
     
     chime_log_level = old_level;
 }

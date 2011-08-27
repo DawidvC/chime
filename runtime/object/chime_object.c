@@ -71,8 +71,8 @@ void chime_object_destroy(chime_object_t* object)
     
     assert(object);
     
-    free(object->methods);
-    free(object->variables);
+    chime_dictionary_destroy(object->methods);
+    chime_dictionary_destroy(object->variables);
     
     free(object);
 }
