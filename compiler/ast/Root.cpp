@@ -1,16 +1,8 @@
 #include "Root.h"
+#include "compiler/ast/variable/GlobalVariable.h"
 
 namespace ast
 {
-    Root::Root() :
-        node()
-    {
-    }
-    
-    Root::~Root()
-    {
-    }
-    
     std::vector<std::string> Root::getBinaryDependencies(void) const
     {
         return _binaryDependencies;
@@ -27,5 +19,10 @@ namespace ast
     void Root::addSourceDependency(const std::string& dependency)
     {
         _sourceDependencies.push_back(dependency);
+    }
+    
+    Variable* Root::createVariable(const std::string& identifier)
+    {
+        return new GlobalVariable(identifier);
     }
 }

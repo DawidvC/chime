@@ -16,14 +16,14 @@ namespace ast
         }
         else
         {
-            this->setBody(CodeBlock::nextBlock(parser));
+            this->setBody(CodeBlock::parseNextBlock(parser));
         }
         
         parser.advance_past_ending_tokens();
         
         if (parser.advance_token_if_equals("else"))
         {
-            this->setElse(CodeBlock::nextBlock(parser));
+            this->setElse(CodeBlock::parseNextBlock(parser));
         }
     }
     

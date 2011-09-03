@@ -1,23 +1,22 @@
+// chime: ScopedNode.h
+
 #ifndef AST_ROOT_H
 #define AST_ROOT_H
 
-#ifndef COMPILER_PCH_H
-#   include "node.h"
-#endif
+#include "ScopedNode.h"
 
 namespace ast
 {
-    class Root : public node
+    class Root : public ScopedNode
     {
     public:
-        Root();
-        virtual ~Root();
-        
         std::vector<std::string> getBinaryDependencies(void) const;
         void                     addBinaryDependency(const std::string& dependency);
         
         std::vector<std::string> getSourceDependencies(void) const;
         void                     addSourceDependency(const std::string& dependency);
+        
+        Variable*                createVariable(const std::string& identifier);
     
     private:
         std::vector<std::string> _binaryDependencies;

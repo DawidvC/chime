@@ -17,8 +17,10 @@ namespace ast
         virtual std::string node_name(void) const;
         virtual std::string to_string(void) const;
         
+        ast::node* getRightOperand() const;
         ast::node* right_operand(void) const;
         void       right_operand(ast::node* op);
+        ast::node* getLeftOperand() const;
         ast::node* left_operand(void) const;
         void       left_operand(ast::node* op);
         

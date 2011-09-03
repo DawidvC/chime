@@ -100,10 +100,10 @@ TEST_F(FlowControlParserTest, TailingIf)
 {
     ast::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("a = b if c")->child_at_index(0);
+    node = static_cast<ast::IfStatement*>(parse("a = b if c")->childAtIndex(0));
     
     ASSERT_IF_STATEMENT(node);
-    ASSERT_ENTITY("c", node->getCondition().get());
+    ASSERT_GLOBAL_VARIABLE("c", node->getCondition().get());
     ASSERT_OPERATOR("=", node->getBody().get());
 }
 

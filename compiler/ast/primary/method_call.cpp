@@ -93,7 +93,7 @@ namespace ast
         
         if (parser->look_ahead()->equal_to("do"))
         {
-            this->add_child(new ast::Closure(*parser));
+            this->add_child(ast::Closure::parse(*parser));
         }
     }
     

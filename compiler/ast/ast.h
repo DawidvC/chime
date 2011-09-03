@@ -26,3 +26,6 @@
 #include "structural/import.h"
 #include "structural/method_definition.h"
 #include "structural/PropertyDefinition.h"
+#include "variable/GlobalVariable.h"
+#include "variable/InstanceVariable.h"
+#include "variable/LocalVariable.h"

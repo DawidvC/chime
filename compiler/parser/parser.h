@@ -7,6 +7,7 @@
 #include "parse_error.h"
 #include "compiler/ast/node.h"
 #include "compiler/ast/Root.h"
+#include "compiler/ast/ScopedNode.h"
 
 namespace chime
 {
@@ -30,8 +31,12 @@ namespace chime
         void                              addError(const char* message);
         void                              print_errors(void) const;
         
+        ast::ScopedNode* getCurrentScope() const;
+        void             setCurrentScope(ast::ScopedNode* node);
+        void             pushScope(ast::ScopedNode* node);
+        void             popScope();
+        
         ast::Root*  parse(void);
-        ast::node*  parse_with_structural(void);
         ast::node*  parse_without_structural(void);
         ast::node*  parse_primary(void);
         ast::node*  parse_expression(void);
@@ -44,6 +49,7 @@ namespace chime
         
     protected:
         ast::Root*                        _currentRoot;
+        ast::ScopedNode*                  _currentScope;
         chime::lexer*                     _lexer;
         std::vector<chime::parse_error*>* _errors;
     };

@@ -43,19 +43,19 @@ TEST_F(FileParserTests, StoreToAVariableAndUseIt)
     
     node = this->parse("store_then_use.chm");
     
-    op = (ast::binary_operator*)node->child_at_index(0);
+    op = static_cast<ast::binary_operator*>(node->childAtIndex(0));
     ASSERT_OPERATOR("=", op);
-    ASSERT_ENTITY("a", op->left_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
-    op = (ast::binary_operator*)op->right_operand();
+    op = static_cast<ast::binary_operator*>(op->getRightOperand());
     ASSERT_OPERATOR(".", op);
-    ASSERT_TYPE("Object", op->left_operand());
-    ASSERT_METHOD_CALL("new", op->right_operand());
+    ASSERT_TYPE("Object", op->getLeftOperand());
+    ASSERT_METHOD_CALL("new", op->getRightOperand());
     
-    op = (ast::binary_operator*)node->child_at_index(1);
+    op = static_cast<ast::binary_operator*>(node->childAtIndex(1));
     ASSERT_OPERATOR(".", op);
-    ASSERT_ENTITY("a", op->left_operand());
-    ASSERT_METHOD_CALL("to_string", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_METHOD_CALL("to_string", op->getRightOperand());
 }
 
 TEST_F(FileParserTests, TwoClassMethodsInARow)

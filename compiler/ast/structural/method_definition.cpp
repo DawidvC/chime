@@ -3,17 +3,33 @@
 #include "method_definition.h"
 #include "compiler/parser/parser.h"
 #include "compiler/codegen/code_generator.h"
+#include "compiler/ast/variable/LocalVariable.h"
 
 namespace ast
 {
-    method_definition::method_definition(chime::parser& parser)
+    method_definition* method_definition::parse(chime::parser& parser)
     {
+        method_definition* definition;
+        
+        definition = new ast::method_definition();
+        
+        parser.pushScope(definition);
+        
         // "method identifier"
         parser.next_token_value("method");
         
-        this->setIdentifier(parser.next_token_value());
-        this->setParameters(ParameterSetRef(new ParameterSet(parser)));
-        _bodyBlock = CodeBlock::nextBlock(parser);
+        definition->setIdentifier(parser.next_token_value());
+        definition->setParameters(ParameterSetRef(new ParameterSet(parser)));
+        
+        definition->_bodyBlock = CodeBlock::parseNextBlock(parser);
+        
+        parser.popScope();
+        
+        return definition;
+    }
+    
+    method_definition::method_definition()
+    {
     }
     
     std::string method_definition::nodeName(void) const
@@ -38,6 +54,11 @@ namespace ast
     NodeRef method_definition::getBody(void) const
     {
         return _bodyBlock;
+    }
+    
+    Variable* method_definition::createVariable(const std::string& identifier)
+    {
+        return new LocalVariable(identifier);
     }
     
     llvm::Value* method_definition::codegen(chime::code_generator& generator)

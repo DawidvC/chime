@@ -8,7 +8,32 @@
     ASSERT_EQ("entity reference", y->node_name()); \
     ASSERT_EQ(x, ((ast::entity_reference*)y)->identifier()); \
     } while (0)
-    
+
+#define ASSERT_GLOBAL_VARIABLE(x, y) do { \
+   ASSERT_EQ("Global Variable", y->nodeName()); \
+   ASSERT_EQ(x, ((ast::GlobalVariable*)y)->getIdentifier()); \
+   } while (0)
+
+#define ASSERT_CLOSED_GLOBAL_VARIABLE(x, y) do { \
+   ASSERT_EQ("Closed Global Variable", y->nodeName()); \
+   ASSERT_EQ(x, ((ast::GlobalVariable*)y)->getIdentifier()); \
+   } while (0)
+   
+#define ASSERT_LOCAL_VARIABLE(x, y) do { \
+   ASSERT_EQ("Local Variable", y->nodeName()); \
+   ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
+   } while (0)
+
+#define ASSERT_CLOSED_LOCAL_VARIABLE(x, y) do { \
+   ASSERT_EQ("Closed Local Variable", y->nodeName()); \
+   ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
+   } while (0)
+
+#define ASSERT_INSTANCE_VARIABLE(x, y) do { \
+   ASSERT_EQ("Instance Variable", y->nodeName()); \
+   ASSERT_EQ(x, ((ast::InstanceVariable*)y)->getIdentifier()); \
+   } while (0)
+
 #define ASSERT_TYPE(x, y) do { \
     ASSERT_EQ("type reference", y->nodeName()); \
     ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \

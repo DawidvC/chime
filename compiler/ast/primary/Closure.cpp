@@ -1,20 +1,37 @@
 #include "Closure.h"
 #include "compiler/ast/common/code_block.h"
+#include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/codegen/code_generator.h"
 
 namespace ast
 {
-    Closure::Closure(chime::parser& parser)
+    ast::Closure* Closure::parse(chime::parser& parser)
     {
-        // method identifier
+        Closure* closure;
+        
         parser.next_token_value("do");
+        
+        closure = new ast::Closure();
+        
+        parser.pushScope(closure);
         
         if (parser.look_ahead()->equal_to("("))
         {
-            _parameters = ParameterSetRef(new ParameterSet(parser));
+            closure->_parameters = ParameterSetRef(new ParameterSet(parser));
         }
         
-        _bodyBlock = CodeBlock::nextBlock(parser);
+        // this cast is probably not always safe because the current
+        // implemenation of CodeBlock::parseNextBlock can return non-CodeBlockRef
+        // types
+        closure->_bodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parseNextBlock(parser));
+        
+        parser.popScope();
+        
+        return closure;
+    }
+    
+    Closure::Closure()
+    {
     }
     
     std::string Closure::nodeName(void) const
@@ -22,7 +39,7 @@ namespace ast
         return std::string("Closure");
     }
     
-    NodeRef Closure::getBody() const
+    CodeBlockRef Closure::getBody() const
     {
         return _bodyBlock;
     }
@@ -30,6 +47,32 @@ namespace ast
     ParameterSetRef Closure::getParameters() const
     {
         return _parameters;
+    }
+    
+    std::vector<Variable*> Closure::getClosedVariables() const
+    {
+        // iterator must be const, since the method is marked const
+        std::map<std::string, Variable*>::const_iterator it;
+        std::vector<Variable*>                           variables;
+        
+        for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it )
+        {
+            variables.push_back(it->second);
+        }
+        
+        return variables;
+    }
+    
+    Variable* Closure::createVariable(const std::string& identifier)
+    {
+        return new LocalVariable(identifier);
+    }
+    
+    void Closure::definedInParent(Variable* variable)
+    {
+        variable->setClosed(true);
+        
+        _closedVariables[variable->getIdentifier()] = variable;
     }
     
     llvm::Value* Closure::codegen(chime::code_generator& generator)
@@ -44,6 +87,17 @@ namespace ast
         llvm::Value*                   closureValue;
         llvm::BasicBlock*              basicBlock;
         llvm::BasicBlock*              currentBlock;
+        
+        // test for determining closed variables
+        std::vector<std::string>           names(this->getContainedVariableNames());
+        std::vector<std::string>::iterator i;
+        
+        fprintf(stderr, "Listing closed variables in closure\n");
+        for (i = names.begin(); i < names.end(); ++i)
+        {
+            fprintf(stderr, "Contained: %s\n", i->c_str());
+        }
+        fprintf(stderr, "Listed closed variables in closure\n");
         
         // capture the current insertion point
         currentBlock = generator.builder()->GetInsertBlock();

@@ -3,11 +3,11 @@
 #ifndef STRUCTURAL_H
 #define STRUCTURAL_H
 
-#include "compiler/ast/node.h"
+#include "compiler/ast/ScopedNode.h"
 
 namespace ast
 {
-    class Structural : public node
+    class Structural : public ScopedNode
     {
     public:
         static ast::node* parse(chime::parser& parser);

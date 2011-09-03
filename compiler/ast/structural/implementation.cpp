@@ -1,12 +1,16 @@
 // implementation.cpp
 
 #include "implementation.h"
-#ifndef COMPILER_PCH_H
-#    include "compiler/parser/parser.h"
-#endif
+#include "compiler/ast/variable/InstanceVariable.h"
+#include "compiler/parser/parser.h"
 
 namespace ast
 {
+    Implementation* Implementation::parse(chime::parser& parser)
+    {
+        return NULL;
+    }
+    
     Implementation::Implementation(chime::parser& parser)
     {
         // parse the import statement
@@ -59,6 +63,34 @@ namespace ast
         str.append(this->getBody()->stringRepresentation(depth+1));
         
         return str;
+    }
+    
+    ast::TypeRef Implementation::getTypeRef() const
+    {
+        return _typeRef;
+    }
+    void Implementation::setTypeRef(ast::TypeRef node)
+    {
+        _typeRef = node;
+    }
+    
+    ast::TypeRef Implementation::getSuperclass() const
+    {
+        return _superclass;
+    }
+    void Implementation::setSuperclass(ast::TypeRef node)
+    {
+        _superclass = node;
+    }
+    
+    CodeBlock* Implementation::getBody(void) const
+    {
+        return _bodyBlock;
+    }
+    
+    Variable* Implementation::createVariable(const std::string& identifier)
+    {
+        return new InstanceVariable(identifier);
     }
     
     llvm::Function* Implementation::createInitFunction(chime::code_generator& generator)
@@ -140,28 +172,5 @@ namespace ast
         generator.builder()->SetInsertPoint(currentBlock);
         
         return NULL;
-    }
-    
-    ast::TypeRef Implementation::getTypeRef() const
-    {
-        return _typeRef;
-    }
-    void Implementation::setTypeRef(ast::TypeRef node)
-    {
-        _typeRef = node;
-    }
-    
-    ast::TypeRef Implementation::getSuperclass() const
-    {
-        return _superclass;
-    }
-    void Implementation::setSuperclass(ast::TypeRef node)
-    {
-        _superclass = node;
-    }
-    
-    CodeBlock* Implementation::getBody(void) const
-    {
-        return _bodyBlock;
     }
 }

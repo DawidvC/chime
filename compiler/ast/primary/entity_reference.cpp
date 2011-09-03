@@ -2,14 +2,28 @@
 
 namespace ast
 {
-    entity_reference::entity_reference()
+    ast::node* entity_reference::parse(chime::parser& parser)
     {
-        _identifier = "";
+        ast::node* node;
+        
+        node = new entity_reference(&parser);
+        
+        // We now have an entity created.  But, we need to know
+        // the scope this variable is in.
+        
+        // check the next token for a right-hand-side
+        // operator (which is currently only "[")
+        // if (parser.look_ahead()->equal_to("["))
+        // {
+        //     node = ast::IndexOperator::parse(this, node);
+        // }
+        
+        return node;
     }
     
     entity_reference::entity_reference(chime::parser* parser)
     {
-        assert(parser->look_ahead()->is_identifier());
+        assert(parser->look_ahead()->isIdentifier());
         this->identifier(parser->next_token_value());
     }
     
@@ -17,7 +31,7 @@ namespace ast
     {
     }
     
-    std::string entity_reference::node_name(void) const
+    std::string entity_reference::nodeName(void) const
     {
         return std::string("entity reference");
     }

@@ -3,13 +3,13 @@
 #ifndef FUNCTION_DEFINITON_H
 #define FUNCTION_DEFINITON_H
 
-#include "compiler/ast/node.h"
+#include "compiler/ast/ScopedNode.h"
 #include "compiler/ast/common/parameter_set.h"
 #include "compiler/ast/common/code_block.h"
 
 namespace ast
 {
-    class FunctionDefinition : public node
+    class FunctionDefinition : public ScopedNode
     {
     public:
         FunctionDefinition();

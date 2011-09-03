@@ -84,6 +84,24 @@ TEST_F(BasicParserTest, InstanceVariable)
     ASSERT_ATTRIBUTE("bar", ivar);
 }
 
+TEST_F(BasicParserTest, AccessInstanceVariable)
+{
+    ast::Implementation*    node;
+    ast::method_definition* method;
+    ast::binary_operator*   op;
+    
+    node = parse_implementation("implementation SomeClass { attribute bar\n method foo() { bar = 0 } }");
+    
+    ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
+    
+    method = static_cast<ast::method_definition*>(node->getBody()->childAtIndex(1));
+    ASSERT_METHOD_DEFINITION("foo", method);
+    
+    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
+    ASSERT_OPERATOR("=", op);
+    ASSERT_INSTANCE_VARIABLE("bar", op->getLeftOperand());
+}
+
 TEST_F(BasicParserTest, SimpleMethodDefinition)
 {
     ast::Implementation*    node;
@@ -155,11 +173,11 @@ TEST_F(BasicParserTest, AssignmentExpression)
     ast::binary_operator* op;
     
     node = parse("a = b");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR("=", op);
-    ASSERT_ENTITY("a", op->left_operand());
-    ASSERT_ENTITY("b", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_GLOBAL_VARIABLE("b", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, ComplexOperatorExpression)
@@ -168,19 +186,19 @@ TEST_F(BasicParserTest, ComplexOperatorExpression)
     ast::binary_operator* op;
     
     node = parse("a = b + c * d + e");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR("=", op);
-    ASSERT_ENTITY("a", op->left_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
-    op = (ast::binary_operator*)op->right_operand();
+    op = (ast::binary_operator*)op->getRightOperand();
     ASSERT_OPERATOR("+", op);
-    ASSERT_ENTITY("e", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("e", op->getRightOperand());
     
-    op = (ast::binary_operator*)op->left_operand();
+    op = (ast::binary_operator*)op->getLeftOperand();
     ASSERT_OPERATOR("+", op);
-    ASSERT_ENTITY("b", op->left_operand());
-    ASSERT_OPERATOR("*", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
+    ASSERT_OPERATOR("*", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, ExpressionWithParenthesis)
@@ -189,35 +207,35 @@ TEST_F(BasicParserTest, ExpressionWithParenthesis)
     ast::binary_operator* op;
     
     node = parse("a = (b + c) * d");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR("=", op);
-    ASSERT_ENTITY("a", op->left_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
-    op = (ast::binary_operator*)op->right_operand();
+    op = (ast::binary_operator*)op->getRightOperand();
     ASSERT_OPERATOR("*", op);
-    ASSERT_ENTITY("d", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("d", op->getRightOperand());
     
-    op = (ast::binary_operator*)op->left_operand();
+    op = (ast::binary_operator*)op->getLeftOperand();
     ASSERT_OPERATOR("+", op);
-    ASSERT_ENTITY("b", op->left_operand());
-    ASSERT_ENTITY("c", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
+    ASSERT_GLOBAL_VARIABLE("c", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, AssignmentFromTypeMethodCall)
 {
     ast::binary_operator* op;
     
-    op = (ast::binary_operator*)parse("a = Foo.Bar.baz()")->child_at_index(0);
+    op = (ast::binary_operator*)parse("a = Foo.Bar.baz()")->childAtIndex(0);
     
     ASSERT_OPERATOR("=", op);
-    ASSERT_ENTITY("a", op->left_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
-    op = (ast::binary_operator*)op->right_operand();
+    op = (ast::binary_operator*)op->getRightOperand();
     
     ASSERT_OPERATOR(".", op);
-    ASSERT_TYPE("Foo.Bar", op->left_operand());
-    ASSERT_METHOD_CALL("baz", op->right_operand());
+    ASSERT_TYPE("Foo.Bar", op->getLeftOperand());
+    ASSERT_METHOD_CALL("baz", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, TopLevelMethod)
@@ -246,9 +264,9 @@ TEST_F(BasicParserTest, ExpressionInMethodBody)
     
     method = parse_method_def("method foo() { a = b }");
     
-    ASSERT_EQ(1, method->getBody()->child_count());
+    ASSERT_EQ(1, method->getBody()->childCount());
     
-    op = (ast::binary_operator*)method->getBody()->child_at_index(0);
+    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
     
     ASSERT_OPERATOR("=", op);
 }
@@ -294,14 +312,14 @@ TEST_F(BasicParserTest, GetProperty)
     ast::binary_operator* op;
     
     node = parse("b = a.prop");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR("=", op);
-    ASSERT_ENTITY("b", op->left_operand());
+    ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
     
-    op   = (ast::binary_operator*)op->right_operand();
-    ASSERT_ENTITY("a", op->left_operand());
-    ASSERT_METHOD_CALL("prop", op->right_operand());
+    op   = (ast::binary_operator*)op->getRightOperand();
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_METHOD_CALL("prop", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, SetProperty)
@@ -310,11 +328,11 @@ TEST_F(BasicParserTest, SetProperty)
     ast::binary_operator* op;
     
     node = parse("a.prop = b");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR(".", op);
-    ASSERT_ENTITY("a", op->left_operand());
-    ASSERT_METHOD_CALL("prop=", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_METHOD_CALL("prop=", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, MethodCallArguments)
@@ -324,8 +342,8 @@ TEST_F(BasicParserTest, MethodCallArguments)
     call = parse_method_call("call(a, b)");
     
     ASSERT_METHOD_CALL("call", call);
-    ASSERT_ENTITY("a", call->child_at_index(0));
-    ASSERT_ENTITY("b", call->child_at_index(1));
+    ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
+    ASSERT_GLOBAL_VARIABLE("b", call->childAtIndex(1));
 }
 
 TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
@@ -337,25 +355,25 @@ TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
     
     ASSERT_METHOD_CALL("call", call);
     
-    op = (ast::binary_operator*)call->child_at_index(0);
+    op = (ast::binary_operator*)call->childAtIndex(0);
     ASSERT_OPERATOR("*", op);
-    ASSERT_ENTITY("c", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("c", op->getRightOperand());
     
-    op = (ast::binary_operator*)op->left_operand();
+    op = (ast::binary_operator*)op->getLeftOperand();
     ASSERT_OPERATOR("+", op);
-    ASSERT_ENTITY("a", op->left_operand());
-    ASSERT_ENTITY("b", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_GLOBAL_VARIABLE("b", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, IndexerCall)
 {
     ast::IndexOperator* op;
     
-    op = (ast::IndexOperator*)parse("foo[123]")->child_at_index(0);
+    op = (ast::IndexOperator*)parse("foo[123]")->childAtIndex(0);
     
     ASSERT_INDEXER(op);
     ASSERT_LITERAL_INTEGER(123, op->getArgument().get());
-    ASSERT_ENTITY("foo", op->getOperand().get());
+    ASSERT_GLOBAL_VARIABLE("foo", op->getOperand().get());
 }
 
 TEST_F(BasicParserTest, IndexerOnMethod)
@@ -363,7 +381,7 @@ TEST_F(BasicParserTest, IndexerOnMethod)
     ast::binary_operator* op;
     ast::IndexOperator*   indexer;
     
-    indexer = (ast::IndexOperator*)parse("foo.bar[123]")->child_at_index(0);
+    indexer = (ast::IndexOperator*)parse("foo.bar[123]")->childAtIndex(0);
     
     ASSERT_INDEXER(indexer);
     ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
@@ -371,8 +389,8 @@ TEST_F(BasicParserTest, IndexerOnMethod)
     op = static_cast<ast::binary_operator*>(indexer->getOperand().get());
     
     ASSERT_OPERATOR(".", op);
-    ASSERT_ENTITY("foo", op->left_operand());
-    ASSERT_METHOD_CALL("bar", op->right_operand());
+    ASSERT_GLOBAL_VARIABLE("foo", op->getLeftOperand());
+    ASSERT_METHOD_CALL("bar", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, FunctionType)
@@ -384,62 +402,15 @@ TEST_F(BasicParserTest, FunctionType)
     ASSERT_VARIABLE_DEFINITION("Function", "a", node);
 }
 
-TEST_F(BasicParserTest, MethodCallWithBlock)
-{
-    ast::method_call* call;
-    
-    call = (ast::method_call*)parse("call(a, b) do {}")->child_at_index(0);
-    
-    ASSERT_METHOD_CALL("call", call);
-    ASSERT_ENTITY("a", call->child_at_index(0));
-    ASSERT_ENTITY("b", call->child_at_index(1));
-    ASSERT_CLOSURE(call->child_at_index(2));
-}
-
-TEST_F(BasicParserTest, MethodCallWithBlockAndBody)
-{
-    ast::method_call* call;
-    ast::Closure*     closure;
-    
-    call = parse_method_call("call() do { a = \"string\" }");
-    
-    ASSERT_METHOD_CALL("call", call);
-    
-    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
-    ASSERT_CLOSURE(closure);
-    ASSERT_OPERATOR("=", closure->getBody()->childAtIndex(0));
-}
-
-TEST_F(BasicParserTest, MethodCallWithBlockParameters)
-{
-    ast::method_call* call;
-    
-    call = parse_method_call("call() do (a) { }");
-    
-    ASSERT_METHOD_CALL("call", call);
-    ASSERT_CLOSURE(call->child_at_index(0));
-}
-
-TEST_F(BasicParserTest, MethodCallWithLablledParams)
+TEST_F(BasicParserTest, MethodCallWithLabelledParams)
 {
     ast::method_call* call;
     
     call = parse_method_call("foo(bar:a, baz:b)");
     
     ASSERT_METHOD_CALL("foo", call);
-    ASSERT_ENTITY("a", call->child_at_index(0));
-    ASSERT_ENTITY("b", call->child_at_index(1));
-}
-
-TEST_F(BasicParserTest, MethodCallWithLabelledBlock)
-{
-    ast::method_call* call;
-    
-    call = parse_method_call("on_queue(queue, async:) do { queue = 0 }");
-    
-    ASSERT_METHOD_CALL("on_queue", call);
-    ASSERT_ENTITY("queue", call->child_at_index(0));
-    ASSERT_CLOSURE(call->child_at_index(1));
+    ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
+    ASSERT_GLOBAL_VARIABLE("b", call->childAtIndex(1));
 }
 
 TEST_F(BasicParserTest, MethodWithOperatorsOnType)

@@ -1,9 +1,41 @@
 // chime: code_block.cpp
 
 #include "code_block.h"
+#include "compiler/ast/structural/Structural.h"
+
+#include <tr1/memory>
 
 namespace ast
 {
+    NodeRef CodeBlock::parseNextBlock(chime::parser& parser, bool allowStructural)
+    {
+        NodeRef node;
+        
+        // first, advance past endings
+        parser.advance_past_ending_tokens();
+        
+        if (parser.advance_token_if_equals("{"))
+        {
+            chime::LexicalScopeRef scope;
+            
+            scope = chime::LexicalScopeRef(new chime::LexicalScope());
+            //parser.pushCodeBlock(scope);
+            
+            node = NodeRef(new ast::CodeBlock(parser, allowStructural));
+            
+            parser.advance_past_ending_tokens();
+            
+            parser.next_token("}");
+            //parser.popCodeBlock();
+        }
+        else
+        {
+            node = NodeRef(parser.parse_without_structural());
+        }
+        
+        return node;
+    }
+    
     CodeBlock::CodeBlock(chime::parser& parser, bool allowStructural)
     {
         ast::node* node;
@@ -18,7 +50,7 @@ namespace ast
             
             if (allowStructural)
             {
-                node = parser.parse_with_structural();
+                node = Structural::parse(parser);
             }
             else
             {
@@ -35,10 +67,6 @@ namespace ast
         }
         
         parser.advance_past_ending_tokens();
-    }
-
-    CodeBlock::~CodeBlock()
-    {
     }
 
     std::string CodeBlock::nodeName() const
@@ -82,27 +110,9 @@ namespace ast
         return this->child_at_index(i);
     }
     
-    NodeRef CodeBlock::nextBlock(chime::parser& parser)
+    chime::LexicalScopeRef CodeBlock::getScope() const
     {
-        NodeRef node;
-        
-        // first, advance past endings
-        parser.advance_past_ending_tokens();
-        
-        if (parser.advance_token_if_equals("{"))
-        {
-            node = NodeRef(new ast::CodeBlock(parser));
-            
-            parser.advance_past_ending_tokens();
-            
-            parser.next_token("}");
-        }
-        else
-        {
-            node = NodeRef(parser.parse_without_structural());
-        }
-        
-        return node;
+        return _scope;
     }
     
     llvm::Value* CodeBlock::codegen(chime::code_generator& generator)

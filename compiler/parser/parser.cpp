@@ -1,6 +1,7 @@
 #include "parser.h"
 #include "compiler/ast/ast.h"
 #include "compiler/ast/literals/literal.h"
+#include "compiler/ast/structural/Structural.h"
 
 #include <string>
 #include <vector>
@@ -15,7 +16,8 @@ namespace chime
         
         _errors = new std::vector<chime::parse_error*>();
         
-        _currentRoot = NULL;
+        _currentRoot  = NULL;
+        _currentScope = NULL;
     }
     
     parser::~parser()
@@ -153,11 +155,54 @@ namespace chime
             fprintf(stdout, "[Parse:\e[31merror\e[0m:%d] %s\n", e->line(), e->message().c_str());
         }
     }
+
+#pragma mark -
+#pragma mark Context Handling
+    ast::ScopedNode* parser::getCurrentScope() const
+    {
+        return _currentScope;
+    }
     
-#pragma mark *** Parsing Methods ***
+    void parser::setCurrentScope(ast::ScopedNode* scope)
+    {
+        _currentScope = scope;
+    }
+    
+    void parser::pushScope(ast::ScopedNode* scope)
+    {
+        if (!_currentScope)
+        {
+            _currentScope = scope;
+            return;
+        }
+        
+        scope->setParent(_currentScope);
+        
+        _currentScope = scope;
+    }
+    
+    void parser::popScope()
+    {
+        if (_currentScope->getParent())
+        {
+            _currentScope = _currentScope->getParent();
+        }
+        else
+        {
+            this->addError("Popped to a null scope");
+            _currentScope = NULL;
+        }
+    }
+    
+#pragma mark -
+#pragma mark Parsing Methods
     ast::Root* parser::parse(void)
     {
         _currentRoot = new ast::Root();
+        
+        // this is the "global" scope, though it's really only global
+        // to the current file
+        this->pushScope(_currentRoot);
         
         while (true)
         {
@@ -165,7 +210,7 @@ namespace chime
             
             this->advance_past_ending_tokens();
             
-            node = parse_with_structural();
+            node = ast::Structural::parse(*this);
             if (node == NULL)
                 break;
             
@@ -173,54 +218,6 @@ namespace chime
         }
         
         return _currentRoot;
-    }
-    
-    ast::node* parser::parse_with_structural(void)
-    {
-        ast::node*    node;
-        chime::token* t;
-        
-        t = this->look_ahead();
-        if (t->empty())
-            return NULL;
-        
-        node = NULL;
-        
-        if (t->equal_to("import"))
-        {
-            node = new ast::Import(*this);
-        }
-        else if (t->equal_to("implementation"))
-        {
-            node = new ast::Implementation(*this);
-        }
-        else if (t->equal_to("method"))
-        {
-            node = new ast::method_definition(*this);
-        }
-        else if (t->equal_to("property"))
-        {
-            node = new ast::PropertyDefinition(*this);
-        }
-        else if (t->equal_to("attribute"))
-        {
-            node = new ast::Attribute(*this);
-        }
-        else
-        {
-            node = this->parse_without_structural();
-        }
-        
-        if (!node)
-        {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("Unable to construct in the main loop");
-            
-            this->add_error(e);
-        }
-        
-        return node;
     }
     
     ast::node* parser::parse_without_structural(void)
@@ -377,12 +374,7 @@ namespace chime
                 return new ast::method_call(this);
             }
             
-            node = new ast::entity_reference(this);
-            
-            if (this->look_ahead(1)->equal_to("["))
-            {
-                node = ast::IndexOperator::parse(*this, node);
-            }
+            node = ast::Variable::parse(*this);
         }
         else
         {

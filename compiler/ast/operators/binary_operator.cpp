@@ -95,7 +95,7 @@ namespace ast
         }
         else if (t->isIdentifier())
         {
-            node = new ast::entity_reference(&parser);
+            node = ast::Variable::parse(parser);
         }
         else
         {
@@ -122,9 +122,13 @@ namespace ast
         return s;
     }
     
-    ast::node* binary_operator::right_operand(void) const
+    ast::node* binary_operator::getRightOperand() const
     {
         return this->child_at_index(1);
+    }
+    ast::node* binary_operator::right_operand(void) const
+    {
+        return this->getRightOperand();
     }
     void binary_operator::right_operand(ast::node* op)
     {
@@ -132,9 +136,13 @@ namespace ast
         
         this->add_child(op);
     }
-    ast::node* binary_operator::left_operand(void) const
+    ast::node* binary_operator::getLeftOperand() const
     {
         return this->child_at_index(0);
+    }
+    ast::node* binary_operator::left_operand(void) const
+    {
+        return this->getLeftOperand();
     }
     void binary_operator::left_operand(ast::node* op)
     {
