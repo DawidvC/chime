@@ -17,9 +17,6 @@ namespace ast
         static Implementation* parse(chime::parser& parser);
     
     public:
-        Implementation(chime::parser& parser);
-        virtual ~Implementation();
-        
         virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0) const;
         
@@ -27,7 +24,7 @@ namespace ast
         void       setTypeRef(ast::TypeRef node);
         TypeRef    getSuperclass() const;
         void       setSuperclass(ast::TypeRef node);
-        CodeBlock* getBody(void) const;
+        NodeRef    getBody(void) const;
         
         Variable*           createVariable(const std::string& identifier);
         
@@ -35,9 +32,9 @@ namespace ast
         llvm::Value*        codegen(chime::code_generator& generator);
         
     protected:
-        TypeRef    _typeRef;
-        TypeRef    _superclass;
-        CodeBlock* _bodyBlock;
+        TypeRef _typeRef;
+        TypeRef _superclass;
+        NodeRef _bodyBlock;
     };
 }
 

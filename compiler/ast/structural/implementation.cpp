@@ -8,38 +8,33 @@ namespace ast
 {
     Implementation* Implementation::parse(chime::parser& parser)
     {
-        return NULL;
-    }
-    
-    Implementation::Implementation(chime::parser& parser)
-    {
+        Implementation* implementation;
+        
+        implementation = new Implementation();
+        
+        parser.pushScope(implementation);
+        
         // parse the import statement
         parser.next_token_value("implementation");
         
-        this->setTypeRef(TypeRef(new ast::type_reference(&parser)));
+        implementation->setTypeRef(TypeRef(new ast::type_reference(&parser)));
         
         // check for ": SuperClass"
         if (parser.advance_token_if_equals(":"))
         {
-            this->setSuperclass(TypeRef(new ast::type_reference(&parser)));
+            implementation->setSuperclass(TypeRef(new ast::type_reference(&parser)));
         }
         else
         {
-            this->setSuperclass(TypeRef());
+            implementation->setSuperclass(TypeRef());
         }
         
-        // { body }
-        parser.advance_past_ending_tokens();
-        parser.next_token_value("{");
+        // parse the body, allowing structural elements inside
+        implementation->_bodyBlock = CodeBlock::parseNextBlock(parser, true);
         
-        _bodyBlock = new CodeBlock(parser, true);
+        parser.popScope();
         
-        parser.advance_past_ending_tokens();
-        parser.next_token_value("}");
-    }
-    
-    Implementation::~Implementation()
-    {
+        return implementation;
     }
     
     std::string Implementation::nodeName(void) const
@@ -83,7 +78,7 @@ namespace ast
         _superclass = node;
     }
     
-    CodeBlock* Implementation::getBody(void) const
+    NodeRef Implementation::getBody(void) const
     {
         return _bodyBlock;
     }

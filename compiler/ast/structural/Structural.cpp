@@ -25,7 +25,7 @@ namespace ast
         }
         else if (t->equal_to("implementation"))
         {
-            node = new ast::Implementation(parser);
+            node = ast::Implementation::parse(parser);
         }
         else if (t->equal_to("method"))
         {

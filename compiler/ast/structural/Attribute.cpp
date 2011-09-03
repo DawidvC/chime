@@ -4,6 +4,8 @@ namespace ast
 {
     Attribute::Attribute(chime::parser& parser)
     {
+        Variable* v;
+        
         parser.next_token_value("attribute");
         
         if (!parser.look_ahead()->isIdentifier())
@@ -13,6 +15,15 @@ namespace ast
         }
         
         _identifier = parser.next_token_value();
+        
+        // slight hack to give the current scope (an Implemenation), a chance
+        // to define the variable.  We don't actually use the variable here.
+        
+        assert(parser.getCurrentScope()->nodeName() == "implemenation");
+        
+        v = parser.getCurrentScope()->variableForIdentifier(_identifier);
+        
+        assert(v->nodeName() == "Instance Variable");
     }
         
     std::string Attribute::nodeName() const

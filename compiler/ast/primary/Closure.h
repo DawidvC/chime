@@ -5,6 +5,8 @@
 #include "compiler/ast/common/code_block.h"
 #include "compiler/ast/common/parameter_set.h"
 
+#include <map>
+
 namespace ast
 {
     class Closure : public ScopedNode

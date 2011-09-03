@@ -4,7 +4,6 @@
 #define CODE_BLOCK_H
 
 #include "compiler/ast/node.h"
-#include "compiler/parser/LexicalScope.h"
 
 namespace ast
 {
@@ -21,12 +20,8 @@ namespace ast
         
         void                   addChild(const ast::node& node);
         ast::node*             childAtIndex(unsigned int i) const;
-        chime::LexicalScopeRef getScope() const;
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
-    
-    private:
-        chime::LexicalScopeRef _scope;
     };
     
     typedef std::tr1::shared_ptr<ast::CodeBlock> CodeBlockRef;

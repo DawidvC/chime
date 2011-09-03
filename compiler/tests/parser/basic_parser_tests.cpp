@@ -80,7 +80,7 @@ TEST_F(BasicParserTest, InstanceVariable)
     
     ASSERT_IMPLEMENTATION("SomeClass", NULL, node);
     
-    ivar = (ast::Attribute*)node->getBody()->child_at_index(0);
+    ivar = (ast::Attribute*)node->getBody()->childAtIndex(0);
     ASSERT_ATTRIBUTE("bar", ivar);
 }
 

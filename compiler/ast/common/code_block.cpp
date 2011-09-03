@@ -14,19 +14,13 @@ namespace ast
         // first, advance past endings
         parser.advance_past_ending_tokens();
         
-        if (parser.advance_token_if_equals("{"))
+        if (parser.advance_token_if_equals("{") || allowStructural)
         {
-            chime::LexicalScopeRef scope;
-            
-            scope = chime::LexicalScopeRef(new chime::LexicalScope());
-            //parser.pushCodeBlock(scope);
-            
             node = NodeRef(new ast::CodeBlock(parser, allowStructural));
             
             parser.advance_past_ending_tokens();
             
             parser.next_token("}");
-            //parser.popCodeBlock();
         }
         else
         {
@@ -108,11 +102,6 @@ namespace ast
     ast::node* CodeBlock::childAtIndex(unsigned int i) const
     {
         return this->child_at_index(i);
-    }
-    
-    chime::LexicalScopeRef CodeBlock::getScope() const
-    {
-        return _scope;
     }
     
     llvm::Value* CodeBlock::codegen(chime::code_generator& generator)
