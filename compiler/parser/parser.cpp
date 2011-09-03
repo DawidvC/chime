@@ -317,12 +317,7 @@ namespace chime
                 return new ast::method_call(this);
             }
             
-            node = new ast::entity_reference(this);
-            
-            if (this->look_ahead(1)->equal_to("["))
-            {
-                node = ast::IndexOperator::parse(*this, node);
-            }
+            node = ast::Variable::parse(*this);
         }
         else
         {

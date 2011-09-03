@@ -1,6 +1,5 @@
 #include "binary_operator.h"
 #include "compiler/ast/primary/method_call.h"
-#include "compiler/ast/primary/entity_reference.h"
 #include "compiler/ast/literals/literal.h"
 #include "IndexOperator.h"
 
@@ -194,24 +193,24 @@ namespace ast
     
     llvm::Value* binary_operator::codegen_assignment(chime::code_generator& generator)
     {
-        ast::entity_reference* entity;
-        llvm::Value*           lValue;
-        llvm::Value*           rValue;
-        llvm::LoadInst*        objectLoad;
+        ast::Variable*  variable;
+        llvm::Value*    lValue;
+        llvm::Value*    rValue;
+        llvm::LoadInst* objectLoad;
         
-        // assignments can happen only to entity references
-        entity = dynamic_cast<ast::entity_reference*>(this->left_operand());
+        // assignments can happen only to variable
+        variable = static_cast<ast::Variable*>(this->getLeftOperand());
         
-        rValue = this->right_operand()->codegen(generator);
+        rValue = this->getRightOperand()->codegen(generator);
         assert(rValue);
         
         // first, is it an instance variable?
-        if (generator.isEntityAnInstanceVariable(entity->identifier()))
+        if (variable->nodeName() == "Instance Variable")
         {
             llvm::Value* self;
             llvm::Value* attributeNameCStringPtr;
             
-            attributeNameCStringPtr = generator.make_constant_string(entity->identifier());
+            attributeNameCStringPtr = generator.make_constant_string(variable->getIdentifier());
             
             self = generator.getMethodScope()->getSelfPointer();
             

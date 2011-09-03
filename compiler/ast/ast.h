@@ -2,7 +2,6 @@
 #include "common/code_block.h"
 #include "common/parameter_set.h"
 #include "primary/type_reference.h"
-#include "primary/entity_reference.h"
 #include "common/method_parameter.h"
 #include "primary/Closure.h"
 #include "control/if_statement.h"

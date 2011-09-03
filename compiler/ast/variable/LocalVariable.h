@@ -13,6 +13,8 @@ namespace ast
         LocalVariable(const std::string& identifier);
         
         std::string nodeName(void) const;
+        
+        llvm::Value* codegen(chime::code_generator& generator);
     };
     
     typedef std::tr1::shared_ptr<LocalVariable> LocalVariableRef;

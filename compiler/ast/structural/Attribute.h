@@ -4,7 +4,6 @@
 #define ATTRIBUTE_H
 
 #include "Structural.h"
-#include "compiler/ast/primary/entity_reference.h"
 
 namespace ast
 {
