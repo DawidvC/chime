@@ -1,23 +1,27 @@
 #include "PropertyDefinition.h"
-#ifndef USING_PREFIX_HEADERS
-#    include "compiler/parser/parser.h"
-#    include "compiler/codegen/code_generator.h"
-#endif
+#include "compiler/ast/variable/LocalVariable.h"
+#include "compiler/parser/parser.h"
+#include "compiler/codegen/code_generator.h"
 
 namespace ast
 {
-    PropertyDefinition::PropertyDefinition(chime::parser& parser)
+    PropertyDefinition* PropertyDefinition::parse(chime::parser& parser)
     {
-        chime::token* t;
+        chime::token*       t;
+        PropertyDefinition* property;
+        
+        property = new PropertyDefinition();
+        
+        parser.pushScope(property);
         
         // "property identifier"
         parser.next_token_value("property");
-        this->setIdentifier(parser.next_token_value());
+        property->setIdentifier(parser.next_token_value());
         
         t = parser.look_ahead();
         if (t->equal_to("("))
         {
-            this->setParameters(ParameterSetRef(new ParameterSet(parser)));
+            property->setParameters(ParameterSetRef(new ParameterSet(parser)));
         }
         
         parser.advance_past_ending_tokens();
@@ -32,7 +36,7 @@ namespace ast
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
             
-            _getBodyBlock = CodeBlockRef(new CodeBlock(parser));
+            property->_getBodyBlock = CodeBlockRef(new CodeBlock(parser));
             
             parser.advance_past_ending_tokens();
             parser.next_token_value("}");
@@ -47,7 +51,7 @@ namespace ast
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
             
-            _setBodyBlock = CodeBlockRef(new CodeBlock(parser));
+            property->_setBodyBlock = CodeBlockRef(new CodeBlock(parser));
             
             parser.advance_past_ending_tokens();
             parser.next_token_value("}");
@@ -57,6 +61,10 @@ namespace ast
         parser.advance_past_ending_tokens();
         parser.next_token_value("}");
         parser.advance_past_ending_tokens();
+        
+        parser.popScope();
+        
+        return property;
     }
     
     std::string PropertyDefinition::nodeName() const
@@ -77,6 +85,11 @@ namespace ast
     CodeBlockRef PropertyDefinition::getSetBody() const
     {
         return _setBodyBlock;
+    }
+    
+    Variable* PropertyDefinition::createVariable(const std::string& identifier)
+    {
+        return new LocalVariable(identifier);
     }
     
     llvm::Value* PropertyDefinition::codegen(chime::code_generator& generator)

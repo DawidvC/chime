@@ -11,15 +11,18 @@ namespace ast
     class PropertyDefinition : public FunctionDefinition
     {
     public:
-        PropertyDefinition(chime::parser& parser);
-        
+        static PropertyDefinition* parse(chime::parser& parser);
+    
+    public:
         virtual std::string nodeName() const;
         virtual std::string stringRepresentation(int depth=0) const;
         
-        CodeBlockRef        getGetBody() const;
-        CodeBlockRef        getSetBody() const;
+        CodeBlockRef getGetBody() const;
+        CodeBlockRef getSetBody() const;
         
-        llvm::Value*        codegen(chime::code_generator& generator);
+        Variable*    createVariable(const std::string& identifier);
+        
+        llvm::Value* codegen(chime::code_generator& generator);
         
     protected:
         CodeBlockRef _getBodyBlock;

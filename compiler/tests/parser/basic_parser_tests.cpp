@@ -422,28 +422,73 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
     
     ASSERT_METHOD_DEFINITION("foo", method);
     
-    op = (ast::binary_operator*)method->getBody()->child_at_index(0);
+    op = (ast::binary_operator*)method->getBody()->childAtIndex(0);
     ASSERT_OPERATOR(".", op);
-    ASSERT_TYPE("Bar", op->left_operand());
-    ASSERT_METHOD_CALL("baz", op->right_operand());
+    ASSERT_TYPE("Bar", op->getLeftOperand());
+    ASSERT_METHOD_CALL("baz", op->getRightOperand());
 }
 
 TEST_F(BasicParserTest, PropertyWithGetAndSet)
 {
     ast::PropertyDefinition* property;
     
-    property = (ast::PropertyDefinition*)parse("property foo(value) { get { return a } set { a = value} }")->child_at_index(0);
+    property = (ast::PropertyDefinition*)parse("property foo(value) { get { return a } set { a = value } }")->childAtIndex(0);
     
     ASSERT_PROPERTY_DEFINITION("foo", property);
     ASSERT_METHOD_PARAMETER(NULL, NULL, "value", property->getParameters()->childAtIndex(0));
 }
 
-TEST_F(BasicParserTest, Attribute)
+TEST_F(BasicParserTest, AttributeAccessedInGetProperty)
 {
+    ast::Implementation*     implemenation;
     ast::PropertyDefinition* property;
+    ast::Return*             ret;
     
-    property = (ast::PropertyDefinition*)parse("property foo(value) { get { return a } set { a = value} }")->child_at_index(0);
+    implemenation = parse_implementation("implementation Foo\n { attribute a\n property foo(value) { get { return a } } }");
+    
+    ASSERT_IMPLEMENTATION("Foo", NULL, implemenation);
+    
+    property = static_cast<ast::PropertyDefinition*>(implemenation->getBody()->childAtIndex(1));
     
     ASSERT_PROPERTY_DEFINITION("foo", property);
-    ASSERT_METHOD_PARAMETER(NULL, NULL, "value", property->getParameters()->childAtIndex(0));
+    
+    ret = static_cast<ast::Return*>(property->getGetBody()->childAtIndex(0));
+    ASSERT_INSTANCE_VARIABLE("a", ret->getReturnValue().get());
+}
+
+TEST_F(BasicParserTest, AttributeAccessedInSetProperty)
+{
+    ast::Implementation*     implemenation;
+    ast::PropertyDefinition* property;
+    ast::binary_operator*    op;
+    
+    implemenation = parse_implementation("implementation Foo\n { attribute a\n property foo(value) { set { a = value } } }");
+    ASSERT_IMPLEMENTATION("Foo", NULL, implemenation);
+    
+    property = static_cast<ast::PropertyDefinition*>(implemenation->getBody()->childAtIndex(1));
+    ASSERT_PROPERTY_DEFINITION("foo", property);
+    
+    op = static_cast<ast::binary_operator*>(property->getSetBody()->childAtIndex(0));
+    ASSERT_OPERATOR("=", op);
+    ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
+    ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
+}
+
+TEST_F(BasicParserTest, ImplementationMethodWithParameterUsedInBody)
+{
+    ast::Implementation*    implemenation;
+    ast::method_definition* method;
+    ast::binary_operator*   op;
+    
+    implemenation = parse_implementation("implementation Foo\n { attribute a\n method foo(value) { a = value } }");
+    ASSERT_IMPLEMENTATION("Foo", NULL, implemenation);
+    
+    method = static_cast<ast::method_definition*>(implemenation->getBody()->childAtIndex(1));
+    ASSERT_METHOD_DEFINITION("foo", method);
+    
+    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
+    ASSERT_OPERATOR("=", op);
+    ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
+    ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
+    
 }

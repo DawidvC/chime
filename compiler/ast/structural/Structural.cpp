@@ -33,7 +33,7 @@ namespace ast
         }
         else if (t->equal_to("property"))
         {
-            node = new ast::PropertyDefinition(parser);
+            node = ast::PropertyDefinition::parse(parser);
         }
         else if (t->equal_to("attribute"))
         {
