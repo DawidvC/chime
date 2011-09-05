@@ -27,21 +27,10 @@ namespace ast
     Variable::Variable(const std::string& identifier)
     {
         _identifier = identifier;
-        _closed = false;
     }
     
     std::string Variable::getIdentifier() const
     {
         return _identifier;
-    }
-    
-    bool Variable::getClosed() const
-    {
-        return _closed;
-    }
-    
-    void Variable::setClosed(bool value)
-    {
-        _closed = value;
     }
 }

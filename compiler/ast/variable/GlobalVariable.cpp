@@ -9,10 +9,7 @@ namespace ast
     
     std::string GlobalVariable::nodeName(void) const
     {
-        if (this->getClosed())
-            return std::string("Closed Global Variable");
-        else
-            return std::string("Global Variable");
+        return std::string("Global Variable");
     }
     
     llvm::Value* GlobalVariable::codegen(chime::code_generator& generator)

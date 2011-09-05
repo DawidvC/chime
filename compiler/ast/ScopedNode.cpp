@@ -32,8 +32,9 @@ namespace ast
         return NULL;
     }
     
-    void ScopedNode::definedInParent(Variable* variable)
+    Variable* ScopedNode::transformVariable(Variable* variable)
     {
+        return variable;
     }
     
     Variable* ScopedNode::variableForIdentifier(const std::string& identifier)
@@ -49,7 +50,7 @@ namespace ast
                 Variable* v;
                 
                 v = node->createVariable(identifier);
-                this->definedInParent(v);
+                v = this->transformVariable(v);
                 
                 return v;
             }

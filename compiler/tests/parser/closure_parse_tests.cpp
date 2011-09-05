@@ -60,7 +60,7 @@ TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
     
     op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
     ASSERT_OPERATOR("=", op);
-    ASSERT_CLOSED_GLOBAL_VARIABLE("queue", op->getLeftOperand());
+    ASSERT_GLOBAL_VARIABLE("queue", op->getLeftOperand());
 }
 
 TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)

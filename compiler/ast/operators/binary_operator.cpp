@@ -211,12 +211,28 @@ namespace ast
             llvm::Value* attributeNameCStringPtr;
             
             attributeNameCStringPtr = generator.make_constant_string(variable->getIdentifier());
-            
-            self = generator.getMethodScope()->getSelfPointer();
+            self                    = generator.getMethodScope()->getSelfPointer();
             
             generator.getRuntime()->callChimeObjectSetAttribute(self, attributeNameCStringPtr, rValue);
             
             // the return of this statement isn't super obvious
+            return rValue;
+        }
+        else if (variable->nodeName() == "Closed Local Variable")
+        {
+            llvm::Value*      closure;
+            llvm::Value*      attributeNameCStringPtr;
+            llvm::AllocaInst* allocaPtrPtr;
+            
+            attributeNameCStringPtr = generator.make_constant_string(variable->getIdentifier());
+            closure                 = generator.getMethodScope()->getSelfPointer();
+            
+            allocaPtrPtr = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrPtrType(), 0, "chime_closure_set_attribute arg1");
+            
+            generator.builder()->CreateStore(rValue, allocaPtrPtr, false);
+            
+            generator.getRuntime()->callChimeClosureSetAttribute(closure, attributeNameCStringPtr, allocaPtrPtr);
+            
             return rValue;
         }
         

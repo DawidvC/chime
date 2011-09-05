@@ -20,7 +20,7 @@ namespace ast
         bool                     definedIdentifier(const std::string& identifier);
         
         virtual Variable* createVariable(const std::string& identifier);
-        virtual void      definedInParent(Variable* variable);
+        virtual Variable* transformVariable(Variable* variable);
         Variable*         variableForIdentifier(const std::string& identifier);
         
     protected:

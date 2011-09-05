@@ -1,6 +1,7 @@
 #include "Closure.h"
 #include "compiler/ast/common/code_block.h"
 #include "compiler/ast/variable/LocalVariable.h"
+#include "compiler/ast/variable/ClosedLocalVariable.h"
 #include "compiler/codegen/code_generator.h"
 
 namespace ast
@@ -82,11 +83,22 @@ namespace ast
         return new LocalVariable(identifier);
     }
     
-    void Closure::definedInParent(Variable* variable)
+    Variable* Closure::transformVariable(Variable* variable)
     {
-        variable->setClosed(true);
+        Variable* newVariable;
         
-        _closedVariables[variable->getIdentifier()] = variable;
+        newVariable = variable;
+        
+        if (variable->nodeName() == "Local Variable")
+        {
+            newVariable = new ClosedLocalVariable(variable->getIdentifier());
+            
+            delete variable;
+        }
+        
+        _closedVariables[newVariable->getIdentifier()] = newVariable;
+        
+        return newVariable;
     }
     
     llvm::Value* Closure::codegen(chime::code_generator& generator)

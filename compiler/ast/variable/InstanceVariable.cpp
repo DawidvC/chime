@@ -9,10 +9,7 @@ namespace ast
     
     std::string InstanceVariable::nodeName(void) const
     {
-        if (this->getClosed())
-            return std::string("Closed Instance Variable");
-        else
-            return std::string("Instance Variable");
+        return std::string("Instance Variable");
     }
     
     llvm::Value* InstanceVariable::codegen(chime::code_generator& generator)

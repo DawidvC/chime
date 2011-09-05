@@ -25,7 +25,7 @@ namespace ast
         std::vector<Variable*> getClosedVariables() const;
         
         Variable*    createVariable(const std::string& identifier);
-        void         definedInParent(Variable* variable);
+        Variable*    transformVariable(Variable* variable);
         
         llvm::Value* codegen(chime::code_generator& generator);
     

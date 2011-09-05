@@ -16,12 +16,9 @@ namespace ast
         Variable(const std::string& identifier);
         
         std::string  getIdentifier() const;
-        bool         getClosed() const;
-        void         setClosed(bool value);
         
     protected:
         std::string _identifier;
-        bool        _closed;
     };
     
     typedef std::tr1::shared_ptr<Variable> VariableRef;
