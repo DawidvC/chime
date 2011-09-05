@@ -153,7 +153,7 @@ namespace chime
         return _c_string_ptr_type;
     }
     
-    llvm::AllocaInst* code_generator::insert_chime_object_alloca(void)
+    llvm::AllocaInst* code_generator::insertChimeObjectAlloca(void)
     {
         llvm::AllocaInst* alloca;
         
@@ -161,6 +161,11 @@ namespace chime
         alloca->setAlignment(8);
         
         return alloca;
+    }
+    
+    llvm::AllocaInst* code_generator::insert_chime_object_alloca(void)
+    {
+        return this->insertChimeObjectAlloca();
     }
     
     llvm::Value* code_generator::createCondition(llvm::Value* cond)

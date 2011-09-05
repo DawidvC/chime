@@ -6,6 +6,7 @@
 #include "runtime/class/chime_class.h"
 #include "runtime/object/chime_object.h"
 #include "runtime/literals/chime_literal.h"
+#include "runtime/closure/chime_closure.h"
 
 #ifdef __cplusplus
 extern "C" {

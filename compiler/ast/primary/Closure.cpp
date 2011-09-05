@@ -39,6 +39,20 @@ namespace ast
         return std::string("Closure");
     }
     
+    std::string Closure::stringRepresentation(int depth) const
+    {
+        std::string str;
+        
+        str.append(depth*2, ' ');
+        str.append("Closure");
+        
+        str.append("\n");
+        
+        str.append(this->getBody()->stringRepresentation(depth+1));
+        
+        return str;
+    }
+    
     CodeBlockRef Closure::getBody() const
     {
         return _bodyBlock;
@@ -88,30 +102,37 @@ namespace ast
         llvm::BasicBlock*              basicBlock;
         llvm::BasicBlock*              currentBlock;
         
-        // test for determining closed variables
-        std::vector<std::string>           names(this->getContainedVariableNames());
-        std::vector<std::string>::iterator i;
-        
-        fprintf(stderr, "Listing closed variables in closure\n");
-        for (i = names.begin(); i < names.end(); ++i)
-        {
-            fprintf(stderr, "Contained: %s\n", i->c_str());
-        }
-        fprintf(stderr, "Listed closed variables in closure\n");
+        // setup the function type
+        functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is self (the closure object)
         
         // capture the current insertion point
         currentBlock = generator.builder()->GetInsertBlock();
         
         functionName = generator.getMethodScope()->createNewAnonymousFunctionName();
         
-        // returns nothing, takes no arguments
         functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), functionArgs, false);
         
         function = generator.createFunction(functionType, functionName);
         
+        generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
+        generator.getMethodScope()->setName(functionName);
+        
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", function, 0);
         generator.builder()->SetInsertPoint(basicBlock);
         
+        // parameters
+        llvm::Function::arg_iterator args;
+        llvm::AllocaInst*            alloca;
+        
+        // first, deal with self
+        args = function->arg_begin();
+        
+        alloca = generator.insertChimeObjectAlloca();
+        generator.builder()->CreateStore(args, alloca, false);
+        
+        generator.getMethodScope()->setSelfPointer(alloca);
+        
+        // now body
         this->getBody()->codegen(generator);
         
         // only do this if we haven't yet terminated the block
@@ -126,6 +147,27 @@ namespace ast
         generator.builder()->SetInsertPoint(currentBlock);
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
+        
+        // put in the closed values
+        std::map<std::string, Variable*>::iterator it;
+        
+        for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
+        {
+            llvm::Value*      value;
+            llvm::Value*      attributeNameCStringPtr;
+            llvm::AllocaInst* allocaPtrPtr;
+            
+            allocaPtrPtr = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrPtrType(), 0, "chime_closure_set_attribute arg1");
+            
+            value = generator.value_for_identifier(it->second->getIdentifier());
+            
+            generator.builder()->CreateStore(value, allocaPtrPtr, false);
+            
+            attributeNameCStringPtr = generator.make_constant_string(it->first);
+            
+            // chime_closure_t* closure, const char* key, chime_object_t** value
+            generator.getRuntime()->callChimeClosureSetAttribute(closureValue, attributeNameCStringPtr, allocaPtrPtr);
+        }
         
         return closureValue;
     }

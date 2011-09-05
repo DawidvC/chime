@@ -18,6 +18,8 @@ namespace ast
         Closure();
         
         virtual std::string    nodeName(void) const;
+        std::string            stringRepresentation(int depth=0) const;
+        
         CodeBlockRef           getBody() const;
         ParameterSetRef        getParameters() const;
         std::vector<Variable*> getClosedVariables() const;

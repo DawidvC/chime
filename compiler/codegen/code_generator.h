@@ -50,6 +50,7 @@ namespace chime
         
         llvm::Type*        get_c_string_ptr_type(void);
         
+        llvm::AllocaInst*  insertChimeObjectAlloca(void);
         llvm::AllocaInst*  insert_chime_object_alloca(void);
         
         llvm::Value*       createCondition(llvm::Value* cond);

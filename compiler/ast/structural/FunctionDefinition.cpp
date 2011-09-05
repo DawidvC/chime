@@ -36,7 +36,7 @@ namespace ast
         // first, deal with self
         args = function->arg_begin();
         
-        alloca = generator.insert_chime_object_alloca();
+        alloca = generator.insertChimeObjectAlloca();
         generator.builder()->CreateStore(args, alloca, false);
         
         generator.getMethodScope()->setSelfPointer(alloca);
