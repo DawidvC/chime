@@ -1,4 +1,5 @@
 #include "ClosedLocalVariable.h"
+#include "compiler/ast/operators/ClosedLocalVariableAssignmentOperator.h"
 
 namespace ast
 {
@@ -10,6 +11,11 @@ namespace ast
     std::string ClosedLocalVariable::nodeName(void) const
     {
         return std::string("Closed Local Variable");
+    }
+    
+    AssignmentOperator* ClosedLocalVariable::createAssignment()
+    {
+        return new ClosedLocalVariableAssignmentOperator();
     }
     
     llvm::Value* ClosedLocalVariable::codegen(chime::code_generator& generator)

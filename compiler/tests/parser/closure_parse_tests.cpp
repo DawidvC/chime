@@ -71,7 +71,7 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     ast::Closure*               closure;
     std::vector<ast::Variable*> closedVariables;
     
-    method = parse_method_def("method foo() {\n a = 42\n a.times() do { a.print() }\n }");
+    method = parse_method_def("method foo() {\n a = 42\n a.times() do { a = a + 1 }\n }");
     
     ASSERT_METHOD_DEFINITION("foo", method);
     
@@ -93,7 +93,10 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     ASSERT_EQ("a", closedVariables[0]->getIdentifier());
     
     op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
-    ASSERT_OPERATOR(".", op);
+    ASSERT_CLOSED_ASSIGNMENT(op);
     ASSERT_CLOSED_LOCAL_VARIABLE("a", op->getLeftOperand());
-    ASSERT_METHOD_CALL("print", op->getRightOperand());
+    
+    op = static_cast<ast::binary_operator*>(op->getRightOperand());
+    ASSERT_OPERATOR("+", op);
+    ASSERT_CLOSED_LOCAL_VARIABLE("a", op->getLeftOperand());
 }

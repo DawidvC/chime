@@ -82,6 +82,7 @@
 #define ASSERT_GLOBAL_ASSIGNMENT(x) ASSERT_EQ("Global Variable Assignment Operator", x->nodeName())
 #define ASSERT_INSTANCE_ASSIGNMENT(x) ASSERT_EQ("Instance Variable Assignment Operator", x->nodeName())
 #define ASSERT_LOCAL_ASSIGNMENT(x) ASSERT_EQ("Local Variable Assignment Operator", x->nodeName())
+#define ASSERT_CLOSED_ASSIGNMENT(x) ASSERT_EQ("Closed Local Variable Assignment Operator", x->nodeName())
 
 #define ASSERT_INDEXER(x) ASSERT_EQ("Index Operator", x->nodeName())
     
