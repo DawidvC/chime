@@ -1,4 +1,5 @@
 #include "LocalVariable.h"
+#include "compiler/ast/operators/LocalVariableAssignmentOperator.h"
 
 namespace ast
 {
@@ -10,6 +11,11 @@ namespace ast
     std::string LocalVariable::nodeName(void) const
     {
         return std::string("Local Variable");
+    }
+    
+    AssignmentOperator* LocalVariable::createAssignment()
+    {
+        return new LocalVariableAssignmentOperator();
     }
     
     llvm::Value* LocalVariable::codegen(chime::code_generator& generator)

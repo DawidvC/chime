@@ -75,9 +75,13 @@
     } while (0)
 
 #define ASSERT_OPERATOR(x, y) do { \
-    ASSERT_EQ("binary operator", y->node_name()); \
+    ASSERT_EQ("Binary Operator", y->nodeName()); \
     ASSERT_EQ(x, ((ast::binary_operator*)y)->identifier()); \
     } while (0)
+
+#define ASSERT_GLOBAL_ASSIGNMENT(x) ASSERT_EQ("Global Variable Assignment Operator", x->nodeName())
+#define ASSERT_INSTANCE_ASSIGNMENT(x) ASSERT_EQ("Instance Variable Assignment Operator", x->nodeName())
+#define ASSERT_LOCAL_ASSIGNMENT(x) ASSERT_EQ("Local Variable Assignment Operator", x->nodeName())
 
 #define ASSERT_INDEXER(x) ASSERT_EQ("Index Operator", x->nodeName())
     

@@ -98,7 +98,7 @@ TEST_F(BasicParserTest, AccessInstanceVariable)
     ASSERT_METHOD_DEFINITION("foo", method);
     
     op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_INSTANCE_ASSIGNMENT(op);
     ASSERT_INSTANCE_VARIABLE("bar", op->getLeftOperand());
 }
 
@@ -175,7 +175,7 @@ TEST_F(BasicParserTest, AssignmentExpression)
     node = parse("a = b");
     op   = (ast::binary_operator*)node->childAtIndex(0);
     
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     ASSERT_GLOBAL_VARIABLE("b", op->getRightOperand());
 }
@@ -186,16 +186,16 @@ TEST_F(BasicParserTest, ComplexOperatorExpression)
     ast::binary_operator* op;
     
     node = parse("a = b + c * d + e");
-    op   = (ast::binary_operator*)node->childAtIndex(0);
+    op   = static_cast<ast::binary_operator*>(node->childAtIndex(0));
     
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
-    op = (ast::binary_operator*)op->getRightOperand();
+    op = static_cast<ast::binary_operator*>(op->getRightOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_GLOBAL_VARIABLE("e", op->getRightOperand());
     
-    op = (ast::binary_operator*)op->getLeftOperand();
+    op = static_cast<ast::binary_operator*>(op->getLeftOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
     ASSERT_OPERATOR("*", op->getRightOperand());
@@ -209,7 +209,7 @@ TEST_F(BasicParserTest, ExpressionWithParenthesis)
     node = parse("a = (b + c) * d");
     op   = (ast::binary_operator*)node->childAtIndex(0);
     
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
     op = (ast::binary_operator*)op->getRightOperand();
@@ -228,7 +228,7 @@ TEST_F(BasicParserTest, AssignmentFromTypeMethodCall)
     
     op = (ast::binary_operator*)parse("a = Foo.Bar.baz()")->childAtIndex(0);
     
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
     op = (ast::binary_operator*)op->getRightOperand();
@@ -268,7 +268,7 @@ TEST_F(BasicParserTest, ExpressionInMethodBody)
     
     op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
     
-    ASSERT_OPERATOR("=", op);
+    ASSERT_LOCAL_ASSIGNMENT(op);
 }
 
 TEST_F(BasicParserTest, MethodCall)
@@ -314,7 +314,7 @@ TEST_F(BasicParserTest, GetProperty)
     node = parse("b = a.prop");
     op   = (ast::binary_operator*)node->childAtIndex(0);
     
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
     
     op   = (ast::binary_operator*)op->getRightOperand();
@@ -469,7 +469,7 @@ TEST_F(BasicParserTest, AttributeAccessedInSetProperty)
     ASSERT_PROPERTY_DEFINITION("foo", property);
     
     op = static_cast<ast::binary_operator*>(property->getSetBody()->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_INSTANCE_ASSIGNMENT(op);
     ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
     ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
 }
@@ -487,7 +487,7 @@ TEST_F(BasicParserTest, ImplementationMethodWithParameterUsedInBody)
     ASSERT_METHOD_DEFINITION("foo", method);
     
     op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_INSTANCE_ASSIGNMENT(op);
     ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
     ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
     

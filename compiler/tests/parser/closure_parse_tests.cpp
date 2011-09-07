@@ -40,7 +40,7 @@ TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)
     ASSERT_CLOSURE(closure);
     
     op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_LOCAL_ASSIGNMENT(op);
     ASSERT_LOCAL_VARIABLE("a", op->getLeftOperand());
 }
 
@@ -59,7 +59,7 @@ TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
     ASSERT_CLOSURE(closure);
     
     op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("queue", op->getLeftOperand());
 }
 
@@ -76,7 +76,7 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     ASSERT_METHOD_DEFINITION("foo", method);
     
     op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_LOCAL_ASSIGNMENT(op);
     ASSERT_LOCAL_VARIABLE("a", op->getLeftOperand());
     
     op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(1));

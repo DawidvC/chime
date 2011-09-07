@@ -104,26 +104,39 @@ namespace ast
         return node;
     }
     
-    binary_operator::binary_operator()
+    std::string binary_operator::nodeName(void) const
     {
+        return std::string("Binary Operator");
     }
-    
-    std::string binary_operator::node_name(void) const
-    {
-        return std::string("binary operator");
-    }
-    std::string binary_operator::to_string(void) const
+    std::string binary_operator::stringRepresentation(int depth) const
     {
         std::string s;
         
-        s += "operator: " + this->identifier();
+        s.append(depth*2, ' ');
+        s.append(this->nodeName());
+        s.append(": ");
+        s.append(this->identifier());
+        
+        s.append("\n");
+        
+        s.append(this->getLeftOperand()->stringRepresentation(depth+1));
+        
+        s.append("\n");
+        
+        s.append(this->getRightOperand()->stringRepresentation(depth+1));
         
         return s;
     }
     
     ast::node* binary_operator::getRightOperand() const
     {
-        return this->child_at_index(1);
+        return this->childAtIndex(1);
+    }
+    void binary_operator::setRightOperand(ast::node* op)
+    {
+        assert(this->childCount() == 1);
+        
+        this->addChild(op);
     }
     ast::node* binary_operator::right_operand(void) const
     {
@@ -131,13 +144,17 @@ namespace ast
     }
     void binary_operator::right_operand(ast::node* op)
     {
-        assert(this->child_count() == 1);
-        
-        this->add_child(op);
+        this->setRightOperand(op);
     }
     ast::node* binary_operator::getLeftOperand() const
     {
-        return this->child_at_index(0);
+        return this->childAtIndex(0);
+    }
+    void binary_operator::setLeftOperand(ast::node* op)
+    {
+        assert(this->childCount() == 0);
+        
+        this->addChild(op);
     }
     ast::node* binary_operator::left_operand(void) const
     {
@@ -145,9 +162,7 @@ namespace ast
     }
     void binary_operator::left_operand(ast::node* op)
     {
-        assert(this->child_count() == 0);
-        
-        this->add_child(op);
+        this->setLeftOperand(op);
     }
     
     llvm::Value* binary_operator::codegen(chime::code_generator& generator)

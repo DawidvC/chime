@@ -1,4 +1,5 @@
 #include "GlobalVariable.h"
+#include "compiler/ast/operators/GlobalVariableAssignmentOperator.h"
 
 namespace ast
 {
@@ -10,6 +11,11 @@ namespace ast
     std::string GlobalVariable::nodeName(void) const
     {
         return std::string("Global Variable");
+    }
+    
+    AssignmentOperator* GlobalVariable::createAssignment()
+    {
+        return new GlobalVariableAssignmentOperator();
     }
     
     llvm::Value* GlobalVariable::codegen(chime::code_generator& generator)

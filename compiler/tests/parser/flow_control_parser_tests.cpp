@@ -104,7 +104,7 @@ TEST_F(FlowControlParserTest, TailingIf)
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_GLOBAL_VARIABLE("c", node->getCondition().get());
-    ASSERT_OPERATOR("=", node->getBody().get());
+    ASSERT_GLOBAL_ASSIGNMENT(node->getBody().get());
 }
 
 TEST_F(FlowControlParserTest, BasicTryCatch)

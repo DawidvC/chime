@@ -38,7 +38,6 @@ namespace chime
         
         ast::Root*  parse(void);
         ast::node*  parse_without_structural(void);
-        ast::node*  parse_primary(void);
         ast::node*  parse_expression(void);
         ast::node*  parse_type(void);
         ast::node*  parse_control(void);

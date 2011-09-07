@@ -1,4 +1,5 @@
 #include "InstanceVariable.h"
+#include "compiler/ast/operators/InstanceVariableAssignmentOperator.h"
 
 namespace ast
 {
@@ -10,6 +11,11 @@ namespace ast
     std::string InstanceVariable::nodeName(void) const
     {
         return std::string("Instance Variable");
+    }
+    
+    AssignmentOperator* InstanceVariable::createAssignment()
+    {
+        return new InstanceVariableAssignmentOperator();
     }
     
     llvm::Value* InstanceVariable::codegen(chime::code_generator& generator)

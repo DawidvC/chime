@@ -12,15 +12,15 @@ namespace ast
         static ast::node* parseRightOperand(chime::parser& parser);
         
     public:
-        binary_operator();
-        
-        virtual std::string node_name(void) const;
-        virtual std::string to_string(void) const;
+        virtual std::string nodeName(void) const;
+        virtual std::string stringRepresentation(int depth=0) const;
         
         ast::node* getRightOperand() const;
+        void       setRightOperand(ast::node* op);
         ast::node* right_operand(void) const;
         void       right_operand(ast::node* op);
         ast::node* getLeftOperand() const;
+        void       setLeftOperand(ast::node* op);
         ast::node* left_operand(void) const;
         void       left_operand(ast::node* op);
         

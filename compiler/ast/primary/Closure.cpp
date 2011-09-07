@@ -171,6 +171,7 @@ namespace ast
             
             allocaPtrPtr = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrPtrType(), 0, "chime_closure_set_attribute arg1");
             
+            //value = it->second->codegen(generator);
             value = generator.value_for_identifier(it->second->getIdentifier());
             
             generator.builder()->CreateStore(value, allocaPtrPtr, false);

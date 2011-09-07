@@ -44,7 +44,7 @@ TEST_F(FileParserTests, StoreToAVariableAndUseIt)
     node = this->parse("store_then_use.chm");
     
     op = static_cast<ast::binary_operator*>(node->childAtIndex(0));
-    ASSERT_OPERATOR("=", op);
+    ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     
     op = static_cast<ast::binary_operator*>(op->getRightOperand());

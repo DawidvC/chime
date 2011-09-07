@@ -276,58 +276,7 @@ namespace chime
         return node;
     }
     
-    ast::node* parser::parse_primary(void)
-    {
-        chime::token* t;
-        ast::node*    node;
-        
-        node = NULL;
-        
-        t = this->look_ahead();
-        if (t == NULL || t->empty())
-        {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("Unable to extract the next token while parsing a primary expression");
-            
-            this->add_error(e);
-            
-            return NULL;
-        }
-        else if (t->equal_to("("))
-        {
-            this->next_token_value("(");
-            
-            node = this->parse_expression();
-            
-            this->next_token_value(")");
-        }
-        else if (t->is_literal())
-        {
-            node = ast::Literal::parse(*this);
-        }
-        else if (t->is_type())
-        {
-            node = this->parse_type();
-        }
-        else if (t->is_identifier())
-        {
-            if (this->look_ahead(2)->equal_to("("))
-            {
-                return new ast::method_call(this);
-            }
-            
-            node = ast::Variable::parse(*this);
-        }
-        else
-        {
-            assert(0 && "how did we get to this point");
-        }
-        
-        return node;
-    }
-    
-    ast::node* parser::parse_expression(void)
+    ast::node* parser::parse_expression()
     {
         chime::token* t;
         ast::node*    node;
