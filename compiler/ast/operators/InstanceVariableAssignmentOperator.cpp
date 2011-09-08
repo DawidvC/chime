@@ -6,4 +6,23 @@ namespace ast
     {
         return std::string("Instance Variable Assignment Operator");
     }
+    
+    llvm::Value* InstanceVariableAssignmentOperator::codegen(chime::code_generator& generator)
+    {
+        llvm::Value* rValue;
+        llvm::Value* self;
+        llvm::Value* attributeNameCStringPtr;
+        
+        // first, codegen the thing we're going to be assigning to the variable
+        rValue = this->getRightOperand()->codegen(generator);
+        assert(rValue);
+        
+        attributeNameCStringPtr = generator.make_constant_string(this->getVariable()->getIdentifier());
+        self                    = generator.getMethodScope()->getSelfPointer();
+        
+        generator.getRuntime()->callChimeObjectSetAttribute(self, attributeNameCStringPtr, rValue);
+        
+        // the return of this statement isn't super obvious
+        return rValue;
+    }
 }

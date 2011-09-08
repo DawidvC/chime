@@ -7,8 +7,17 @@
 
 namespace ast
 {
+    class Variable;
+}
+
+namespace ast
+{
     class AssignmentOperator : public binary_operator
     {
+    public:
+        Variable* getVariable() const;
+        
+        virtual llvm::Value* codegen(chime::code_generator& generator);
     };
 }
 

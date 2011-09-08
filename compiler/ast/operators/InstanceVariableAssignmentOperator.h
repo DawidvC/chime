@@ -11,6 +11,8 @@ namespace ast
     {
     public:
         std::string nodeName(void) const;
+        
+        llvm::Value* codegen(chime::code_generator& generator);
     };
 }
 
