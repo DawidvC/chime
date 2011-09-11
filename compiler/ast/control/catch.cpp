@@ -25,7 +25,8 @@ namespace ast
         
         if (t->isIdentifier())
         {
-            _exceptionVariable = new ast::entity_reference(&parser);
+            // do not allow assignment
+            _exceptionVariable = static_cast<ast::Variable*>(ast::Variable::parse(parser, false));
         }
         
         parser.next_token(")");

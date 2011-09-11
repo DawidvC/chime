@@ -57,7 +57,7 @@ static void append_methods_to_array(chime_object_t* klass, chime_object_t* array
         method = chime_runtime_instantiate(_method_class);
         chime_object_set_property(method, "_name", chime_string_create_with_c_string(method_name));
         
-        array_add(array, method);
+        array_append(array, method);
     }
 }
 

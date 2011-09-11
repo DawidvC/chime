@@ -5,7 +5,7 @@
 
 #include "exception_flow.h"
 #include "compiler/ast/primary/type_reference.h"
-#include "compiler/ast/primary/entity_reference.h"
+#include "compiler/ast/variable/Variable.h"
 
 namespace ast
 {
@@ -18,8 +18,8 @@ namespace ast
         virtual std::string nodeName(void) const;
     
     protected:
-        ast::entity_reference* _exceptionVariable;
-        ast::type_reference*   _exceptionType;
+        ast::Variable*       _exceptionVariable;
+        ast::type_reference* _exceptionType;
     };
 }
 

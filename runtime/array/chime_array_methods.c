@@ -40,7 +40,7 @@ chime_object_t* array_length(chime_object_t* instance)
     return chime_literal_encode_integer(chime_runtime_array_count(internal_array));
 }
 
-chime_object_t* array_add(chime_object_t* instance, chime_object_t* object)
+chime_object_t* array_append(chime_object_t* instance, chime_object_t* object)
 {
     chime_runtime_array_t* internal_array;
     

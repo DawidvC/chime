@@ -39,15 +39,20 @@ ast::node* ParserTestsBase::parse(const char* input)
 
 ast::Implementation* ParserTestsBase::parse_implementation(const char *input)
 {
-    return (ast::Implementation*)this->parse(input)->child_at_index(0);
+    return (ast::Implementation*)this->parse(input)->childAtIndex(0);
 }
 
 ast::method_definition* ParserTestsBase::parse_method_def(const char *input)
 {
-    return (ast::method_definition*)this->parse(input)->child_at_index(0);
+    return (ast::method_definition*)this->parse(input)->childAtIndex(0);
 }
 
 ast::method_call* ParserTestsBase::parse_method_call(const char* input)
 {
-    return dynamic_cast<ast::method_call*>(this->parse(input)->child_at_index(0));
+    return static_cast<ast::method_call*>(this->parse(input)->childAtIndex(0));
+}
+
+ast::binary_operator* ParserTestsBase::parseOperator(const char* input)
+{
+    return static_cast<ast::binary_operator*>(this->parse(input)->childAtIndex(0));
 }

@@ -13,35 +13,61 @@ implementation ClosureTests : Test.Case
         Assert.equal(10, to:count)
     }
     
-//    method test_nested_closure_creation_with_closed_variables()
-//    {
-//        value = 10
-//        functions = Array.new()
-//        
-//        10.times() do 
-//        {
-//            f = do
-//            {
-//                value += 1
-//                return value
-//            }
-//            
-//            functions.append(f) 
-//        }
-//        
-//        Assert.equal(10, to:value)
-//        
-//        Assert.equal(11, to:functions[0].call())
-//        Assert.equal(12, to:functions[1].call())
-//        Assert.equal(13, to:functions[2].call())
-//        Assert.equal(14, to:functions[3].call())
-//        Assert.equal(15, to:functions[4].call())
-//        Assert.equal(16, to:functions[5].call())
-//        Assert.equal(17, to:functions[6].call())
-//        Assert.equal(18, to:functions[7].call())
-//        Assert.equal(19, to:functions[8].call())
-//        Assert.equal(20, to:functions[9].call())
-//        
-//        Assert.equal(20, to:value)
-//   }
+    method test_closure_definition()
+    {
+        f = do
+        {
+            return 5
+        }
+        
+        Assert.equal(5, to:f.call())
+    }
+    
+    method test_closure_definition_with_closed_variables()
+    {
+        value = 0
+        
+        g = do
+        {
+            value = 10
+            return 5
+        }
+        
+        Assert.equal(0, to:value)
+        Assert.equal(5, to:g.call())
+        Assert.equal(10, to:value)
+    }
+    
+    method test_nested_closure_creation_with_closed_variables()
+    {
+        result = 10
+        functions = Array.new()
+        
+        10.times() do
+        {
+            h = do
+            {
+                //result = result + 1
+                //return result
+                return 5
+            }
+            
+            //functions.append(h)
+        }
+        
+        Assert.equal(10, to:result)
+        
+        Assert.equal(11, to:functions[0].call())
+        Assert.equal(12, to:functions[1].call())
+        Assert.equal(13, to:functions[2].call())
+        Assert.equal(14, to:functions[3].call())
+        Assert.equal(15, to:functions[4].call())
+        Assert.equal(16, to:functions[5].call())
+        Assert.equal(17, to:functions[6].call())
+        Assert.equal(18, to:functions[7].call())
+        Assert.equal(19, to:functions[8].call())
+        Assert.equal(20, to:functions[9].call())
+        
+        Assert.equal(20, to:result)
+    }
 }

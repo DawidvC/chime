@@ -14,6 +14,7 @@ void chime_array_initialize(void)
     
     // instance methods
     chime_class_set_instance_method(_array_class, "length", array_length);
-    chime_class_set_instance_method(_array_class, "add",    array_add);
+    chime_class_set_instance_method(_array_class, "count",  array_length);
+    chime_class_set_instance_method(_array_class, "append", array_append);
     chime_class_set_instance_method(_array_class, "[]",     array_indexer_get);
 }

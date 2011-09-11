@@ -286,14 +286,11 @@ namespace chime
         if (this->isPunctuation())        return true;
         if (this->isBoolean())            return true;
         if (this->isInheritanceRelated()) return true;
+        if (_value == "do")               return true;
         
         return false;
     }
     
-    bool token::is_block_start(void)
-    {
-        return _value == "do";
-    }
     bool token::is_ending(void) const
     {
         return this->isEnding();

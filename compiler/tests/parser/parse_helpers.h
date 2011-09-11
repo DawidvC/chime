@@ -4,11 +4,6 @@
     ASSERT_EQ("import", x->nodeName()); \
     } while (0)
 
-#define ASSERT_ENTITY(x, y) do { \
-    ASSERT_EQ("entity reference", y->node_name()); \
-    ASSERT_EQ(x, ((ast::entity_reference*)y)->identifier()); \
-    } while (0)
-
 #define ASSERT_GLOBAL_VARIABLE(x, y) do { \
    ASSERT_EQ("Global Variable", y->nodeName()); \
    ASSERT_EQ(x, ((ast::GlobalVariable*)y)->getIdentifier()); \

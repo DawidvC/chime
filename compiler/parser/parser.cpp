@@ -307,6 +307,10 @@ namespace chime
         {
             node = ast::Literal::parse(*this);
         }
+        else if (t->value() =="do")
+        {
+            return ast::Closure::parse(*this);
+        }
         else if (t->is_type())
         {
             node = this->parse_type();

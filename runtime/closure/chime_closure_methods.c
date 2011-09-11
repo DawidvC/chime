@@ -15,7 +15,5 @@ chime_object_t* closure_call(chime_object_t* instance, chime_object_t* argument_
 {
     assert(instance);
     
-    fprintf(stderr, "Closure invoked\n");
-    
     return chime_closure_invoke((chime_closure_t*)instance, argument_array);
 }

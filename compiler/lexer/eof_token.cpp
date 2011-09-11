@@ -68,10 +68,6 @@ namespace chime
     {
         return false;
     }
-    bool eof_token::is_block_start(void)
-    {
-        return false;
-    }
     bool eof_token::isEnding(void) const
     {
         return true;

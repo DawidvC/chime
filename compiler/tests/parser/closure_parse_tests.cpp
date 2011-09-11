@@ -44,6 +44,17 @@ TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)
     ASSERT_LOCAL_VARIABLE("a", op->getLeftOperand());
 }
 
+TEST_F(ClosureParseTests, AnonymousFunctionDefinition)
+{
+    ast::binary_operator* op;
+    
+    op = parseOperator("f = do { return 5; }");
+    
+    ASSERT_GLOBAL_ASSIGNMENT(op);
+    ASSERT_GLOBAL_VARIABLE("f", op->getLeftOperand());
+    ASSERT_CLOSURE(op->getRightOperand());
+}
+
 TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
 {
     ast::method_call*     call;

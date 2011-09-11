@@ -89,5 +89,17 @@ test.setup()
 test.test_integer_iterator()
 test.teardown()
 
+test.setup()
+test.test_closure_definition()
+test.teardown()
+
+test.setup()
+test.test_closure_definition_with_closed_variables()
+test.teardown()
+
+test.setup()
+test.test_nested_closure_creation_with_closed_variables()
+test.teardown()
+
 "*** Failure Count ***".print()
 Assert.failure_count().print()

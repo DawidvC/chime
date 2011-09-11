@@ -129,16 +129,19 @@ TEST_F(TokenTest, IsType)
 TEST_F(TokenTest, IsIdentifier)
 {
     token->set_value("abc");
-    ASSERT_TRUE(token->is_identifier());
+    ASSERT_TRUE(token->isIdentifier());
     
     token->set_value("Abc");
-    ASSERT_TRUE(!token->is_identifier());
+    ASSERT_TRUE(!token->isIdentifier());
     
     token->set_value(":");
-    ASSERT_TRUE(!token->is_identifier());
+    ASSERT_TRUE(!token->isIdentifier());
     
     token->set_value("");
-    ASSERT_TRUE(!token->is_identifier());
+    ASSERT_TRUE(!token->isIdentifier());
+    
+    token->set_value("do");
+    ASSERT_TRUE(!token->isIdentifier());
 }
 
 TEST_F(TokenTest, IsEnding)
