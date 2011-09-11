@@ -14,7 +14,7 @@ namespace ast
         
         std::string nodeName(void) const;
         
-        // AssignmentOperator* createAssignment();
+        AssignmentOperator* createAssignment();
         
         llvm::Value* codegen(chime::code_generator& generator);
     };

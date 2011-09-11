@@ -116,11 +116,11 @@ namespace ast
         llvm::Value* hashClass;
         llvm::Value* string;
         
-        string = generator.make_constant_string("Hash");
+        string = generator.getConstantString("Hash");
         
         hashClass = generator.getRuntime()->callChimeRuntimeGetClass(string);
         
-        string = generator.make_constant_string("new");
+        string = generator.getConstantString("new");
         
         environment = generator.getRuntime()->callChimeObjectInvoke(hashClass, string, std::vector<llvm::Value*>());
         
@@ -132,8 +132,8 @@ namespace ast
             llvm::Value* variableValue;
             llvm::Value* variableNameCStringPtr;
             
-            variableValue          = generator.value_for_identifier(it->second->getIdentifier());
-            variableNameCStringPtr = generator.make_constant_string(it->first);
+            variableValue          = generator.getCurrentScope()->getValueForIdentifier(it->second->getIdentifier());
+            variableNameCStringPtr = generator.getConstantString(it->first);
             
             generator.getRuntime()->callChimeObjectSetAttribute(environment, variableNameCStringPtr, variableValue);
         }
@@ -168,6 +168,7 @@ namespace ast
         
         generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
         generator.getMethodScope()->setName(functionName);
+        generator.pushScope(this);
         
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", function, 0);
         generator.builder()->SetInsertPoint(basicBlock);
@@ -183,7 +184,7 @@ namespace ast
         alloca = generator.insertChimeObjectAlloca();
         generator.builder()->CreateStore(args, alloca, false);
         
-        generator.getMethodScope()->setSelfPointer(alloca);
+        generator.getCurrentScope()->setValueForIdentifier("_self", alloca);
         
         // now body
         this->getBody()->codegen(generator);
@@ -197,13 +198,14 @@ namespace ast
         llvm::verifyFunction(*function);
         
         // restore the builder's position
+        generator.popScope();
         generator.builder()->SetInsertPoint(currentBlock);
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
         environment  = this->codegenEnvironment(generator);
         
         generator.getRuntime()->callChimeClosureSetEnvironment(closureValue, environment);
-        generator.getMethodScope()->setEnvironmentPointer(environment);
+        generator.getCurrentScope()->setValueForIdentifier("_environment", environment);
         
         return closureValue;
     }

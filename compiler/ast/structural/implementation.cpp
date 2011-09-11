@@ -153,6 +153,7 @@ namespace ast
         scope->setName(this->getTypeRef()->identifier());
         
         generator.setImplementationScope(scope);
+        generator.pushScope(this);
         
         // and now, finally, we can actually codegen the internals of the implementation
         _bodyBlock->codegen(generator);
@@ -163,7 +164,8 @@ namespace ast
         // verify the function
         llvm::verifyFunction(*initFunction);
         
-        // restore the builder's position
+        // restore scope and the builder's position
+        generator.popScope();
         generator.builder()->SetInsertPoint(currentBlock);
         
         return NULL;

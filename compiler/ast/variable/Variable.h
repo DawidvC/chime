@@ -18,10 +18,10 @@ namespace ast
         
         std::string stringRepresentation(int depth=0) const;
         
-        std::string  getIdentifier() const;
+        std::string getIdentifier() const;
         
-        virtual AssignmentOperator* createAssignment();
-        
+        virtual AssignmentOperator* createAssignment() = 0;
+    
     protected:
         std::string _identifier;
     };

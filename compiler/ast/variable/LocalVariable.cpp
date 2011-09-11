@@ -22,14 +22,15 @@ namespace ast
     {
         llvm::Value* value;
         
-        value = generator.value_for_identifier(this->getIdentifier());
-        
+        value = generator.getCurrentScope()->getValueForIdentifier(this->getIdentifier());
         if (!value)
         {
             value = generator.insertChimeObjectAlloca();
             
-            generator.set_value_for_identifier(this->getIdentifier(), value);
+            generator.getCurrentScope()->setValueForIdentifier(this->getIdentifier(), value);
         }
+        
+        assert(value);
         
         return value;
     }

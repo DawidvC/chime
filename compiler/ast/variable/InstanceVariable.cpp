@@ -23,9 +23,9 @@ namespace ast
         llvm::Value* self;
         llvm::Value* attributeNameCStringPtr;
         
-        attributeNameCStringPtr = generator.make_constant_string(this->getIdentifier());
+        attributeNameCStringPtr = generator.getConstantString(this->getIdentifier());
         
-        self = generator.getMethodScope()->getSelfPointer();
+        self = generator.getCurrentScope()->getValueForIdentifier("_self");
         
         return generator.getRuntime()->callChimeObjectGetAttribute(self, attributeNameCStringPtr);
     }

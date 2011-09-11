@@ -39,7 +39,7 @@ namespace ast
         alloca = generator.insertChimeObjectAlloca();
         generator.builder()->CreateStore(args, alloca, false);
         
-        generator.getMethodScope()->setSelfPointer(alloca);
+        generator.getCurrentScope()->setValueForIdentifier("_self", alloca);
         
         // Careful here.  Properties define two methods, one that has params and one that does not.  The
         // safest thing to do here is to iterate over the function arguments, and fill in as we go
@@ -51,7 +51,7 @@ namespace ast
             
             alloca = generator.insert_chime_object_alloca();
             generator.builder()->CreateStore(args, alloca, false);
-            generator.getMethodScope()->setValue(param->identifier(), alloca);
+            generator.getCurrentScope()->setValueForIdentifier(param->identifier(), alloca);
         }
     }
     
@@ -89,6 +89,7 @@ namespace ast
         // create the return code for the method
         generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
         generator.getMethodScope()->setName(this->getIdentifier());
+        generator.pushScope(this);
         
         // setup the function entry
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", methodFunction, 0);
@@ -109,7 +110,8 @@ namespace ast
         // before we continue, verify the function
         llvm::verifyFunction(*methodFunction);
         
-        // restore the builder's position
+        // restore the scope and builder's position
+        generator.popScope();
         generator.builder()->SetInsertPoint(currentBlock);
         
         // get the class object

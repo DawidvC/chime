@@ -71,4 +71,14 @@ namespace ast
         _variableNames.push_back(identifier); // track it here
         return this->createVariable(identifier);
     }
+    
+    llvm::Value* ScopedNode::getValueForIdentifier(const std::string& identifier)
+    {
+        return _scopedValues[identifier];
+    }
+    
+    void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value)
+    {
+        _scopedValues[identifier] = value;
+    }
 }

@@ -27,10 +27,15 @@ namespace ast
         void              capturedVariable(Variable* variable);
         Variable*         variableForIdentifier(const std::string& identifier);
         
+        llvm::Value*      getValueForIdentifier(const std::string& identifier);
+        void              setValueForIdentifier(const std::string& identifier, llvm::Value* value);
+        
     protected:
         std::vector<std::string>         _variableNames;
         std::map<std::string, Variable*> _capturedVariables;
         ScopedNode*                      _parent;
+        
+        std::map<std::string, llvm::Value*> _scopedValues;
     };
     
     typedef std::tr1::shared_ptr<ScopedNode> ScopedNodeRef;

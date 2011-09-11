@@ -24,8 +24,8 @@ namespace ast
         llvm::Value* environment;
         llvm::Value* variableNamePtr;
         
-        variableNamePtr = generator.make_constant_string(this->getIdentifier());
-        closure         = generator.getMethodScope()->getSelfPointer();
+        variableNamePtr = generator.getConstantString(this->getIdentifier());
+        closure         = generator.getCurrentScope()->getValueForIdentifier("_self");
         environment     = generator.getRuntime()->callChimeClosureGetEnvironment(closure);
         
         return generator.getRuntime()->callChimeObjectGetAttribute(environment, variableNamePtr);

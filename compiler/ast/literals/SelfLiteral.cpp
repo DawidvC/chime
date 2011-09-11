@@ -14,6 +14,6 @@ namespace ast
     
     llvm::Value* SelfLiteral::codegen(chime::code_generator& generator)
     {
-        return generator.getMethodScope()->getSelfPointer();
+        return generator.getCurrentScope()->getValueForIdentifier("_self");
     }
 }

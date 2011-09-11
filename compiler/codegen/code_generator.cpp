@@ -12,6 +12,8 @@ namespace chime
         _initFunctions        = new std::vector<llvm::Function*>();
         _internalInitFunction = NULL;
         
+        _currentScope         = NULL;
+        
         _object_ptr_type     = NULL;
         _c_string_ptr_type   = NULL;
         _chime_function_type = NULL;
@@ -63,6 +65,37 @@ namespace chime
     std::vector<std::string>* code_generator::getImportedNamespaces(void) const
     {
         return _importedNamespaces;
+    }
+    
+    ast::ScopedNode* code_generator::getCurrentScope() const
+    {
+        return _currentScope;
+    }
+    
+    void code_generator::setCurrentScope(ast::ScopedNode* node)
+    {
+        _currentScope = node;
+    }
+    
+    void code_generator::pushScope(ast::ScopedNode* scope)
+    {
+        if (!_currentScope)
+        {
+            _currentScope = scope;
+            return;
+        }
+        
+        scope->setParent(_currentScope);
+        
+        _currentScope = scope;
+    }
+    
+    void code_generator::popScope()
+    {
+        assert(_currentScope);
+        assert(_currentScope->getParent());
+        
+        _currentScope = _currentScope->getParent();
     }
     
     ImplementationScopeRef code_generator::getImplementationScope(void) const
@@ -300,11 +333,13 @@ namespace chime
         this->builder()->SetInsertPoint(currentBlock);
     }
     
-    void code_generator::generate(ast::node* node, const std::string& moduleName, bool asMain)
+    void code_generator::generate(ast::Root* node, const std::string& moduleName, bool asMain)
     {
         std::vector<ast::node*>::iterator i;
         
         assert(node != NULL);
+        
+        this->pushScope(node);
         
         _module = new llvm::Module(moduleName, llvm::getGlobalContext());
         

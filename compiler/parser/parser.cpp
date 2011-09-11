@@ -183,15 +183,10 @@ namespace chime
     
     void parser::popScope()
     {
-        if (_currentScope->getParent())
-        {
-            _currentScope = _currentScope->getParent();
-        }
-        else
-        {
-            this->addError("Popped to a null scope");
-            _currentScope = NULL;
-        }
+        assert(_currentScope);
+        assert(_currentScope->getParent());
+        
+        _currentScope = _currentScope->getParent();
     }
     
 #pragma mark -

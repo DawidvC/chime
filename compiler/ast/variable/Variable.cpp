@@ -62,10 +62,4 @@ namespace ast
     {
         return _identifier;
     }
-    
-    AssignmentOperator* Variable::createAssignment()
-    {
-        fprintf(stderr, "createAssignment should be overridden\n");
-        return NULL;
-    }
 }

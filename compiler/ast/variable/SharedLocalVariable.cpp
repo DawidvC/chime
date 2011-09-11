@@ -12,18 +12,21 @@ namespace ast
         return std::string("Shared Local Variable");
     }
     
-    // AssignmentOperator* ClosedLocalVariable::createAssignment()
-    // {
-    //     return new ClosedLocalVariableAssignmentOperator();
-    // }
+    AssignmentOperator* SharedLocalVariable::createAssignment()
+    {
+        assert(0 && "Assignment to a SharedLocalVariable isn't implemented yet");
+        
+        return NULL;
+    }
     
     llvm::Value* SharedLocalVariable::codegen(chime::code_generator& generator)
     {
         llvm::Value* environment;
         llvm::Value* variableNamePtr;
         
-        variableNamePtr = generator.make_constant_string(this->getIdentifier());
-        environment     = generator.getMethodScope()->getEnvironmentPointer();
+        variableNamePtr = generator.getConstantString(this->getIdentifier());
+        //environment     = generator.getMethodScope()->getEnvironmentPointer();
+        environment     = generator.getCurrentScope()->getValueForIdentifier("_environment");
         
         return generator.getRuntime()->callChimeObjectGetAttribute(environment, variableNamePtr);
     }

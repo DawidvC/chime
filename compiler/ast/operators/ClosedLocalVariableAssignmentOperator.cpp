@@ -19,7 +19,7 @@ namespace ast
         assert(rValue);
         
         variableNamePtr = generator.make_constant_string(this->getVariable()->getIdentifier());
-        closure         = generator.getMethodScope()->getSelfPointer();
+        closure         = generator.getCurrentScope()->getValueForIdentifier("_self");
         environment     = generator.getRuntime()->callChimeClosureGetEnvironment(closure);
         
         generator.getRuntime()->callChimeObjectSetAttribute(environment, variableNamePtr, rValue);

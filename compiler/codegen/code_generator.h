@@ -6,10 +6,13 @@
 
 namespace ast
 {
-    class node;
+    class Root;
+    class ScopedNode;
 }
 
-#include <map>
+#include "compiler/codegen/runtime_interface.h"
+#include "compiler/codegen/scopes/implementation_scope.h"
+#include "compiler/codegen/scopes/method_scope.h"
 
 #include "llvm/DerivedTypes.h"
 #include "llvm/LLVMContext.h"
@@ -17,9 +20,7 @@ namespace ast
 #include "llvm/Analysis/Verifier.h"
 #include "llvm/Support/IRBuilder.h"
 
-#include "compiler/codegen/runtime_interface.h"
-#include "compiler/codegen/scopes/implementation_scope.h"
-#include "compiler/codegen/scopes/method_scope.h"
+#include <map>
 
 namespace chime
 {
@@ -36,6 +37,10 @@ namespace chime
         RuntimeInterface*         getRuntime(void) const;
         std::vector<std::string>* getImportedNamespaces(void) const;
         
+        ast::ScopedNode*       getCurrentScope() const;
+        void                   setCurrentScope(ast::ScopedNode* node);
+        void                   pushScope(ast::ScopedNode* scope);
+        void                   popScope();
         ImplementationScopeRef getImplementationScope(void) const;
         void                   setImplementationScope(ImplementationScopeRef scope);
         MethodScopeRef         getMethodScope(void) const;
@@ -58,7 +63,7 @@ namespace chime
         
         llvm::Value*    callModuleInitFunction(const std::string& name);
         
-        void generate(ast::node* node, const std::string& moduleName, bool asMain);
+        void generate(ast::Root* node, const std::string& moduleName, bool asMain);
         
     protected:
         llvm::Module*                        _module;
@@ -69,6 +74,8 @@ namespace chime
         ImplementationScopeRef               _implementationScope;
         MethodScopeRef                       _methodScope;
         std::vector<std::string>*            _importedNamespaces;
+        
+        ast::ScopedNode*                     _currentScope;
         
         llvm::PointerType*                   _object_ptr_type;
         llvm::Type*                          _c_string_ptr_type;
