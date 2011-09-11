@@ -1,4 +1,5 @@
 #include "code_generator.h"
+
 #include <assert.h>
 
 namespace chime
@@ -7,7 +8,6 @@ namespace chime
     {
         _module               = NULL;
         _builder              = new llvm::IRBuilder<>(llvm::getGlobalContext());
-        _scope_values         = new std::map<std::string, llvm::Value*>();
         _importedNamespaces   = new std::vector<std::string>();
         _initFunctions        = new std::vector<llvm::Function*>();
         _internalInitFunction = NULL;
@@ -25,7 +25,6 @@ namespace chime
     
     code_generator::~code_generator()
     {
-        delete _scope_values;
         delete _builder;
         delete _importedNamespaces;
         delete _initFunctions;
@@ -107,15 +106,6 @@ namespace chime
         _implementationScope = scope;
     }
     
-    MethodScopeRef code_generator::getMethodScope(void) const
-    {
-        return _methodScope;
-    }
-    void code_generator::setMethodScope(MethodScopeRef scope)
-    {
-        _methodScope = scope;
-    }
-    
     std::vector<llvm::Function*>* code_generator::getInitFunctions(void) const
     {
         return _initFunctions;
@@ -151,25 +141,6 @@ namespace chime
     llvm::Value* code_generator::make_constant_string(std::string str)
     {
         return this->getConstantString(str);
-    }
-    
-    void code_generator::set_value_for_identifier(std::string name, llvm::Value* value)
-    {
-        (*_scope_values)[name] = value;
-    }
-    
-    llvm::Value* code_generator::value_for_identifier(std::string name)
-    {
-        llvm::Value* value;
-        
-        if (this->getMethodScope())
-        {
-            value = this->getMethodScope()->getValue(name);
-            if (value)
-                return value;
-        }
-        
-        return (*_scope_values)[name];
     }
     
     llvm::Type* code_generator::get_c_string_ptr_type(void)

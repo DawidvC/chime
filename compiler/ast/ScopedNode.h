@@ -15,6 +15,7 @@ namespace ast
     public:
         ScopedNode();
         
+        virtual std::string getIdentifier() const = 0;
         ScopedNode* getParent() const;
         void        setParent(ScopedNode* parent);
         
@@ -27,8 +28,11 @@ namespace ast
         void              capturedVariable(Variable* variable);
         Variable*         variableForIdentifier(const std::string& identifier);
         
+        // codegen support
         llvm::Value*      getValueForIdentifier(const std::string& identifier);
         void              setValueForIdentifier(const std::string& identifier, llvm::Value* value);
+        
+        std::string       getAnonymousFunctionName();
         
     protected:
         std::vector<std::string>         _variableNames;
@@ -36,6 +40,7 @@ namespace ast
         ScopedNode*                      _parent;
         
         std::map<std::string, llvm::Value*> _scopedValues;
+        int                                 _anonymousFunctionCount;
     };
     
     typedef std::tr1::shared_ptr<ScopedNode> ScopedNodeRef;

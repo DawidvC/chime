@@ -87,8 +87,6 @@ namespace ast
         methodFunction = generator.createFunction(functionType, functionName);
         
         // create the return code for the method
-        generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
-        generator.getMethodScope()->setName(this->getIdentifier());
         generator.pushScope(this);
         
         // setup the function entry

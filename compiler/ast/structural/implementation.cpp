@@ -83,6 +83,11 @@ namespace ast
         return _bodyBlock;
     }
     
+    std::string Implementation::getIdentifier() const
+    {
+        return this->getTypeRef()->identifier();
+    }
+    
     Variable* Implementation::createVariable(const std::string& identifier)
     {
         return new InstanceVariable(identifier);

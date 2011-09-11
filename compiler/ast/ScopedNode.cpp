@@ -1,10 +1,14 @@
 #include "ScopedNode.h"
 
+#include <sstream>
+
 namespace ast
 {
     ScopedNode::ScopedNode()
     {
         _parent = NULL;
+        
+        _anonymousFunctionCount = 1;
     }
     
     ScopedNode* ScopedNode::getParent() const
@@ -80,5 +84,18 @@ namespace ast
     void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value)
     {
         _scopedValues[identifier] = value;
+    }
+    
+    std::string ScopedNode::getAnonymousFunctionName()
+    {
+        std::stringstream s;
+        
+        s << this->getIdentifier();
+        s << "_anonymous_";
+        s << _anonymousFunctionCount;
+        
+        _anonymousFunctionCount += 1;
+        
+        return s.str();
     }
 }

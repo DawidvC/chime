@@ -16,6 +16,8 @@ namespace ast
         std::vector<std::string> getSourceDependencies(void) const;
         void                     addSourceDependency(const std::string& dependency);
         
+        std::string              getIdentifier() const;
+        
         Variable*                createVariable(const std::string& identifier);
     
     private:

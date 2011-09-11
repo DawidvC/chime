@@ -24,6 +24,7 @@ namespace ast
         ParameterSetRef        getParameters() const;
         std::vector<Variable*> getClosedVariables() const;
         
+        std::string  getIdentifier() const;
         Variable*    createVariable(const std::string& identifier);
         Variable*    transformVariable(Variable* variable);
         
@@ -37,6 +38,7 @@ namespace ast
         ParameterSetRef _parameters;
         
         std::map<std::string, Variable*> _closedVariables;
+        std::string                      _identifier;
     };
     
     typedef std::tr1::shared_ptr<Closure> ClosureRef;

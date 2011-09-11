@@ -12,7 +12,6 @@ namespace ast
 
 #include "compiler/codegen/runtime_interface.h"
 #include "compiler/codegen/scopes/implementation_scope.h"
-#include "compiler/codegen/scopes/method_scope.h"
 
 #include "llvm/DerivedTypes.h"
 #include "llvm/LLVMContext.h"
@@ -43,15 +42,10 @@ namespace chime
         void                   popScope();
         ImplementationScopeRef getImplementationScope(void) const;
         void                   setImplementationScope(ImplementationScopeRef scope);
-        MethodScopeRef         getMethodScope(void) const;
-        void                   setMethodScope(MethodScopeRef scope);
         std::vector<llvm::Function*>* getInitFunctions(void) const;
         
         llvm::Value*       getConstantString(std::string str);
         llvm::Value*       make_constant_string(std::string str);
-        
-        void               set_value_for_identifier(std::string name, llvm::Value* value);
-        llvm::Value*       value_for_identifier(std::string name);
         
         llvm::Type*        get_c_string_ptr_type(void);
         
@@ -68,11 +62,9 @@ namespace chime
     protected:
         llvm::Module*                        _module;
         llvm::IRBuilder<>*                   _builder;
-        std::map<std::string, llvm::Value*>* _scope_values;
         std::vector<llvm::Function*>*        _initFunctions;
         llvm::Function*                      _internalInitFunction;
         ImplementationScopeRef               _implementationScope;
-        MethodScopeRef                       _methodScope;
         std::vector<std::string>*            _importedNamespaces;
         
         ast::ScopedNode*                     _currentScope;

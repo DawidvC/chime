@@ -25,7 +25,6 @@ namespace ast
         llvm::Value* variableNamePtr;
         
         variableNamePtr = generator.getConstantString(this->getIdentifier());
-        //environment     = generator.getMethodScope()->getEnvironmentPointer();
         environment     = generator.getCurrentScope()->getValueForIdentifier("_environment");
         
         return generator.getRuntime()->callChimeObjectGetAttribute(environment, variableNamePtr);

@@ -21,6 +21,11 @@ namespace ast
         _sourceDependencies.push_back(dependency);
     }
     
+    std::string Root::getIdentifier() const
+    {
+        return std::string("Root");
+    }
+    
     Variable* Root::createVariable(const std::string& identifier)
     {
         return new GlobalVariable(identifier);

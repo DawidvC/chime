@@ -42,6 +42,7 @@ namespace ast
     
     Closure::Closure()
     {
+        _identifier = std::string("Unset Closure Identifier");
     }
     
     std::string Closure::nodeName(void) const
@@ -85,6 +86,11 @@ namespace ast
         }
         
         return variables;
+    }
+    
+    std::string Closure::getIdentifier() const
+    {
+        return _identifier;
     }
     
     Variable* Closure::createVariable(const std::string& identifier)
@@ -149,7 +155,6 @@ namespace ast
         llvm::Function*                function;
         llvm::FunctionType*            functionType;
         std::vector<const llvm::Type*> functionArgs;
-        std::string                    functionName;
         llvm::Value*                   closureValue;
         llvm::BasicBlock*              basicBlock;
         llvm::BasicBlock*              currentBlock;
@@ -160,14 +165,13 @@ namespace ast
         // capture the current insertion point
         currentBlock = generator.builder()->GetInsertBlock();
         
-        functionName = generator.getMethodScope()->createNewAnonymousFunctionName();
+        // set our identifier here
+        _identifier = generator.getCurrentScope()->getAnonymousFunctionName();
         
         functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), functionArgs, false);
         
-        function = generator.createFunction(functionType, functionName);
+        function = generator.createFunction(functionType, this->getIdentifier());
         
-        generator.setMethodScope(chime::MethodScopeRef(new chime::MethodScope()));
-        generator.getMethodScope()->setName(functionName);
         generator.pushScope(this);
         
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", function, 0);

@@ -26,6 +26,8 @@ namespace ast
         void       setSuperclass(ast::TypeRef node);
         NodeRef    getBody(void) const;
         
+        std::string         getIdentifier() const;
+        
         Variable*           createVariable(const std::string& identifier);
         
         llvm::Function*     createInitFunction(chime::code_generator& generator);
