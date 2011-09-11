@@ -29,7 +29,8 @@ namespace chime
         _functionChimeLiteralEncodeBoolean     = NULL;
         _functionChimeStringCreateWithCString  = NULL;
         _functionChimeClosureCreate            = NULL;
-        _functionChimeClosureSetAttribute      = NULL;
+        _functionChimeClosureGetEnvironment    = NULL;
+        _functionChimeClosureSetEnvironment    = NULL;
         
         _literalNull = NULL;
     }
@@ -401,7 +402,7 @@ namespace chime
             functionArgs.push_back(this->getCStringPtrType());
             functionArgs.push_back(this->getChimeObjectPtrType());
             
-            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
             
             _functionChimeObjectSetAttribute = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_set_attribute", this->getModule());
             _functionChimeObjectSetAttribute->setCallingConv(llvm::CallingConv::C);
@@ -646,36 +647,34 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* RuntimeInterface::callChimeClosureGetAttribute(llvm::Value* closureValue, llvm::Value* attributeNamePtr)
+    llvm::Value* RuntimeInterface::callChimeClosureGetEnvironment(llvm::Value* closureValue)
     {
         llvm::CallInst*           call;
         llvm::AllocaInst*         alloca;
         llvm::LoadInst*           loadedObjectPtr;
         std::vector<llvm::Value*> args;
         
-        if (_functionChimeClosureGetAttribute == NULL)
+        if (_functionChimeClosureGetEnvironment == NULL)
         {
             std::vector<const llvm::Type*> functionArgs;
             llvm::FunctionType*            functionType;
             
             functionArgs.push_back(this->getChimeObjectPtrType());
-            functionArgs.push_back(this->getCStringPtrType());
             
-            functionType = llvm::FunctionType::get(this->getChimeObjectPtrPtrType(), functionArgs, false);
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
             
-            _functionChimeClosureGetAttribute = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_closure_get_attribute", this->getModule());
-            _functionChimeClosureGetAttribute->setCallingConv(llvm::CallingConv::C);
+            _functionChimeClosureGetEnvironment = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_closure_get_environment", this->getModule());
+            _functionChimeClosureGetEnvironment->setCallingConv(llvm::CallingConv::C);
         }
         
-        loadedObjectPtr = this->getBuilder()->CreateLoad(closureValue, "chime_closure_get_attribute arg1:closure");
+        loadedObjectPtr = this->getBuilder()->CreateLoad(closureValue, "chime_closure_get_environement arg1:closure");
         
         args.push_back(loadedObjectPtr);
-        args.push_back(attributeNamePtr);
         
-        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrPtrType(), 0, "chime_closure_get_attribute return");
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_closure_get_environement return");
         alloca->setAlignment(8);
         
-        call = this->getBuilder()->CreateCall(_functionChimeClosureGetAttribute, args.begin(), args.end(), "");
+        call = this->getBuilder()->CreateCall(_functionChimeClosureGetEnvironment, args.begin(), args.end(), "");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);
@@ -683,36 +682,34 @@ namespace chime
         return alloca;
     }
     
-    void RuntimeInterface::callChimeClosureSetAttribute(llvm::Value* closureValue, llvm::Value* attributeNamePtr, llvm::Value* attributePtrValue)
+    void RuntimeInterface::callChimeClosureSetEnvironment(llvm::Value* closureValue, llvm::Value* environmentPtrValue)
     {
         llvm::CallInst*           call;
         llvm::LoadInst*           loadedObjectPtr;
         llvm::LoadInst*           loadedValuePtr;
         std::vector<llvm::Value*> args;
         
-        if (_functionChimeClosureSetAttribute == NULL)
+        if (_functionChimeClosureSetEnvironment == NULL)
         {
             std::vector<const llvm::Type*> functionArgs;
             llvm::FunctionType*            functionType;
             
             functionArgs.push_back(this->getChimeObjectPtrType());
-            functionArgs.push_back(this->getCStringPtrType());
-            functionArgs.push_back(this->getChimeObjectPtrPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
             
-            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
             
-            _functionChimeClosureSetAttribute = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_closure_set_attribute", this->getModule());
-            _functionChimeClosureSetAttribute->setCallingConv(llvm::CallingConv::C);
+            _functionChimeClosureSetEnvironment = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_closure_set_environment", this->getModule());
+            _functionChimeClosureSetEnvironment->setCallingConv(llvm::CallingConv::C);
         }
         
-        loadedObjectPtr = this->getBuilder()->CreateLoad(closureValue, "chime_closure_set_attribute param1:closure");
-        loadedValuePtr  = this->getBuilder()->CreateLoad(attributePtrValue, "chime_closure_set_attribute param2:value");
+        loadedObjectPtr = this->getBuilder()->CreateLoad(closureValue, "chime_closure_set_environment param1:closure");
+        loadedValuePtr  = this->getBuilder()->CreateLoad(environmentPtrValue, "chime_closure_set_environment param2:value");
         
         args.push_back(loadedObjectPtr);
-        args.push_back(attributeNamePtr);
         args.push_back(loadedValuePtr);
         
-        call = this->getBuilder()->CreateCall(_functionChimeClosureSetAttribute, args.begin(), args.end(), "");
+        call = this->getBuilder()->CreateCall(_functionChimeClosureSetEnvironment, args.begin(), args.end(), "");
         call->setTailCall(false);
     }
 }

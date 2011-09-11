@@ -9,23 +9,20 @@ namespace ast
     
     llvm::Value* ClosedLocalVariableAssignmentOperator::codegen(chime::code_generator& generator)
     {
-        llvm::Value*      rValue;
-        llvm::Value*      closure;
-        llvm::Value*      attributeNameCStringPtr;
-        llvm::AllocaInst* allocaPtrPtr;
+        llvm::Value*  rValue;
+        llvm::Value*  closure;
+        llvm::Value*  environment;
+        llvm::Value*  variableNamePtr;
         
         // first, codegen the thing we're going to be assigning to the variable
         rValue = this->getRightOperand()->codegen(generator);
         assert(rValue);
         
-        attributeNameCStringPtr = generator.make_constant_string(this->getVariable()->getIdentifier());
-        closure                 = generator.getMethodScope()->getSelfPointer();
+        variableNamePtr = generator.make_constant_string(this->getVariable()->getIdentifier());
+        closure         = generator.getMethodScope()->getSelfPointer();
+        environment     = generator.getRuntime()->callChimeClosureGetEnvironment(closure);
         
-        allocaPtrPtr = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrPtrType(), 0, "chime_closure_set_attribute arg1");
-        
-        generator.builder()->CreateStore(rValue, allocaPtrPtr, false);
-        
-        generator.getRuntime()->callChimeClosureSetAttribute(closure, attributeNameCStringPtr, allocaPtrPtr);
+        generator.getRuntime()->callChimeObjectSetAttribute(environment, variableNamePtr, rValue);
         
         return rValue;
     }

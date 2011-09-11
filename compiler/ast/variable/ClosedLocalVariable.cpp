@@ -20,27 +20,14 @@ namespace ast
     
     llvm::Value* ClosedLocalVariable::codegen(chime::code_generator& generator)
     {
-        llvm::Value*      value;
-        llvm::Value*      self;
-        llvm::Value*      variableNamePtr;
-        llvm::Value*      objectPtrPtr;
-        llvm::Value*      objectPtr;
-        llvm::AllocaInst* alloca;
-        
-        self = generator.getMethodScope()->getSelfPointer();
+        llvm::Value* closure;
+        llvm::Value* environment;
+        llvm::Value* variableNamePtr;
         
         variableNamePtr = generator.make_constant_string(this->getIdentifier());
+        closure         = generator.getMethodScope()->getSelfPointer();
+        environment     = generator.getRuntime()->callChimeClosureGetEnvironment(closure);
         
-        // get the stored object** from chime_closure_get_attribute
-        value = generator.getRuntime()->callChimeClosureGetAttribute(self, variableNamePtr);
-        
-        alloca = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrType(), 0, "closure attribute");
-        
-        objectPtrPtr = generator.builder()->CreateLoad(value, "closure attribute**");
-        objectPtr    = generator.builder()->CreateLoad(objectPtrPtr, "closure attribute*");
-        
-        generator.builder()->CreateStore(objectPtr, alloca, false);
-        
-        return alloca;
+        return generator.getRuntime()->callChimeObjectGetAttribute(environment, variableNamePtr);
     }
 }

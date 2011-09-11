@@ -6,6 +6,8 @@
 #include "compiler/ast/node.h"
 #include "compiler/ast/variable/Variable.h"
 
+#include <map>
+
 namespace ast
 {
     class ScopedNode : public node
@@ -18,14 +20,17 @@ namespace ast
         
         std::vector<std::string> getContainedVariableNames();
         bool                     definedIdentifier(const std::string& identifier);
+        bool                     capturedIdentifier(const std::string& identifier);
         
         virtual Variable* createVariable(const std::string& identifier);
         virtual Variable* transformVariable(Variable* variable);
+        void              capturedVariable(Variable* variable);
         Variable*         variableForIdentifier(const std::string& identifier);
         
     protected:
-        std::vector<std::string> _variableNames;
-        ScopedNode*              _parent;
+        std::vector<std::string>         _variableNames;
+        std::map<std::string, Variable*> _capturedVariables;
+        ScopedNode*                      _parent;
     };
     
     typedef std::tr1::shared_ptr<ScopedNode> ScopedNodeRef;

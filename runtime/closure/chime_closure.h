@@ -16,8 +16,8 @@ void chime_closure_initialize(void);
 chime_closure_t* chime_closure_create(void* function);
 void             chime_closure_destroy(chime_closure_t* closure);
 
-chime_object_t** chime_closure_get_attribute(chime_closure_t* closure, const char* key);
-void             chime_closure_set_attribute(chime_closure_t* closure, const char* key, chime_object_t** value);
+chime_object_t*  chime_closure_get_environment(chime_closure_t* closure);
+void             chime_closure_set_environment(chime_closure_t* closure, chime_object_t* environment);
 
 chime_object_t*  chime_closure_invoke(chime_closure_t* closure, chime_object_t* argument_array);
 

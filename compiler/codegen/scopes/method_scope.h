@@ -10,12 +10,17 @@ namespace chime
     class MethodScope : public Scope
     {
     public:
-        llvm::Value*      getSelfPointer(void) const;
-        void              setSelfPointer(llvm::Value* value);
+        MethodScope();
+        
+        llvm::Value* getSelfPointer(void) const;
+        void         setSelfPointer(llvm::Value* value);
+        
+        llvm::Value* getEnvironmentPointer(void) const;
+        void         setEnvironmentPointer(llvm::Value* value);
     
     protected:
-        std::string       _name;
-        llvm::Value*      _selfPointer;
+        llvm::Value* _selfPointer;
+        llvm::Value* _environmentPointer;
     };
     
     typedef std::tr1::shared_ptr<chime::MethodScope> MethodScopeRef;

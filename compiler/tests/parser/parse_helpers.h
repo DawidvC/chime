@@ -29,6 +29,11 @@
    ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
    } while (0)
 
+#define ASSERT_SHARED_LOCAL_VARIABLE(x, y) do { \
+   ASSERT_EQ("Shared Local Variable", y->nodeName()); \
+   ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
+   } while (0)
+
 #define ASSERT_INSTANCE_VARIABLE(x, y) do { \
    ASSERT_EQ("Instance Variable", y->nodeName()); \
    ASSERT_EQ(x, ((ast::InstanceVariable*)y)->getIdentifier()); \

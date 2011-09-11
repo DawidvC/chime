@@ -29,3 +29,4 @@
 #include "variable/GlobalVariable.h"
 #include "variable/InstanceVariable.h"
 #include "variable/LocalVariable.h"
+#include "variable/SharedLocalVariable.h"

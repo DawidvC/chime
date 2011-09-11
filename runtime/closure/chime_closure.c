@@ -31,6 +31,7 @@ chime_closure_t* chime_closure_create(void* function)
     closure->object.methods    = chime_dictionary_create();
     closure->object.variables  = chime_dictionary_create();
     closure->function          = function;
+    closure->environment       = NULL;
     
     return closure;
 }
@@ -45,14 +46,14 @@ void chime_closure_destroy(chime_closure_t* closure)
     free(closure);
 }
 
-chime_object_t** chime_closure_get_attribute(chime_closure_t* closure, const char* key)
+chime_object_t* chime_closure_get_environment(chime_closure_t* closure)
 {
-    return (chime_object_t**)chime_object_get_attribute((chime_object_t*)closure, key);
+    return closure->environment;
 }
 
-void chime_closure_set_attribute(chime_closure_t* closure, const char* key, chime_object_t** value)
+void chime_closure_set_environment(chime_closure_t* closure, chime_object_t* environment)
 {
-    chime_object_set_attribute((chime_object_t*)closure, key, (chime_object_t*)value);
+    closure->environment = environment;
 }
 
 chime_object_t* chime_closure_invoke(chime_closure_t* closure, chime_object_t* argument_array)

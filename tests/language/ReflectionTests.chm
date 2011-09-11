@@ -19,13 +19,14 @@ implementation ReflectionTests : Test.Case
     {
         methods = Object.new().methods
         
-        Assert.equal(methods.length, to:6)
+        Assert.equal(7, to:methods.length)
         
-        Assert.equal(methods[0].name, to:"class")
-        Assert.equal(methods[1].name, to:"methods")
-        Assert.equal(methods[2].name, to:"invoke")
-        Assert.equal(methods[3].name, to:"to_string")
-        Assert.equal(methods[4].name, to:"==")
-        Assert.equal(methods[5].name, to:">")
+        Assert.equal("class",     to:methods[0].name)
+        Assert.equal("methods",   to:methods[1].name)
+        Assert.equal("invoke",    to:methods[2].name)
+        Assert.equal("hash",      to:methods[3].name)
+        Assert.equal("to_string", to:methods[4].name)
+        Assert.equal("==",        to:methods[5].name)
+        Assert.equal(">",         to:methods[6].name)
     }
 }

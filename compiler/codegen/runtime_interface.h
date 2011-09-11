@@ -62,8 +62,8 @@ namespace chime
         
         // closure functions
         llvm::Value* callChimeClosureCreate(llvm::Function* function);
-        llvm::Value* callChimeClosureGetAttribute(llvm::Value* closureValue, llvm::Value* attributeNamePtr);
-        void         callChimeClosureSetAttribute(llvm::Value* closureValue, llvm::Value* attributeNamePtr, llvm::Value* attributePtrValue);
+        llvm::Value* callChimeClosureGetEnvironment(llvm::Value* closureValue);
+        void         callChimeClosureSetEnvironment(llvm::Value* closureValue, llvm::Value* environmentPtrValue);
         
     protected:
         llvm::Module*       _module;
@@ -93,8 +93,8 @@ namespace chime
         llvm::Function*     _functionChimeLiteralEncodeBoolean;
         llvm::Function*     _functionChimeStringCreateWithCString;
         llvm::Function*     _functionChimeClosureCreate;
-        llvm::Function*     _functionChimeClosureGetAttribute;
-        llvm::Function*     _functionChimeClosureSetAttribute;
+        llvm::Function*     _functionChimeClosureGetEnvironment;
+        llvm::Function*     _functionChimeClosureSetEnvironment;
         
         llvm::Value*        _literalNull;
     };

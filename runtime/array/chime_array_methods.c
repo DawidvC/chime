@@ -51,7 +51,7 @@ chime_object_t* array_add(chime_object_t* instance, chime_object_t* object)
     return CHIME_LITERAL_NULL;
 }
 
-chime_object_t* array_indexer(chime_object_t* instance, chime_object_t* index)
+chime_object_t* array_indexer_get(chime_object_t* instance, chime_object_t* index)
 {
     chime_runtime_array_t* internal_array;
     unsigned long          i;

@@ -27,6 +27,11 @@ namespace ast
         return std::find(_variableNames.begin(), _variableNames.end(), identifier) != _variableNames.end();
     }
     
+    bool ScopedNode::capturedIdentifier(const std::string& identifier)
+    {
+        return _capturedVariables.count(identifier) == 1; 
+    }
+    
     Variable* ScopedNode::createVariable(const std::string& identifier)
     {
         return NULL;
@@ -35,6 +40,11 @@ namespace ast
     Variable* ScopedNode::transformVariable(Variable* variable)
     {
         return variable;
+    }
+    
+    void ScopedNode::capturedVariable(Variable* variable)
+    {
+        _capturedVariables[variable->getIdentifier()] = variable;
     }
     
     Variable* ScopedNode::variableForIdentifier(const std::string& identifier)

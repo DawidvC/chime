@@ -29,6 +29,9 @@ namespace ast
         
         llvm::Value* codegen(chime::code_generator& generator);
     
+    protected:
+        llvm::Value* codegenEnvironment(chime::code_generator& generator);
+    
     private:
         CodeBlockRef    _bodyBlock;
         ParameterSetRef _parameters;

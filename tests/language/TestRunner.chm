@@ -2,6 +2,7 @@ import "ControlTests"
 import "LiteralTests"
 import "MethodTests"
 import "ReflectionTests"
+import "HashTests"
 import "ClosureTests"
 
 test = LiteralTests.new()
@@ -74,6 +75,12 @@ test.teardown()
 
 test.setup()
 test.test_method_names()
+test.teardown()
+
+test = HashTests.new()
+
+test.setup()
+test.test_hash_create()
 test.teardown()
 
 test = ClosureTests.new()

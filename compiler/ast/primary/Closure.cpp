@@ -26,6 +26,15 @@ namespace ast
         // types
         closure->_bodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parseNextBlock(parser));
         
+        // before we pop the scope, we need to inform the enclosing scope of any
+        // local variables that now need to be shared
+        std::map<std::string, Variable*>::iterator it;
+        
+        for (it = closure->_closedVariables.begin(); it != closure->_closedVariables.end(); ++it)
+        {
+            closure->getParent()->capturedVariable(it->second);
+        }
+        
         parser.popScope();
         
         return closure;
@@ -101,6 +110,37 @@ namespace ast
         return newVariable;
     }
     
+    llvm::Value* Closure::codegenEnvironment(chime::code_generator& generator)
+    {
+        llvm::Value* environment;
+        llvm::Value* hashClass;
+        llvm::Value* string;
+        
+        string = generator.make_constant_string("Hash");
+        
+        hashClass = generator.getRuntime()->callChimeRuntimeGetClass(string);
+        
+        string = generator.make_constant_string("new");
+        
+        environment = generator.getRuntime()->callChimeObjectInvoke(hashClass, string, std::vector<llvm::Value*>());
+        
+        // put in the closed values
+        std::map<std::string, Variable*>::iterator it;
+        
+        for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
+        {
+            llvm::Value* variableValue;
+            llvm::Value* variableNameCStringPtr;
+            
+            variableValue          = generator.value_for_identifier(it->second->getIdentifier());
+            variableNameCStringPtr = generator.make_constant_string(it->first);
+            
+            generator.getRuntime()->callChimeObjectSetAttribute(environment, variableNameCStringPtr, variableValue);
+        }
+        
+        return environment;
+    }
+    
     llvm::Value* Closure::codegen(chime::code_generator& generator)
     {
         // This code is very very similar to the code in FunctionDefinition.cpp.  I'd like to
@@ -135,6 +175,7 @@ namespace ast
         // parameters
         llvm::Function::arg_iterator args;
         llvm::AllocaInst*            alloca;
+        llvm::Value*                 environment;
         
         // first, deal with self
         args = function->arg_begin();
@@ -159,28 +200,10 @@ namespace ast
         generator.builder()->SetInsertPoint(currentBlock);
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
+        environment  = this->codegenEnvironment(generator);
         
-        // put in the closed values
-        std::map<std::string, Variable*>::iterator it;
-        
-        for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
-        {
-            llvm::Value*      value;
-            llvm::Value*      attributeNameCStringPtr;
-            llvm::AllocaInst* allocaPtrPtr;
-            
-            allocaPtrPtr = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrPtrType(), 0, "chime_closure_set_attribute arg1");
-            
-            //value = it->second->codegen(generator);
-            value = generator.value_for_identifier(it->second->getIdentifier());
-            
-            generator.builder()->CreateStore(value, allocaPtrPtr, false);
-            
-            attributeNameCStringPtr = generator.make_constant_string(it->first);
-            
-            // chime_closure_t* closure, const char* key, chime_object_t** value
-            generator.getRuntime()->callChimeClosureSetAttribute(closureValue, attributeNameCStringPtr, allocaPtrPtr);
-        }
+        generator.getRuntime()->callChimeClosureSetEnvironment(closureValue, environment);
+        generator.getMethodScope()->setEnvironmentPointer(environment);
         
         return closureValue;
     }

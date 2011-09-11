@@ -1,0 +1,18 @@
+implementation HashTests : Test.Case
+{
+    method test_hash_create()
+    {
+        hash = Hash.new()
+        
+        Assert.equal(0, to:hash.length)
+    }
+    
+//     method test_hash_set()
+//     {
+//         hash = Hash.new()
+//         
+//         //hash["abc"] = 10
+//         
+//         Assert.equal(10, to:hash["abc"])
+//     }
+}

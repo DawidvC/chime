@@ -187,10 +187,6 @@ namespace ast
             
             return call->codegen_with_target(l_value, generator);
         }
-        else if (this->identifier().compare("=") == 0)
-        {
-            return this->codegen_assignment(generator);
-        }
         
         // this is just a plain operator that we need to invoke as a method
         l_value = this->left_operand()->codegen(generator);
@@ -204,61 +200,5 @@ namespace ast
         methodNamePtr = generator.make_constant_string(this->identifier());
         
         return generator.getRuntime()->callChimeObjectInvoke(l_value, methodNamePtr, arguments);
-    }
-    
-    llvm::Value* binary_operator::codegen_assignment(chime::code_generator& generator)
-    {
-        ast::Variable*  variable;
-        llvm::Value*    lValue;
-        llvm::Value*    rValue;
-        llvm::LoadInst* objectLoad;
-        
-        // assignments can happen only to variable
-        variable = static_cast<ast::Variable*>(this->getLeftOperand());
-        
-        rValue = this->getRightOperand()->codegen(generator);
-        assert(rValue);
-        
-        // first, is it an instance variable?
-        if (variable->nodeName() == "Instance Variable")
-        {
-            llvm::Value* self;
-            llvm::Value* attributeNameCStringPtr;
-            
-            attributeNameCStringPtr = generator.make_constant_string(variable->getIdentifier());
-            self                    = generator.getMethodScope()->getSelfPointer();
-            
-            generator.getRuntime()->callChimeObjectSetAttribute(self, attributeNameCStringPtr, rValue);
-            
-            // the return of this statement isn't super obvious
-            return rValue;
-        }
-        else if (variable->nodeName() == "Closed Local Variable")
-        {
-            llvm::Value*      closure;
-            llvm::Value*      attributeNameCStringPtr;
-            llvm::AllocaInst* allocaPtrPtr;
-            
-            attributeNameCStringPtr = generator.make_constant_string(variable->getIdentifier());
-            closure                 = generator.getMethodScope()->getSelfPointer();
-            
-            allocaPtrPtr = generator.builder()->CreateAlloca(generator.getRuntime()->getChimeObjectPtrPtrType(), 0, "chime_closure_set_attribute arg1");
-            
-            generator.builder()->CreateStore(rValue, allocaPtrPtr, false);
-            
-            generator.getRuntime()->callChimeClosureSetAttribute(closure, attributeNameCStringPtr, allocaPtrPtr);
-            
-            return rValue;
-        }
-        
-        objectLoad = generator.builder()->CreateLoad(rValue, "loaded r_value");
-        
-        // this is just a regular old local variable
-        lValue = this->left_operand()->codegen(generator);
-        assert(lValue);
-        
-        generator.builder()->CreateStore(objectLoad, lValue, false);
-        
-        return lValue;
-    }
+    }    
 }
