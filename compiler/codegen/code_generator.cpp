@@ -88,7 +88,7 @@ namespace chime
         return _initFunctions;
     }
     
-    llvm::Value* code_generator::make_constant_string(std::string str)
+    llvm::Value* code_generator::getConstantString(std::string str)
     {
         llvm::ArrayType*             string_array_type;
         llvm::GlobalVariable*        global_string;
@@ -113,6 +113,11 @@ namespace chime
         global_string->setInitializer(const_c_string_array);
         
         return const_ptr;
+    }
+    
+    llvm::Value* code_generator::make_constant_string(std::string str)
+    {
+        return this->getConstantString(str);
     }
     
     void code_generator::set_value_for_identifier(std::string name, llvm::Value* value)
@@ -224,78 +229,6 @@ namespace chime
         call->setTailCall(false);
         
         return NULL;
-    }
-    
-    llvm::Value* code_generator::call_chime_literal_encode_boolean(unsigned char value)
-    {
-        llvm::Function*   function_chime_literal_encode_boolean;
-        llvm::CallInst*   call;
-        llvm::AllocaInst* alloca;
-        
-        function_chime_literal_encode_boolean = (llvm::Function*)this->value_for_identifier("chime_literal_encode_boolean");
-        if (function_chime_literal_encode_boolean == NULL)
-        {
-            std::vector<const llvm::Type*> function_args;
-            llvm::FunctionType*            function_type;
-            
-            function_args.push_back(llvm::IntegerType::get(this->get_context(), 8));
-            
-            function_type = llvm::FunctionType::get(this->getRuntime()->getChimeObjectPtrType(), function_args, false);
-            
-            function_chime_literal_encode_boolean = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_literal_encode_boolean", this->module());
-            function_chime_literal_encode_boolean->setCallingConv(llvm::CallingConv::C);
-            
-            this->set_value_for_identifier("chime_literal_encode_boolean", function_chime_literal_encode_boolean);
-        }
-        
-        llvm::Value* boolean_value;
-        
-        alloca = this->insert_chime_object_alloca();
-        
-        boolean_value = llvm::ConstantInt::get(this->get_context(), llvm::APInt(8, value, 10));
-        
-        call = this->builder()->CreateCall(function_chime_literal_encode_boolean, boolean_value, "encode boolean");
-        call->setTailCall(false);
-        
-        this->builder()->CreateStore(call, alloca, false);
-        
-        return alloca;
-    }
-    
-    llvm::Value* code_generator::call_chime_string_create_with_c_string(std::string str)
-    {
-        llvm::Function*   function_chime_string_create_with_c_string;
-        llvm::CallInst*   call;
-        llvm::AllocaInst* alloca;
-        
-        function_chime_string_create_with_c_string = (llvm::Function*)this->value_for_identifier("chime_string_create_with_c_string");
-        if (function_chime_string_create_with_c_string == NULL)
-        {
-            std::vector<const llvm::Type*> function_args;
-            llvm::FunctionType*            function_type;
-            
-            function_args.push_back(this->get_c_string_ptr_type());
-            
-            function_type = llvm::FunctionType::get(this->getRuntime()->getChimeObjectPtrType(), function_args, false);
-            
-            function_chime_string_create_with_c_string = llvm::Function::Create(function_type, llvm::GlobalValue::ExternalLinkage, "chime_string_create_with_c_string", this->module());
-            function_chime_string_create_with_c_string->setCallingConv(llvm::CallingConv::C);
-            
-            this->set_value_for_identifier("chime_string_create_with_c_string", function_chime_string_create_with_c_string);
-        }
-        
-        llvm::Value* c_string_ptr;
-        
-        c_string_ptr = this->make_constant_string(str);
-        
-        alloca = this->insert_chime_object_alloca();
-        
-        call = this->builder()->CreateCall(function_chime_string_create_with_c_string, c_string_ptr, "create string");
-        call->setTailCall(false);
-        
-        this->builder()->CreateStore(call, alloca, false);
-        
-        return alloca;
     }
     
     void code_generator::generateMainFunction(void)

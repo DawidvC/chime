@@ -503,7 +503,7 @@ namespace chime
     
 #pragma mark -
 #pragma mark Literal Functions
-    llvm::Value* RuntimeInterface::callChimeLiteralEncodeInteger(signed long value)
+    llvm::Value* RuntimeInterface::callChimeLiteralEncodeInteger(llvm::Value* integerValue)
     {
         llvm::CallInst*   call;
         llvm::AllocaInst* alloca;
@@ -521,12 +521,8 @@ namespace chime
             _functionChimeLiteralEncodeInteger->setCallingConv(llvm::CallingConv::C);
         }
         
-        llvm::Value* integerValue;
-        
         alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "encode integer return");
         alloca->setAlignment(8);
-        
-        integerValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, value, 10));
         
         call = this->getBuilder()->CreateCall(_functionChimeLiteralEncodeInteger, integerValue, "encode integer");
         call->setTailCall(false);
@@ -536,7 +532,7 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* RuntimeInterface::callChimeLiteralEncodeBoolean(unsigned char value)
+    llvm::Value* RuntimeInterface::callChimeLiteralEncodeBoolean(llvm::Value* booleanValue)
     {
         llvm::CallInst*   call;
         llvm::AllocaInst* alloca;
@@ -554,12 +550,8 @@ namespace chime
             _functionChimeLiteralEncodeBoolean->setCallingConv(llvm::CallingConv::C);
         }
         
-        llvm::Value* booleanValue;
-        
         alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "encode boolean return");
         alloca->setAlignment(8);
-        
-        booleanValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(8, value, 10));
         
         call = this->getBuilder()->CreateCall(_functionChimeLiteralEncodeBoolean, booleanValue, "encode boolean");
         call->setTailCall(false);

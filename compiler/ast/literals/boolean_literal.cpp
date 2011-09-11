@@ -51,6 +51,10 @@ namespace ast
     
     llvm::Value* boolean_literal::codegen(chime::code_generator& generator)
     {
-        return generator.call_chime_literal_encode_boolean(this->value());
+        llvm::Value* booleanValue;
+        
+        booleanValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(8, this->value(), 10));
+        
+        return generator.getRuntime()->callChimeLiteralEncodeBoolean(booleanValue);
     }
 }

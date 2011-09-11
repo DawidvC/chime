@@ -38,6 +38,10 @@ namespace ast
     
     llvm::Value* string_literal::codegen(chime::code_generator& generator)
     {
-        return generator.call_chime_string_create_with_c_string(this->value());
+        llvm::Value* cStringPtr;
+        
+        cStringPtr = generator.getConstantString(this->value());
+        
+        return generator.getRuntime()->callChimeStringCreateWithCString(cStringPtr);
     }
 }

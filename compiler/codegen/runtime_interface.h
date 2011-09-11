@@ -53,8 +53,8 @@ namespace chime
         llvm::Value* callChimeObjectInvoke(llvm::Value* objectValue, llvm::Value* namePtr, std::vector<llvm::Value*> args);
         
         // literal functions
-        llvm::Value* callChimeLiteralEncodeInteger(signed long value);
-        llvm::Value* callChimeLiteralEncodeBoolean(unsigned char value);
+        llvm::Value* callChimeLiteralEncodeInteger(llvm::Value* integerValue);
+        llvm::Value* callChimeLiteralEncodeBoolean(llvm::Value* booleanValue);
         
         llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr);
         

@@ -42,6 +42,7 @@ namespace chime
         void                   setMethodScope(MethodScopeRef scope);
         std::vector<llvm::Function*>* getInitFunctions(void) const;
         
+        llvm::Value*       getConstantString(std::string str);
         llvm::Value*       make_constant_string(std::string str);
         
         void               set_value_for_identifier(std::string name, llvm::Value* value);
@@ -56,8 +57,6 @@ namespace chime
         llvm::Function*    createFunction(const llvm::FunctionType* type, const std::string name);
         
         llvm::Value*    callModuleInitFunction(const std::string& name);
-        llvm::Value*    call_chime_literal_encode_boolean(unsigned char value);
-        llvm::Value*    call_chime_string_create_with_c_string(std::string str);
         
         void generate(ast::node* node, const std::string& moduleName, bool asMain);
         
