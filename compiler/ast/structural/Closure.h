@@ -1,15 +1,16 @@
+// chime: Closure.h
+
 #ifndef CLOSURE_H
 #define CLOSURE_H
 
-#include "compiler/ast/ScopedNode.h"
+#include "FunctionDefinition.h"
 #include "compiler/ast/common/code_block.h"
-#include "compiler/ast/common/parameter_set.h"
 
 #include <map>
 
 namespace ast
 {
-    class Closure : public ScopedNode
+    class Closure : public FunctionDefinition
     {
     public:
         static ast::Closure* parse(chime::parser& parser);
@@ -21,10 +22,8 @@ namespace ast
         std::string            stringRepresentation(int depth=0) const;
         
         CodeBlockRef           getBody() const;
-        ParameterSetRef        getParameters() const;
         std::vector<Variable*> getClosedVariables() const;
         
-        std::string  getIdentifier() const;
         Variable*    createVariable(const std::string& identifier);
         Variable*    transformVariable(Variable* variable);
         
@@ -34,11 +33,11 @@ namespace ast
         llvm::Value* codegenEnvironment(chime::code_generator& generator);
     
     private:
-        CodeBlockRef    _bodyBlock;
-        ParameterSetRef _parameters;
+        // parsing members
+        CodeBlockRef _bodyBlock;
         
+        // codegen members
         std::map<std::string, Variable*> _closedVariables;
-        std::string                      _identifier;
     };
     
     typedef std::tr1::shared_ptr<Closure> ClosureRef;

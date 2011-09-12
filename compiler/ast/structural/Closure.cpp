@@ -18,7 +18,7 @@ namespace ast
         
         if (parser.look_ahead()->equal_to("("))
         {
-            closure->_parameters = ParameterSetRef(new ParameterSet(parser));
+            closure->setParameters(ParameterSetRef(new ParameterSet(parser)));
         }
         
         // this cast is probably not always safe because the current
@@ -42,7 +42,7 @@ namespace ast
     
     Closure::Closure()
     {
-        _identifier = std::string("Unset Closure Identifier");
+        this->setIdentifier("Unset Closure Identifier");
     }
     
     std::string Closure::nodeName(void) const
@@ -69,11 +69,6 @@ namespace ast
         return _bodyBlock;
     }
     
-    ParameterSetRef Closure::getParameters() const
-    {
-        return _parameters;
-    }
-    
     std::vector<Variable*> Closure::getClosedVariables() const
     {
         // iterator must be const, since the method is marked const
@@ -86,11 +81,6 @@ namespace ast
         }
         
         return variables;
-    }
-    
-    std::string Closure::getIdentifier() const
-    {
-        return _identifier;
     }
     
     Variable* Closure::createVariable(const std::string& identifier)
@@ -166,7 +156,7 @@ namespace ast
         currentBlock = generator.builder()->GetInsertBlock();
         
         // set our identifier here
-        _identifier = generator.getCurrentScope()->getAnonymousFunctionName();
+        this->setIdentifier(generator.getCurrentScope()->getAnonymousFunctionName());
         
         functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), functionArgs, false);
         
