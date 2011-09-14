@@ -6,9 +6,8 @@
 #include "runtime/object/chime_object_internal.h"
 
 struct _chime_closure {
-    struct _chime_object  object;      // make it an object
-    void*                 function;    // with an extra field for its function
-    struct _chime_object* environment; // and environment it closes over
+    struct _chime_object object;      // make it an object
+    void*                function;    // with an extra field for its function
 };
 
 #endif // CHIME_CLOSURE_INTERNAL_H

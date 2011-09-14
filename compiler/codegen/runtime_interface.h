@@ -22,6 +22,7 @@ namespace chime
         llvm::IRBuilder<>* getBuilder(void) const;
         
         // basic types
+        llvm::Type*         getVoidPtrType(void);
         llvm::Type*         getCStringPtrType(void);
         
         // types
@@ -62,10 +63,13 @@ namespace chime
         
         // closure functions
         llvm::Value* callChimeClosureCreate(llvm::Function* function);
-        llvm::Value* callChimeClosureGetEnvironment(llvm::Value* closureValue);
-        void         callChimeClosureSetEnvironment(llvm::Value* closureValue, llvm::Value* environmentPtrValue);
         
-    protected:
+        // reference functions
+        llvm::Value* callChimeReferenceCreate(llvm::Value* objectValue);
+        llvm::Value* callChimeReferenceGet(llvm::Value* referenceValue);
+        void         callChimeReferenceSet(llvm::Value* referenceValue, llvm::Value* objectValue);
+        
+    private:
         llvm::Module*       _module;
         llvm::IRBuilder<>*  _builder;
         
@@ -93,8 +97,9 @@ namespace chime
         llvm::Function*     _functionChimeLiteralEncodeBoolean;
         llvm::Function*     _functionChimeStringCreateWithCString;
         llvm::Function*     _functionChimeClosureCreate;
-        llvm::Function*     _functionChimeClosureGetEnvironment;
-        llvm::Function*     _functionChimeClosureSetEnvironment;
+        llvm::Function*     _functionChimeReferenceCreate;
+        llvm::Function*     _functionChimeReferenceGet;
+        llvm::Function*     _functionChimeReferenceSet;
         
         llvm::Value*        _literalNull;
     };

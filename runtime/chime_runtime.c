@@ -8,6 +8,7 @@
 #include "runtime/string/chime_string.h"
 #include "runtime/array/chime_array.h"
 #include "runtime/hash/chime_hash.h"
+#include "runtime/reference/chime_reference.h"
 #include "runtime/closure/chime_closure.h"
 
 #include <assert.h>
@@ -43,6 +44,8 @@ void chime_runtime_initialize(void)
     chime_array_initialize();
     
     chime_hash_initialize();
+    
+    chime_reference_initialize();
     
     chime_closure_initialize();
     

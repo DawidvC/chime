@@ -18,16 +18,25 @@ namespace ast
         return new ClosedLocalVariableAssignmentOperator();
     }
     
-    llvm::Value* ClosedLocalVariable::codegen(chime::code_generator& generator)
+    llvm::Value* ClosedLocalVariable::codegenReference(chime::code_generator& generator)
     {
         llvm::Value* closure;
-        llvm::Value* environment;
+        llvm::Value* reference;
         llvm::Value* variableNamePtr;
         
         variableNamePtr = generator.getConstantString(this->getIdentifier());
         closure         = generator.getCurrentScope()->getValueForIdentifier("_self");
-        environment     = generator.getRuntime()->callChimeClosureGetEnvironment(closure);
+        reference       = generator.getRuntime()->callChimeObjectGetAttribute(closure, variableNamePtr);
         
-        return generator.getRuntime()->callChimeObjectGetAttribute(environment, variableNamePtr);
+        return reference;
+    }
+    
+    llvm::Value* ClosedLocalVariable::codegen(chime::code_generator& generator)
+    {
+        llvm::Value* reference;
+        
+        reference = this->codegenReference(generator);
+        
+        return generator.getRuntime()->callChimeReferenceGet(reference);
     }
 }

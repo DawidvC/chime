@@ -21,6 +21,8 @@ namespace ast
         std::string getIdentifier() const;
         
         virtual AssignmentOperator* createAssignment() = 0;
+        
+        virtual llvm::Value* codegenReference(chime::code_generator& generator);
     
     protected:
         std::string _identifier;

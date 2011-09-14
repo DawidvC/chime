@@ -30,7 +30,7 @@ namespace ast
         llvm::Value* codegen(chime::code_generator& generator);
     
     protected:
-        llvm::Value* codegenEnvironment(chime::code_generator& generator);
+        void codegenEnvironment(chime::code_generator& generator, llvm::Value* closureValue);
     
     private:
         // parsing members

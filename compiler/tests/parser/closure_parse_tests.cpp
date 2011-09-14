@@ -118,3 +118,22 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     ASSERT_OPERATOR(".", op);
     ASSERT_SHARED_LOCAL_VARIABLE("a", op->getLeftOperand());
 }
+
+TEST_F(ClosureParseTests, NestedClosedLocalVariablesInMethod)
+{
+    ast::method_definition*     method;
+    //ast::binary_operator*       op;
+    //ast::method_call*           call;
+    ast::Closure*               closure;
+    std::vector<ast::Variable*> closedVariables;
+    
+    method = parse_method_def("method foo() {\n  a = 42\n  b = 0\n do { a = a + 1 \n do { b = b + 5 }\n }\n a.print()\n b.print()\n }");
+    
+    closure = static_cast<ast::Closure*>(method->getBody()->childAtIndex(2));
+    ASSERT_CLOSURE(closure);
+    
+    closedVariables = closure->getClosedVariables();
+    ASSERT_EQ(2, closedVariables.size());
+    ASSERT_EQ("a", closedVariables[0]->getIdentifier());
+    ASSERT_EQ("b", closedVariables[1]->getIdentifier());
+}

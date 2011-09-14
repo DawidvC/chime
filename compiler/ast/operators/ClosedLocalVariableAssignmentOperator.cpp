@@ -10,19 +10,19 @@ namespace ast
     llvm::Value* ClosedLocalVariableAssignmentOperator::codegen(chime::code_generator& generator)
     {
         llvm::Value*  rValue;
-        llvm::Value*  closure;
-        llvm::Value*  environment;
+        llvm::Value*  closureValue;
+        llvm::Value*  referenceValue;
         llvm::Value*  variableNamePtr;
         
         // first, codegen the thing we're going to be assigning to the variable
         rValue = this->getRightOperand()->codegen(generator);
         assert(rValue);
         
-        variableNamePtr = generator.make_constant_string(this->getVariable()->getIdentifier());
-        closure         = generator.getCurrentScope()->getValueForIdentifier("_self");
-        environment     = generator.getRuntime()->callChimeClosureGetEnvironment(closure);
+        variableNamePtr = generator.getConstantString(this->getVariable()->getIdentifier());
+        closureValue    = generator.getCurrentScope()->getValueForIdentifier("_self");
+        referenceValue  = generator.getRuntime()->callChimeObjectGetAttribute(closureValue, variableNamePtr);
         
-        generator.getRuntime()->callChimeObjectSetAttribute(environment, variableNamePtr, rValue);
+        generator.getRuntime()->callChimeReferenceSet(referenceValue, rValue);
         
         return rValue;
     }

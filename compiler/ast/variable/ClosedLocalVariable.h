@@ -16,6 +16,7 @@ namespace ast
         
         AssignmentOperator* createAssignment();
         
+        llvm::Value* codegenReference(chime::code_generator& generator);
         llvm::Value* codegen(chime::code_generator& generator);
     };
     

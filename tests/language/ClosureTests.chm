@@ -46,9 +46,8 @@ implementation ClosureTests : Test.Case
         {
             h = do
             {
-                //value = value + 1
-                //return value
-                return 5
+                value = value + 1
+                return value
             }
             
             functions.append(h)

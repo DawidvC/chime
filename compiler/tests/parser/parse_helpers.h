@@ -61,12 +61,6 @@
     ASSERT_EQ(x, ((ast::Attribute*)y)->getIdentifier()); \
     } while (0)
 
-#define ASSERT_VARIABLE_DEFINITION(x, y, z) do { \
-    ASSERT_EQ("variable definition", z->node_name()); \
-    ASSERT_EQ(y, ((ast::variable_definition*)z)->identifier()); \
-    ASSERT_TYPE(x, ((ast::variable_definition*)z)->variable_type()); \
-    } while (0)
-
 #define ASSERT_METHOD_PARAMETER(w, x, y, z) do { \
     ASSERT_EQ("method parameter", ((ast::method_parameter*)z)->node_name()); \
     ASSERT_EQ(y, ((ast::method_parameter*)z)->identifier()); \

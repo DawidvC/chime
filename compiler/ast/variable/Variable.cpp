@@ -16,6 +16,7 @@ namespace ast
         // Defer to the current scope to actually create the variable object.  This is
         // the trick to make scope-aware variables in the AST
         node = parser.getCurrentScope()->variableForIdentifier(identifier);
+        assert(node);
         
         if (allowAssignment && parser.look_ahead(1)->value() == "=")
         {
@@ -61,5 +62,16 @@ namespace ast
     std::string Variable::getIdentifier() const
     {
         return _identifier;
+    }
+    
+    llvm::Value* Variable::codegenReference(chime::code_generator& generator)
+    {
+        llvm::Value* variableValue;
+        llvm::Value* referenceValue;
+        
+        variableValue  = this->codegen(generator);
+        referenceValue = generator.getRuntime()->callChimeReferenceCreate(variableValue);
+        
+        return referenceValue;
     }
 }

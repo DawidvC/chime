@@ -18,11 +18,14 @@ namespace ast
     {
         return std::string("string literal");
     }
-    std::string string_literal::toString(void) const
+    std::string string_literal::stringRepresentation(int depth) const
     {
         std::string s;
         
-        s += "literal: '" + this->value() + "'";
+        s.append(depth*2, ' ');
+        s.append("literal: '");
+        s.append(this->value());
+        s.append("'");
         
         return s;
     }

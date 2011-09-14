@@ -1,5 +1,5 @@
 #include "method_call.h"
-#include "Closure.h"
+#include "compiler/ast/structural/Closure.h"
 
 namespace ast
 {

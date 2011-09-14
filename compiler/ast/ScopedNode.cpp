@@ -53,7 +53,8 @@ namespace ast
     
     Variable* ScopedNode::variableForIdentifier(const std::string& identifier)
     {
-        ScopedNode* node;
+        ScopedNode*              node;
+        std::vector<ScopedNode*> nodesPassedOver;
         
         node = this->getParent();
         
@@ -63,11 +64,26 @@ namespace ast
             {
                 Variable* v;
                 
+                // allow the node that actually defined the identifier to make
+                // the variable node
                 v = node->createVariable(identifier);
+                
+                // This is kind of a hack.  It gives all of the inner nodes a chance
+                // to transform the variable.  This is specifically so that closures
+                // can be notified of inner variables they need to close over
+                for (std::vector<ScopedNode*>::iterator it = nodesPassedOver.begin(); it != nodesPassedOver.end(); ++it)
+                {
+                    v = (*it)->transformVariable(v);
+                }
+                
+                // now, allow the node that's making the reference to transform it, 
+                // if needed
                 v = this->transformVariable(v);
                 
                 return v;
             }
+            
+            nodesPassedOver.push_back(node);
             
             node = node->getParent();
         }

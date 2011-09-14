@@ -393,15 +393,6 @@ TEST_F(BasicParserTest, IndexerOnMethod)
     ASSERT_METHOD_CALL("bar", op->getRightOperand());
 }
 
-TEST_F(BasicParserTest, FunctionType)
-{
-    ast::variable_definition* node;
-    
-    node = (ast::variable_definition*)parse("Function() a")->child_at_index(0);
-    
-    ASSERT_VARIABLE_DEFINITION("Function", "a", node);
-}
-
 TEST_F(BasicParserTest, MethodCallWithLabelledParams)
 {
     ast::method_call* call;

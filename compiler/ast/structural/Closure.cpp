@@ -85,56 +85,44 @@ namespace ast
     
     Variable* Closure::createVariable(const std::string& identifier)
     {
+        //if (_closedVariables.find(identifier) != _closedVariables.end())
+        //    return new ClosedLocalVariable(identifier);
+        
         return new LocalVariable(identifier);
     }
     
     Variable* Closure::transformVariable(Variable* variable)
     {
-        Variable* newVariable;
-        
-        newVariable = variable;
+        _closedVariables[variable->getIdentifier()] = variable;
         
         if (variable->nodeName() == "Local Variable")
         {
-            newVariable = new ClosedLocalVariable(variable->getIdentifier());
-            
-            delete variable;
+            variable = new ClosedLocalVariable(variable->getIdentifier());
         }
         
-        _closedVariables[newVariable->getIdentifier()] = newVariable;
-        
-        return newVariable;
+        return variable;
     }
     
-    llvm::Value* Closure::codegenEnvironment(chime::code_generator& generator)
+    void Closure::codegenEnvironment(chime::code_generator& generator, llvm::Value* closureValue)
     {
-        llvm::Value* environment;
-        llvm::Value* hashClass;
-        llvm::Value* string;
-        
-        string = generator.getConstantString("Hash");
-        
-        hashClass = generator.getRuntime()->callChimeRuntimeGetClass(string);
-        
-        string = generator.getConstantString("new");
-        
-        environment = generator.getRuntime()->callChimeObjectInvoke(hashClass, string, std::vector<llvm::Value*>());
+        std::map<std::string, Variable*>::iterator it;
         
         // put in the closed values
-        std::map<std::string, Variable*>::iterator it;
         
         for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
         {
-            llvm::Value* variableValue;
+            llvm::Value* referenceValue;
             llvm::Value* variableNameCStringPtr;
             
-            variableValue          = generator.getCurrentScope()->getValueForIdentifier(it->second->getIdentifier());
-            variableNameCStringPtr = generator.getConstantString(it->first);
+            //fprintf(stderr, "%s => %s => %s\n", this->getIdentifier().c_str(), it->second->nodeName().c_str(), it->first.c_str());
             
-            generator.getRuntime()->callChimeObjectSetAttribute(environment, variableNameCStringPtr, variableValue);
+            variableNameCStringPtr = generator.getConstantString(it->first);
+            referenceValue         = it->second->codegenReference(generator);
+            
+            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue);
+            
+            generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
         }
-        
-        return environment;
     }
     
     llvm::Value* Closure::codegen(chime::code_generator& generator)
@@ -169,16 +157,15 @@ namespace ast
         
         // parameters
         llvm::Function::arg_iterator args;
-        llvm::AllocaInst*            alloca;
-        llvm::Value*                 environment;
+        llvm::AllocaInst*            selfAlloca;
         
         // first, deal with self
         args = function->arg_begin();
         
-        alloca = generator.insertChimeObjectAlloca();
-        generator.builder()->CreateStore(args, alloca, false);
+        selfAlloca = generator.insertChimeObjectAlloca();
+        generator.builder()->CreateStore(args, selfAlloca, false);
         
-        generator.getCurrentScope()->setValueForIdentifier("_self", alloca);
+        generator.getCurrentScope()->setValueForIdentifier("_self", selfAlloca);
         
         // now body
         this->getBody()->codegen(generator);
@@ -196,10 +183,8 @@ namespace ast
         generator.builder()->SetInsertPoint(currentBlock);
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
-        environment  = this->codegenEnvironment(generator);
         
-        generator.getRuntime()->callChimeClosureSetEnvironment(closureValue, environment);
-        generator.getCurrentScope()->setValueForIdentifier("_environment", environment);
+        this->codegenEnvironment(generator, closureValue);
         
         return closureValue;
     }

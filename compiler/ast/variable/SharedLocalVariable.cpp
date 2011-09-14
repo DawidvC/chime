@@ -21,12 +21,10 @@ namespace ast
     
     llvm::Value* SharedLocalVariable::codegen(chime::code_generator& generator)
     {
-        llvm::Value* environment;
-        llvm::Value* variableNamePtr;
+        llvm::Value* reference;
         
-        variableNamePtr = generator.getConstantString(this->getIdentifier());
-        environment     = generator.getCurrentScope()->getValueForIdentifier("_environment");
+        reference = generator.getCurrentScope()->getValueForIdentifier(this->getIdentifier());
         
-        return generator.getRuntime()->callChimeObjectGetAttribute(environment, variableNamePtr);
+        return generator.getRuntime()->callChimeReferenceGet(reference);
     }
 }
