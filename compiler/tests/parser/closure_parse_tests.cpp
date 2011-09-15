@@ -19,11 +19,16 @@ TEST_F(ClosureParseTests, MethodCallWithClosure)
 TEST_F(ClosureParseTests, MethodCallWithClosureParameters)
 {
     ast::method_call* call;
+    ast::Closure*     closure;
     
     call = parse_method_call("call() do (a) { }");
     
     ASSERT_METHOD_CALL("call", call);
-    ASSERT_CLOSURE(call->child_at_index(0));
+    
+    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    ASSERT_CLOSURE(closure);
+    
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "a", closure->getParameters()->childAtIndex(0));
 }
 
 TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)

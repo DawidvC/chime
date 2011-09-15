@@ -90,6 +90,10 @@ test.test_integer_iterator()
 test.teardown()
 
 test.setup()
+test.test_integer_iterator_with_argument()
+test.teardown()
+
+test.setup()
 test.test_closure_definition()
 test.teardown()
 

@@ -16,7 +16,7 @@ void chime_closure_initialize(void);
 chime_closure_t* chime_closure_create(void* function);
 void             chime_closure_destroy(chime_closure_t* closure);
 
-chime_object_t*  chime_closure_invoke(chime_closure_t* closure, chime_object_t* argument_array);
+chime_object_t*  chime_closure_invoke(chime_closure_t* closure, chime_object_t* arg1);
 
 #ifdef __cplusplus
 }

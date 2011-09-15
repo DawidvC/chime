@@ -139,6 +139,7 @@ namespace ast
         
         // setup the function type
         functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is self (the closure object)
+        functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is arg1
         
         // capture the current insertion point
         currentBlock = generator.builder()->GetInsertBlock();
@@ -166,6 +167,21 @@ namespace ast
         generator.builder()->CreateStore(args, selfAlloca, false);
         
         generator.getCurrentScope()->setValueForIdentifier("_self", selfAlloca);
+        
+        ++args; // advance past self argument
+        
+        unsigned int i;
+        for (i = 0; args != function->arg_end() && this->getParameters() && this->getParameters()->length() > i; ++args, ++i)
+        {
+            ast::method_parameter* param;
+            llvm::AllocaInst*      alloca;
+            
+            param = this->getParameters()->parameterAtIndex(i);
+            
+            alloca = generator.insertChimeObjectAlloca();
+            generator.builder()->CreateStore(args, alloca, false);
+            generator.getCurrentScope()->setValueForIdentifier(param->identifier(), alloca);
+        }
         
         // now body
         this->getBody()->codegen(generator);

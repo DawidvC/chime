@@ -277,7 +277,7 @@ TEST_F(BasicParserTest, MethodCall)
     
     node = parse("call()");
     
-    ASSERT_METHOD_CALL("call", node->child_at_index(0));
+    ASSERT_METHOD_CALL("call", node->childAtIndex(0));
 }
 
 TEST_F(BasicParserTest, TypeMethodCall)
@@ -286,7 +286,7 @@ TEST_F(BasicParserTest, TypeMethodCall)
     ast::binary_operator* op;
     
     node = parse("Type.call()");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR(".", op);
     ASSERT_TYPE("Type", op->left_operand());
@@ -299,7 +299,7 @@ TEST_F(BasicParserTest, NamespacedTypeMethodCall)
     ast::binary_operator* op;
     
     node = parse("Some.Type.call()");
-    op   = (ast::binary_operator*)node->child_at_index(0);
+    op   = (ast::binary_operator*)node->childAtIndex(0);
     
     ASSERT_OPERATOR(".", op);
     ASSERT_TYPE("Some.Type", op->left_operand());

@@ -44,11 +44,11 @@ chime_object_t* integer_times(chime_object_t* instance, chime_object_t* function
         fprintf(stderr, "[runtime] Integer#times doesn't work on negative integers\n");
         return CHIME_LITERAL_NULL;
     }
-        
+    
     // ok, so, what we need to is simply iterate on the block
     for (i = 0; i < value; ++i)
     {
-        chime_closure_invoke((chime_closure_t*)function, CHIME_LITERAL_NULL);
+        chime_closure_invoke((chime_closure_t*)function, chime_literal_encode_integer(i));
     }
     
     return CHIME_LITERAL_NULL;

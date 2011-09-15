@@ -12,6 +12,19 @@ implementation ClosureTests : Test.Case
         Assert.equal(10, to:count)
     }
     
+    method test_integer_iterator_with_argument()
+    {
+        value = 0
+        
+        10.times() do (i)
+        {
+            value = i
+        }
+        
+        // goes from 0 to 9
+        Assert.equal(9, to:value)
+    }
+    
     method test_closure_definition()
     {
         f = do

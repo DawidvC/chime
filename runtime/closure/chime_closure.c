@@ -45,9 +45,9 @@ void chime_closure_destroy(chime_closure_t* closure)
     free(closure);
 }
 
-chime_object_t* chime_closure_invoke(chime_closure_t* closure, chime_object_t* argument_array)
+chime_object_t* chime_closure_invoke(chime_closure_t* closure, chime_object_t* arg1)
 {
     assert(closure);
     
-    return ((chime_function_arg0_t)closure->function)((chime_object_t*)closure);
+    return ((chime_function_arg1_t)closure->function)((chime_object_t*)closure, arg1);
 }
