@@ -27,10 +27,11 @@ namespace ast
         Variable*    createVariable(const std::string& identifier);
         Variable*    transformVariable(Variable* variable);
         
-        llvm::Value* codegen(chime::code_generator& generator);
-    
-    protected:
-        void codegenEnvironment(chime::code_generator& generator, llvm::Value* closureValue);
+        llvm::Function* createFunction(chime::code_generator& generator);
+        void            codegenArguments(chime::code_generator& generator, llvm::Function* function);
+        llvm::Function* codegenFunction(chime::code_generator& generator);
+        
+        llvm::Value*    codegen(chime::code_generator& generator);
     
     private:
         // parsing members

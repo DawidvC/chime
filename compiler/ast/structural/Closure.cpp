@@ -103,78 +103,55 @@ namespace ast
         return variable;
     }
     
-    void Closure::codegenEnvironment(chime::code_generator& generator, llvm::Value* closureValue)
+    llvm::Function* Closure::createFunction(chime::code_generator& generator)
     {
-        std::map<std::string, Variable*>::iterator it;
-        
-        // put in the closed values
-        
-        for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
-        {
-            llvm::Value* referenceValue;
-            llvm::Value* variableNameCStringPtr;
-            
-            //fprintf(stderr, "%s => %s => %s\n", this->getIdentifier().c_str(), it->second->nodeName().c_str(), it->first.c_str());
-            
-            variableNameCStringPtr = generator.getConstantString(it->first);
-            referenceValue         = it->second->codegenReference(generator);
-            
-            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue);
-            
-            generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
-        }
-    }
-    
-    llvm::Value* Closure::codegen(chime::code_generator& generator)
-    {
-        // This code is very very similar to the code in FunctionDefinition.cpp.  I'd like to
-        // figure out a way to share it better
-        
         llvm::Function*                function;
         llvm::FunctionType*            functionType;
         std::vector<const llvm::Type*> functionArgs;
-        llvm::Value*                   closureValue;
-        llvm::BasicBlock*              basicBlock;
-        llvm::BasicBlock*              currentBlock;
+        unsigned int                   i;
         
         // setup the function type
-        functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is self (the closure object)
-        functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is arg1
+        functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // first argument is always self
         
-        // capture the current insertion point
-        currentBlock = generator.builder()->GetInsertBlock();
-        
-        // set our identifier here
-        this->setIdentifier(generator.getCurrentScope()->getAnonymousFunctionName());
+        // add a new argument for each parameter
+        for (i = 0; this->getParameters() && i < this->getParameters()->length(); ++i)
+        {
+            functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is arg1
+        }
         
         functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), functionArgs, false);
         
         function = generator.createFunction(functionType, this->getIdentifier());
         
-        generator.pushScope(this);
-        
-        basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", function, 0);
-        generator.builder()->SetInsertPoint(basicBlock);
-        
-        // parameters
+        return function;
+    }
+    
+    void Closure::codegenArguments(chime::code_generator& generator, llvm::Function* function)
+    {
         llvm::Function::arg_iterator args;
-        llvm::AllocaInst*            selfAlloca;
+        llvm::AllocaInst*            alloca;
+        unsigned int                 i;
         
         // first, deal with self
         args = function->arg_begin();
         
-        selfAlloca = generator.insertChimeObjectAlloca();
-        generator.builder()->CreateStore(args, selfAlloca, false);
+        alloca = generator.insertChimeObjectAlloca();
+        generator.builder()->CreateStore(args, alloca, false);
         
-        generator.getCurrentScope()->setValueForIdentifier("_self", selfAlloca);
+        generator.getCurrentScope()->setValueForIdentifier("_self", alloca);
         
         ++args; // advance past self argument
         
-        unsigned int i;
-        for (i = 0; args != function->arg_end() && this->getParameters() && this->getParameters()->length() > i; ++args, ++i)
+        // if we have no parameters set, which is possible, we're done
+        if (!this->getParameters())
+            return;
+        
+        for (i = 0; this->getParameters()->length() > i; ++args, ++i)
         {
             ast::method_parameter* param;
             llvm::AllocaInst*      alloca;
+            
+            assert(args != function->arg_end());
             
             param = this->getParameters()->parameterAtIndex(i);
             
@@ -182,6 +159,29 @@ namespace ast
             generator.builder()->CreateStore(args, alloca, false);
             generator.getCurrentScope()->setValueForIdentifier(param->identifier(), alloca);
         }
+    }
+    
+    llvm::Function* Closure::codegenFunction(chime::code_generator& generator)
+    {
+        llvm::Function*   function;
+        llvm::BasicBlock* basicBlock;
+        llvm::BasicBlock* currentBlock;
+        
+        // set our identifier here, since it depends on the current scope
+        this->setIdentifier(generator.getCurrentScope()->getAnonymousFunctionName());
+        
+        function = this->createFunction(generator);
+        
+        // capture the current insertion point
+        currentBlock = generator.builder()->GetInsertBlock();
+        
+        generator.pushScope(this);
+        
+        basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", function, 0);
+        generator.builder()->SetInsertPoint(basicBlock);
+        
+        // arguments
+        this->codegenArguments(generator, function);
         
         // now body
         this->getBody()->codegen(generator);
@@ -198,9 +198,33 @@ namespace ast
         generator.popScope();
         generator.builder()->SetInsertPoint(currentBlock);
         
+        return function;
+    }
+    
+    llvm::Value* Closure::codegen(chime::code_generator& generator)
+    {
+        llvm::Function* function;
+        llvm::Value*    closureValue;
+        
+        function = this->codegenFunction(generator);
+        
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
         
-        this->codegenEnvironment(generator, closureValue);
+        // put in the closed values
+        std::map<std::string, Variable*>::const_iterator it;
+        
+        for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
+        {
+            llvm::Value* referenceValue;
+            llvm::Value* variableNameCStringPtr;
+            
+            variableNameCStringPtr = generator.getConstantString(it->first);
+            referenceValue         = it->second->codegenReference(generator);
+            
+            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue);
+            
+            generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
+        }
         
         return closureValue;
     }
