@@ -7,6 +7,9 @@ namespace ast
 {
     ParameterSet::ParameterSet(chime::parser& parser)
     {
+        if (parser.look_ahead()->value() != "(")
+            return;
+        
         parser.next_token_value("(");
         
         while (true)

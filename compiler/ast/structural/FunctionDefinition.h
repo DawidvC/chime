@@ -13,14 +13,17 @@ namespace ast
     public:
         FunctionDefinition();
         
-        std::string         getIdentifier() const;
-        void                setIdentifier(const std::string& s);
-        ParameterSetRef     getParameters() const;
-        void                setParameters(ParameterSetRef params);
+        std::string     getIdentifier() const;
+        void            setIdentifier(const std::string& s);
+        ParameterSetRef getParameters() const;
+        void            setParameters(ParameterSetRef params);
         
     protected:
-        void                codegenMethodParameters(chime::code_generator& generator, llvm::Function* function);
-        llvm::Value*        createMethod(chime::code_generator& generator, const std::string& name, NodeRef body, unsigned int arity);
+        llvm::Function* createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity);
+        void            codegenArguments(chime::code_generator& generator, llvm::Function* function);
+        llvm::Function* codegenFunction(chime::code_generator& generator, const std::string& name, NodeRef body, unsigned int arity);
+        
+        llvm::Value*    createMethod(chime::code_generator& generator, const std::string& name, NodeRef body, unsigned int arity);
         
     private:
         std::string     _identifier;
