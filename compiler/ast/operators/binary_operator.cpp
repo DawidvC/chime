@@ -47,12 +47,7 @@ namespace ast
             node->right_operand(rightOperand);
             leftOperand = node;
             
-            // this needs to be done in a loop, to account for
-            // multiple levels
-            while (parser.look_ahead(1)->equal_to("["))
-            {
-                leftOperand = ast::IndexOperator::parse(parser, leftOperand);
-            }
+            leftOperand = ast::IndexOperator::parse(parser, leftOperand);
         }
         
         return leftOperand;

@@ -57,7 +57,7 @@ namespace chime
         llvm::Value* callChimeLiteralEncodeInteger(llvm::Value* integerValue);
         llvm::Value* callChimeLiteralEncodeBoolean(llvm::Value* booleanValue);
         
-        llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr);
+        llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr, llvm::Value* length);
         
         llvm::Value* getChimeLiteralNull();
         

@@ -2,23 +2,29 @@
 
 namespace ast
 {
-    ast::IndexOperator* IndexOperator::parse(chime::parser& parser, ast::node* operand)
+    ast::node* IndexOperator::parse(chime::parser& parser, ast::node* operand)
     {
         ast::IndexOperator* indexOp;
         ast::NodeRef        argument;
         
-        parser.next_token_value("[");
+        // check for index operators
+        while (parser.look_ahead(1)->equal_to("["))
+        {
+            parser.next_token_value("[");
+            
+            argument = ast::NodeRef(parser.parse_expression());
+            assert(argument);
+            
+            indexOp = new IndexOperator();
+            indexOp->setOperand(ast::NodeRef(operand));
+            indexOp->setArgument(argument);
+            
+            parser.next_token_value("]");
+            
+            operand = indexOp;
+        }
         
-        argument = ast::NodeRef(parser.parse_expression());
-        assert(argument);
-        
-        indexOp = new IndexOperator();
-        indexOp->setOperand(ast::NodeRef(operand));
-        indexOp->setArgument(argument);
-        
-        parser.next_token_value("]");
-        
-        return indexOp;
+        return operand;
     }
     
     std::string IndexOperator::nodeName(void) const

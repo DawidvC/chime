@@ -3,13 +3,14 @@
 #include "integer_literal.h"
 #include "string_literal.h"
 #include "SelfLiteral.h"
+#include "compiler/ast/operators/IndexOperator.h"
 
 namespace ast
 {
-    ast::Literal* Literal::parse(chime::parser& parser)
+    ast::node* Literal::parse(chime::parser& parser)
     {
         chime::token* t;
-        ast::Literal* node;
+        ast::node*    node;
         
         t = parser.look_ahead();
         if (t->isFloatingPoint())
@@ -43,6 +44,8 @@ namespace ast
         {
             assert(0 && "Unhandled literal!");
         }
+        
+        node = ast::IndexOperator::parse(parser, node);
         
         return node;
     }

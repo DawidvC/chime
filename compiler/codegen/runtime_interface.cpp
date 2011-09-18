@@ -567,10 +567,11 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* RuntimeInterface::callChimeStringCreateWithCString(llvm::Value* cStringPtr)
+    llvm::Value* RuntimeInterface::callChimeStringCreateWithCString(llvm::Value* cStringPtr, llvm::Value* lengthValue)
     {
-        llvm::CallInst*   call;
-        llvm::AllocaInst* alloca;
+        llvm::CallInst*           call;
+        llvm::AllocaInst*         alloca;
+        std::vector<llvm::Value*> args;
         
         if (_functionChimeStringCreateWithCString == NULL)
         {
@@ -578,6 +579,7 @@ namespace chime
             llvm::FunctionType*            functionType;
             
             functionArgs.push_back(this->getCStringPtrType());
+            functionArgs.push_back(llvm::IntegerType::get(this->getContext(), 64));
             
             functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
             
@@ -588,7 +590,10 @@ namespace chime
         alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "create string with c string");
         alloca->setAlignment(8);
         
-        call = this->getBuilder()->CreateCall(_functionChimeStringCreateWithCString, cStringPtr, "create string");
+        args.push_back(cStringPtr);
+        args.push_back(lengthValue);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeStringCreateWithCString, args.begin(), args.end(), "create string");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);
