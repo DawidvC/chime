@@ -8,7 +8,7 @@ namespace ast
     class IndexOperator : public basic_operator
     {
     public:
-        static ast::IndexOperator* parse(chime::parser& parser, ast::node* operand);
+        static ast::node* parse(chime::parser& parser, ast::node* operand);
         
     public:
         virtual std::string nodeName(void) const;

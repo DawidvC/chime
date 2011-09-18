@@ -42,9 +42,11 @@ namespace ast
     llvm::Value* string_literal::codegen(chime::code_generator& generator)
     {
         llvm::Value* cStringPtr;
+        llvm::Value* lengthValue;
         
-        cStringPtr = generator.getConstantString(this->value());
+        cStringPtr  = generator.getConstantString(this->value());
+        lengthValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(64, this->value().length(), 10));
         
-        return generator.getRuntime()->callChimeStringCreateWithCString(cStringPtr);
+        return generator.getRuntime()->callChimeStringCreateWithCString(cStringPtr, lengthValue);
     }
 }

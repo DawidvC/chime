@@ -33,10 +33,7 @@ namespace ast
         }
         
         // check for index operators
-        while (parser.look_ahead(1)->equal_to("["))
-        {
-            node = ast::IndexOperator::parse(parser, node);
-        }
+        node = ast::IndexOperator::parse(parser, node);
         
         return node;
     }

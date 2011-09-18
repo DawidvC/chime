@@ -8,7 +8,7 @@ namespace ast
     class Literal : public node
     {
     public:
-        static ast::Literal* parse(chime::parser& parser);
+        static ast::node* parse(chime::parser& parser);
     };
 }
 
