@@ -47,6 +47,7 @@ namespace ast
     };
     
     typedef std::tr1::shared_ptr<ast::node> NodeRef;
+    typedef ast::node Node;
 }
 
 #endif

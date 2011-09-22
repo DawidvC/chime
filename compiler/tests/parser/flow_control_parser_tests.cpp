@@ -6,10 +6,10 @@ class FlowControlParserTest : public ParserTestsBase
 
 TEST_F(FlowControlParserTest, ClosureWithNext)
 {
-    ast::method_call* call;
+    ast::MethodCall* call;
     ast::Closure*     closure;
     
-    call = parse_method_call("call() do (a) { next }");
+    call = parseMethodCall("call() do (a) { next }");
     
     ASSERT_METHOD_CALL("call", call);
     

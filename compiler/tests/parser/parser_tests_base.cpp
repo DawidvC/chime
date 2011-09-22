@@ -47,9 +47,9 @@ ast::method_definition* ParserTestsBase::parse_method_def(const char *input)
     return (ast::method_definition*)this->parse(input)->childAtIndex(0);
 }
 
-ast::method_call* ParserTestsBase::parse_method_call(const char* input)
+ast::MethodCall* ParserTestsBase::parseMethodCall(const char* input)
 {
-    return static_cast<ast::method_call*>(this->parse(input)->childAtIndex(0));
+    return static_cast<ast::MethodCall*>(this->parse(input)->childAtIndex(0));
 }
 
 ast::binary_operator* ParserTestsBase::parseOperator(const char* input)

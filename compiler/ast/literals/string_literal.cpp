@@ -2,16 +2,14 @@
 
 namespace ast
 {
-    string_literal::string_literal(chime::parser* parser)
+    ast::Node* string_literal::parse(chime::parser& parser)
     {
-        chime::token* t;
+        ast::string_literal* string;
         
-        assert(parser->look_ahead()->is_string());
+        string = new ast::string_literal();
+        string->value(parser.next_token()->string_value());
         
-        t = parser->next_token();
-        this->value(t->string_value());
-        
-        delete t;
+        return string;
     }
     
     std::string string_literal::nodeName(void) const

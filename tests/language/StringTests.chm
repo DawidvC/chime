@@ -1,0 +1,21 @@
+implementation StringTests : Test.Case
+{
+    method test_string_literal_indexer_get()
+    {
+        r = Range.new()
+        r.start = 0
+        r.end   = 2
+        
+        Assert.equal("Abc", "AbcDef"[r])
+        
+        r.start = 3
+        r.end   = -1
+        
+        Assert.equal("Def", "AbcDef"[r])
+    }
+    
+    method test_string_length()
+    {
+        Assert.equal(7, to:"1234567".length)
+    }
+}

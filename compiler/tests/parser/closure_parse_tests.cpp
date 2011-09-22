@@ -6,9 +6,9 @@ class ClosureParseTests : public ParserTestsBase
 
 TEST_F(ClosureParseTests, MethodCallWithClosure)
 {
-    ast::method_call* call;
+    ast::MethodCall* call;
     
-    call = parse_method_call("call(a, b) do {}");
+    call = parseMethodCall("call(a, b) do {}");
     
     ASSERT_METHOD_CALL("call", call);
     ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
@@ -18,10 +18,10 @@ TEST_F(ClosureParseTests, MethodCallWithClosure)
 
 TEST_F(ClosureParseTests, MethodCallWithClosureParameters)
 {
-    ast::method_call* call;
+    ast::MethodCall* call;
     ast::Closure*     closure;
     
-    call = parse_method_call("call() do (a) { }");
+    call = parseMethodCall("call() do (a) { }");
     
     ASSERT_METHOD_CALL("call", call);
     
@@ -33,11 +33,11 @@ TEST_F(ClosureParseTests, MethodCallWithClosureParameters)
 
 TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)
 {
-    ast::method_call*     call;
+    ast::MethodCall*     call;
     ast::Closure*         closure;
     ast::binary_operator* op;
     
-    call = parse_method_call("call() do { a = \"string\" }");
+    call = parseMethodCall("call() do { a = \"string\" }");
     
     ASSERT_METHOD_CALL("call", call);
     
@@ -62,11 +62,11 @@ TEST_F(ClosureParseTests, AnonymousFunctionDefinition)
 
 TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
 {
-    ast::method_call*     call;
+    ast::MethodCall*     call;
     ast::Closure*         closure;
     ast::binary_operator* op;
     
-    call = parse_method_call("on_queue(queue, async:) do { queue = 0 }");
+    call = parseMethodCall("on_queue(queue, async:) do { queue = 0 }");
     
     ASSERT_METHOD_CALL("on_queue", call);
     ASSERT_GLOBAL_VARIABLE("queue", call->childAtIndex(0));
@@ -83,7 +83,7 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
 {
     ast::method_definition*     method;
     ast::binary_operator*       op;
-    ast::method_call*           call;
+    ast::MethodCall*           call;
     ast::Closure*               closure;
     std::vector<ast::Variable*> closedVariables;
     
@@ -100,7 +100,7 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(1));
     ASSERT_OPERATOR(".", op);
     
-    call = static_cast<ast::method_call*>(op->getRightOperand());
+    call = static_cast<ast::MethodCall*>(op->getRightOperand());
     ASSERT_METHOD_CALL("times", call);
     
     closure = static_cast<ast::Closure*>(call->childAtIndex(0));
@@ -128,7 +128,7 @@ TEST_F(ClosureParseTests, NestedClosedLocalVariablesInMethod)
 {
     ast::method_definition*     method;
     //ast::binary_operator*       op;
-    //ast::method_call*           call;
+    //ast::MethodCall*           call;
     ast::Closure*               closure;
     std::vector<ast::Variable*> closedVariables;
     

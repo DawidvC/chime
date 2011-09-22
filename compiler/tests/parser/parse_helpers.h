@@ -81,8 +81,8 @@
 #define ASSERT_INDEXER(x) ASSERT_EQ("Index Operator", x->nodeName())
     
 #define ASSERT_METHOD_CALL(x, y) do { \
-    ASSERT_EQ("method call", y->node_name()); \
-    ASSERT_EQ(x, ((ast::method_call*)y)->identifier()); \
+    ASSERT_EQ("Method Call", y->nodeName()); \
+    ASSERT_EQ(x, ((ast::MethodCall*)y)->identifier()); \
     } while (0)
 
 #define ASSERT_CLOSURE(x) ASSERT_EQ("Closure", x->nodeName())
@@ -100,16 +100,14 @@
 #define ASSERT_LITERAL_SELF(x) ASSERT_EQ("self literal", x->node_name())
     
 #define ASSERT_LITERAL_STRING(x, y) do { \
-    ASSERT_EQ("string literal", y->node_name()); \
+    ASSERT_EQ("string literal", y->nodeName()); \
     ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
     } while (0)
-
+    
 #define ASSERT_LITERAL_INTEGER(x, y) do { \
-    ASSERT_EQ("integer literal", y->node_name()); \
+    ASSERT_EQ("Integer Literal", y->nodeName()); \
     ASSERT_EQ(x, ((ast::integer_literal*)y)->value()); \
     } while (0)
-
-
 
 #define ASSERT_IF_STATEMENT(x) do { \
     ASSERT_EQ("if statement", x->nodeName()); \

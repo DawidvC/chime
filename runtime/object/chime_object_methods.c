@@ -15,7 +15,7 @@
 
 chime_object_t* object_class(chime_object_t* instance)
 {
-    return chime_object_get_class(instance);
+    return (chime_object_t*)chime_object_get_class(instance);
 }
 
 chime_object_t* object_methods(chime_object_t* instance)
@@ -33,8 +33,6 @@ chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_n
     method = chime_string_to_c_string(method_name);
     assert(method);
     
-    fprintf(stderr, "About to try to invoke %s\n", method);
-    
     return chime_object_invoke_0(instance, method);
 }
 
@@ -43,11 +41,11 @@ chime_object_t* object_to_string(chime_object_t* instance)
     int             string_length;
     char*           buffer;
     char*           class_name;
-    chime_object_t* class;
+    chime_class_t*  klass;
     chime_object_t* string;
     
-    class      = chime_object_get_class(instance);
-    class_name = chime_class_get_name((chime_class_t*)class);
+    klass      = chime_object_get_class(instance);
+    class_name = chime_class_get_name(klass);
     
     // we have to add the size of the "<:0x12345678>" to the string
     string_length = strlen(class_name) + sizeof(void*) + 6;
@@ -57,11 +55,9 @@ chime_object_t* object_to_string(chime_object_t* instance)
     
     snprintf(buffer, string_length + 1, "<%s:%p>", class_name, instance);
     
-    string = chime_string_create_with_c_string(buffer);
+    string = chime_string_create_with_c_string(buffer, string_length + 1);
     
-    // here, we should free the buffer
-    // except right now the string class doesn't make a copy
-    // free(buffer);
+    free(buffer);
     
     return string;
 }

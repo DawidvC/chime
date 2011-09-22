@@ -8,8 +8,9 @@ namespace ast
     class string_literal : public Literal
     {
     public:
-        string_literal(chime::parser* parser);
-        
+        static ast::Node* parse(chime::parser& parser);
+    
+    public:
         virtual std::string nodeName(void) const;
         std::string stringRepresentation(int depth=0) const;
         

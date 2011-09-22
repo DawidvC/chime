@@ -1,9 +1,9 @@
+#include "lexer.h"
+#include "eof_token.h"
+
 #include <cstdio>
 #include <string>
 #include <assert.h>
-
-#include "lexer.h"
-#include "eof_token.h"
 
 namespace chime
 {
@@ -12,7 +12,10 @@ namespace chime
         _current_line = 1;
         this->ignore_new_lines(true);
         token_buffer = new std::vector<token*>();
-        _peeked_char = 0;
+        
+        _peeked_char         = 0;
+        _inString            = false;
+        _interpolatingString = false;
     }
     
     lexer::~lexer()
@@ -77,13 +80,13 @@ namespace chime
         return _current_line;
     }
     
-	token* lexer::extract_next_token(void)
-	{
-		token* t = new token();
-		char c;
-		
-		while (!this->is_finished())
-		{
+    token* lexer::extract_next_token(void)
+    {
+        token* t = new token();
+        char c;
+        
+        while (!this->is_finished())
+        {
 			// handle a peeked character, which
 			// will always be a dot
 			if (_peeked_char != 0)
@@ -97,16 +100,34 @@ namespace chime
 			}
 			else
 				c = this->peek();
-			
-			// handle strings
-			if (t->is_string())
-			{
-                t->append(this->next_char());
-				if (c == '"')
-					return t;
-				
-				continue;
-			}
+            
+            // handle strings
+            if (_inString && !_interpolatingString)
+            {
+                switch (c)
+                {
+                    case '"':
+                        t->append(this->next_char());
+                        
+                        _inString            = false;
+                        _interpolatingString = false;
+                        return t; // closed string
+                    case '}':
+                        t->append(this->next_char());
+                        t->append('"');
+                        break;
+                    case '{':
+                        t->append('"');
+                        t->append(this->next_char());
+                        _interpolatingString = true;
+                        return t;
+                    default:
+                        t->append(this->next_char());
+                        break;
+                }
+                
+                continue;
+            }
             
 			// handle everything else
 			switch (c)
@@ -137,55 +158,72 @@ namespace chime
 					}
 					break;
 				case '.':
-					// if we have nothing so far, then we have a dot
-					if (t->empty())
-					{
+                    // if we have nothing so far, then we have a dot
+                    if (t->empty())
+                    {
                         t->set_value(this->next_char());
                         
                         return t;
-					}
-					
-					// we've got "7.8."
-					if (t->is_floating_point())	
-						return t;
-					
-					// here's the tricky case.  if we have
-					// a number so far, then we might have
-					// a floating point definition,
-					// or we might have a method call on an
-					// integer
-					// "7." -> "7.8", "7..", "7.times"
-					if (!t->is_integer())
-						return t;
-					else
-					{
-						// crazy ugly hack
-						this->next_char(); // advance past the dot
-						_peeked_char = this->peek();
-						
-						// check for a number
-						if ((_peeked_char <= '0') || (_peeked_char >= '9'))
-						{
-							return t;
-						}
-						else
-						{
-							_peeked_char = 0;
+                    }
+                    
+                    // we've got "7.8."
+                    if (t->isFloatingPoint())
+                        return t;
+                    
+                    // here's the tricky case.  if we have
+                    // a number so far, then we might have
+                    // a floating point definition,
+                    // or we might have a method call on an
+                    // integer
+                    // "7." -> "7.8", "7..", "7.times"
+                    if (!t->isInteger())
+                        return t;
+                    else
+                    {
+                        // crazy ugly hack
+                        this->next_char(); // advance past the dot
+                        _peeked_char = this->peek();
+                        
+                        // check for a number
+                        if ((_peeked_char <= '0') || (_peeked_char >= '9'))
+                        {
+                            return t;
+                        }
+                        else
+                        {
+                            _peeked_char = 0;
                             t->append('.');
                             t->append(this->next_char());
-						}
-					}
-						
-					break;
+                        }
+                    }
+                    
+                    break;
                 case '{':
+                    assert(!_interpolatingString && "Open braces are not allowed within a string interpolation");
+                    
+                    if (t->empty())
+                        t->set_value(this->next_char());
+                    
+                    return t;
+                    break;
                 case '}':
+                    if (_interpolatingString)
+                    {
+                        assert(_inString);
+                        _interpolatingString = false; // toggle state
+                    }
+                    
+                    if (t->empty())
+                        t->set_value(this->next_char());
+                    
+                    return t;
+                    break;
                 case '(':
                 case ')':
                 case ';':
                 case ':':
                 case ',':
                 case '+':
-                case '-':
                 case '*':
                 case '|':
                 case '[':
@@ -193,11 +231,11 @@ namespace chime
                     if (t->empty())
                         t->set_value(this->next_char());
                     
-					return t;
-					break;
-				case '<':
-				case '>':
-				case '=':
+                    return t;
+                    break;
+                case '<':
+                case '>':
+                case '=':
                     if (t->empty())
                     {
                         // handle '<=' and '>='
@@ -225,33 +263,40 @@ namespace chime
                         while ((next != '\n') && (next != 0));
                     }
                     else
-					{
+                    {
                         t->set_value('/');
-						return t;
-					}
-					break;
-				case '"':
-					if (!t->empty())
-					{
-						printf("un-oh, lexing a string did something wierd\n");
-					}
-					else
-					{
-                        t->set_value(this->next_char());
-					}
-					break;
-				default:
+                        return t;
+                    }
+                    break;
+                case '-':
+                    _peeked_char = this->peek();
+                    
+                    // check for a number
+                    if ((_peeked_char < '0') && (_peeked_char > '9'))
+                    {
+                        return t;
+                    }
+                    
                     t->append(this->next_char());
-					break;
-			}
-		}
-		
-		if (t->empty())
-		{
-			free(t);
-			return NULL;
-		}
-		
-		return t;
-	}
+                    _peeked_char = 0;
+                    break;
+                case '"':
+                    t->set_value(this->next_char());
+                    
+                    _inString = true;
+                    break;
+                default:
+                    t->append(this->next_char());
+                    break;
+            }
+        }
+        
+        if (t->empty())
+        {
+            free(t);
+            return NULL;
+        }
+        
+        return t;
+    }
 }

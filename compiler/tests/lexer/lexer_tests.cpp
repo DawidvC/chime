@@ -172,7 +172,7 @@ TEST_F(LexerTest, FloatingPointExpression)
 {
 	lex("123.4567 + -2345.23452345");
 	
-	const char *tokens[] = {"123.4567", "+", "-", "2345.23452345", NULL};
+	const char *tokens[] = {"123.4567", "+", "-2345.23452345", NULL};
 	ExpectTokens(tokens);
 }
 TEST_F(LexerTest, IntegerExpression)
@@ -270,34 +270,60 @@ TEST_F(LexerTest, CommentsInMethodDefinition)
 	ExpectTokens(tokens);
 }
 
-#pragma mark literal handling
+// *** literal handling
 TEST_F(LexerTest, SimpleString)
 {
-	lex("Library.printf(\"hello world\")");
-	
-	const char *tokens[] = {"Library", ".", "printf", "(", "\"hello world\"", ")", NULL};
-	ExpectTokens(tokens);
+    lex("Library.printf(\"hello world\")");
+    
+    const char *tokens[] = {"Library", ".", "printf", "(", "\"hello world\"", ")", NULL};
+    ExpectTokens(tokens);
 }
+
 TEST_F(LexerTest, MoreComplexString)
 {
-	lex("(\"This is a && ^ () {} much more {\n} complex string\")");
-	
-	const char *tokens[] = {"(","\"This is a && ^ () {} much more {\n} complex string\"", ")", NULL};
-	ExpectTokens(tokens);
+    lex("(\"This is a && ^ () much more [\n] complex string\")");
+    
+    const char *tokens[] = {"(","\"This is a && ^ () much more [\n] complex string\"", ")", NULL};
+    ExpectTokens(tokens);
 }
+
+TEST_F(LexerTest, InterpolatedString)
+{
+    lex("\"1 + 1 = {1 + 1}\"");
+    
+    const char* tokens[] = {"\"1 + 1 = \"{", "1", "+", "1", "}\"\"", NULL};
+    ExpectTokens(tokens);
+}
+
+TEST_F(LexerTest, MoreComplexInterpolatedString)
+{
+    lex("\"1 + 1 = {2} = {2}\"");
+    
+    const char* tokens[] = {"\"1 + 1 = \"{", "2", "}\" = \"{", "2", "}\"\"", NULL};
+    ExpectTokens(tokens);
+}
+
 TEST_F(LexerTest, SingleFloatingPoint)
 {
-	lex("5.667");
-	
-	const char *tokens[] = {"5.667", NULL};
-	ExpectTokens(tokens);
+    lex("5.667");
+    
+    const char *tokens[] = {"5.667", NULL};
+    ExpectTokens(tokens);
 }
 TEST_F(LexerTest, IntegerMethodCall)
 {
-	lex("5.times");
-	
-	const char *tokens[] = {"5", ".", "times", NULL};
-	ExpectTokens(tokens);
+    lex("5.times");
+    
+    const char *tokens[] = {"5", ".", "times", NULL};
+    ExpectTokens(tokens);
+}
+
+TEST_F(LexerTest, NegativeInteger)
+{
+    lex("6 + -7");
+    
+    const char *tokens[] = {"6", "+", "-7", NULL};
+    ExpectTokens(tokens);
 }
 
 TEST_F(LexerTest, FloatMethodCall)

@@ -11,7 +11,9 @@ namespace chime
         virtual bool equal_to(const char*);
         
         virtual bool empty(void) const;
-        virtual bool isString(void) const;
+        bool isPlainString() const;
+        bool isInterpolatedStringStart() const;
+        bool isInterpolatedStringEnd() const;
         virtual bool isInteger(void) const;
         virtual bool isFloatingPoint(void) const;
         virtual bool isBoolean(void) const;

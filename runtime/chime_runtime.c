@@ -10,6 +10,7 @@
 #include "runtime/hash/chime_hash.h"
 #include "runtime/reference/chime_reference.h"
 #include "runtime/closure/chime_closure.h"
+#include "runtime/range/chime_range.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -21,6 +22,7 @@ chime_class_t*      _object_class    = NULL;
 chime_class_t*      _string_class    = NULL;
 chime_class_t*      _array_class     = NULL;
 chime_class_t*      _hash_class      = NULL;
+chime_class_t*      _range_class     = NULL;
 chime_class_t*      _method_class    = NULL;
 chime_class_t*      _undefined_class = NULL;
 unsigned char       chime_log_level  = 4;
@@ -49,6 +51,8 @@ void chime_runtime_initialize(void)
     
     chime_closure_initialize();
     
+    chime_range_initialize();
+    
     chime_log_level = old_level;
 }
 
@@ -62,6 +66,7 @@ void chime_runtime_destroy(void)
     _string_class    = NULL;
     _array_class     = NULL;
     _hash_class      = NULL;
+    _range_class     = NULL;
     _method_class    = NULL;
     _undefined_class = NULL;
 }

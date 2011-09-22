@@ -1,5 +1,5 @@
 #include "binary_operator.h"
-#include "compiler/ast/primary/method_call.h"
+#include "MethodCall.h"
 #include "compiler/ast/literals/literal.h"
 #include "IndexOperator.h"
 
@@ -34,7 +34,7 @@ namespace ast
             node->identifier(parser.next_token_value());
             
             if (node->identifier().compare(".") == 0)
-                rightOperand = new ast::method_call(&parser);
+                rightOperand = ast::MethodCall::parse(parser);
             else
                 rightOperand = ast::binary_operator::parseRightOperand(parser);
             
@@ -172,20 +172,20 @@ namespace ast
         // depend on both the kinds of operator and operands
         if (this->identifier().compare(".") == 0)
         {
-            ast::method_call* call;
+            ast::MethodCall* call;
             
-            call = dynamic_cast<ast::method_call*>(this->right_operand());
+            call = dynamic_cast<ast::MethodCall*>(this->getRightOperand());
             assert(call);
             
-            l_value = this->left_operand()->codegen(generator);
+            l_value = this->getLeftOperand()->codegen(generator);
             assert(l_value);
             
-            return call->codegen_with_target(l_value, generator);
+            return call->codegenWithTarget(generator, l_value);
         }
         
         // this is just a plain operator that we need to invoke as a method
-        l_value = this->left_operand()->codegen(generator);
-        r_value = this->right_operand()->codegen(generator);
+        l_value = this->getLeftOperand()->codegen(generator);
+        r_value = this->getRightOperand()->codegen(generator);
         assert(l_value && r_value);
         
         object_load = generator.builder()->CreateLoad(r_value, "loaded r_value");

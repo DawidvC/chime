@@ -13,7 +13,7 @@ namespace ast
         integer_literal();
         integer_literal(chime::parser* parser);
         
-        virtual std::string node_name(void) const;
+        virtual std::string nodeName(void) const;
         virtual std::string to_string(void) const;
         
         long value(void) const;

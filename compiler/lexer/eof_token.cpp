@@ -11,7 +11,18 @@ namespace chime
     {
         return true;
     }
-    bool eof_token::isString(void) const
+    
+    bool eof_token::isPlainString() const
+    {
+        return false;
+    }
+    
+    bool eof_token::isInterpolatedStringStart() const
+    {
+        return false;
+    }
+    
+    bool eof_token::isInterpolatedStringEnd() const
     {
         return false;
     }

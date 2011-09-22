@@ -22,6 +22,15 @@ TEST_F(LiteralParserTest, Integer)
     ASSERT_LITERAL_INTEGER(128, node->childAtIndex(0));
 }
 
+TEST_F(LiteralParserTest, NegativeInteger)
+{
+    ast::node* node;
+    
+    node = parse("-128");
+    
+    ASSERT_LITERAL_INTEGER(-128, node->childAtIndex(0));
+}
+
 TEST_F(LiteralParserTest, True)
 {
     ast::node* node;
@@ -58,4 +67,28 @@ TEST_F(LiteralParserTest, StringWithIndexer)
     ASSERT_INDEXER(op);
     ASSERT_LITERAL_STRING("a string", op->getOperand().get());
     ASSERT_LITERAL_INTEGER(123, op->getArgument().get());
+}
+
+TEST_F(LiteralParserTest, SimpleInterpolatedString)
+{
+    ast::binary_operator* op;
+    
+    // translates to: "a string" + (1 + 1).toString() + ""
+    op = static_cast<ast::binary_operator*>(parse("\"1 + 2 = {1 + 2}\"")->childAtIndex(0));
+    
+    ASSERT_OPERATOR("+", op);
+    ASSERT_LITERAL_STRING("", op->getRightOperand());
+    
+    op = static_cast<ast::binary_operator*>(op->getLeftOperand());
+    ASSERT_OPERATOR("+", op);
+    ASSERT_LITERAL_STRING("1 + 2 = ", op->getLeftOperand());
+    
+    op = static_cast<ast::binary_operator*>(op->getRightOperand());
+    ASSERT_OPERATOR(".", op);
+    ASSERT_METHOD_CALL("to_string", op->getRightOperand());
+    
+    op = static_cast<ast::binary_operator*>(op->getLeftOperand());
+    ASSERT_OPERATOR("+", op);
+    ASSERT_LITERAL_INTEGER(1, op->getLeftOperand());
+    ASSERT_LITERAL_INTEGER(2, op->getRightOperand());
 }

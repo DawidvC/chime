@@ -2,6 +2,7 @@
 
 #include "chime_array_methods.h"
 #include "runtime/literals/chime_literal.h"
+#include "runtime/closure/chime_closure.h"
 #include "runtime/collections/chime_runtime_array.h"
 
 #include <assert.h>
@@ -47,6 +48,23 @@ chime_object_t* array_append(chime_object_t* instance, chime_object_t* object)
     internal_array = array_get_internal_array(instance);
     
     chime_runtime_array_add(internal_array, object);
+    
+    return CHIME_LITERAL_NULL;
+}
+
+chime_object_t* array_each(chime_object_t* instance, chime_object_t* function)
+{
+    chime_runtime_array_t* internal_array;
+    unsigned long          length;
+    signed long            i;
+    
+    internal_array = array_get_internal_array(instance);
+    
+    length = chime_runtime_array_count(internal_array);
+    for (i = 0; i < length; ++i)
+    {
+        chime_closure_invoke((chime_closure_t*)function, chime_runtime_array_get(internal_array, i));
+    }
     
     return CHIME_LITERAL_NULL;
 }

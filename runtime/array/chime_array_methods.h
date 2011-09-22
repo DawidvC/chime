@@ -13,6 +13,7 @@ chime_object_t* array_class_new(chime_class_t* klass);
 chime_object_t* array_to_string(chime_object_t* instance);
 chime_object_t* array_length(chime_object_t* instance);
 chime_object_t* array_append(chime_object_t* instance, chime_object_t* object);
+chime_object_t* array_each(chime_object_t* instance, chime_object_t* function);
 chime_object_t* array_indexer_get(chime_object_t* instance, chime_object_t* index);
 
 #ifdef __cplusplus

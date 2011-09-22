@@ -337,9 +337,9 @@ TEST_F(BasicParserTest, SetProperty)
 
 TEST_F(BasicParserTest, MethodCallArguments)
 {
-    ast::method_call* call;
+    ast::MethodCall* call;
     
-    call = parse_method_call("call(a, b)");
+    call = parseMethodCall("call(a, b)");
     
     ASSERT_METHOD_CALL("call", call);
     ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
@@ -348,10 +348,10 @@ TEST_F(BasicParserTest, MethodCallArguments)
 
 TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
 {
-    ast::method_call*     call;
+    ast::MethodCall*     call;
     ast::binary_operator* op;
     
-    call = parse_method_call("call((a + b) * c)");
+    call = parseMethodCall("call((a + b) * c)");
     
     ASSERT_METHOD_CALL("call", call);
     
@@ -395,9 +395,9 @@ TEST_F(BasicParserTest, IndexerOnMethod)
 
 TEST_F(BasicParserTest, MethodCallWithLabelledParams)
 {
-    ast::method_call* call;
+    ast::MethodCall* call;
     
-    call = parse_method_call("foo(bar:a, baz:b)");
+    call = parseMethodCall("foo(bar:a, baz:b)");
     
     ASSERT_METHOD_CALL("foo", call);
     ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));

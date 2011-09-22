@@ -1,0 +1,36 @@
+implementation ArrayTests : Test.Case
+{
+    method test_array_create()
+    {
+        array = Array.new()
+        
+        Assert.equal(0, to:array.length)
+    }
+    
+    method test_array_each()
+    {
+        array = Array.new()
+        
+        array.append(1)
+        array.append(2)
+        array.append(3)
+        
+        value = 0
+        
+        array.each() do (x)
+        {
+            value = value + x
+        }
+        
+        Assert.equal(6, to:value)
+    }
+    
+//     method test_hash_set()
+//     {
+//         hash = Hash.new()
+//         
+//         //hash["abc"] = 10
+//         
+//         Assert.equal(10, to:hash["abc"])
+//     }
+}

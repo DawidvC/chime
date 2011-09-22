@@ -32,15 +32,12 @@ void            chime_object_destroy(chime_object_t* instance);
 
 chime_object_type_t chime_object_get_type(chime_object_t* instance);
 
-chime_object_t* chime_object_get_class(chime_object_t* instance);
+chime_class_t*  chime_object_get_class(chime_object_t* instance);
 chime_object_t* chime_object_get_superclass(chime_object_t* instance);
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name);
 chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char* name);
 void            chime_object_set_property(chime_object_t* instance, const char* name, chime_object_t* value);
 void            chime_object_set_attribute(chime_object_t* instance, const char* name, chime_object_t* value);
-
-void*           chime_object_get_function(chime_object_t* instance);
-void            chime_object_set_function(chime_object_t* instance, const char* name, void* function, unsigned char arity);
 
 void*           chime_object_resolve_invoke(chime_object_t* instance, const char* name);
 chime_object_t* chime_object_invoke_0(chime_object_t* instance, const char* name);

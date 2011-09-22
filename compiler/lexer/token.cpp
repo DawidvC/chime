@@ -31,6 +31,10 @@ namespace chime
         if (c > 0)
             _value += c;
     }
+    void token::append(const std::string& str)
+    {
+        _value += str;
+    }
     std::string token::value(void) const
     {
         return _value;
@@ -52,24 +56,65 @@ namespace chime
     {
         return _value.empty();
     }
-    bool token::is_string(void)
+    
+    bool token::isString() const
     {
-        return this->isString();
+        return this->isPlainString() || this->isInterpolatedStringStart() || this->isInterpolatedStringMiddle() || this->isInterpolatedStringEnd();
     }
     
-    bool token::isString(void) const
+    bool token::isPlainString(void) const
     {
-        return _value[0] == '"';
+        return *(_value.begin()) == '"' && *(_value.end()-1) == '"';
     }
     
-    bool token::is_number(void)
+    bool token::isInterpolatedStringStart() const
     {
-        return this->isNumber();
+        return *(_value.begin()) == '"' && *(_value.end()-2) == '"' && *(_value.end()-1) == '{';
     }
     
-    bool token::isNumber(void) const
+    bool token::isInterpolatedStringMiddle() const
     {
-        return this->isFloatingPoint() || this->isInteger();
+        return *(_value.begin()) == '}' && *(_value.begin()+1) == '"' && *(_value.end()-2) == '"' && *(_value.end()-1) == '{';
+    }
+    
+    bool token::isInterpolatedStringEnd() const
+    {
+        return *(_value.begin()) == '}' && *(_value.begin()+1) == '"' && *(_value.end()-1) == '"';
+    }
+    
+    bool token::isNumber(bool allowFloat) const
+    {
+        std::string::const_iterator it;
+        
+        it = _value.begin();
+        
+        // check for a possible leading '-'
+        if ((*it) == '-')
+        {
+            if (_value.length() == 1)
+                return false;
+            else
+                ++it; // advance past the '-'
+        }
+        
+        // the next spot must be a number character
+        if ((*it) < '0' || (*it) > '9')
+            return false;
+        
+        ++it;
+        
+        for (; it != _value.end(); ++it)
+        {
+            if ((*it) == '.' && !allowFloat)
+                return false;
+            else
+                continue;
+            
+            if ((*it) < '0' || (*it) > '9')
+                return false;
+        }
+        
+        return true;
     }
     
     bool token::is_integer(void)
@@ -77,13 +122,9 @@ namespace chime
         return this->isInteger();
     }
     
-    bool token::isInteger(void) const
+    bool token::isInteger() const
     {
-        char c;
-        
-        c = *_value.begin();
-        
-        return (c >= '0' && c <= '9' );
+        return this->isNumber(false);
     }
     
     bool token::is_floating_point(void)
@@ -93,16 +134,10 @@ namespace chime
     
     bool token::isFloatingPoint(void) const
     {
-        char c;
-        
-        if (!this->isInteger())
+        if (_value.find(".", 0) == std::string::npos)
             return false;
         
-        c = *_value.end();
-        if (c <= '0' || c >= '9' )
-            return false;
-        
-        return _value.find(".",0) != std::string::npos;
+        return this->isNumber(true);
     }
     
     bool token::is_boolean(void)
@@ -297,7 +332,7 @@ namespace chime
     }
     bool token::isEnding() const
     {
-        return (_value == ";") || (_value == "\n") || (_value == "}");
+        return (_value == ";") || (_value == "\n") || (_value == "}") || this->isInterpolatedStringMiddle() || this->isInterpolatedStringEnd();
     }
     bool token::isExceptionRelated(void) const
     {
@@ -334,7 +369,26 @@ namespace chime
     }
     std::string token::string_value(void)
     {
-        // strips out the leading and trailing quotes
-        return std::string(_value.begin()+1, _value.end()-1);
+        // needs to be a little smarter
+        if (this->isPlainString())
+        {
+            return std::string(_value.begin()+1, _value.end()-1);
+        }
+        else if (this->isInterpolatedStringStart())
+        {
+            return std::string(_value.begin()+1, _value.end()-2);
+        }
+        else if (this->isInterpolatedStringMiddle())
+        {
+            return std::string(_value.begin()+2, _value.end()-2);
+        }
+        else if (this->isInterpolatedStringEnd())
+        {
+            return std::string(_value.begin()+2, _value.end()-1);
+        }
+        
+        assert(0 && "Trying to get the string_value of a non-string token");
+        
+        return std::string();
     }
 }

@@ -9,6 +9,7 @@
 #include "runtime/string/chime_string.h"
 #include "runtime/array/chime_array_methods.h"
 
+#include <string.h>
 #include <stdio.h>
 #include <assert.h>
 
@@ -20,8 +21,10 @@ chime_object_t* class_new(chime_object_t* instance)
 chime_object_t* class_name(chime_object_t* instance)
 {
     chime_object_t* string;
+    char*           name;
     
-    string = chime_string_create_with_c_string(chime_runtime_get_class_name((chime_class_t*)instance));
+    name   = chime_runtime_get_class_name((chime_class_t*)instance);
+    string = chime_string_create_with_c_string(name, strlen(name));
     
     return string;
 }
@@ -55,7 +58,7 @@ static void append_methods_to_array(chime_object_t* klass, chime_object_t* array
         method_name = chime_runtime_array_get(method_names, i);
         
         method = chime_runtime_instantiate(_method_class);
-        chime_object_set_property(method, "_name", chime_string_create_with_c_string(method_name));
+        chime_object_set_property(method, "_name", chime_string_create_with_c_string(method_name, strlen(method_name)));
         
         array_append(array, method);
     }

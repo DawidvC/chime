@@ -18,16 +18,19 @@ namespace chime
         void set_value(const char c);
         void set_value(const char* s);
         void append(const char c);
+        void append(const std::string& str);
         std::string value(void) const;
         const char* c_str(void) const;
         
         virtual bool equal_to(const char*);
         
         virtual bool empty(void) const;
-        virtual bool is_string(void);
-        virtual bool isString(void) const;
-        bool         is_number(void);
-        bool         isNumber(void) const;
+        bool isString() const;
+        virtual bool isPlainString() const;
+        virtual bool isInterpolatedStringStart() const;
+        virtual bool isInterpolatedStringMiddle() const;
+        virtual bool isInterpolatedStringEnd() const;
+        bool         isNumber(bool allowFloat=true) const;
         virtual bool is_integer(void);
         virtual bool isInteger(void) const;
         virtual bool is_floating_point(void);

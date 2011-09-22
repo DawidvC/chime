@@ -1,6 +1,7 @@
 // Chime Runtime: chime_object.c
 
 #include "chime_object.h"
+#include "runtime/support.h"
 #include "chime_object_internal.h"
 #include "chime_object_methods.h"
 #include "runtime/chime_runtime.h"
@@ -95,27 +96,27 @@ chime_object_type_t chime_object_get_type(chime_object_t* instance)
     return CHIME_OBJECT_INVALID_TYPE;
 }
 
-chime_object_t* chime_object_get_class(chime_object_t* instance)
+chime_class_t* chime_object_get_class(chime_object_t* instance)
 {
     switch (chime_object_get_type(instance))
     {
         case CHIME_OBJECT_TYPE:
             break;
         case CHIME_NULL_TYPE:
-            return (chime_object_t*)chime_runtime_get_class("Null");
+            return chime_runtime_get_class("Null");
             break;
         case CHIME_INTEGER_TYPE:
-            return (chime_object_t*)chime_runtime_get_class("Integer");
+            return chime_runtime_get_class("Integer");
             break;
         case CHIME_BOOLEAN_TYPE:
-            return (chime_object_t*)chime_runtime_get_class("Boolean");
+            return chime_runtime_get_class("Boolean");
             break;
         default:
             assert(0 && "This type of object isn't handled yet");
             break;
     }
     
-    return (chime_object_t*)instance->self_class;
+    return instance->self_class;
 }
 
 chime_object_t* chime_object_get_superclass(chime_object_t* instance)
@@ -168,8 +169,8 @@ void chime_object_set_attribute(chime_object_t* instance, const char* name, chim
 
 void* chime_object_resolve_invoke(chime_object_t* instance, const char* name)
 {
-    chime_object_t* klass;
-    void*           function;
+    chime_class_t* klass;
+    void*          function;
     
     function = NULL;
     
@@ -179,14 +180,14 @@ void* chime_object_resolve_invoke(chime_object_t* instance, const char* name)
     // we now need to hunt up the inheritance chain for the right method
     do
     {
-        function = chime_dictionary_get(chime_object_get_methods(klass), name);
+        function = chime_dictionary_get(chime_object_get_methods((chime_object_t*)klass), name);
         if (function)
             break;
         
         // Be careful here.  We need to use the chime_class_x methods, because
         // we know we have a class instance.  This is one of the few places where the
         // interchangable-ness of classes and objects breaks down
-        klass = (chime_object_t*)chime_class_get_superclass((chime_class_t*)klass);
+        klass = chime_class_get_superclass(klass);
     } while (klass);
     
     if (!function)

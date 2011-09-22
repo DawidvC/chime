@@ -13,5 +13,6 @@ extern chime_class_t*      _method_class;
 extern chime_class_t*      _string_class;
 extern chime_class_t*      _array_class;
 extern chime_class_t*      _hash_class;
+extern chime_class_t*      _range_class;
 
 #endif

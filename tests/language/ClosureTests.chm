@@ -1,3 +1,5 @@
+global = 0
+
 implementation ClosureTests : Test.Case
 {
     method test_integer_iterator()
@@ -81,4 +83,20 @@ implementation ClosureTests : Test.Case
         
         Assert.equal(20, to:value)
     }
+    
+    // method test_closure_with_global_variables()
+    // {
+    //     global = 0
+    //     
+    //     f = do
+    //     {
+    //         global = global + 1
+    //     }
+    //     
+    //     Assert.equal(0, to:global)
+    //     
+    //     f.call()
+    //     
+    //     Assert.equal(1, to:global)
+    // }
 }

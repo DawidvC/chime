@@ -314,7 +314,7 @@ namespace chime
         {
             if (this->look_ahead(2)->equal_to("("))
             {
-                return new ast::method_call(this);
+                return ast::MethodCall::parse(*this);
             }
             
             node = ast::Variable::parse(*this);

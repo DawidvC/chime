@@ -14,17 +14,17 @@ namespace ast
         parser.next_token_value("import");
         
         t = parser.look_ahead();
-        if (t->isString())
+        if (t->isPlainString())
         {
-            string_literal* string;
+            Node* node;
             
-            string = new string_literal(&parser);
+            node = ast::string_literal::parse(parser);
             
-            this->setImportand(string);
+            this->setImportand(node);
             
             // this needs to be smart and figure out if it's currently
             // a structural element or not
-            parser.addSourceDependency(string->value());
+            parser.addSourceDependency(static_cast<ast::string_literal*>(node)->value());
         }
         else if (t->isType())
         {

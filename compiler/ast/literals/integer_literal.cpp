@@ -21,9 +21,9 @@ namespace ast
         delete t;
     }
     
-    std::string integer_literal::node_name(void) const
+    std::string integer_literal::nodeName(void) const
     {
-        return std::string("integer literal");
+        return std::string("Integer Literal");
     }
     std::string integer_literal::to_string(void) const
     {

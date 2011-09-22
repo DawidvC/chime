@@ -3,6 +3,7 @@
 #include "integer_literal.h"
 #include "string_literal.h"
 #include "SelfLiteral.h"
+#include "InterpolatedString.h"
 #include "compiler/ast/operators/IndexOperator.h"
 
 namespace ast
@@ -12,7 +13,9 @@ namespace ast
         chime::token* t;
         ast::node*    node;
         
-        t = parser.look_ahead();
+        node = NULL;
+        t    = parser.look_ahead();
+        
         if (t->isFloatingPoint())
         {
             assert(0 && "Floating point numbers not parsed yet");
@@ -21,9 +24,13 @@ namespace ast
         {
             node = new ast::integer_literal(&parser);
         }
-        else if (t->isString())
+        else if (t->isPlainString())
         {
-            node = new ast::string_literal(&parser);
+            node = ast::string_literal::parse(parser);
+        }
+        else if (t->isInterpolatedStringStart())
+        {
+            node = ast::InterpolatedString::parse(parser, node);
         }
         else if (t->isBoolean())
         {
