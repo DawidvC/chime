@@ -14,15 +14,12 @@ namespace chime
         _lexer = lexer;
         _lexer->ignore_new_lines(false);
         
-        _errors = new std::vector<chime::parse_error*>();
-        
         _currentRoot  = NULL;
         _currentScope = NULL;
     }
     
     parser::~parser()
     {
-        delete _errors;
     }
     
 #pragma mark *** Token Handling ***
@@ -42,11 +39,11 @@ namespace chime
         
         if ((expected != NULL) && (!t->equal_to(expected)))
         {
-            chime::parse_error* e;
+            chime::ParseErrorRef e;
             
-            e = new chime::parse_error("Expected '%s' but got '%s'", expected, t->c_str());
+            e = chime::ParseErrorRef(new chime::ParseError("Expected '%s' but got '%s'", expected, t->c_str()));
             
-            this->add_error(e);
+            this->addError(e);
             
             return NULL;
         }
@@ -116,43 +113,34 @@ namespace chime
         return _lexer->look_ahead(distance);
     }
     
-    std::vector<chime::parse_error*>* parser::errors(void) const
+    std::vector<chime::ParseErrorRef> parser::getErrors() const
     {
         return _errors;
     }
     
-    void parser::add_error(chime::parse_error* e)
+    void parser::addError(chime::ParseErrorRef e)
     {
-        assert(e != NULL);
-        
         e->line(_lexer->current_line());
         
-        this->errors()->push_back(e);
+        _errors.push_back(e);
     }
     
     void parser::addError(const char* message)
     {
-        chime::parse_error* e;
+        chime::ParseErrorRef e;
         
-        e = new chime::parse_error(message);
+        e = chime::ParseErrorRef(new chime::ParseError(message));
         
-        this->add_error(e);
+        this->addError(e);
     }
     
-    void parser::print_errors(void) const
+    void parser::printErrors(void) const
     {
-        std::vector<chime::parse_error*>::iterator i;
+        std::vector<chime::ParseErrorRef>::const_iterator it;
         
-        if (this->errors()->empty())
-            return;
-        
-        for (i=this->errors()->begin(); i < this->errors()->end(); i++)
+        for (it = _errors.begin(); it != _errors.end(); ++it)
         {
-            chime::parse_error* e;
-            
-            e = (*i);
-            
-            fprintf(stdout, "[Parse:\e[31merror\e[0m:%d] %s\n", e->line(), e->message().c_str());
+            fprintf(stdout, "[Parse:\e[31merror\e[0m:%d] %s\n", (*it)->line(), (*it)->message().c_str());
         }
     }
 
@@ -225,11 +213,7 @@ namespace chime
         t = this->look_ahead();
         if (t->empty())
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("parse_without_structural: found empty/null token");
-            
-            this->add_error(e);
+            this->addError("parse_without_structural: found empty/null token");
             return NULL;
         }
         else if (t->is_control())
@@ -255,11 +239,11 @@ namespace chime
             }
             else
             {
-                chime::parse_error* e;
+                chime::ParseErrorRef e;
                 
-                e = new chime::parse_error("parse_without_structural: found something unexpected '%s'", t->c_str());
+                e = ParseErrorRef(new chime::ParseError("parse_without_structural: found something unexpected '%s'", t->c_str()));
                 
-                this->add_error(e);
+                this->addError(e);
                 return NULL;
             }
         }
@@ -281,11 +265,7 @@ namespace chime
         t = this->look_ahead();
         if (t == NULL || t->empty())
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("Unable to extract the next token while making an expression");
-            
-            this->add_error(e);
+            this->addError("Unable to extract the next token while making an expression");
             
             return NULL;
         }
@@ -321,11 +301,11 @@ namespace chime
         }
         else
         {
-            chime::parse_error* e;
+            chime::ParseErrorRef e;
             
-            e = new chime::parse_error("expression: found something weird '%s'", t->c_str());
+            e = chime::ParseErrorRef(new chime::ParseError("expression: found something weird '%s'", t->c_str()));
             
-            this->add_error(e);
+            this->addError(e);
             
             return NULL;
         }

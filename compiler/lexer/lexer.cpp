@@ -281,6 +281,9 @@ namespace chime
                     _peeked_char = 0;
                     break;
                 case '"':
+                    if (_inString)
+                        return t;
+                    
                     t->set_value(this->next_char());
                     
                     _inString = true;

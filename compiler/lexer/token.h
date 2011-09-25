@@ -4,8 +4,6 @@
 #include <string>
 #include <tr1/memory>
 
-using std::tr1::shared_ptr;
-
 namespace chime
 {
     class token
@@ -69,7 +67,7 @@ namespace chime
         std::string _value;
     };
     
-    typedef shared_ptr<chime::token> TokenRef;
+    typedef std::tr1::shared_ptr<chime::token> TokenRef;
 }
 
 #endif /* _TOKEN_H_ */

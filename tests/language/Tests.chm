@@ -19,11 +19,11 @@ runner.execute_tests_for_class(ClosureTests)
 runner.execute_tests_for_class(ArrayTests)
 runner.execute_tests_for_class(StringTests)
 
-// if (Assert.failure_count() > 0)
-// {
-//     "Test Failures: {Assert.failure_count()}".print()
-// }
-// else
-// {
-//     "Tests Passed".print()
-// }
+if (Assert.failure_count() > 0)
+{
+    "Tests Failed".print()
+}
+else
+{
+    "Tests Passed".print()
+}

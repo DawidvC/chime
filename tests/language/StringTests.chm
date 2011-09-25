@@ -32,4 +32,9 @@ implementation StringTests : Test.Case
         Assert.equal(" 1 2 3", to:" {1} 2 3")
         Assert.equal("{1} {2} {3}", to:"1 2 3")
     }
+    
+    // method test_method_call_in_string_interpolation()
+    // {
+    //     Assert.equal("1 2 3", to:"1 {2.to_string()} 3")
+    // }
 }

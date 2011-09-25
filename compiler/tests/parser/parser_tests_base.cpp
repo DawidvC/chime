@@ -27,9 +27,9 @@ ast::node* ParserTestsBase::parse(const char* input)
     
     _last_node = parser->parse();
     
-    //assert(parser->errors()->size() == 0 && "There should not be any errors after parsing");
+    _errors = parser->getErrors();
     
-    parser->print_errors();
+    parser->printErrors();
     
     delete parser;
     delete lexer;
@@ -55,4 +55,9 @@ ast::MethodCall* ParserTestsBase::parseMethodCall(const char* input)
 ast::binary_operator* ParserTestsBase::parseOperator(const char* input)
 {
     return static_cast<ast::binary_operator*>(this->parse(input)->childAtIndex(0));
+}
+
+std::vector<chime::ParseErrorRef> ParserTestsBase::getErrors() const
+{
+    return _errors;
 }

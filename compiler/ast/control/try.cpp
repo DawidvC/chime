@@ -124,11 +124,7 @@ namespace ast
         
         if ((this->getCatchBlocks()->size() == 0) && (this->getFinallyBlock() == NULL))
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("a try statement also requires either a catch or finally");
-            
-            parser.add_error(e);
+            parser.addError("a try statement also requires either a catch or finally");
         }
     }
 }

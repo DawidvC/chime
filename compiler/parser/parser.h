@@ -1,10 +1,10 @@
-// parser.h
+// chime: parser.h
 
 #ifndef PARSER_H
 #define PARSER_H
 
 #include "compiler/lexer/lexer.h"
-#include "parse_error.h"
+#include "ParseError.h"
 #include "compiler/ast/node.h"
 #include "compiler/ast/Root.h"
 #include "compiler/ast/ScopedNode.h"
@@ -26,10 +26,10 @@ namespace chime
         token*      look_ahead(void);
         token*      look_ahead(int);
         
-        std::vector<chime::parse_error*>* errors(void) const;
-        void                              add_error(chime::parse_error* e);
+        std::vector<chime::ParseErrorRef> getErrors() const;
+        void                              addError(ParseErrorRef e);
         void                              addError(const char* message);
-        void                              print_errors(void) const;
+        void                              printErrors() const;
         
         ast::ScopedNode* getCurrentScope() const;
         void             setCurrentScope(ast::ScopedNode* node);
@@ -50,7 +50,7 @@ namespace chime
         ast::Root*                        _currentRoot;
         ast::ScopedNode*                  _currentScope;
         chime::lexer*                     _lexer;
-        std::vector<chime::parse_error*>* _errors;
+        std::vector<chime::ParseErrorRef> _errors;
     };
     
     typedef std::tr1::shared_ptr<parser> ParserRef;

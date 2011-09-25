@@ -12,6 +12,12 @@ namespace ast
         chime::token*         t;
         int                   currentPrecedence;
         
+        if (leftOperand == NULL)
+        {
+            parser.addError("Unable to parse left operand of Binary Operator");
+            return NULL;
+        }
+        
         while (true)
         {
             t = parser.look_ahead();
@@ -43,8 +49,14 @@ namespace ast
                 rightOperand = ast::binary_operator::parse(parser, currentPrecedence+1, rightOperand);
             }
             
-            node->left_operand(leftOperand);
-            node->right_operand(rightOperand);
+            if (rightOperand == NULL)
+            {
+                parser.addError("Unable to parse right operand of Binary Operator");
+                return leftOperand;
+            }
+            
+            node->setLeftOperand(leftOperand);
+            node->setRightOperand(rightOperand);
             leftOperand = node;
             
             leftOperand = ast::IndexOperator::parse(parser, leftOperand);
@@ -63,11 +75,7 @@ namespace ast
         t = parser.look_ahead();
         if (t == NULL || t->empty())
         {
-            chime::parse_error* e;
-            
-            e = new chime::parse_error("Unable to extract the next token while parsing a primary expression");
-            
-            parser.add_error(e);
+            parser.addError("Unable to extract the next token while parsing a right operand for a binary operator");
             
             return NULL;
         }
@@ -129,6 +137,7 @@ namespace ast
     }
     void binary_operator::setRightOperand(ast::node* op)
     {
+        assert(op);
         assert(this->childCount() == 1);
         
         this->addChild(op);
@@ -147,6 +156,7 @@ namespace ast
     }
     void binary_operator::setLeftOperand(ast::node* op)
     {
+        assert(op);
         assert(this->childCount() == 0);
         
         this->addChild(op);

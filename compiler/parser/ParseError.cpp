@@ -1,9 +1,10 @@
-#include "parse_error.h"
+#include "ParseError.h"
+
 #include <stdarg.h>
 
 namespace chime
 {
-    parse_error::parse_error(const char* format, ...)
+    ParseError::ParseError(const char* format, ...)
     {
         char buffer[1024];
         
@@ -20,22 +21,22 @@ namespace chime
         this->line(-1);
     }
     
-    parse_error::~parse_error()
+    ParseError::~ParseError()
     {
         delete _message;
     }
     
-    std::string parse_error::message() const
+    std::string ParseError::message() const
     {
         return *_message;
     }
     
-    int parse_error::line(void) const
+    int ParseError::line(void) const
     {
         return _line;
     }
     
-    void parse_error::line(int l)
+    void ParseError::line(int l)
     {
         _line = l;
     }

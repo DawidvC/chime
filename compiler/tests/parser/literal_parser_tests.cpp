@@ -132,3 +132,12 @@ TEST_F(LiteralParserTest, MultipleInterpolationString)
     ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
     ASSERT_LITERAL_INTEGER(3, leftOp->getRightOperand());
 }
+
+// TEST_F(LiteralParserTest, InterpolatedStringWithMethodCall)
+// {
+//     ast::BinaryOperator* op;
+//     
+//     op = parseOperator("\"1 {2.to_string()} 3\"");
+//     
+//     op->print();
+// }

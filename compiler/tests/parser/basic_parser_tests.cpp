@@ -1,5 +1,5 @@
 #include "parser_tests_base.h"
-#include "compiler/parser/parse_error.h"
+#include "compiler/parser/ParseError.h"
 
 class BasicParserTest : public ParserTestsBase
 {
@@ -8,23 +8,21 @@ class BasicParserTest : public ParserTestsBase
 
 TEST_F(BasicParserTest, ErrorTest)
 {
-    chime::parse_error* error;
+    chime::ParseErrorRef error;
     
-    error = new chime::parse_error("yo %d", 1);
+    error = chime::ParseErrorRef(new chime::ParseError("yo %d", 1));
     
     ASSERT_EQ("yo 1", error->message());
-    
-    delete error;
 }
 
 TEST_F(BasicParserTest, ImportIdentifier)
 {
-    ast::node* node;
+    ast::Node* node;
     
-    node = parse("import Yo.Dog")->child_at_index(0);
+    node = parse("import Yo.Dog")->childAtIndex(0);
     
     ASSERT_IMPORT(node);
-    ASSERT_TYPE("Yo.Dog", ((ast::Import*)node)->getImportand());
+    ASSERT_TYPE("Yo.Dog", static_cast<ast::Import*>(node)->getImportand());
 }
 
 TEST_F(BasicParserTest, MultipleImports)

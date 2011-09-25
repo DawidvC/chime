@@ -303,6 +303,22 @@ TEST_F(LexerTest, MoreComplexInterpolatedString)
     ExpectTokens(tokens);
 }
 
+TEST_F(LexerTest, UnterminatedString)
+{
+    lex("\"1 2 3");
+    
+    const char* tokens[] = {"\"1 2 3", NULL};
+    ExpectTokens(tokens);
+}
+
+// TEST_F(LexerTest, MethodCallInInterpolatedString)
+// {
+//     lex("\"1 {2.to_string()} 3\"");
+//     
+//     const char* tokens[] = {"\"1 \"{", "2", ".", "to_string", "(", ")", "}\" 3\"", NULL};
+//     ExpectTokens(tokens);
+// }
+
 TEST_F(LexerTest, SingleFloatingPoint)
 {
     lex("5.667");

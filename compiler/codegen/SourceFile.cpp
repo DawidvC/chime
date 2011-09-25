@@ -59,7 +59,7 @@ namespace chime
             
             _astRoot = ast::RootRef(parser->parse());
             
-            parser->print_errors();
+            parser->printErrors();
         }
         
         return _astRoot;
