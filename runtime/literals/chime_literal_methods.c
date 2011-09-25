@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+// a 64-bit integer can have 20 digits, plus a minus sign, plus a null
+// terminator.  So we need at least 22 bytes.
+#define INTEGER_STRING_SIZE ((22 / CHIME_ALLOCATION_UNIT) + 1)
+
 #pragma mark -
 #pragma mark Null Functions
 chime_object_t* null_print(chime_object_t* instance)
@@ -22,13 +26,46 @@ chime_object_t* null_print(chime_object_t* instance)
 
 #pragma mark -
 #pragma mark Integer Functions
-chime_object_t* integer_print(chime_object_t* instance)
+chime_object_t* integer_to_string(chime_object_t* instance)
 {
+    chime_object_t* string;
+    signed long     value;
+    char*           c_string;
+    char*           p;
+    unsigned int    length;
+    
     assert(chime_object_is_integer(instance));
     
-    fprintf(stdout, "<Integer: %ld>\n", chime_literal_decode_integer(instance));
+    value = chime_literal_decode_integer(instance);
+    if (value == 0)
+        return chime_string_create_with_c_string("0", 1);
     
-    return CHIME_LITERAL_NULL;
+    c_string = chime_allocate(INTEGER_STRING_SIZE);
+    p        = c_string;
+    length   = 0;
+    
+    if (value < 0)
+    {
+        value = value * -1; // make it positive
+        p[length] = '-';
+        length += 1;
+    }
+    
+    while (value > 0)
+    {
+        p[length] = (value % 10) + 48; // convert digit to ASCII and store in the string
+        value = value / 10;
+        
+        length += 1;
+    }
+    
+    p[length] = 0; // terminate the string
+    
+    string = chime_string_create_with_c_string(c_string, length);
+    
+    chime_deallocate(c_string); // remove our scratch space
+    
+    return string;
 }
 
 chime_object_t* integer_times(chime_object_t* instance, chime_object_t* function)
@@ -63,6 +100,22 @@ chime_object_t* integer_add(chime_object_t* instance, chime_object_t* other)
         signed long result;
         
         result = chime_literal_decode_integer(instance) + chime_literal_decode_integer(other);
+        
+        return chime_literal_encode_integer(result);
+    }
+    
+    return CHIME_LITERAL_NULL;
+}
+
+chime_object_t* integer_subtract(chime_object_t* instance, chime_object_t* other)
+{
+    assert(chime_object_is_integer(instance));
+    
+    if (chime_object_is_integer(other))
+    {
+        signed long result;
+        
+        result = chime_literal_decode_integer(instance) - chime_literal_decode_integer(other);
         
         return chime_literal_encode_integer(result);
     }
@@ -119,13 +172,16 @@ chime_object_t* integer_compare(chime_object_t* instance, chime_object_t* other)
 
 #pragma mark -
 #pragma mark Boolean Function
-chime_object_t* boolean_print(chime_object_t* instance)
+chime_object_t* boolean_to_string(chime_object_t* instance)
 {
     assert(chime_object_is_boolean(instance));
     
-    fprintf(stdout, "<Boolean: %s>\n", instance == CHIME_LITERAL_TRUE ? "true" : "false");
+    if (instance == CHIME_LITERAL_TRUE)
+    {
+        return chime_string_create_with_c_string("true", 4);
+    }
     
-    return CHIME_LITERAL_NULL;
+    return chime_string_create_with_c_string("false", 5);
 }
 
 chime_object_t* boolean_compare(chime_object_t* instance, chime_object_t* other)

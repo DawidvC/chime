@@ -1,11 +1,13 @@
 // Chime Runtime: chime_string_methods.c
 
 #include "chime_string_methods.h"
+#include "chime_string_internal.h"
 #include "runtime/string/chime_string.h"
 #include "runtime/literals/chime_literal.h"
 #include "runtime/support.h"
 #include "runtime/chime_runtime_internal.h"
-#include "runtime/collections/chime_runtime_array.h"
+
+#include "runtime/collections/chime_dictionary.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -13,18 +15,18 @@
 
 chime_object_t* string_class_new(chime_class_t* klass)
 {
-    chime_object_t*        string_instance;
+    chime_object_t*        instance;
     chime_runtime_array_t* internal_array;
     
     // first thing to do is invoke new on super
-    string_instance = chime_object_create(klass);
-    internal_array  = chime_runtime_array_create();
+    instance       = chime_object_create(klass);
+    internal_array = chime_runtime_array_create();
     
-    chime_object_set_attribute(string_instance, "_internal_array", (chime_object_t*)internal_array);
-    chime_object_set_attribute(string_instance, "_length", chime_literal_encode_integer(0));
-    chime_object_set_attribute(string_instance, "_c_string", (chime_object_t*)0);
+    chime_object_set_attribute(instance, "_internal_array", (chime_object_t*)internal_array);
+    string_length_set(instance, 0);
+    string_set_buffer(instance, STRING_EMPTY_BUFFER_FLAG);
     
-    return string_instance;
+    return instance;
 }
 
 chime_object_t* string_to_string(chime_object_t* instance)
@@ -62,6 +64,88 @@ chime_object_t* string_compare(chime_object_t* instance, chime_object_t* other)
         return chime_literal_encode_integer(-1);
     
     return chime_literal_encode_integer(0);
+}
+
+chime_object_t* string_add(chime_object_t* instance, chime_object_t* other)
+{
+    chime_object_t*        other_as_string;
+    signed long            instance_length;
+    signed long            other_length; 
+    unsigned long          instance_index;
+    unsigned long          other_index;
+    unsigned long          i;
+    chime_runtime_array_t* instance_array;
+    chime_runtime_array_t* other_array;
+    unsigned long          instance_offset;
+    unsigned long          other_offset;
+    char*                  instance_data_chunk;
+    char*                  other_data_chunk;
+    
+    other_as_string = chime_object_invoke_0(other, "to_string");
+    
+    instance_length = chime_literal_decode_integer(string_length_get(instance));
+    other_length    = chime_literal_decode_integer(string_length_get(other_as_string));
+    
+    // special-case when the other string has zero length
+    if (other_length <= 0)
+    {
+        assert(other_length == 0);
+        return instance;
+    }
+    
+    instance_array  = string_get_internal_array(instance);
+    other_array     = string_get_internal_array(other_as_string);
+    
+    // special case when this instance has zero length
+    if (instance_length <= 0)
+    {
+        assert(instance_length == 0);
+        
+        chime_runtime_array_add(instance_array, chime_allocate(STRING_STORAGE_UNIT));
+    }
+    
+    instance_index  = instance_length / BYTES_PER_STRING_STORAGE_UNIT; // compute the array indices
+    other_index     = other_length / BYTES_PER_STRING_STORAGE_UNIT;
+    
+    instance_offset = instance_length % BYTES_PER_STRING_STORAGE_UNIT; // compute how far into the last chunk we are
+    other_offset    = 0;
+    
+    instance_data_chunk = chime_runtime_array_get(instance_array, instance_index);
+    other_data_chunk    = chime_runtime_array_get(other_array,    other_index);
+    
+    for (i = 0; i < other_length; ++i, ++other_offset, ++instance_offset)
+    {
+        if (other_offset >= BYTES_PER_STRING_STORAGE_UNIT)
+        {
+            other_index += 1;
+            other_offset = 0;
+            other_data_chunk = chime_runtime_array_get(other_array, other_index);
+        }
+        
+        // if we fall off the end of the chunk, we need to start adding chunks
+        if (instance_offset >= BYTES_PER_STRING_STORAGE_UNIT)
+        {
+            instance_offset = 0;
+            instance_data_chunk = chime_allocate(STRING_STORAGE_UNIT);
+            chime_runtime_array_add(instance_array, instance_data_chunk);
+        }
+        
+        instance_data_chunk[instance_offset] = other_data_chunk[other_offset];
+    }
+    
+    // make sure that anything left over in the data_chunk is zero'ed out
+    for (; instance_offset < BYTES_PER_STRING_STORAGE_UNIT; ++instance_offset)
+    {
+        instance_data_chunk[instance_offset] = 0;
+    }
+    
+    // adjust the length and clear the internal buffer
+    string_length_set(instance, instance_length + other_length);
+    string_set_buffer(instance, STRING_EMPTY_BUFFER_FLAG);
+    
+    assert((instance_length + other_length) == chime_literal_decode_integer(string_length_get(instance)));
+    
+    return instance; // to allow chaining, this is important
 }
 
 chime_object_t* string_indexer_get(chime_object_t* instance, chime_object_t* index)
@@ -125,6 +209,13 @@ chime_object_t* string_length_get(chime_object_t* instance)
     return chime_object_get_attribute(instance, "_length");
 }
 
+chime_object_t* string_length_set(chime_object_t* instance, signed long length)
+{
+    chime_object_set_attribute(instance, "_length", chime_literal_encode_integer(length));
+    
+    return CHIME_LITERAL_NULL;
+}
+
 chime_object_t* string_concatenate(chime_object_t* instance, chime_object_t* other)
 {
     return instance;
@@ -133,4 +224,20 @@ chime_object_t* string_concatenate(chime_object_t* instance, chime_object_t* oth
 chime_runtime_array_t* string_get_internal_array(chime_object_t* instance)
 {
     return (chime_runtime_array_t*)chime_object_get_attribute(instance, "_internal_array");
+}
+
+char* string_get_buffer(chime_object_t* instance)
+{
+    return (char*)chime_object_get_attribute(instance, "_c_string");
+}
+
+void string_set_buffer(chime_object_t* instance, char* value)
+{
+    char* buffer;
+    
+    buffer = string_get_buffer(instance);
+    if (buffer != STRING_EMPTY_BUFFER_FLAG)
+        chime_deallocate(buffer);
+    
+    chime_object_set_attribute(instance, "_c_string", (chime_object_t*)value);
 }

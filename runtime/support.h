@@ -13,7 +13,8 @@ extern "C" {
 #define CHIME_ALLOCATION_UNIT sizeof(struct _chime_object)
 
 #include <stdlib.h>
-#define chime_allocate(x) malloc(x*CHIME_ALLOCATION_UNIT)
+#define chime_allocate(x)   malloc(x*CHIME_ALLOCATION_UNIT)
+#define chime_deallocate(x) free(x)
 
 #ifdef __cplusplus
 }

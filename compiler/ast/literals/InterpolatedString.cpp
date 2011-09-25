@@ -5,55 +5,36 @@
 
 namespace ast
 {
-    ast::Node* InterpolatedString::parse(chime::parser& parser, ast::Node* leftOperand)
+    // " " + () + " " + () + " "
+    ast::Node* InterpolatedString::parse(chime::parser& parser)
     {
-        chime::token*         t;
-        ast::binary_operator* addOp;
-        ast::binary_operator* callOp;
-        ast::MethodCall*      toStringCall;
-        ast::Node*            node;
+        chime::token*        t;
+        ast::BinaryOperator* leftOp;
+        ast::BinaryOperator* rightOp;
+        ast::Node*           node;
         
         t = parser.look_ahead();
         if (t->empty())
-            return leftOperand;
+            return NULL;
         
         if (t->isInterpolatedStringEnd())
         {
-            addOp = new ast::binary_operator();
-            addOp->identifier("+");
-            addOp->setLeftOperand(leftOperand);
-            addOp->setRightOperand(ast::string_literal::parse(parser));
-            
-            return addOp;
+            return ast::string_literal::parse(parser);
         }
-        
-        if (!t->isInterpolatedStringStart() && !t->isInterpolatedStringMiddle())
-        {
-            assert(0 && "How did we get here while parsing an interpolated string?");
-            
-            return NULL;
-        }
-        
-        if (t->isInterpolatedStringStart())
-            assert(leftOperand == NULL);
         
         node = ast::string_literal::parse(parser);
         
-        // the interpolated expression
-        toStringCall = new ast::MethodCall();
-        toStringCall->identifier("to_string");
+        leftOp = new ast::BinaryOperator();
+        leftOp->identifier("+");
+        leftOp->setLeftOperand(node);
+        leftOp->setRightOperand(parser.parse_expression());
         
-        callOp = new ast::binary_operator();
-        callOp->identifier(".");
-        callOp->setLeftOperand(parser.parse_expression());
-        callOp->setRightOperand(toStringCall);
+        rightOp = new ast::BinaryOperator();
+        rightOp->identifier("+");
+        rightOp->setLeftOperand(leftOp);
+        rightOp->setRightOperand(InterpolatedString::parse(parser));
         
-        addOp = new ast::binary_operator();
-        addOp->identifier("+");
-        addOp->setLeftOperand(node);
-        addOp->setRightOperand(callOp);
-        
-        return InterpolatedString::parse(parser, addOp);
+        return rightOp;
     }
     
     std::string InterpolatedString::nodeName(void) const

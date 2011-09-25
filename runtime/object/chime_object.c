@@ -135,6 +135,31 @@ chime_dictionary_t* chime_object_get_methods(chime_object_t* instance)
     return instance->methods;
 }
 
+chime_dictionary_t* chime_object_get_attributes(chime_object_t* instance)
+{
+    assert(instance);
+    
+    return instance->variables;
+}
+
+void chime_object_print(struct _chime_object* instance)
+{
+    chime_dictionary_t*    dict;
+    chime_runtime_array_t* keys;
+    unsigned long          i;
+
+    dict = chime_object_get_attributes(instance);
+    keys = chime_dictionary_get_keys(dict);
+    
+    for (i = 0; i < chime_runtime_array_count(keys); ++i)
+    {
+        char* key;
+        
+        key = chime_runtime_array_get(keys, i);
+        fprintf(stderr, "[runtime] %s => %p\n", key, chime_dictionary_get(dict, key));
+    }
+}
+
 chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name)
 {
     if (!instance)

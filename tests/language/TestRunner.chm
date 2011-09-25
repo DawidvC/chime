@@ -1,109 +1,34 @@
-import "ControlTests"
-import "LiteralTests"
-import "MethodTests"
-import "ReflectionTests"
-import "HashTests"
-import "ClosureTests"
-
-test = LiteralTests.new()
-
-// test.methods.length.print()
-// 
-// original_count = Assert.failure_count()
-// 
-// test.setup()
-// test.invoke(test.methods[0].name)
-// test.teardown()
-// 
-// if (Assert.failure_count() > original_count)
-// {
-//     test.methods[0].name.print()
-//     "Failed".print()
-// }
-
-test = LiteralTests.new()
-
-test.setup()
-test.test_boolean_literal_comparisons()
-test.teardown()
-
-test.setup()
-test.test_integer_literal_comparisons()
-test.teardown()
-
-test = ControlTests.new()
-
-test.setup()
-test.test_if_executes_only_next_statement()
-test.teardown()
-
-test.setup()
-test.test_if_executes_on_true_expression()
-test.teardown()
-
-test.setup()
-test.test_if_executes_on_true_expression_with_local_variable()
-test.teardown()
-
-test.setup()
-test.test_ifs_with_boolean_literals()
-test.teardown()
-
-test = MethodTests.new()
-
-test.setup()
-test.test_get_property()
-test.teardown()
-
-test.setup()
-test.test_set_property()
-test.teardown()
-
-test = ReflectionTests.new()
-
-test.setup()
-test.test_class_name()
-test.teardown()
-
-test.setup()
-test.test_self_class()
-test.teardown()
-
-test.setup()
-test.test_self_class_name()
-test.teardown()
-
-test.setup()
-test.test_method_names()
-test.teardown()
-
-test = HashTests.new()
-
-test.setup()
-test.test_hash_create()
-test.teardown()
-
-test = ClosureTests.new()
-
-test.setup()
-test.test_integer_iterator()
-test.teardown()
-
-test.setup()
-test.test_integer_iterator_with_argument()
-test.teardown()
-
-test.setup()
-test.test_closure_definition()
-test.teardown()
-
-test.setup()
-test.test_closure_definition_with_closed_variables()
-test.teardown()
-
-test.setup()
-test.test_nested_closure_creation_with_closed_variables()
-test.teardown()
-
-"*** Failure Count ***".print()
-Assert.failure_count().print()
+implementation TestRunner
+{
+    method execute_tests_for_class(klass)
+    {
+        test         = klass.new()
+        test_methods = 0
+        failures     = 0
+        range        = Range.new()
+        range.start  = 0
+        range.end    = 3
+        
+        test.methods.each() do (test_method)
+        {
+            original_count = Assert.failure_count()
+            
+            if test_method.name[range] == "test"
+            {
+                test_methods = test_methods + 1
+                
+                test.setup()
+                test.invoke(test_method.name)
+                test.teardown()
+                
+                if (Assert.failure_count() > original_count)
+                {
+                    failures = failures + 1
+                    "Failure: {test_method.name}".print()
+                }
+            }
+        }
+        
+        "{test.class.name}: {test_methods - failures} / {test_methods}".print()
+    }
+}

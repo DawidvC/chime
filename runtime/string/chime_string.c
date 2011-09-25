@@ -21,6 +21,7 @@ void chime_string_initialize(void)
     chime_class_set_instance_method(_string_class, "to_string", string_to_string);
     chime_class_set_instance_method(_string_class, "print",     string_print);
     chime_class_set_instance_method(_string_class, "<=>",       string_compare);
+    chime_class_set_instance_method(_string_class, "+",         string_add);
     chime_class_set_instance_method(_string_class, "[]",        string_indexer_get);
     chime_class_set_instance_method(_string_class, "length",    string_length_get);
 }
@@ -67,7 +68,7 @@ chime_object_t* chime_string_create_with_c_string(const char* string, unsigned i
         data_chunk[count] = 0;
     }
     
-    chime_object_set_attribute(instance, "_length", chime_literal_encode_integer(length));
+    string_length_set(instance, length);
     
     return instance;
 }
@@ -83,9 +84,8 @@ char* chime_string_to_c_string(chime_object_t* instance)
     
     assert(instance && "Trying to convert NULL to a c-string");
     
-    buffer = (char*)chime_object_get_attribute(instance, "_c_string");
-    
-    if (buffer)
+    buffer = string_get_buffer(instance);
+    if (buffer != STRING_EMPTY_BUFFER_FLAG)
         return buffer;
     
     // we need to build a contiguous buffer to fit the string, so first
@@ -93,6 +93,9 @@ char* chime_string_to_c_string(chime_object_t* instance)
     // of the internal array times the storage of each of those elements
     array  = string_get_internal_array(instance);
     length = chime_runtime_array_count(array);
+    
+    if (length == 0)
+        return "";
     
     buffer = chime_allocate(length * STRING_STORAGE_UNIT);
     cursor = 0;
@@ -110,7 +113,9 @@ char* chime_string_to_c_string(chime_object_t* instance)
         }
     }
     
-    chime_object_set_attribute(instance, "_c_string", (chime_object_t*)buffer);
+    buffer[cursor] = 0; // make sure to null-terminate!
+    
+    string_set_buffer(instance, buffer);
     
     return buffer;
 }

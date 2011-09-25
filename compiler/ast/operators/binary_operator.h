@@ -32,6 +32,8 @@ namespace ast
     private:
         int _precendence;
     };
+    
+    typedef ast::binary_operator BinaryOperator;
 }
 
 #endif

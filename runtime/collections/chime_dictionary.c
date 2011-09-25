@@ -60,6 +60,7 @@ void* chime_dictionary_get(chime_dictionary_t* dictionary, const char* key)
 void chime_dictionary_set(chime_dictionary_t* dictionary, const char* key, void* value)
 {
     assert(dictionary);
+    assert(key);
     
     chime_dictionary_remove(dictionary, key);
     
@@ -75,6 +76,7 @@ void chime_dictionary_remove(chime_dictionary_t* dictionary, const char* key)
     char*         current_key;
     
     assert(dictionary);
+    assert(key);
     
     for (i = 0; i < chime_dictionary_count(dictionary); ++i)
     {

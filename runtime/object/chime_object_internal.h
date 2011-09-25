@@ -18,6 +18,8 @@ struct _chime_object {
 };
 
 chime_dictionary_t* chime_object_get_methods(struct _chime_object* instance);
+chime_dictionary_t* chime_object_get_attributes(struct _chime_object* instance);
+void                chime_object_print(struct _chime_object* instance);
 
 #ifdef __cplusplus
 }

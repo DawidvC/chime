@@ -138,7 +138,7 @@ TEST_F(RuntimeTests, InheritanceStructure)
     chime_object_destroy(object);
 }
 
-TEST_F(RuntimeTests, OverwriteProperty)
+TEST_F(RuntimeTests, OverwriteOneProperty)
 {
     chime_object_t* object;
     chime_object_t* test_prop;
@@ -155,6 +155,70 @@ TEST_F(RuntimeTests, OverwriteProperty)
     
     ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_property(object, "test_prop"));
     
+    // try a third time
+    chime_object_set_property(object, "test_prop", test_prop);
+    
+    ASSERT_EQ(test_prop, chime_object_get_property(object, "test_prop"));
+    
     chime_object_destroy(object);
     chime_object_destroy(test_prop);
+}
+
+TEST_F(RuntimeTests, OverwriteMiddleAttribute)
+{
+    chime_object_t* object;
+    chime_object_t* test_prop;
+    
+    object    = chime_object_create_with_name("Object");
+    test_prop = chime_object_create_with_name("Object");
+    
+    chime_object_set_attribute(object, "one", CHIME_LITERAL_TRUE);
+    chime_object_set_attribute(object, "two", CHIME_LITERAL_TRUE);
+    chime_object_set_attribute(object, "three", CHIME_LITERAL_TRUE);
+    
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "two"));
+    
+    chime_object_set_attribute(object, "two", test_prop);
+    
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "one"));
+    ASSERT_EQ(test_prop, chime_object_get_attribute(object, "two"));
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "three"));
+    
+    chime_object_destroy(object);
+    chime_object_destroy(test_prop);
+}
+
+TEST_F(RuntimeTests, OverwriteLastAttribute)
+{
+    chime_object_t* object;
+    chime_object_t* test_prop;
+    
+    object    = chime_object_create_with_name("Object");
+    test_prop = chime_object_create_with_name("Object");
+    
+    chime_object_set_attribute(object, "one", CHIME_LITERAL_TRUE);
+    chime_object_set_attribute(object, "two", CHIME_LITERAL_TRUE);
+    chime_object_set_attribute(object, "three", CHIME_LITERAL_TRUE);
+    
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "three"));
+    
+    chime_object_set_attribute(object, "three", test_prop);
+    
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "one"));
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "two"));
+    ASSERT_EQ(test_prop, chime_object_get_attribute(object, "three"));
+    
+    chime_object_destroy(object);
+    chime_object_destroy(test_prop);
+}
+
+TEST_F(RuntimeTests, NullAttribute)
+{
+    chime_object_t* object;
+    
+    object = chime_object_create_with_name("Object");
+    
+    chime_object_set_attribute(object, "one", NULL);
+    
+    ASSERT_TRUE(chime_object_get_attribute(object, "one") == NULL);
 }

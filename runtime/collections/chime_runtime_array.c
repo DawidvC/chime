@@ -115,15 +115,15 @@ void chime_runtime_array_remove(chime_runtime_array_t* array, unsigned long inde
 {
     chime_runtime_array_node_t* node;
     chime_runtime_array_node_t* prev_node;
-    unsigned long               i;
     
     assert(array);
     assert(index < chime_runtime_array_count(array));
     
     node = array->head;
     
-    array->count--; // decrease the count, this is an important step!
+    array->count = array->count - 1; // decrease the count, this is an important step!
     
+    // handle the zero special-case
     if (index == 0)
     {
         array->head = array->head->next;
@@ -138,8 +138,8 @@ void chime_runtime_array_remove(chime_runtime_array_t* array, unsigned long inde
         prev_node = node;
         node      = node->next;
         
-        ++i;
-    } while (node->next && (i < index - 1));
+        index = index - 1;
+    } while (node && (index != 0));
     
     prev_node->next = node->next;
     

@@ -30,7 +30,7 @@ namespace ast
         }
         else if (t->isInterpolatedStringStart())
         {
-            node = ast::InterpolatedString::parse(parser, node);
+            node = ast::InterpolatedString::parse(parser);
         }
         else if (t->isBoolean())
         {

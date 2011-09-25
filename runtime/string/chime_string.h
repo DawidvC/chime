@@ -11,7 +11,8 @@ extern "C" {
 #endif
 
 #define STRING_STORAGE_UNIT           8
-#define BYTES_PER_STRING_STORAGE_UNIT STRING_STORAGE_UNIT * CHIME_ALLOCATION_UNIT
+#define BYTES_PER_STRING_STORAGE_UNIT (STRING_STORAGE_UNIT * CHIME_ALLOCATION_UNIT)
+#define STRING_EMPTY_BUFFER_FLAG      ((char*)1)
 
 void            chime_string_initialize(void);
 void            chime_string_destroy(void);

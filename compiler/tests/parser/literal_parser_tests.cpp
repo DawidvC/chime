@@ -71,24 +71,64 @@ TEST_F(LiteralParserTest, StringWithIndexer)
 
 TEST_F(LiteralParserTest, SimpleInterpolatedString)
 {
-    ast::binary_operator* op;
+    ast::BinaryOperator* op;
     
-    // translates to: "a string" + (1 + 1).toString() + ""
-    op = static_cast<ast::binary_operator*>(parse("\"1 + 2 = {1 + 2}\"")->childAtIndex(0));
+    // translates to: "a string" + (1 + 1) + ""
+    op = parseOperator("\"1 + 2 = {1 + 2}\"");
     
     ASSERT_OPERATOR("+", op);
     ASSERT_LITERAL_STRING("", op->getRightOperand());
     
-    op = static_cast<ast::binary_operator*>(op->getLeftOperand());
+    op = static_cast<ast::BinaryOperator*>(op->getLeftOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_LITERAL_STRING("1 + 2 = ", op->getLeftOperand());
     
-    op = static_cast<ast::binary_operator*>(op->getRightOperand());
-    ASSERT_OPERATOR(".", op);
-    ASSERT_METHOD_CALL("to_string", op->getRightOperand());
-    
-    op = static_cast<ast::binary_operator*>(op->getLeftOperand());
+    op = static_cast<ast::BinaryOperator*>(op->getRightOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_LITERAL_INTEGER(1, op->getLeftOperand());
     ASSERT_LITERAL_INTEGER(2, op->getRightOperand());
+}
+
+TEST_F(LiteralParserTest, LeadingInterpolationInString)
+{
+    ast::BinaryOperator* op;
+    
+    op = parseOperator("\"{1} + 1 = 2\"");
+    
+    ASSERT_OPERATOR("+", op);
+    ASSERT_LITERAL_STRING(" + 1 = 2", op->getRightOperand());
+}
+
+TEST_F(LiteralParserTest, MultipleInterpolationString)
+{
+    ast::BinaryOperator* leftOp;
+    ast::BinaryOperator* rightOp;
+    
+    leftOp = parseOperator("\" {1} {2} {3}\"");
+    
+    ASSERT_OPERATOR("+", leftOp);
+    
+    rightOp = static_cast<ast::BinaryOperator*>(leftOp->getRightOperand());
+    leftOp = static_cast<ast::BinaryOperator*>(leftOp->getLeftOperand());
+    
+    ASSERT_OPERATOR("+", leftOp);
+    ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
+    ASSERT_LITERAL_INTEGER(1, leftOp->getRightOperand());
+    
+    ASSERT_OPERATOR("+", rightOp);
+    
+    leftOp  = static_cast<ast::BinaryOperator*>(rightOp->getLeftOperand());
+    rightOp = static_cast<ast::BinaryOperator*>(rightOp->getRightOperand());
+    
+    ASSERT_OPERATOR("+", leftOp);
+    ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
+    ASSERT_LITERAL_INTEGER(2, leftOp->getRightOperand());
+    
+    ASSERT_OPERATOR("+", rightOp);
+    ASSERT_LITERAL_STRING("", rightOp->getRightOperand());
+    
+    leftOp = static_cast<ast::BinaryOperator*>(rightOp->getLeftOperand());
+    ASSERT_OPERATOR("+", leftOp);
+    ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
+    ASSERT_LITERAL_INTEGER(3, leftOp->getRightOperand());
 }

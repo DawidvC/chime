@@ -14,6 +14,7 @@ chime_object_t* string_class_new(chime_class_t* klass);
 chime_object_t* string_to_string(chime_object_t* instance);
 chime_object_t* string_print(chime_object_t* instance);
 chime_object_t* string_compare(chime_object_t* instance, chime_object_t* other);
+chime_object_t* string_add(chime_object_t* instance, chime_object_t* other);
 chime_object_t* string_indexer_get(chime_object_t* instance, chime_object_t* index);
 chime_object_t* string_length_get(chime_object_t* instance);
 
