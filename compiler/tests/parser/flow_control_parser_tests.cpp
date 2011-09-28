@@ -174,3 +174,37 @@ TEST_F(FlowControlParserTest, ReturnVoidStatment)
     ASSERT_METHOD_DEFINITION("foo", method);
     ASSERT_RETURN(method->getBody()->childAtIndex(0));
 }
+
+TEST_F(FlowControlParserTest, SwitchStatement)
+{
+    ast::Switch* switchNode;
+    ast::CaseRef caseNode;
+    
+    switchNode = static_cast<ast::Switch*>(parse("switch (a) {\n case 1\n foo()\nelse\n bar()\n}")->childAtIndex(0));
+    
+    ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
+    ASSERT_EQ(1, switchNode->getCases().size());
+    
+    caseNode = switchNode->getCases()[0];
+    ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
+    ASSERT_METHOD_CALL("foo", caseNode->getBody().get());
+    
+    ASSERT_METHOD_CALL("bar", switchNode->getElse().get());
+}
+
+TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
+{
+    ast::Switch* switchNode;
+    ast::CaseRef caseNode;
+    
+    switchNode = static_cast<ast::Switch*>(parse("switch (a) {\n case 1\n foo()\n}")->childAtIndex(0));
+    
+    ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
+    ASSERT_EQ(1, switchNode->getCases().size());
+    
+    caseNode = switchNode->getCases()[0];
+    ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
+    ASSERT_METHOD_CALL("foo", caseNode->getBody().get());
+    
+    ASSERT_FALSE(switchNode->getElse());
+}

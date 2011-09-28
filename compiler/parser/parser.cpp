@@ -216,7 +216,7 @@ namespace chime
             this->addError("parse_without_structural: found empty/null token");
             return NULL;
         }
-        else if (t->is_control())
+        else if (t->isControl())
         {
             return this->parse_control();
         }
@@ -355,6 +355,10 @@ namespace chime
         else if (t->equal_to("if"))
         {
             node = new ast::IfStatement(*this, NULL);
+        }
+        else if (t->equal_to("switch"))
+        {
+            node = ast::Switch::parse(*this);
         }
         else if (t->equal_to("return"))
         {
