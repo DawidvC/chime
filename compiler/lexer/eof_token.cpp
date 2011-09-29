@@ -83,6 +83,14 @@ namespace chime
     {
         return true;
     }
+    bool eof_token::isBlockEnding() const
+    {
+        return true;
+    }
+    bool eof_token::isStatementEnding() const
+    {
+        return true;
+    }
     
     bool eof_token::isExceptionRelated(void) const
     {
@@ -94,11 +102,11 @@ namespace chime
         return -1;
     }
     
-    long eof_token::integer_value(void)
+    long eof_token::integerValue(void)
     {
         return 0;
     }
-    std::string eof_token::string_value(void)
+    std::string eof_token::stringValue(void)
     {
         return std::string("EOF");
     }

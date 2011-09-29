@@ -16,7 +16,7 @@ namespace ast
             parser.advance_past_ending_tokens();
             
             // we've reached the end of the body
-            if (parser.look_ahead()->is_ending())
+            if (parser.look_ahead()->isBlockEnding())
                 break;
             
             node = parser.parse_without_structural();
@@ -27,7 +27,7 @@ namespace ast
                 break;
             }
             
-            this->add_child(node);
+            this->addChild(node);
         }
         
         parser.advance_past_ending_tokens();

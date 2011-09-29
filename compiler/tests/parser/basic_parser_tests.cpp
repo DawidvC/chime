@@ -32,11 +32,11 @@ TEST_F(BasicParserTest, MultipleImports)
     
     node = parse("import Yo\nimport Sup\n");
     
-    import = (ast::Import*)node->child_at_index(0);
+    import = static_cast<ast::Import*>(node->childAtIndex(0));
     ASSERT_IMPORT(import);
     ASSERT_TYPE("Yo", import->getImportand());
     
-    import = (ast::Import*)node->child_at_index(1);
+    import = static_cast<ast::Import*>(node->childAtIndex(1));
     ASSERT_IMPORT(import);
     ASSERT_TYPE("Sup", import->getImportand());
 }
@@ -45,7 +45,7 @@ TEST_F(BasicParserTest, ImportString)
 {
     ast::Import* import;
     
-    import = (ast::Import*)parse("import \"a/file\"\n")->child_at_index(0);
+    import = static_cast<ast::Import*>(parse("import \"a/file\"\n")->childAtIndex(0));
     
     ASSERT_IMPORT(import);
     ASSERT_LITERAL_STRING("a/file", import->getImportand());
@@ -411,7 +411,7 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
     
     ASSERT_METHOD_DEFINITION("foo", method);
     
-    op = (ast::binary_operator*)method->getBody()->childAtIndex(0);
+    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
     ASSERT_OPERATOR(".", op);
     ASSERT_TYPE("Bar", op->getLeftOperand());
     ASSERT_METHOD_CALL("baz", op->getRightOperand());

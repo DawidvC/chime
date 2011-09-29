@@ -13,10 +13,10 @@ namespace ast
     {
         chime::token* t;
         
-        assert(parser->look_ahead()->is_integer());
+        assert(parser->look_ahead()->isInteger());
         
         t = parser->next_token();
-        this->value(t->integer_value());
+        this->value(t->integerValue());
         
         delete t;
     }

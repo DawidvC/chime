@@ -117,19 +117,9 @@ namespace chime
         return true;
     }
     
-    bool token::is_integer(void)
-    {
-        return this->isInteger();
-    }
-    
     bool token::isInteger() const
     {
         return this->isNumber(false);
-    }
-    
-    bool token::is_floating_point(void)
-    {
-        return this->isFloatingPoint();
     }
     
     bool token::isFloatingPoint(void) const
@@ -138,11 +128,6 @@ namespace chime
             return false;
         
         return this->isNumber(true);
-    }
-    
-    bool token::is_boolean(void)
-    {
-        return this->isBoolean();
     }
     
     bool token::isBoolean(void) const
@@ -159,11 +144,6 @@ namespace chime
         if (_value == "super") return true;
         
         return false;
-    }
-    
-    bool token::is_modifier(void)
-    {
-        return this->isModifier();
     }
     
     bool token::isModifier(void) const
@@ -189,22 +169,12 @@ namespace chime
         return false;
     }
     
-    bool token::is_conditional(void)
-    {
-        return this->isConditional();
-    }
-    
     bool token::isConditional(void) const
     {
         if (_value == "if")     return true;
         if (_value == "unless") return true;
         
         return false;
-    }
-    
-    bool token::is_loop(void)
-    {
-        return this->isLoop();
     }
     
     bool token::isLoop(void) const
@@ -214,11 +184,6 @@ namespace chime
         if (_value == "loop")  return true;
         
         return false;
-    }
-    
-    bool token::is_control(void)
-    {
-        return this->isControl();
     }
     
     bool token::isControl(void) const
@@ -239,19 +204,9 @@ namespace chime
         return false;
     }
     
-    bool token::is_literal(void)
-    {
-        return this->isLiteral();
-    }
-    
     bool token::isLiteral(void) const
     {
         return this->isString() || this->isNumber() || this->isBoolean() || this->isInheritanceRelated();
-    }
-    
-    bool token::is_identifier(void)
-    {
-        return this->isIdentifier();
     }
     
     bool token::isIdentifier(void) const
@@ -264,11 +219,6 @@ namespace chime
         if (this->isType())         return false;
         
         return true;
-    }
-    
-    bool token::is_type(void)
-    {
-        return this->isType();
     }
     
     bool token::isType(void) const
@@ -284,11 +234,6 @@ namespace chime
         c = *_value.begin();
         
         return (c >= 'A' && c <= 'Z' );
-    }
-    
-    bool token::is_punctuation(void)
-    {
-        return this->isPunctuation();
     }
     
     bool token::isPunctuation(void) const
@@ -308,11 +253,6 @@ namespace chime
         return false;
     }
     
-    bool token::is_reserved(void)
-    {
-        return this->isReserved();
-    }
-    
     bool token::isReserved(void) const
     {
         if (this->isControl())            return true;
@@ -326,13 +266,17 @@ namespace chime
         return false;
     }
     
-    bool token::is_ending(void) const
-    {
-        return this->isEnding();
-    }
     bool token::isEnding() const
     {
-        return (_value == ";") || (_value == "\n") || (_value == "}") || this->isInterpolatedStringMiddle() || this->isInterpolatedStringEnd();
+        return false;
+    }
+    bool token::isStatementEnding() const
+    {
+        return (_value == ";") || (_value == "\n") || this->isBlockEnding();
+    }
+    bool token::isBlockEnding() const
+    {
+        return (_value == "}") || (_value == "case") || (_value == "else");
     }
     bool token::isExceptionRelated(void) const
     {
@@ -363,11 +307,11 @@ namespace chime
         return -1;
     }
     
-    long token::integer_value(void)
+    long token::integerValue(void)
     {
         return strtol(_value.c_str(), NULL, 10);
     }
-    std::string token::string_value(void)
+    std::string token::stringValue(void)
     {
         // needs to be a little smarter
         if (this->isPlainString())
@@ -390,5 +334,18 @@ namespace chime
         assert(0 && "Trying to get the string_value of a non-string token");
         
         return std::string();
+    }
+    
+    bool token::operator==(const char* cString)
+    {
+        if (cString == NULL)
+            return false;
+            
+        return this->_value == cString;
+    }
+    
+    bool token::operator!=(const char* cString)
+    {
+        return this->_value != cString;
     }
 }

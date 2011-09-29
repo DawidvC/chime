@@ -102,7 +102,7 @@ namespace ast
             parser.advance_past_ending_tokens();
             
             t = parser.look_ahead();
-            if (t->is_ending())
+            if (t->isBlockEnding())
                 break;
             
             if (t->equal_to("catch"))

@@ -80,17 +80,17 @@ namespace chime
         
         return v;
     }
-    void parser::advance_past_ending_tokens(void)
+    void parser::advanceToNextStatement()
     {
         token* t;
         
         while (true)
         {
             t = this->look_ahead();
-            if (!t->is_ending())
+            if (!t->isStatementEnding())
                 break;
                 
-            if (t->empty() || t->equal_to("}"))
+            if (t->empty() || t->isBlockEnding())
                 break;
             
             if (t->equal_to("\n"))
@@ -102,6 +102,10 @@ namespace chime
                 this->next_token_value(";");
             }
         }
+    }
+    void parser::advance_past_ending_tokens(void)
+    {
+        this->advanceToNextStatement();
     }
     
     token* parser::look_ahead(void)
@@ -197,7 +201,7 @@ namespace chime
             if (node == NULL)
                 break;
             
-            _currentRoot->add_child(node);
+            _currentRoot->addChild(node);
         }
         
         return _currentRoot;
@@ -220,16 +224,16 @@ namespace chime
         {
             return this->parse_control();
         }
-        else if (t->is_type())
+        else if (t->isType())
         {
             node = this->parse_type();
             
             t = this->look_ahead();
-            if (t->empty() || t->is_ending())
+            if (t->empty() || t->isStatementEnding())
             {
                 return node;
             }
-            else if (t->is_identifier())
+            else if (t->isIdentifier())
             {
                 return new ast::variable_definition(this, (ast::type_reference*)node);
             }
@@ -278,7 +282,7 @@ namespace chime
             
             this->next_token_value(")");
         }
-        else if (t->is_literal())
+        else if (t->isLiteral())
         {
             node = ast::Literal::parse(*this);
         }
@@ -286,11 +290,11 @@ namespace chime
         {
             return ast::Closure::parse(*this);
         }
-        else if (t->is_type())
+        else if (t->isType())
         {
             node = this->parse_type();
         }
-        else if (t->is_identifier())
+        else if (t->isIdentifier())
         {
             if (this->look_ahead(2)->equal_to("("))
             {
@@ -378,7 +382,7 @@ namespace chime
         ast::node*    node;
         
         t = this->look_ahead();
-        if (!t->is_conditional())
+        if (!t->isConditional())
         {
             return body_node;
         }

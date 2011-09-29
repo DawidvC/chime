@@ -39,7 +39,7 @@ namespace ast
             parser.advance_past_ending_tokens();
             
             // we've reached the end of the block
-            if (parser.look_ahead()->is_ending())
+            if (parser.look_ahead()->isBlockEnding())
                 break;
             
             if (allowStructural)

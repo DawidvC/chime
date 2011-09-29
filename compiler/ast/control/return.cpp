@@ -7,7 +7,7 @@ namespace ast
         parser.next_token("return");
         
         // we need to deal with an argument to return here
-        if (!parser.look_ahead()->isEnding())
+        if (!parser.look_ahead()->isStatementEnding())
         {
             _returnValue = ast::NodeRef(parser.parse_expression());
         }

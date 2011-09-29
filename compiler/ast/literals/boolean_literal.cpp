@@ -9,7 +9,7 @@ namespace ast
         chime::token* t;
         
         t = parser->next_token();
-        assert(t->is_boolean());
+        assert(t->isBoolean());
         
         if (t->equal_to("true"))
             this->value(1);

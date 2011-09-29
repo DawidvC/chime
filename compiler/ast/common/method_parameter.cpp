@@ -25,7 +25,7 @@ namespace ast
         }
         
         t = parser->look_ahead();
-        if (t->is_type())
+        if (t->isType())
         {
             this->type(new type_reference(parser));
         }

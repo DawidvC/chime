@@ -27,11 +27,13 @@ namespace chime
         virtual bool isPunctuation(void) const;
         virtual bool isReserved(void) const;
         virtual bool isEnding(void) const;
+        virtual bool isBlockEnding() const;
+        virtual bool isStatementEnding() const;
         virtual bool isExceptionRelated(void) const;
         virtual int  precedence(void) const;
         
-        virtual long integer_value(void);
-        virtual std::string string_value(void);
+        virtual long integerValue(void);
+        virtual std::string stringValue(void);
     };
 }
 

@@ -7,7 +7,7 @@ namespace ast
         ast::string_literal* string;
         
         string = new ast::string_literal();
-        string->value(parser.next_token()->string_value());
+        string->value(parser.next_token()->stringValue());
         
         return string;
     }

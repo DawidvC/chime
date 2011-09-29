@@ -102,16 +102,16 @@ TEST_F(TokenTest, IsFloatingPoint)
 TEST_F(TokenTest, IsModifier)
 {
     token->set_value("private");
-    EXPECT_TRUE(token->is_modifier());
+    EXPECT_TRUE(token->isModifier());
     
     token->set_value("protected");
-    EXPECT_TRUE(token->is_modifier());
+    EXPECT_TRUE(token->isModifier());
     
     token->set_value("abstract");
-    EXPECT_TRUE(token->is_modifier());
+    EXPECT_TRUE(token->isModifier());
     
     token->set_value("internal");
-    EXPECT_TRUE(token->is_modifier());
+    EXPECT_TRUE(token->isModifier());
 }
 
 TEST_F(TokenTest, IsStructural)
@@ -183,19 +183,22 @@ TEST_F(TokenTest, IsIdentifier)
 TEST_F(TokenTest, IsEnding)
 {
     token->set_value(";");
-    ASSERT_TRUE(token->is_ending());
+    ASSERT_TRUE(token->isStatementEnding());
+    ASSERT_TRUE(!token->isBlockEnding());
     
     token->set_value("\n");
-    ASSERT_TRUE(token->is_ending());
+    ASSERT_TRUE(token->isStatementEnding());
+    ASSERT_TRUE(!token->isBlockEnding());
     
     token->set_value("}");
-    ASSERT_TRUE(token->is_ending());
+    ASSERT_TRUE(token->isStatementEnding());
+    ASSERT_TRUE(token->isBlockEnding());
 }
 
 TEST_F(TokenTest, IsControl)
 {
     token->set_value("next");
-    ASSERT_TRUE(token->is_control());
+    ASSERT_TRUE(token->isControl());
 }
 
 TEST_F(TokenTest, IsOperator)
@@ -210,13 +213,13 @@ TEST_F(TokenTest, IsOperator)
 TEST_F(TokenTest, IsLiteral)
 {
     token->set_value("1");
-    ASSERT_TRUE(token->is_literal());
+    ASSERT_TRUE(token->isLiteral());
     
     token->set_value("true");
-    ASSERT_TRUE(token->is_literal());
+    ASSERT_TRUE(token->isLiteral());
     
     token->set_value("false");
-    ASSERT_TRUE(token->is_literal());
+    ASSERT_TRUE(token->isLiteral());
 }
 
 TEST_F(TokenTest, IsExceptionRelated)

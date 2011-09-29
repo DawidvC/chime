@@ -36,7 +36,7 @@ namespace ast
             {
                 parser.next_token("else");
                 
-                node->_else = CodeBlock::parseNextBlock(parser);
+                node->_else = ast::NodeRef(ast::CodeBlock::parseNextBlock(parser));
                 break;
             }
             else if(t->equal_to("}"))

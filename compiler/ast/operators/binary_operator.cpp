@@ -24,7 +24,7 @@ namespace ast
             if (t->empty())
                 return leftOperand;
             
-            if (t->is_ending())
+            if (t->isStatementEnding())
             {
                 return leftOperand;
             }
@@ -91,7 +91,7 @@ namespace ast
         {
             node = ast::Literal::parse(parser);
         }
-        else if (t->is_type())
+        else if (t->isType())
         {
             node = parser.parse_type();
         }

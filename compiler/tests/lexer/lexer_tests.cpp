@@ -65,7 +65,7 @@ TEST_F(LexerTest, LookAheadWithBlankInput)
     lex("");
     
     ASSERT_TRUE(lexer->look_ahead(1)->empty());
-    ASSERT_TRUE(lexer->look_ahead(1)->is_punctuation());
+    ASSERT_TRUE(lexer->look_ahead(1)->isPunctuation());
 }
 TEST_F(LexerTest, LookAheadAndNext)
 {

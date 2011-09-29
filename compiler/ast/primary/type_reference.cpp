@@ -7,11 +7,11 @@ namespace ast
     {
         std::string str;
         
-        assert(parser->look_ahead()->is_type());
+        assert(parser->look_ahead()->isType());
         
         str += parser->next_token_value();
         
-        while (parser->look_ahead()->equal_to(".") && parser->look_ahead(2)->is_type())
+        while (parser->look_ahead()->equal_to(".") && parser->look_ahead(2)->isType())
         {
             parser->next_token_value(".");
             

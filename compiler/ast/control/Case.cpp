@@ -14,7 +14,7 @@ namespace ast
         
         parser.advance_past_ending_tokens();
         
-        node->setBody(CodeBlock::parseNextBlock(parser));
+        node->setBody(ast::NodeRef(ast::CodeBlock::parseNextBlock(parser)));
         
         parser.advance_past_ending_tokens();
         
