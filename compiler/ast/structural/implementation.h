@@ -5,7 +5,7 @@
 
 #include "compiler/ast/ScopedNode.h"
 #include "compiler/ast/primary/type_reference.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 
 #include <llvm/Function.h>
 

@@ -36,7 +36,7 @@ namespace ast
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
             
-            property->_getBodyBlock = CodeBlockRef(new CodeBlock(parser));
+            property->_getBodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
             
             parser.advance_past_ending_tokens();
             parser.next_token_value("}");
@@ -51,7 +51,7 @@ namespace ast
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
             
-            property->_setBodyBlock = CodeBlockRef(new CodeBlock(parser));
+            property->_setBodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
             
             parser.advance_past_ending_tokens();
             parser.next_token_value("}");

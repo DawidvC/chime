@@ -1,6 +1,6 @@
 #include "if_statement.h"
 
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 
 namespace ast
 {
@@ -16,14 +16,14 @@ namespace ast
         }
         else
         {
-            this->setBody(CodeBlock::parseNextBlock(parser));
+            this->setBody(CodeBlock::parse(parser));
         }
         
         parser.advance_past_ending_tokens();
         
         if (parser.advance_token_if_equals("else"))
         {
-            this->setElse(CodeBlock::parseNextBlock(parser));
+            this->setElse(CodeBlock::parse(parser));
         }
     }
     

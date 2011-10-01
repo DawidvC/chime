@@ -1,5 +1,5 @@
 #include "node.h"
-#include "common/code_block.h"
+#include "common/CodeBlock.h"
 #include "common/parameter_set.h"
 #include "primary/type_reference.h"
 #include "common/method_parameter.h"

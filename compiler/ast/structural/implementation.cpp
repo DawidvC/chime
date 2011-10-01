@@ -30,7 +30,7 @@ namespace ast
         }
         
         // parse the body, allowing structural elements inside
-        implementation->_bodyBlock = CodeBlock::parseNextBlock(parser, true);
+        implementation->_bodyBlock = CodeBlock::parse(parser, true);
         
         parser.popScope();
         

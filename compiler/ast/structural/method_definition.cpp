@@ -3,7 +3,7 @@
 #include "method_definition.h"
 #include "compiler/parser/parser.h"
 #include "compiler/codegen/code_generator.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 #include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/ast/variable/SharedLocalVariable.h"
 
@@ -23,7 +23,7 @@ namespace ast
         definition->setIdentifier(parser.next_token_value());
         definition->setParameters(ParameterSetRef(new ParameterSet(parser)));
         
-        definition->_bodyBlock = CodeBlock::parseNextBlock(parser);
+        definition->_bodyBlock = CodeBlock::parse(parser);
         
         parser.popScope();
         

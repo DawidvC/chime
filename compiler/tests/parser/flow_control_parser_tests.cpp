@@ -22,11 +22,12 @@ TEST_F(FlowControlParserTest, IfWithNoElse)
 {
     ast::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if true foo()")->child_at_index(0);
+    node = static_cast<ast::IfStatement*>(parse("if true foo()")->childAtIndex(0));
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
-    ASSERT_METHOD_CALL("foo", node->getBody().get());
+    
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
     ASSERT_TRUE(node->getElse() == NULL);
 }
 
@@ -38,8 +39,8 @@ TEST_F(FlowControlParserTest, IfWithElse)
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
-    ASSERT_METHOD_CALL("foo", node->getBody().get());
-    ASSERT_METHOD_CALL("bar", node->getElse().get());
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
+    ASSERT_METHOD_CALL("bar", node->getElse()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, IfWithElseOnDifferentLines)
@@ -50,8 +51,8 @@ TEST_F(FlowControlParserTest, IfWithElseOnDifferentLines)
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
-    ASSERT_METHOD_CALL("foo", node->getBody().get());
-    ASSERT_METHOD_CALL("bar", node->getElse().get());
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
+    ASSERT_METHOD_CALL("bar", node->getElse()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, IfWithBracesAndNoElse)
@@ -93,7 +94,7 @@ TEST_F(FlowControlParserTest, IfWithNestedIf)
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
-    ASSERT_IF_STATEMENT(node->getBody().get());
+    ASSERT_IF_STATEMENT(node->getBody()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, TailingIf)
@@ -158,10 +159,10 @@ TEST_F(FlowControlParserTest, ReturnInIfStatement)
 {
     ast::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if false\n  return")->child_at_index(0);
+    node = static_cast<ast::IfStatement*>(parse("if false\n  return")->childAtIndex(0));
     
     ASSERT_IF_STATEMENT(node);
-    ASSERT_RETURN(node->getBody().get());
+    ASSERT_RETURN(node->getBody()->childAtIndex(0));
     ASSERT_TRUE(node->getElse() == NULL);
 }
 
@@ -190,6 +191,25 @@ TEST_F(FlowControlParserTest, SwitchStatement)
     ASSERT_METHOD_CALL("foo", caseNode->getBody().get());
     
     ASSERT_METHOD_CALL("bar", switchNode->getElse().get());
+}
+
+TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
+{
+    ast::Switch* switchNode;
+    ast::CaseRef caseNode;
+    
+    //"switch a\n{\n case 0\na = 0\nAssert.failure()\ncase 1\na = 1\nelse\na = 2\n}"
+    
+    switchNode = static_cast<ast::Switch*>(parse("switch a\n {\n case 1\n foo()\n foo()\nelse\n bar() }")->childAtIndex(0));
+    
+    ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
+    ASSERT_EQ(2, switchNode->getCases().size());
+    
+    caseNode = switchNode->getCases()[1];
+    ASSERT_LITERAL_INTEGER(2, caseNode->getCondition().get());
+    ASSERT_METHOD_CALL("bar", caseNode->getBody().get());
+    
+    ASSERT_TRUE(switchNode->getElse());
 }
 
 TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)

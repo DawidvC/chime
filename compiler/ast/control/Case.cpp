@@ -1,5 +1,5 @@
 #include "Case.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 
 namespace ast
 {
@@ -14,7 +14,7 @@ namespace ast
         
         parser.advance_past_ending_tokens();
         
-        node->setBody(ast::NodeRef(ast::CodeBlock::parseNextBlock(parser)));
+        node->setBody(ast::NodeRef(ast::CodeBlock::parse(parser)));
         
         parser.advance_past_ending_tokens();
         

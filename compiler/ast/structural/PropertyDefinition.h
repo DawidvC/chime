@@ -4,7 +4,7 @@
 #define PROPERTY_DEFINITON_H
 
 #include "FunctionDefinition.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 
 namespace ast
 {

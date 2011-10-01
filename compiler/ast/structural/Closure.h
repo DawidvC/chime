@@ -4,7 +4,7 @@
 #define CLOSURE_H
 
 #include "FunctionDefinition.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 
 #include <map>
 
@@ -27,7 +27,7 @@ namespace ast
         Variable*    createVariable(const std::string& identifier);
         Variable*    transformVariable(Variable* variable);
         
-        llvm::Value*    codegen(chime::code_generator& generator);
+        llvm::Value* codegen(chime::code_generator& generator);
     
     private:
         // parsing members

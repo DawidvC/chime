@@ -1,5 +1,5 @@
 #include "Closure.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 #include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/ast/variable/ClosedLocalVariable.h"
 #include "compiler/codegen/code_generator.h"
@@ -18,10 +18,10 @@ namespace ast
         
         closure->setParameters(ParameterSetRef(new ParameterSet(parser)));
         
-        // this cast is probably not always safe because the current
-        // implemenation of CodeBlock::parseNextBlock can return non-CodeBlockRef
-        // types
-        closure->_bodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parseNextBlock(parser));
+        // This cast is currently necessary, even though now CodeBlock::parse will
+        // always return an actual CodeBlockRef.  The signature of CodeBlock::parse should
+        // really fixed, but that affects a lot of classes.
+        closure->_bodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
         
         // before we pop the scope, we need to inform the enclosing scope of any
         // local variables that now need to be shared

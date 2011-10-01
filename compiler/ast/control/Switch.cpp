@@ -1,6 +1,6 @@
 #include "Switch.h"
 #include "Case.h"
-#include "compiler/ast/common/code_block.h"
+#include "compiler/ast/common/CodeBlock.h"
 
 namespace ast
 {
@@ -36,7 +36,7 @@ namespace ast
             {
                 parser.next_token("else");
                 
-                node->_else = ast::NodeRef(ast::CodeBlock::parseNextBlock(parser));
+                node->_else = ast::NodeRef(ast::CodeBlock::parse(parser));
                 break;
             }
             else if(t->equal_to("}"))
