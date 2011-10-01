@@ -187,7 +187,8 @@ TEST_F(FlowControlParserTest, SwitchStatement)
     ASSERT_EQ(1, switchNode->getCases().size());
     
     caseNode = switchNode->getCases()[0];
-    ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
+    ASSERT_OPERATOR("===", caseNode->getCondition().get());
+    ASSERT_LITERAL_INTEGER(1, dynamic_cast<ast::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
     ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     
     ASSERT_METHOD_CALL("bar", switchNode->getElse()->childAtIndex(0));
@@ -204,7 +205,8 @@ TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
     ASSERT_EQ(1, switchNode->getCases().size());
     
     caseNode = switchNode->getCases()[0];
-    ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
+    ASSERT_OPERATOR("===", caseNode->getCondition().get());
+    ASSERT_LITERAL_INTEGER(1, dynamic_cast<ast::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
     ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     ASSERT_METHOD_CALL("bar", caseNode->getBody()->childAtIndex(1));
     
@@ -222,7 +224,8 @@ TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
     ASSERT_EQ(1, switchNode->getCases().size());
     
     caseNode = switchNode->getCases()[0];
-    ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
+    ASSERT_OPERATOR("===", caseNode->getCondition().get());
+    ASSERT_LITERAL_INTEGER(1, dynamic_cast<ast::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
     ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     
     ASSERT_FALSE(switchNode->getElse());

@@ -168,14 +168,14 @@ namespace chime
     
     llvm::Value* code_generator::createCondition(llvm::Value* cond)
     {
-        llvm::Value* condCompareToNull;
-        llvm::Value* condCompareToFalse;
+        llvm::Value*    condCompareToNull;
+        llvm::Value*    condCompareToFalse;
         llvm::Constant* falseConstant;
         llvm::Constant* zeroConstant;
-        llvm::Value* condition;
+        llvm::Value*    condition;
         llvm::Constant* zeroValue;
         llvm::Constant* falseValue;
-        llvm::Value* loadedObjectPtr;
+        llvm::Value*    loadedObjectPtr;
         
         loadedObjectPtr = this->builder()->CreateLoad(cond, "value being compared");
         

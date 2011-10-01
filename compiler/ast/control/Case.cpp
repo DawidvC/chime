@@ -3,20 +3,27 @@
 
 namespace ast
 {
-    ast::CaseRef Case::parse(chime::parser& parser)
+    ast::CaseRef Case::parse(chime::parser& parser, Node* switchExpression)
     {
-        ast::Case* node;
+        ast::Case*           node;
+        ast::BinaryOperator* op;
         
         parser.next_token("case");
         
         node = new ast::Case();
-        node->setCondition(ast::NodeRef(parser.parse_expression()));
         
-        parser.advance_past_ending_tokens();
+        op = new ast::BinaryOperator();
+        op->setIdentifier("===");
+        op->setLeftOperand(switchExpression);
+        op->setRightOperand(parser.parse_expression());
+        
+        node->setCondition(ast::NodeRef(op));
+        
+        parser.advanceToNextStatement();
         
         node->setBody(ast::NodeRef(ast::CodeBlock::parse(parser)));
         
-        parser.advance_past_ending_tokens();
+        parser.advanceToNextStatement();
         
         return ast::CaseRef(node);
     }
@@ -43,5 +50,10 @@ namespace ast
     void Case::setBody(ast::NodeRef node)
     {
         _body = node;
+    }
+    
+    llvm::Value* Case::codegenIfBlock(chime::code_generator& generator, llvm::BasicBlock* elseBlock, llvm::BasicBlock* endBlock)
+    {
+        return NULL;
     }
 }

@@ -10,7 +10,7 @@ namespace ast
     class Case : public Node
     {
     public:
-        static std::tr1::shared_ptr<ast::Case> parse(chime::parser& parser);
+        static std::tr1::shared_ptr<ast::Case> parse(chime::parser& parser, Node* switchExpression);
         
     public:
         std::string nodeName(void) const;
@@ -19,6 +19,8 @@ namespace ast
         void         setCondition(ast::NodeRef expression);
         ast::NodeRef getBody(void) const;
         void         setBody(ast::NodeRef node);
+        
+        llvm::Value* codegenIfBlock(chime::code_generator& generator, llvm::BasicBlock* elseBlock, llvm::BasicBlock* endBlock);
         
     private:
         ast::NodeRef _condition;

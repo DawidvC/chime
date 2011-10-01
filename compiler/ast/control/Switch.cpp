@@ -30,7 +30,7 @@ namespace ast
             
             if (t->equal_to("case"))
             {
-                node->_cases.push_back(ast::Case::parse(parser));
+                node->_cases.push_back(ast::Case::parse(parser, node->getExpression().get()));
             }
             else if (t->equal_to("else"))
             {
@@ -80,5 +80,35 @@ namespace ast
     ast::NodeRef Switch::getElse() const
     {
         return _else;
+    }
+    
+    llvm::Value* Switch::codegen(chime::code_generator& generator)
+    {
+        // switch (a)
+        // {
+        //    case 76
+        //      stuff
+        //    case "acdef"
+        //      stuff
+        //    else
+        //      something
+        // }
+        //
+        // has a structure like this
+        //
+        // if (a === 76)
+        // {
+        //     stuff
+        // }
+        // else if (a === "acdef")
+        // {
+        //     stuff
+        // }
+        // else
+        // {
+        //     something
+        // }
+        
+        return NULL;
     }
 }
