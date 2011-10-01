@@ -188,9 +188,9 @@ TEST_F(FlowControlParserTest, SwitchStatement)
     
     caseNode = switchNode->getCases()[0];
     ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
-    ASSERT_METHOD_CALL("foo", caseNode->getBody().get());
+    ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     
-    ASSERT_METHOD_CALL("bar", switchNode->getElse().get());
+    ASSERT_METHOD_CALL("bar", switchNode->getElse()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
@@ -198,16 +198,15 @@ TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
     ast::Switch* switchNode;
     ast::CaseRef caseNode;
     
-    //"switch a\n{\n case 0\na = 0\nAssert.failure()\ncase 1\na = 1\nelse\na = 2\n}"
-    
-    switchNode = static_cast<ast::Switch*>(parse("switch a\n {\n case 1\n foo()\n foo()\nelse\n bar() }")->childAtIndex(0));
+    switchNode = static_cast<ast::Switch*>(parse("switch a\n {\n case 1\n foo()\n bar()\nelse\n bar() }")->childAtIndex(0));
     
     ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
-    ASSERT_EQ(2, switchNode->getCases().size());
+    ASSERT_EQ(1, switchNode->getCases().size());
     
-    caseNode = switchNode->getCases()[1];
-    ASSERT_LITERAL_INTEGER(2, caseNode->getCondition().get());
-    ASSERT_METHOD_CALL("bar", caseNode->getBody().get());
+    caseNode = switchNode->getCases()[0];
+    ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
+    ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
+    ASSERT_METHOD_CALL("bar", caseNode->getBody()->childAtIndex(1));
     
     ASSERT_TRUE(switchNode->getElse());
 }
@@ -224,7 +223,7 @@ TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
     
     caseNode = switchNode->getCases()[0];
     ASSERT_LITERAL_INTEGER(1, caseNode->getCondition().get());
-    ASSERT_METHOD_CALL("foo", caseNode->getBody().get());
+    ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     
     ASSERT_FALSE(switchNode->getElse());
 }
