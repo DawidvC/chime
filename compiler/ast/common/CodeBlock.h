@@ -11,6 +11,7 @@ namespace ast
     {
     public:
         static NodeRef parse(chime::parser& parser, bool allowStructural=false);
+        static NodeRef parseBlockWithOptionalBraces(chime::parser& parser);
         
     public:
         virtual std::string nodeName() const;

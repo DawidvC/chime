@@ -70,6 +70,23 @@ TEST_F(FlowControlParserTest, IfWithBracesAndNoElse)
     ASSERT_TRUE(node->getElse() == NULL);
 }
 
+TEST_F(FlowControlParserTest, IfWithoutBracesAndTwoStatements)
+{
+    ast::IfStatement* node;
+    
+    node = static_cast<ast::IfStatement*>(parse("if true\n foo()\n bar()\n")->childAtIndex(0));
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    
+    ASSERT_CODE_BLOCK(node->getBody().get());
+    ASSERT_EQ(1, node->getBody()->childCount());
+    
+    ASSERT_METHOD_CALL("foo", std::tr1::static_pointer_cast<ast::CodeBlock>(node->getBody())->childAtIndex(0));
+    
+    ASSERT_TRUE(node->getElse() == NULL);
+}
+
 TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
 {
     ast::IfStatement* node;
@@ -84,6 +101,16 @@ TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
     
     ASSERT_CODE_BLOCK(node->getElse().get());
     ASSERT_METHOD_CALL("bar", ((ast::CodeBlock*)node->getElse().get())->childAtIndex(0));
+}
+
+TEST_F(FlowControlParserTest, IfWithComplexConditionWithoutParentheses)
+{
+    ast::IfStatement* node;
+    
+    node = static_cast<ast::IfStatement*>(parse("if true == false\n{\n foo()\n}")->childAtIndex(0));
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_OPERATOR("==", node->getCondition().get());
 }
 
 TEST_F(FlowControlParserTest, IfWithNestedIf)
@@ -106,6 +133,16 @@ TEST_F(FlowControlParserTest, TailingIf)
     ASSERT_IF_STATEMENT(node);
     ASSERT_GLOBAL_VARIABLE("c", node->getCondition().get());
     ASSERT_GLOBAL_ASSIGNMENT(node->getBody().get());
+}
+
+TEST_F(FlowControlParserTest, IfAfterStatement)
+{
+    ast::Node* node;
+    
+    node = parse("a = b\n if c\n foo()");
+    
+    ASSERT_GLOBAL_ASSIGNMENT(node->childAtIndex(0));
+    ASSERT_IF_STATEMENT(node->childAtIndex(1));
 }
 
 TEST_F(FlowControlParserTest, BasicTryCatch)

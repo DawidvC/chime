@@ -55,71 +55,29 @@ namespace ast
         return std::tr1::static_pointer_cast<Node>(block);
     }
     
-    // NodeRef CodeBlock::parseNextBlock(chime::parser& parser, bool allowStructural)
-    // {
-    //     NodeRef node;
-    //     bool    openBraceFound;
-    //     
-    //     // first, advance past endings
-    //     parser.advance_past_ending_tokens();
-    //     
-    //     openBraceFound = parser.advance_token_if_equals("{");
-    //     
-    //     if (openBraceFound || allowStructural)
-    //     {
-    //         node = NodeRef(new ast::CodeBlock(parser, allowStructural));
-    //         
-    //         parser.advance_past_ending_tokens();
-    //         
-    //         if (openBraceFound)
-    //             parser.next_token("}");
-    //     }
-    //     else
-    //     {
-    //         node = NodeRef(parser.parse_without_structural());
-    //     }
-    //     
-    //     return node;
-    // }
-    // 
-    // CodeBlock::CodeBlock(chime::parser& parser, bool allowStructural)
-    // {
-    //     ast::node* node;
-    //     
-    //     while (true)
-    //     {
-    //         parser.advance_past_ending_tokens();
-    //         
-    //         // we've reached the end of the block
-    //         if (parser.look_ahead()->isBlockEnding())
-    //             break;
-    //         
-    //         if (allowStructural)
-    //         {
-    //             node = Structural::parse(parser);
-    //         }
-    //         else
-    //         {
-    //             node = parser.parse_without_structural();
-    //         }
-    //         
-    //         if (!node)
-    //         {
-    //             parser.addError("CodeBlock::CodeBlock: unable to get next node");
-    //             break;
-    //         }
-    //         
-    //         this->addChild(*node);
-    //     }
-    //     
-    //     parser.advance_past_ending_tokens();
-    // }
-
+    NodeRef CodeBlock::parseBlockWithOptionalBraces(chime::parser& parser)
+    {
+        CodeBlockRef block;
+        
+        parser.advanceToNextStatement();
+        
+        // only use a code block if we encountered an open brace
+        if (parser.look_ahead()->equal_to("{"))
+        {
+            return CodeBlock::parse(parser);
+        }
+        
+        block = CodeBlockRef(new CodeBlock());
+        block->addChild(*parser.parse_without_structural());
+            
+        return block;
+    }
+    
     std::string CodeBlock::nodeName() const
     {
         return std::string("code block");
     }
-
+    
     std::string CodeBlock::stringRepresentation(int depth) const
     {
         std::string                       str;

@@ -307,12 +307,25 @@ namespace chime
         {
             chime::ParseErrorRef e;
             
+            fprintf(stderr, "Found something weird '%s'\n", t->c_str());
+            
+            __builtin_trap();
+            
             e = chime::ParseErrorRef(new chime::ParseError("expression: found something weird '%s'", t->c_str()));
             
             this->addError(e);
             
             return NULL;
         }
+        
+        if (node && this->look_ahead()->isStatementEnding())
+        {
+            return node;
+        }
+        
+        // be careful not to auto-advance to the next statement here,
+        // as some semantics depend on knowing there's nothing following
+        // the expression on the same line (like a tailing if)
         
         return ast::binary_operator::parse(*this, 0, node);
     }
@@ -338,6 +351,8 @@ namespace chime
     {
         chime::token* t;
         ast::node*    node;
+        
+        node = NULL;
         
         t = this->look_ahead();
         if (t->equal_to("next"))

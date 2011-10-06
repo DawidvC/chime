@@ -42,7 +42,9 @@ namespace ast
             if (node->identifier().compare(".") == 0)
                 rightOperand = ast::MethodCall::parse(parser);
             else
+            {
                 rightOperand = ast::binary_operator::parseRightOperand(parser);
+            }
             
             if (currentPrecedence < parser.look_ahead()->precedence())
             {
