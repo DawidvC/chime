@@ -14,8 +14,6 @@ namespace ast
         
     public:
         std::string nodeName(void) const;
-        
-        llvm::Value* codegen(chime::code_generator& generator);
     };
     
     typedef std::tr1::shared_ptr<ast::Case> CaseRef;

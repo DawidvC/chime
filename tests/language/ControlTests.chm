@@ -5,13 +5,13 @@ implementation ControlTests : Test.Case
         if true
             return
         
-        Assert.is_true(false)
+        Assert.failure()
     }
     
     method test_if_executes_on_true_expression()
     {
         if (0 > 1)
-            Assert.is_true(false)
+            Assert.failure()
     }
     
     method test_if_executes_on_true_expression_with_local_variable()
@@ -21,18 +21,18 @@ implementation ControlTests : Test.Case
         if (a > 0)
             return
         
-        Assert.is_true(false)
+        Assert.failure()
     }
     
     method test_ifs_with_boolean_literals()
     {
         if false
-            Assert.is_true(false)
+            Assert.failure()
         
         if true
             Assert.is_true(true)
         else
-            Assert.is_true(false)
+            Assert.failure()
         
         if true
         {
@@ -40,7 +40,29 @@ implementation ControlTests : Test.Case
         }
         else
         {
-            Assert.is_true(false)
+            Assert.failure()
         }
+    }
+    
+    method test_switch_statement()
+    {
+        a = 10
+        
+        switch a
+        {
+            case 0
+                a = 0
+                Assert.failure()
+            case 1
+                a = 1
+                Assert.failure()
+            case 10
+                a = 100
+            else
+                a = 2
+                Assert.failure()
+        }
+        
+        Assert.equal(a, to:100)
     }
 }

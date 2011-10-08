@@ -30,11 +30,12 @@ namespace ast
         _else = node;
     }
     
-    llvm::Value* Conditional::codegenConditional(chime::code_generator& generator, llvm::BasicBlock* elseBlock, llvm::BasicBlock* endBlock)
+    llvm::Value* Conditional::codegenConditional(chime::code_generator& generator, llvm::BasicBlock* endBlock)
     {
         llvm::Value*      conditionValue;
         llvm::Function*   function;
         llvm::BasicBlock* thenBlock;
+        llvm::BasicBlock* elseBlock;
         
         // codegen the condition...
         conditionValue = this->getCondition()->codegen(generator);
@@ -44,7 +45,8 @@ namespace ast
         
         function = generator.builder()->GetInsertBlock()->getParent();
         
-        thenBlock = llvm::BasicBlock::Create(generator.get_context(), "if.then", function);
+        thenBlock = llvm::BasicBlock::Create(generator.get_context(), "conditional.then", function);
+        elseBlock = llvm::BasicBlock::Create(generator.get_context(), "conditional.else");
         
         generator.builder()->CreateCondBr(conditionValue, thenBlock, elseBlock);
         
@@ -69,17 +71,6 @@ namespace ast
         {
             this->getElse()->codegen(generator);
         }
-        
-        // guard against duplicate terminators again here
-        if (!generator.builder()->GetInsertBlock()->getTerminator())
-        {
-            generator.builder()->CreateBr(endBlock);
-        }
-        
-        elseBlock = generator.builder()->GetInsertBlock();
-        
-        function->getBasicBlockList().push_back(endBlock);
-        generator.builder()->SetInsertPoint(endBlock);
         
         return NULL;
     }

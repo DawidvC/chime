@@ -17,7 +17,7 @@ namespace ast
         NodeRef getElse() const;
         void    setElse(NodeRef node);
         
-        llvm::Value* codegenConditional(chime::code_generator& generator, llvm::BasicBlock* elseBlock, llvm::BasicBlock* endBlock);
+        llvm::Value* codegenConditional(chime::code_generator& generator, llvm::BasicBlock* endBlock);
         
     private:
         ast::NodeRef _condition;

@@ -26,7 +26,6 @@ namespace ast
     private:
         ast::NodeRef              _expression;
         std::vector<ast::CaseRef> _cases;
-        ast::NodeRef              _else;
     };
 }
 

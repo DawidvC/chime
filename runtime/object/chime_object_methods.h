@@ -15,6 +15,7 @@ chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_n
 chime_object_t* object_to_string(chime_object_t* instance);
 chime_object_t* object_methods(chime_object_t* instance);
 chime_object_t* object_equals(chime_object_t* instance, chime_object_t* other);
+chime_object_t* object_case_compare(chime_object_t* instance, chime_object_t* other);
 chime_object_t* object_greater_than(chime_object_t* instance, chime_object_t* other);
 
 chime_object_t* method_name(chime_object_t* instance);

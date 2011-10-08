@@ -6,6 +6,19 @@
 #include <stdio.h>
 #include <assert.h>
 
+static void print_object(chime_object_t* instance)
+{
+    chime_object_invoke_0(chime_object_invoke_0(instance, "to_string"), "print");
+}
+
+chime_object_t* assert_class_failure(chime_object_t* instance)
+{
+    fprintf(stderr, "[Assert] \e[31mfailure\e[0m\n");
+    chime_object_invoke_0(instance, "increment_failure_count");
+    
+    return CHIME_LITERAL_NULL;
+}
+
 chime_object_t* assert_class_is_true(chime_object_t* instance, chime_object_t* object)
 {
     if (object == CHIME_LITERAL_NULL || object == CHIME_LITERAL_FALSE)
@@ -13,7 +26,7 @@ chime_object_t* assert_class_is_true(chime_object_t* instance, chime_object_t* o
         fprintf(stderr, "[Assert] is_true: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
-        chime_object_invoke_0(object, "print");
+        print_object(object);
     }
     
     return CHIME_LITERAL_NULL;
@@ -26,7 +39,7 @@ chime_object_t* assert_class_is_false(chime_object_t* instance, chime_object_t* 
         fprintf(stderr, "[Assert] is_false: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
-        chime_object_invoke_0(object, "print");
+        print_object(object);
     }
     
     return CHIME_LITERAL_NULL;
@@ -39,7 +52,7 @@ chime_object_t* assert_class_is_null(chime_object_t* instance, chime_object_t* o
         fprintf(stderr, "[Assert] is_null: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
-        chime_object_invoke_0(object, "print");
+        print_object(object);
     }
     
     return CHIME_LITERAL_NULL;
@@ -52,8 +65,8 @@ chime_object_t* assert_class_equal_to(chime_object_t* instance, chime_object_t* 
         fprintf(stderr, "[Assert] equal:to: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
         
-        chime_object_invoke_0(a, "print");
-        chime_object_invoke_0(b, "print");
+        print_object(a);
+        print_object(b);
     }
     
     return CHIME_LITERAL_NULL;
@@ -83,6 +96,7 @@ void chime_assertion_initialize(void)
     
     assertion_class = chime_class_create_object_subclass("Assert");
     
+    chime_class_set_class_method(assertion_class, "failure",  assert_class_failure);
     chime_class_set_class_method(assertion_class, "is_true",  assert_class_is_true);
     chime_class_set_class_method(assertion_class, "is_false", assert_class_is_false);
     chime_class_set_class_method(assertion_class, "is_null",  assert_class_is_null);

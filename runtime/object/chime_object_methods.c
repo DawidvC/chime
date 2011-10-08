@@ -77,6 +77,21 @@ chime_object_t* object_equals(chime_object_t* instance, chime_object_t* other)
     return CHIME_LITERAL_FALSE;
 }
 
+chime_object_t* object_case_compare(chime_object_t* instance, chime_object_t* other)
+{
+    chime_object_t* result;
+    
+    result = chime_object_invoke_1(instance, "<=>", other);
+    
+    if (!chime_object_is_integer(result))
+        return CHIME_LITERAL_FALSE;
+    
+    if (chime_literal_decode_integer(result) == 0)
+        return CHIME_LITERAL_TRUE;
+    
+    return CHIME_LITERAL_FALSE;
+}
+
 chime_object_t* object_greater_than(chime_object_t* instance, chime_object_t* other)
 {
     chime_object_t* result;

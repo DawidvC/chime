@@ -19,7 +19,7 @@ implementation ReflectionTests : Test.Case
     {
         methods = Object.new().methods
         
-        Assert.equal(7, to:methods.length)
+        Assert.equal(8, to:methods.length)
         
         Assert.equal("class",     to:methods[0].name)
         Assert.equal("methods",   to:methods[1].name)
@@ -27,6 +27,7 @@ implementation ReflectionTests : Test.Case
         Assert.equal("hash",      to:methods[3].name)
         Assert.equal("to_string", to:methods[4].name)
         Assert.equal("==",        to:methods[5].name)
-        Assert.equal(">",         to:methods[6].name)
+        Assert.equal("===",       to:methods[6].name)
+        Assert.equal(">",         to:methods[7].name)
     }
 }

@@ -15,9 +15,9 @@ namespace ast
         
         node->setExpression(ast::NodeRef(parser.parse_expression()));
         
-        parser.advance_past_ending_tokens();
+        parser.advanceToNextStatement();
         parser.next_token("{");
-        parser.advance_past_ending_tokens();
+        parser.advanceToNextStatement();
         
         while (true)
         {
@@ -30,13 +30,29 @@ namespace ast
             
             if (t->equal_to("case"))
             {
-                node->_cases.push_back(ast::Case::parse(parser, node->getExpression().get()));
+                CaseRef caseNode;
+                
+                caseNode = ast::Case::parse(parser, node->getExpression().get());
+                
+                if (node->_cases.size() > 0)
+                {
+                    node->_cases.back()->setElse(caseNode);
+                }
+                
+                node->_cases.push_back(caseNode);
             }
             else if (t->equal_to("else"))
             {
                 parser.next_token("else");
                 
-                node->_else = ast::NodeRef(ast::CodeBlock::parse(parser));
+                if (node->_cases.size() == 0)
+                {
+                    parser.addError("A switch statement cannot contain only an else statement");
+                    
+                    return node;
+                }
+                
+                node->_cases.back()->setElse(ast::CodeBlock::parse(parser));
                 break;
             }
             else if(t->equal_to("}"))
@@ -50,9 +66,9 @@ namespace ast
             }
         }
         
-        parser.advance_past_ending_tokens();
+        parser.advanceToNextStatement();
         parser.next_token("}");
-        parser.advance_past_ending_tokens();
+        parser.advanceToNextStatement();
         
         return node;
     }
@@ -79,35 +95,32 @@ namespace ast
     
     ast::NodeRef Switch::getElse() const
     {
-        return _else;
+        return _cases.back()->getElse();
     }
     
     llvm::Value* Switch::codegen(chime::code_generator& generator)
     {
-        // switch (a)
-        // {
-        //    case 76
-        //      stuff
-        //    case "acdef"
-        //      stuff
-        //    else
-        //      something
-        // }
-        //
-        // has a structure like this
-        //
-        // if (a === 76)
-        // {
-        //     stuff
-        // }
-        // else if (a === "acdef")
-        // {
-        //     stuff
-        // }
-        // else
-        // {
-        //     something
-        // }
+        std::vector<ast::CaseRef>::iterator it;
+        llvm::Function*                     function;
+        llvm::BasicBlock*                   endBlock;
+        
+        function = generator.builder()->GetInsertBlock()->getParent();
+        
+        endBlock = llvm::BasicBlock::Create(generator.get_context(), "switch.else");
+        
+        for (it = _cases.begin(); it != _cases.end(); ++it)
+        {
+            (*it)->codegenConditional(generator, endBlock);
+        }
+        
+        // guard against duplicate terminators again here
+        if (!generator.builder()->GetInsertBlock()->getTerminator())
+        {
+            generator.builder()->CreateBr(endBlock);
+        }
+        
+        function->getBasicBlockList().push_back(endBlock);
+        generator.builder()->SetInsertPoint(endBlock);
         
         return NULL;
     }
