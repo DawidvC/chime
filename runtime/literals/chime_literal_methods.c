@@ -11,7 +11,8 @@
 
 // a 64-bit integer can have 20 digits, plus a minus sign, plus a null
 // terminator.  So we need at least 22 bytes.
-#define INTEGER_STRING_SIZE ((22 / CHIME_ALLOCATION_UNIT) + 1)
+#define BYTES_PER_INTEGER_STRING (22)
+#define INTEGER_STRING_SIZE      ((BYTES_PER_INTEGER_STRING / CHIME_ALLOCATION_UNIT) + 1)
 
 #pragma mark -
 #pragma mark Null Functions
@@ -30,6 +31,7 @@ chime_object_t* integer_to_string(chime_object_t* instance)
 {
     chime_object_t* string;
     signed long     value;
+    bool            has_sign;
     char*           c_string;
     char*           p;
     unsigned int    length;
@@ -40,28 +42,41 @@ chime_object_t* integer_to_string(chime_object_t* instance)
     if (value == 0)
         return chime_string_create_with_c_string("0", 1);
     
+    // the approach here, which is a little crazy, is to allocate a buffer
+    // large enough for the biggest integer.  Then, we start filling in the
+    // digits *backwards* using the modulus of the number.
+    
     c_string = chime_allocate(INTEGER_STRING_SIZE);
-    p        = c_string;
     length   = 0;
+    p        = c_string + BYTES_PER_INTEGER_STRING;
     
     if (value < 0)
     {
-        value = value * -1; // make it positive
-        p[length] = '-';
-        length += 1;
+        value     = value * -1; // make it positive
+        length   += 1;          // make space for the sign, which comes at the end
+        has_sign  = true;
     }
     
-    while (value > 0)
+    // null-terminate the string
+    *p = 0;
+    
+    while ((value > 0) && (p >= c_string))
     {
-        p[length] = (value % 10) + 48; // convert digit to ASCII and store in the string
+        p -= 1;
+        
+        *p    = (value % 10) + 48; // convert digit to ASCII and store in the string
         value = value / 10;
         
         length += 1;
     }
     
-    p[length] = 0; // terminate the string
+    if (has_sign)
+    {
+        p -= 1;
+        *p = '-'; // deal with the sign
+    }
     
-    string = chime_string_create_with_c_string(c_string, length);
+    string = chime_string_create_with_c_string(p, length);
     
     chime_deallocate(c_string); // remove our scratch space
     

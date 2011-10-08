@@ -16,6 +16,11 @@ extern "C" {
 #define chime_allocate(x)   malloc(x*CHIME_ALLOCATION_UNIT)
 #define chime_deallocate(x) free(x)
 
+typedef unsigned char bool;
+
+#define true (1)
+#define false (0)
+
 #ifdef __cplusplus
 }
 #endif
