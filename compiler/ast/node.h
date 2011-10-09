@@ -1,14 +1,14 @@
 // node.h
-//
 
 #ifndef AST_NODE
 #define AST_NODE
 
-#include <string>
-#include <vector>
-#include <tr1/memory>
+#include "compiler/shared_ptr.h"
 
 #include <llvm/Value.h>
+
+#include <string>
+#include <vector>
 
 namespace chime
 {

@@ -267,3 +267,25 @@ TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
     
     ASSERT_FALSE(switchNode->getElse());
 }
+
+TEST_F(FlowControlParserTest, WhileStatementWithoutBraces)
+{
+    ast::While* whileNode;
+    
+    whileNode = static_cast<ast::While*>(parse("while true\nfoo()")->childAtIndex(0));
+    
+    ASSERT_LITERAL_TRUE(whileNode->getCondition().get());
+    
+    ASSERT_METHOD_CALL("foo", whileNode->getBody()->childAtIndex(0));
+}
+
+TEST_F(FlowControlParserTest, WhileStatementWithBraces)
+{
+    ast::While* whileNode;
+    
+    whileNode = static_cast<ast::While*>(parse("while (true) { foo() }")->childAtIndex(0));
+    
+    ASSERT_LITERAL_TRUE(whileNode->getCondition().get());
+    
+    ASSERT_METHOD_CALL("foo", whileNode->getBody()->childAtIndex(0));
+}

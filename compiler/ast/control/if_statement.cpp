@@ -1,5 +1,4 @@
 #include "if_statement.h"
-
 #include "compiler/ast/common/CodeBlock.h"
 
 namespace ast

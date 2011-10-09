@@ -17,6 +17,7 @@ namespace chime
         parser(chime::lexer* lexer);
         virtual ~parser();
         
+        TokenRef    nextToken(const char* expected=NULL);
         token*      next_token(void);
         token*      next_token(const char* expected);
         bool        advance_token_if_equals(const char* expected);
@@ -24,6 +25,7 @@ namespace chime
         std::string next_token_value(const char* expected);
         void        advanceToNextStatement();
         void        advance_past_ending_tokens(void);
+        TokenRef    lookAhead(int distance=1);
         token*      look_ahead(void);
         token*      look_ahead(int);
         
@@ -39,6 +41,7 @@ namespace chime
         
         ast::Root*  parse(void);
         ast::node*  parse_without_structural(void);
+        ast::NodeRef parseExpression();
         ast::node*  parse_expression(void);
         ast::node*  parse_type(void);
         ast::node*  parse_control(void);

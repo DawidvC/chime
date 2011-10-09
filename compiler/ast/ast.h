@@ -12,6 +12,7 @@
 #include "control/throw.h"
 #include "control/return.h"
 #include "control/Switch.h"
+#include "control/While.h"
 #include "literals/integer_literal.h"
 #include "literals/InterpolatedString.h"
 #include "literals/string_literal.h"

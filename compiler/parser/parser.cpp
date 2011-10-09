@@ -23,6 +23,32 @@ namespace chime
     }
     
 #pragma mark *** Token Handling ***
+    TokenRef parser::nextToken(const char* expected)
+    {
+        TokenRef token;
+        
+        token = TokenRef(_lexer->next_token());
+        
+        if (!token)
+        {
+            this->addError("Reached the end of the file unexpectedly");
+            return token;
+        }
+        
+        if ((expected != NULL) && (!token->equal_to(expected)))
+        {
+            chime::ParseErrorRef e;
+            
+            e = chime::ParseErrorRef(new chime::ParseError("Expected '%s' but got '%s'", expected, token->c_str()));
+            
+            this->addError(e);
+            
+            return token;
+        }
+        
+        return token;
+    }
+    
     token* parser::next_token(void)
     {
         return this->next_token(NULL);
@@ -108,6 +134,10 @@ namespace chime
         this->advanceToNextStatement();
     }
     
+    TokenRef parser::lookAhead(int distance)
+    {
+        return TokenRef(_lexer->look_ahead(distance));
+    }
     token* parser::look_ahead(void)
     {
         return this->look_ahead(1);
@@ -259,6 +289,11 @@ namespace chime
         return node;
     }
     
+    ast::NodeRef parser::parseExpression()
+    {
+        return ast::NodeRef(this->parse_expression());
+    }
+    
     ast::node* parser::parse_expression()
     {
         chime::token* t;
@@ -382,6 +417,10 @@ namespace chime
         else if (t->equal_to("return"))
         {
             node = new ast::Return(*this);
+        }
+        else if (t->equal_to("while"))
+        {
+            node = ast::While::parse(*this);
         }
         else
         {
