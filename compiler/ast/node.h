@@ -46,8 +46,13 @@ namespace ast
         std::vector<ast::node*>* _children;
     };
     
-    typedef std::tr1::shared_ptr<ast::node> NodeRef;
+    typedef shared_ptr<ast::node> NodeRef;
     typedef ast::node Node;
+}
+
+namespace chime
+{
+    typedef shared_ptr<ast::node> NodeRef;
 }
 
 #endif

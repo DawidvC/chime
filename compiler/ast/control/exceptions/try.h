@@ -3,7 +3,7 @@
 #ifndef TRY_H
 #define TRY_H
 
-#include "exception_flow.h"
+#include "compiler/ast/control/exception_flow.h"
 #include "catch.h"
 #include "finally.h"
 

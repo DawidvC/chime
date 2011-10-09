@@ -1,11 +1,11 @@
 #include "While.h"
 #include "compiler/ast/common/CodeBlock.h"
 
-namespace ast
+namespace chime
 {
-    ast::While* While::parse(chime::parser& parser)
+    While* While::parse(chime::parser& parser)
     {
-        ast::While* whileNode;
+        While* whileNode;
         
         parser.nextToken("while");
         
@@ -15,30 +15,16 @@ namespace ast
         
         parser.advanceToNextStatement();
         
-        whileNode->setBody(CodeBlock::parseBlockWithOptionalBraces(parser));
+        whileNode->setBody(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
         
         parser.advanceToNextStatement();
         
         return whileNode;
     }
     
-    NodeRef While::getCondition() const
+    std::string While::nodeName(void) const
     {
-        return _condition;
-    }
-    
-    void While::setCondition(NodeRef node)
-    {
-        _condition = node;
-    }
-    
-    NodeRef While::getBody(void) const
-    {
-        return _body;
-    }
-    void While::setBody(NodeRef node)
-    {
-        _body = node;
+        return std::string("While");
     }
     
     llvm::Value* While::codegen(chime::code_generator& generator)

@@ -18,6 +18,12 @@ protected:
     virtual chime::lexer*   lex(const char* input);
     ast::node*              parse(const char* input);
     
+    template <typename T>
+    T parseFirst(const char* input)
+    {
+        return static_cast<T>(this->parse(input)->childAtIndex(0));
+    }
+    
     ast::Implementation*    parse_implementation(const char* input);
     ast::method_definition* parse_method_def(const char* input);
     ast::MethodCall*        parseMethodCall(const char* input);

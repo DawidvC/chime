@@ -109,10 +109,14 @@
     ASSERT_EQ(x, ((ast::integer_literal*)y)->value()); \
     } while (0)
 
-#define ASSERT_IF_STATEMENT(x) do { \
-    ASSERT_EQ("if statement", x->nodeName()); \
-    } while (0)
+#define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName())
 
+#define ASSERT_WHILE(x) ASSERT_EQ("While", x->nodeName())
+#define ASSERT_UNTIL(x) ASSERT_EQ("Until", x->nodeName())
+#define ASSERT_LOOP(x)  ASSERT_EQ("Loop", x->nodeName())
+#define ASSERT_LOOP_UNTIL(x) ASSERT_EQ("Loop Until", x->nodeName())
+#define ASSERT_LOOP_WHILE(x) ASSERT_EQ("Loop While", x->nodeName())
+    
 #define ASSERT_TRY(x) do { \
     ASSERT_EQ("try", x->node_name()); \
     } while (0)

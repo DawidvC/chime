@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "compiler/ast/ast.h"
+#include "compiler/ast/control/Control.h"
 #include "compiler/ast/literals/literal.h"
 #include "compiler/ast/structural/Structural.h"
 
@@ -134,10 +135,6 @@ namespace chime
         this->advanceToNextStatement();
     }
     
-    TokenRef parser::lookAhead(int distance)
-    {
-        return TokenRef(_lexer->look_ahead(distance));
-    }
     token* parser::look_ahead(void)
     {
         return this->look_ahead(1);
@@ -252,7 +249,7 @@ namespace chime
         }
         else if (t->isControl())
         {
-            return this->parse_control();
+            return Control::parse(*this);
         }
         else if (t->isType())
         {
@@ -420,7 +417,7 @@ namespace chime
         }
         else if (t->equal_to("while"))
         {
-            node = ast::While::parse(*this);
+            node = While::parse(*this);
         }
         else
         {

@@ -3,7 +3,7 @@
 #ifndef CATCH_H
 #define CATCH_H
 
-#include "exception_flow.h"
+#include "compiler/ast/control/exception_flow.h"
 #include "compiler/ast/primary/type_reference.h"
 #include "compiler/ast/variable/Variable.h"
 

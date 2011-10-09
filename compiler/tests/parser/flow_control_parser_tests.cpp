@@ -270,22 +270,67 @@ TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
 
 TEST_F(FlowControlParserTest, WhileStatementWithoutBraces)
 {
-    ast::While* whileNode;
+    chime::While* node;
     
-    whileNode = static_cast<ast::While*>(parse("while true\nfoo()")->childAtIndex(0));
+    node = parseFirst<chime::While*>("while true\nfoo()");
     
-    ASSERT_LITERAL_TRUE(whileNode->getCondition().get());
+    ASSERT_WHILE(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
     
-    ASSERT_METHOD_CALL("foo", whileNode->getBody()->childAtIndex(0));
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, WhileStatementWithBraces)
 {
-    ast::While* whileNode;
+    chime::While* node;
     
-    whileNode = static_cast<ast::While*>(parse("while (true) { foo() }")->childAtIndex(0));
+    node = parseFirst<chime::While*>("while (true) { foo() }");
     
-    ASSERT_LITERAL_TRUE(whileNode->getCondition().get());
+    ASSERT_WHILE(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
     
-    ASSERT_METHOD_CALL("foo", whileNode->getBody()->childAtIndex(0));
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
+}
+
+TEST_F(FlowControlParserTest, UntilStatementWithBraces)
+{
+    chime::Until* node;
+    
+    node = parseFirst<chime::Until*>("until (true) { foo() }");
+    
+    ASSERT_UNTIL(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
+}
+
+TEST_F(FlowControlParserTest, LoopStatementWithBraces)
+{
+    chime::Loop* node;
+    
+    node = parseFirst<chime::Loop*>("loop { foo() }");
+    
+    ASSERT_LOOP(node);
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
+}
+
+TEST_F(FlowControlParserTest, LoopWhileWithBraces)
+{
+    chime::LoopWhile* node;
+    
+    node = parseFirst<chime::LoopWhile*>("loop { foo() } while (true)");
+    
+    ASSERT_LOOP_WHILE(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
+}
+
+TEST_F(FlowControlParserTest, LoopUntilWithBraces)
+{
+    chime::LoopUntil* node;
+    
+    node = parseFirst<chime::LoopUntil*>("loop { foo() } until (true)");
+    
+    ASSERT_LOOP_UNTIL(node);
+    ASSERT_LITERAL_TRUE(node->getCondition().get());
+    ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
 }

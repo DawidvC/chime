@@ -3,7 +3,7 @@
 #ifndef FINALLY_H
 #define FINALLY_H
 
-#include "exception_flow.h"
+#include "compiler/ast/control/exception_flow.h"
 
 namespace ast
 {

@@ -25,7 +25,6 @@ namespace chime
         std::string next_token_value(const char* expected);
         void        advanceToNextStatement();
         void        advance_past_ending_tokens(void);
-        TokenRef    lookAhead(int distance=1);
         token*      look_ahead(void);
         token*      look_ahead(int);
         
