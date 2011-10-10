@@ -18,7 +18,7 @@ namespace ast
         node = parser.getCurrentScope()->variableForIdentifier(identifier);
         assert(node);
         
-        if (allowAssignment && parser.lookAhead()->value() == "=")
+        if (allowAssignment && parser.lookAhead()->isAssignment())
         {
             return Variable::parseAssignment(parser, static_cast<Variable*>(node));
         }
@@ -32,13 +32,55 @@ namespace ast
     Node* Variable::parseAssignment(chime::parser& parser, Variable* variable)
     {
         AssignmentOperator* op;
-        
-        parser.nextTokenValue("="); // parse the "="
+        BinaryOperator*     binOp;
         
         op = variable->createAssignment();
-        
         op->setLeftOperand(variable);
-        op->setRightOperand(parser.parse_expression());
+        
+        if (parser.lookAhead()->equal_to("="))
+        {
+            parser.nextTokenValue("="); // parse the "="
+            
+            op->setRightOperand(parser.parse_expression());
+            
+            return op;
+        }
+        
+        binOp = new ast::BinaryOperator();
+        
+        if (parser.lookAhead()->equal_to("+="))
+        {
+            parser.nextTokenValue("+=");
+            
+            binOp->setIdentifier("+");
+        }
+        else if (parser.lookAhead()->equal_to("-="))
+        {
+            parser.nextTokenValue("-=");
+            
+            binOp->setIdentifier("-");
+        }
+        else if (parser.lookAhead()->equal_to("*="))
+        {
+            parser.nextTokenValue("*=");
+            
+            binOp->setIdentifier("*");
+        }
+        else if (parser.lookAhead()->equal_to("/="))
+        {
+            parser.nextTokenValue("/=");
+            
+            binOp->setIdentifier("/");
+        }
+        else
+        {
+            parser.addError("What kind of compound assignment operator is you?");
+        }
+        
+        binOp->setLeftOperand(variable);
+        binOp->setRightOperand(parser.parse_expression());
+        
+        op->setRightOperand(binOp);
         
         return op;
     }

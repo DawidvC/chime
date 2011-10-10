@@ -208,6 +208,17 @@ namespace chime
         return false;
     }
     
+    bool token::isAssignment() const
+    {
+        if (_value == "=")  return true;
+        if (_value == "+=") return true;
+        if (_value == "/=") return true;
+        if (_value == "*=") return true;
+        if (_value == "-=") return true;
+        
+        return false;
+    }
+    
     bool token::isLiteral(void) const
     {
         return this->isString() || this->isNumber() || this->isBoolean() || this->isInheritanceRelated();

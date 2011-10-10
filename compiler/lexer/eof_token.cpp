@@ -59,6 +59,10 @@ namespace chime
     {
         return false;
     }
+    bool eof_token::isAssignment() const
+    {
+        return false;
+    }
     
     bool eof_token::isIdentifier(void) const
     {

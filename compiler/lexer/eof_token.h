@@ -22,6 +22,7 @@ namespace chime
         virtual bool isConditional(void) const;
         virtual bool isLoop(void) const;
         virtual bool isControl(void) const;
+        virtual bool isAssignment() const;
         virtual bool isIdentifier(void) const;
         virtual bool isType(void) const;
         virtual bool isPunctuation(void) const;

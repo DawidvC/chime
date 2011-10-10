@@ -8,7 +8,7 @@ implementation ClosureTests : Test.Case
         
         10.times() do
         {
-            count = count + 1
+            count += 1
         }
         
         Assert.equal(10, to:count)
