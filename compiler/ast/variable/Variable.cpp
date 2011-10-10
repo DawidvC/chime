@@ -4,7 +4,7 @@
 
 namespace ast
 {
-    node* Variable::parse(chime::parser& parser, bool allowAssignment)
+    Node* Variable::parse(chime::parser& parser, bool allowAssignment)
     {
         std::string identifier;
         node*       node;
@@ -18,24 +18,29 @@ namespace ast
         node = parser.getCurrentScope()->variableForIdentifier(identifier);
         assert(node);
         
-        if (allowAssignment && parser.look_ahead(1)->value() == "=")
+        if (allowAssignment && parser.lookAhead()->value() == "=")
         {
-            AssignmentOperator* op;
-            
-            parser.next_token_value("="); // parse the "="
-            
-            op = static_cast<Variable*>(node)->createAssignment();
-            
-            op->setLeftOperand(node);
-            op->setRightOperand(parser.parse_expression());
-            
-            return op;
+            return Variable::parseAssignment(parser, static_cast<Variable*>(node));
         }
         
         // check for index operators
         node = ast::IndexOperator::parse(parser, node);
         
         return node;
+    }
+    
+    Node* Variable::parseAssignment(chime::parser& parser, Variable* variable)
+    {
+        AssignmentOperator* op;
+        
+        parser.nextTokenValue("="); // parse the "="
+        
+        op = variable->createAssignment();
+        
+        op->setLeftOperand(variable);
+        op->setRightOperand(parser.parse_expression());
+        
+        return op;
     }
     
     Variable::Variable(const std::string& identifier)

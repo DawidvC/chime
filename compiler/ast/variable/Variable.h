@@ -11,7 +11,8 @@ namespace ast
     class Variable : public node
     {
     public:
-        static node* parse(chime::parser& parser, bool allowAssignment=true);
+        static Node* parse(chime::parser& parser, bool allowAssignment=true);
+        static Node* parseAssignment(chime::parser& parser, Variable* variable);
         
     public:
         Variable(const std::string& identifier);

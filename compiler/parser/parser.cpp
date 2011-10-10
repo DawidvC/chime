@@ -91,13 +91,10 @@ namespace chime
         
         return false;
     }
-    std::string parser::next_token_value(void)
-    {
-        return this->next_token_value(NULL);
-    }
-    std::string parser::next_token_value(const char* expected)
+    std::string parser::nextTokenValue(const char* expected)
     {
         token *t = this->next_token(expected);
+        
         if (!t)
             return std::string();
         
@@ -106,6 +103,10 @@ namespace chime
         delete t;
         
         return v;
+    }
+    std::string parser::next_token_value(const char* expected)
+    {
+        return this->nextTokenValue(expected);
     }
     void parser::advanceToNextStatement()
     {
@@ -135,13 +136,17 @@ namespace chime
         this->advanceToNextStatement();
     }
     
+    Token* parser::lookAhead(int distance)
+    {
+        return _lexer->look_ahead(distance);
+    }
     token* parser::look_ahead(void)
     {
-        return this->look_ahead(1);
+        return this->lookAhead();
     }
     token* parser::look_ahead(int distance)
     {
-        return _lexer->look_ahead(distance);
+        return this->lookAhead(distance);
     }
     
     std::vector<chime::ParseErrorRef> parser::getErrors() const
