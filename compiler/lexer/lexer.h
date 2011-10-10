@@ -43,6 +43,8 @@ namespace chime
         bool _inString;
         bool _interpolatingString;
     };
+    
+    typedef shared_ptr<lexer> LexerRef;
 }
 
 #endif // LEXER_H

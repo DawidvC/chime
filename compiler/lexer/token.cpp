@@ -18,9 +18,13 @@ namespace chime
         this->clear_value();
         this->append(c);
     }
-    void token::set_value(const char* s)
+    void token::setValue(const char* s)
     {
         _value = s;
+    }
+    void token::set_value(const char* s)
+    {
+        this->setValue(s);
     }
     void token::clear_value(void)
     {
@@ -303,6 +307,10 @@ namespace chime
         if (_value == ">=")  return 15;
         if (_value == "<=")  return 15;
         if (_value == "=")   return 10;
+        if (_value == "+=")  return 10;
+        if (_value == "*=")  return 10;
+        if (_value == "/=")  return 10;
+        if (_value == "-=")  return 10;
         
         return -1;
     }

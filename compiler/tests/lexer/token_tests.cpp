@@ -206,7 +206,55 @@ TEST_F(TokenTest, IsOperator)
     token->set_value(".");
     ASSERT_TRUE(token->precedence() > 0);
     
+    token->setValue("+");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("+=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("-");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("-=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("*");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("*=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("/");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("/=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("<");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("<=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue(">");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue(">=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
     token->set_value("<=>");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("=");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("==");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("and");
+    ASSERT_TRUE(token->precedence() > 0);
+    
+    token->setValue("or");
     ASSERT_TRUE(token->precedence() > 0);
 }
 

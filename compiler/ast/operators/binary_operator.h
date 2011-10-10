@@ -36,4 +36,9 @@ namespace ast
     typedef ast::binary_operator BinaryOperator;
 }
 
+namespace chime
+{
+    typedef ast::BinaryOperator BinaryOperator;
+}
+
 #endif

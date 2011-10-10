@@ -223,8 +223,6 @@ namespace chime
                 case ';':
                 case ':':
                 case ',':
-                case '+':
-                case '*':
                 case '|':
                 case '[':
                 case ']':
@@ -233,12 +231,14 @@ namespace chime
                     
                     return t;
                     break;
+                case '+':
+                case '*':
                 case '<':
                 case '>':
                 case '=':
                     if (t->empty())
                     {
-                        // handle '<=' and '>='
+                        // handle '<=', '>=', '==', '+=', '*='
                         t->set_value(this->next_char());
                         if (!this->is_finished() && (this->peek() == '='))
                             t->append(this->next_char());
@@ -262,6 +262,12 @@ namespace chime
                         }
                         while ((next != '\n') && (next != 0));
                     }
+                    else if (this->peek() == '=')
+                    {
+                        t->set_value('/');
+                        t->append(this->next_char());
+                        return t;
+                    }
                     else
                     {
                         t->set_value('/');
@@ -271,13 +277,15 @@ namespace chime
                 case '-':
                     _peeked_char = this->peek();
                     
-                    // check for a number
-                    if ((_peeked_char < '0') && (_peeked_char > '9'))
+                    if ((_peeked_char < '0') && (_peeked_char > '9')) // check for a number
                     {
                         return t;
                     }
                     
                     t->append(this->next_char());
+                    if (!this->is_finished() && (this->peek() == '='))
+                        t->append(this->next_char());
+                    
                     _peeked_char = 0;
                     break;
                 case '"':

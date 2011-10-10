@@ -14,6 +14,7 @@ namespace chime
         
         void clear_value(void);
         void set_value(const char c);
+        void setValue(const char* s);
         void set_value(const char* s);
         void append(const char c);
         void append(const std::string& str);

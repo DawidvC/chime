@@ -22,4 +22,9 @@ namespace ast
     };
 }
 
+namespace chime
+{
+    typedef ast::basic_operator Operator;
+}
+
 #endif

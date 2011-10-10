@@ -6,24 +6,13 @@
 class LexerTest : public testing::Test
 {
 protected:
-	chime::stringlexer* lexer;
-	
-	virtual void SetUp()
-	{
-		lexer = NULL;
-	}
-	
-	virtual void TearDown()
-	{
-		if (lexer)
-			delete lexer;
-	}
-	
-	void lex(const char *input)
-	{
-		lexer = new chime::stringlexer(input);
-	}
-	
+    chime::LexerRef lexer;
+    
+    void lex(const char *input)
+    {
+        lexer = chime::LexerRef(new chime::stringlexer(input));
+    }
+    
 	void ExpectTokens(const char *tokens[])
 	{
 		int i = 0;
@@ -34,16 +23,31 @@ protected:
 			i++;
 		}
 	}
-	
-    chime::token* next_token(void)
+    
+    chime::token* nextToken()
     {
         return lexer->next_token();
     }
+    chime::token* next_token(void)
+    {
+        return this->nextToken();
+    }
+    std::string nextTokenValue()
+    {
+        return lexer->next_token()->value();
+    }
     std::string next_token_value(void)
     {
-        return this->next_token()->value();
+        return this->nextTokenValue();
     }
 };
+
+#define ASSERT_TOKENS(t) do { \
+    for (int i = 0; tokens[i] != NULL; ++i) \
+    { \
+        ASSERT_EQ(tokens[i], this->nextTokenValue()); \
+    } \
+} while (0);
 
 #pragma mark token functions
 TEST_F(LexerTest, LookAhead)
@@ -204,7 +208,7 @@ TEST_F(LexerTest, SignificantNewlines)
     
     lexer->ignore_new_lines(false);
     
-    const char *tokens[] = {"a", "+", "=", "b", "\n", "a", "=", "0", NULL};
+    const char *tokens[] = {"a", "+=", "b", "\n", "a", "=", "0", NULL};
     ExpectTokens(tokens);
     
     lexer->ignore_new_lines(true);
@@ -409,17 +413,45 @@ TEST_F(LexerTest, GreaterOrEqualOperator)
 	const char *tokens[] = {"x", ">=", "y", NULL};
 	ExpectTokens(tokens);
 }
+TEST_F(LexerTest, PlusEqualsOperator)
+{
+    lex("x += y");
+    
+    const char *tokens[] = {"x", "+=", "y", NULL};
+    ASSERT_TOKENS(tokens);
+}
+TEST_F(LexerTest, DivideEqualsOperator)
+{
+    lex("x /= y");
+    
+    const char *tokens[] = {"x", "/=", "y", NULL};
+    ASSERT_TOKENS(tokens);
+}
+TEST_F(LexerTest, MultiplyEqualsOperator)
+{
+    lex("x *= y");
+    
+    const char *tokens[] = {"x", "*=", "y", NULL};
+    ASSERT_TOKENS(tokens);
+}
+TEST_F(LexerTest, MinusEqualsOperator)
+{
+    lex("x -= y");
+    
+    const char *tokens[] = {"x", "-=", "y", NULL};
+    ASSERT_TOKENS(tokens);
+}
 TEST_F(LexerTest, SpaceshipOperator)
 {
     lex("x <=> y");
     
     const char *tokens[] = {"x", "<=>", "y", NULL};
-    ExpectTokens(tokens);
+    ASSERT_TOKENS(tokens);
 }
 TEST_F(LexerTest, IndexerMethodCall)
 {
     lex("foo[123]");
     
     const char *tokens[] = {"foo", "[", "123", "]", NULL};
-    ExpectTokens(tokens);
+    ASSERT_TOKENS(tokens);
 }
