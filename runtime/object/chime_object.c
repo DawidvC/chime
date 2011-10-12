@@ -35,6 +35,7 @@ void chime_object_initialize(void)
     chime_class_set_instance_method(_object_class, "==",        object_equals);
     chime_class_set_instance_method(_object_class, "===",       object_case_compare);
     chime_class_set_instance_method(_object_class, ">",         object_greater_than);
+    chime_class_set_instance_method(_object_class, "<",         object_less_than);
     
     chime_class_set_instance_method(_method_class, "name", method_name);
 }

@@ -69,7 +69,7 @@ namespace ast
         
         function = generator.builder()->GetInsertBlock()->getParent();
         
-        endBlock = llvm::BasicBlock::Create(generator.get_context(), "if.end");
+        endBlock = llvm::BasicBlock::Create(generator.getContext(), "if.end");
         
         value = this->codegenConditional(generator, endBlock);
         

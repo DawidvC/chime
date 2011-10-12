@@ -72,9 +72,9 @@ implementation ControlTests : Test.Case
         
         while a < 5
         {
-            a = a + 1
+            a += 1
         }
         
-        Assert.equal(a, to:4)
+        Assert.equal(a, to:5)
     }
 }

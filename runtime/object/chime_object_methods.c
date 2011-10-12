@@ -107,6 +107,21 @@ chime_object_t* object_greater_than(chime_object_t* instance, chime_object_t* ot
     return CHIME_LITERAL_FALSE;
 }
 
+chime_object_t* object_less_than(chime_object_t* instance, chime_object_t* other)
+{
+    chime_object_t* result;
+    
+    result = chime_object_invoke_1(instance, "<=>", other);
+    
+    if (!chime_object_is_integer(result))
+        return CHIME_LITERAL_FALSE;
+    
+    if (chime_literal_decode_integer(result) == -1)
+        return CHIME_LITERAL_TRUE;
+    
+    return CHIME_LITERAL_FALSE;
+}
+
 chime_object_t* method_name(chime_object_t* instance)
 {
     return chime_object_get_property(instance, "_name");
