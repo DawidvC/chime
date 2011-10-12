@@ -5,11 +5,11 @@
 	foldingStopMarker = '(})';
 	patterns = (
 		{	name = 'comment.line.double-slash.chime';
-					match = '(^[ \t]+)?(\/\/).*$\n?';
-					captures = { 1 = { name = 'punctuation.definition.comment.chime'; }; };
-				},
-		{	match = '\b(if|while|for|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
-			name = 'keyword.control.chime';
+			match = '(^[ \t]+)?(\/\/).*$\n?';
+			captures = { 1 = { name = 'punctuation.definition.comment.chime'; }; };
+		},
+		{	name = 'keyword.control.chime';
+			match = '\b(if|while|until|loop|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
 		},
 		{	match = '(namespace|import)\s+([\w\.]+)';
 			captures = {
@@ -18,9 +18,7 @@
 			};
 		},
 		{	match = '(import)\b';
-			captures = {
-				1 = { name = 'keyword'; };
-			};
+			captures = { 1 = { name = 'keyword'; }; };
 		},
 		{	match = '(implementation|interface)\s+([\w\.]+)\s*(:)?\s*([\w\.]+)?';
 			captures = {
@@ -30,15 +28,14 @@
 				4 = { name = 'entity.other.inherited-class'; };
 			};
 		},
-		{	match = '\b(self|super)\b';
-			name = 'keyword.control.chime';
+		{	name = 'keyword.control.chime';
+			match = '\b(self|super)\b';
 		},
-		{	match = '\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b';
-			name = 'constant.numeric.chime';
+		{	name = 'constant.numeric.chime';
+			match = '\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b';
 		},
-		{
+		{	name = 'constant.chime';
 			match = '\b(true|false)\b';
-			name = 'constant.chime';
 		},
 		{	match = '((class\s*)?method|property|indexer|operator)\s+(\w+)';
 			captures = {
@@ -52,21 +49,17 @@
 				2 = { name = 'variable.chime'; };
 			};
 		},
-		{	match = '\b(get|set)\b';
-			name = 'keyword';
+		{	name = 'keyword';
+			match = '\b(get|set)\b';
 		},
-		{	match = '\b([A-Z]\w+)\b';
-			name = 'entity.name.type.chime';
+		{	name = 'entity.name.type.chime';
+			match = '\b([A-Z]\w+)\b';
 		},
 		{	match = '[\.\b]([\w]+)[\(\b]';
-			captures = {
-				1 = { name = 'support.function'; };
-			};
+			captures = { 1 = { name = 'support.function'; }; };
 		},
 		{	match = '[,;]\s*(\w+:)';
-			captures = {
-				1 = { name = 'support.function'; };
-			};
+			captures = { 1 = { name = 'support.function'; }; };
 		},
 		{	name = 'string.quoted.double.untitled';
 			begin = '"';

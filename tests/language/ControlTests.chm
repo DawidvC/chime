@@ -77,4 +77,16 @@ implementation ControlTests : Test.Case
         
         Assert.equal(a, to:5)
     }
+    
+    method test_until_loop()
+    {
+        a = 0
+        
+        until a > 4
+        {
+            a += 1
+        }
+        
+        Assert.equal(a, to:5)
+    }
 }

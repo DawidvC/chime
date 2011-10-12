@@ -27,8 +27,45 @@ namespace chime
         return std::string("Until");
     }
     
+    // This is *nearly* identical to the while loop, with the exception of the block names and
+    // the flipped order of the blocks for the CreateCondBr call.  Definitely to be refactored.
     llvm::Value* Until::codegen(chime::code_generator& generator)
     {
+        llvm::Function*   function;
+        llvm::BasicBlock* conditionBlock;
+        llvm::BasicBlock* bodyBlock;
+        llvm::BasicBlock* endBlock;
+        llvm::Value*      conditionValue;
+        
+        function = generator.builder()->GetInsertBlock()->getParent();
+        
+        conditionBlock = llvm::BasicBlock::Create(generator.getContext(), "until.condition", function);
+        bodyBlock      = llvm::BasicBlock::Create(generator.getContext(), "until.body");
+        endBlock       = llvm::BasicBlock::Create(generator.getContext(), "until.end");
+        
+        generator.builder()->CreateBr(conditionBlock);
+        
+        generator.builder()->SetInsertPoint(conditionBlock);
+        
+        conditionValue = this->getCondition()->codegen(generator);
+        conditionValue = generator.createCondition(conditionValue);
+        
+        generator.builder()->CreateCondBr(conditionValue, endBlock, bodyBlock);
+        
+        function->getBasicBlockList().push_back(bodyBlock);
+        generator.builder()->SetInsertPoint(bodyBlock);
+        
+        this->getBody()->codegen(generator);
+        
+        // guard against duplicate terminators again here
+        if (!generator.builder()->GetInsertBlock()->getTerminator())
+        {
+            generator.builder()->CreateBr(conditionBlock); // go back to check the condition
+        }
+        
+        function->getBasicBlockList().push_back(endBlock);
+        generator.builder()->SetInsertPoint(endBlock);
+        
         return NULL;
     }
 }
