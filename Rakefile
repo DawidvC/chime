@@ -12,7 +12,7 @@ RAKE_FILES = FileList['Rakefile', 'rakelib/**/*.rake']
 
 # target tasks
 desc("Run all tests for all targets")
-task(:default => ['compiler:test', 'runtime:test', 'library:test', 'language:test'])
+task(:default => ['compiler:test', 'runtime:test', 'library:test', 'specs:run'])
 
 desc("Print the build configuration variables")
 task(:print_config) do
