@@ -22,9 +22,7 @@ namespace chime
     {
         llvm::BasicBlock* block;
         
-        // if the block has already been terminated, skip this
-        if (generator.builder()->GetInsertBlock()->getTerminator())
-            return NULL;
+        assert(!generator.builder()->GetInsertBlock()->getTerminator() && "A break statement cannot occur in a block that has already been terminated");
         
         block = generator.getCurrentScope()->getEndBlock();
         assert(block && "A break statement must be inside a loop construct");

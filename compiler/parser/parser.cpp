@@ -384,54 +384,6 @@ namespace chime
         return node;
     }
     
-    ast::node* parser::parse_control(void)
-    {
-        chime::token* t;
-        ast::node*    node;
-        
-        node = NULL;
-        
-        t = this->look_ahead();
-        if (t->equal_to("next"))
-        {
-            node = new ast::next(this);
-            
-            node = this->parse_tailing_conditional(node);
-        }
-        else if (t->equal_to("try"))
-        {
-            node = new ast::Try(*this);
-        }
-        else if (t->equal_to("throw"))
-        {
-            node = new ast::Throw(*this);
-            
-            node = this->parse_tailing_conditional(node);
-        }
-        else if (t->equal_to("if"))
-        {
-            node = new ast::IfStatement(*this, NULL);
-        }
-        else if (t->equal_to("switch"))
-        {
-            node = ast::Switch::parse(*this);
-        }
-        else if (t->equal_to("return"))
-        {
-            node = new ast::Return(*this);
-        }
-        else if (t->equal_to("while"))
-        {
-            node = While::parse(*this);
-        }
-        else
-        {
-            assert(false && "Unhandled control statement");
-        }
-        
-        return node;
-    }
-    
     ast::node* parser::parse_tailing_conditional(ast::node* body_node)
     {
         chime::token* t;

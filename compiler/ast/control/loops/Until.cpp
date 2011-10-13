@@ -59,7 +59,11 @@ namespace chime
         function->getBasicBlockList().push_back(bodyBlock);
         generator.builder()->SetInsertPoint(bodyBlock);
         
+        generator.pushScope(this);
+        
         this->getBody()->codegen(generator);
+        
+        generator.popScope();
         
         // guard against duplicate terminators again here
         if (!generator.builder()->GetInsertBlock()->getTerminator())

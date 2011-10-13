@@ -19,7 +19,7 @@ namespace ast
         // slight hack to give the current scope (an Implemenation), a chance
         // to define the variable.  We don't actually use the variable here.
         
-        assert(parser.getCurrentScope()->nodeName() == "implemenation");
+        assert(parser.getCurrentScope()->nodeName() == "implementation");
         
         v = parser.getCurrentScope()->variableForIdentifier(_identifier);
         

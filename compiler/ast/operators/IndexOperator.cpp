@@ -32,6 +32,23 @@ namespace ast
         return std::string("Index Operator");
     }
     
+    std::string IndexOperator::stringRepresentation(int depth) const
+    {
+        std::string str;
+        
+        str.append(depth*2, ' ');
+        str.append(this->nodeName());
+        str.append("\n");
+        
+        str.append(this->getArgument()->stringRepresentation(depth+1));
+        
+        str.append("\n");
+        
+        str.append(this->getOperand()->stringRepresentation(depth+1));
+        
+        return str;
+    }
+    
     ast::NodeRef IndexOperator::getOperand(void) const
     {
         return _operand;

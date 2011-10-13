@@ -4,7 +4,7 @@ namespace ast
 {
     variable_definition::variable_definition(chime::parser* parser, ast::type_reference* type)
     {
-        assert(parser->look_ahead()->is_identifier());
+        assert(parser->look_ahead()->isIdentifier());
         
         this->identifier(parser->next_token_value());
         this->variable_type(type);

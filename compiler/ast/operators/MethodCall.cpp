@@ -1,5 +1,6 @@
 #include "MethodCall.h"
 #include "compiler/ast/structural/Closure.h"
+#include "compiler/ast/operators/IndexOperator.h"
 
 namespace ast
 {
@@ -26,10 +27,6 @@ namespace ast
         {
             // ( arguments )
             MethodCall::parseArguments(parser, call);
-        }
-        else
-        {
-            assert(0 && "something funny happened while parsing a MethodCall");
         }
         
         return call;

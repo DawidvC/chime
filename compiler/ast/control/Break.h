@@ -13,7 +13,7 @@ namespace chime
         static Node* parse(parser& parser);
         
     public:
-        std::string nodeName(void) const;
+        std::string nodeName() const;
         
         llvm::Value* codegen(chime::code_generator& generator);
     };

@@ -20,7 +20,6 @@ task(:print_config) do
   puts("")
   puts("LLVM_PATH:          '#{LLVM_PATH}'")
   puts("LLVM_CONFIG:        '#{LLVM_CONFIG}'")
-  puts("LLVM_CXX_FLAGS:     '#{LLVM_CXX_FLAGS}'")
   puts("LLVM_LD_FLAGS:      '#{LLVM_LD_FLAGS}'")
   puts("LLVM_LIBRARIES:     '#{LLVM_LIBRARIES}'")
   puts("")

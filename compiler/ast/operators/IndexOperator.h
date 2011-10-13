@@ -11,7 +11,8 @@ namespace ast
         static ast::node* parse(chime::parser& parser, ast::node* operand);
         
     public:
-        virtual std::string nodeName(void) const;
+        std::string nodeName(void) const;
+        std::string stringRepresentation(int depth=0) const;
         
         ast::NodeRef getOperand(void) const;
         void         setOperand(ast::NodeRef node);

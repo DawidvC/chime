@@ -125,7 +125,7 @@
     
 #define ASSERT_THROW_STATEMENT(x) ASSERT_EQ("throw", x->node_name())
 
-#define ASSERT_NEXT(x) ASSERT_EQ("next statement", x->nodeName())
+#define ASSERT_NEXT(x) ASSERT_EQ("Next", x->nodeName())
 
 #define ASSERT_RETURN(x) ASSERT_EQ("return", x->nodeName())
 

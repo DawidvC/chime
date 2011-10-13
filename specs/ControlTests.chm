@@ -103,4 +103,20 @@ implementation ControlTests : Test.Case
         
         Assert.equal(a, to:5)
     }
+    
+    method test_next()
+    {
+        a = 0
+        b = 0
+        
+        while a < 5
+        {
+            a += 1
+            next if a < 3
+            
+            b += 1
+        }
+        
+        Assert.equal(b, to:3)
+    }
 }

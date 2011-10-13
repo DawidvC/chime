@@ -1,7 +1,7 @@
 #include "Control.h"
 #include "Break.h"
 #include "if_statement.h"
-#include "next.h"
+#include "Next.h"
 #include "return.h"
 #include "Switch.h"
 #include "exceptions/throw.h"
@@ -21,7 +21,7 @@ namespace chime
         t = parser.look_ahead();
         if (t->equal_to("next"))
         {
-            node = new ast::next(&parser);
+            node = chime::Next::parse(parser);
             
             node = parser.parse_tailing_conditional(node);
         }

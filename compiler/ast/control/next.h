@@ -1,16 +1,21 @@
-#ifndef NEXT
-#define NEXT
+// chime:: Next.h
+
+#ifndef NEXT_H
+#define NEXT_H
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
-    class next : public node
+    class Next : public Node
     {
     public:
-        next(chime::parser* parser);
+        static Node* parse(parser& parser);
         
-        virtual std::string nodeName(void) const;
+    public:
+        std::string nodeName() const;
+        
+        llvm::Value* codegen(chime::code_generator& generator);
     };
 }
-#endif
+#endif // NEXT_H

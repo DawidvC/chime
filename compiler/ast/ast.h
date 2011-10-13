@@ -4,7 +4,7 @@
 #include "primary/type_reference.h"
 #include "common/method_parameter.h"
 #include "control/if_statement.h"
-#include "control/next.h"
+#include "control/Next.h"
 #include "control/return.h"
 #include "control/Switch.h"
 #include "control/exceptions/catch.h"

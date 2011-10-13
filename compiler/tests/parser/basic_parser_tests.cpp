@@ -363,34 +363,6 @@ TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
     ASSERT_GLOBAL_VARIABLE("b", op->getRightOperand());
 }
 
-TEST_F(BasicParserTest, IndexerCall)
-{
-    ast::IndexOperator* op;
-    
-    op = (ast::IndexOperator*)parse("foo[123]")->childAtIndex(0);
-    
-    ASSERT_INDEXER(op);
-    ASSERT_LITERAL_INTEGER(123, op->getArgument().get());
-    ASSERT_GLOBAL_VARIABLE("foo", op->getOperand().get());
-}
-
-TEST_F(BasicParserTest, IndexerOnMethod)
-{
-    ast::binary_operator* op;
-    ast::IndexOperator*   indexer;
-    
-    indexer = (ast::IndexOperator*)parse("foo.bar[123]")->childAtIndex(0);
-    
-    ASSERT_INDEXER(indexer);
-    ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
-    
-    op = static_cast<ast::binary_operator*>(indexer->getOperand().get());
-    
-    ASSERT_OPERATOR(".", op);
-    ASSERT_GLOBAL_VARIABLE("foo", op->getLeftOperand());
-    ASSERT_METHOD_CALL("bar", op->getRightOperand());
-}
-
 TEST_F(BasicParserTest, MethodCallWithLabelledParams)
 {
     ast::MethodCall* call;

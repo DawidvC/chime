@@ -44,7 +44,6 @@ namespace chime
         ast::NodeRef parseExpression();
         ast::node*  parse_expression(void);
         ast::node*  parse_type(void);
-        ast::node*  parse_control(void);
         ast::node*  parse_tailing_conditional(ast::node* body_node);
         
         void        addSourceDependency(const std::string& dependency);
