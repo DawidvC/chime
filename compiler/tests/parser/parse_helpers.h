@@ -117,26 +117,16 @@
 #define ASSERT_LOOP_UNTIL(x) ASSERT_EQ("Loop Until", x->nodeName())
 #define ASSERT_LOOP_WHILE(x) ASSERT_EQ("Loop While", x->nodeName())
     
-#define ASSERT_TRY(x) do { \
-    ASSERT_EQ("try", x->node_name()); \
-    } while (0)
+#define ASSERT_TRY(x) ASSERT_EQ("try", x->node_name())
 
-#define ASSERT_CATCH(x) do { \
-    ASSERT_EQ("catch", x->node_name()); \
-    } while (0)
+#define ASSERT_CATCH(x) ASSERT_EQ("catch", x->node_name())
 
-#define ASSERT_FINALLY(x) do { \
-    ASSERT_EQ("finally", x->node_name()); \
-    } while (0)
+#define ASSERT_FINALLY(x) ASSERT_EQ("finally", x->node_name())
     
-#define ASSERT_THROW_STATEMENT(x) do { \
-    ASSERT_EQ("throw", x->node_name()); \
-    } while (0)
+#define ASSERT_THROW_STATEMENT(x) ASSERT_EQ("throw", x->node_name())
 
-#define ASSERT_NEXT(x) do { \
-    ASSERT_EQ("next statement", x->nodeName()); \
-    } while (0)
+#define ASSERT_NEXT(x) ASSERT_EQ("next statement", x->nodeName())
 
-#define ASSERT_RETURN(x) do { \
-    ASSERT_EQ("return", x->nodeName()); \
-    } while (0)
+#define ASSERT_RETURN(x) ASSERT_EQ("return", x->nodeName())
+
+#define ASSERT_BREAK(x) ASSERT_EQ("Break", x->nodeName())

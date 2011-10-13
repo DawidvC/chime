@@ -52,6 +52,7 @@ namespace ast
 
 namespace chime
 {
+    typedef ast::Node             Node;
     typedef shared_ptr<ast::node> NodeRef;
 }
 

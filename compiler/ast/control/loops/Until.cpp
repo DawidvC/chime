@@ -15,9 +15,13 @@ namespace chime
         
         parser.advanceToNextStatement();
         
+        parser.pushScope(node);
+        
         node->setBody(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
         
         parser.advanceToNextStatement();
+        
+        parser.popScope();
         
         return node;
     }

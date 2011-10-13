@@ -5,21 +5,25 @@ namespace chime
 {
     While* While::parse(chime::parser& parser)
     {
-        While* whileNode;
+        While* node;
         
         parser.nextToken("while");
         
-        whileNode = new While();
+        node = new While();
         
-        whileNode->setCondition(parser.parseExpression());
-        
-        parser.advanceToNextStatement();
-        
-        whileNode->setBody(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
+        node->setCondition(parser.parseExpression());
         
         parser.advanceToNextStatement();
         
-        return whileNode;
+        parser.pushScope(node);
+        
+        node->setBody(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
+        
+        parser.advanceToNextStatement();
+        
+        parser.popScope();
+        
+        return node;
     }
     
     std::string While::nodeName(void) const
@@ -30,39 +34,42 @@ namespace chime
     llvm::Value* While::codegen(chime::code_generator& generator)
     {
         llvm::Function*   function;
-        llvm::BasicBlock* conditionBlock;
         llvm::BasicBlock* bodyBlock;
-        llvm::BasicBlock* endBlock;
         llvm::Value*      conditionValue;
         
         function = generator.builder()->GetInsertBlock()->getParent();
         
-        conditionBlock = llvm::BasicBlock::Create(generator.getContext(), "while.condition", function);
-        bodyBlock      = llvm::BasicBlock::Create(generator.getContext(), "while.body");
-        endBlock       = llvm::BasicBlock::Create(generator.getContext(), "while.end");
+        bodyBlock = llvm::BasicBlock::Create(generator.getContext(), "while.body");
         
-        generator.builder()->CreateBr(conditionBlock);
+        this->setStartBlock(llvm::BasicBlock::Create(generator.getContext(), "while.condition", function));
+        this->setEndBlock(llvm::BasicBlock::Create(generator.getContext(), "while.end"));
         
-        generator.builder()->SetInsertPoint(conditionBlock);
+        generator.builder()->CreateBr(this->getStartBlock());
+        
+        generator.builder()->SetInsertPoint(this->getStartBlock());
         
         conditionValue = this->getCondition()->codegen(generator);
         conditionValue = generator.createCondition(conditionValue);
         
-        generator.builder()->CreateCondBr(conditionValue, bodyBlock, endBlock);
+        generator.builder()->CreateCondBr(conditionValue, bodyBlock, this->getEndBlock());
         
         function->getBasicBlockList().push_back(bodyBlock);
         generator.builder()->SetInsertPoint(bodyBlock);
         
+        //generator.pushScope(this);
+        
         this->getBody()->codegen(generator);
+        
+        //generator.popScope();
         
         // guard against duplicate terminators again here
         if (!generator.builder()->GetInsertBlock()->getTerminator())
         {
-            generator.builder()->CreateBr(conditionBlock); // go back to check the condition
+            generator.builder()->CreateBr(this->getStartBlock()); // go back to check the condition
         }
         
-        function->getBasicBlockList().push_back(endBlock);
-        generator.builder()->SetInsertPoint(endBlock);
+        function->getBasicBlockList().push_back(this->getEndBlock());
+        generator.builder()->SetInsertPoint(this->getEndBlock());
         
         return NULL;
     }

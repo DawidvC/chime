@@ -1,4 +1,5 @@
 #include "Control.h"
+#include "Break.h"
 #include "if_statement.h"
 #include "next.h"
 #include "return.h"
@@ -21,6 +22,12 @@ namespace chime
         if (t->equal_to("next"))
         {
             node = new ast::next(&parser);
+            
+            node = parser.parse_tailing_conditional(node);
+        }
+        else if (t->equal_to("break"))
+        {
+            node = chime::Break::parse(parser);
             
             node = parser.parse_tailing_conditional(node);
         }

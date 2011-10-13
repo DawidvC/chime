@@ -334,3 +334,13 @@ TEST_F(FlowControlParserTest, LoopUntilWithBraces)
     ASSERT_LITERAL_TRUE(node->getCondition().get());
     ASSERT_METHOD_CALL("foo", node->getBody()->childAtIndex(0));
 }
+
+TEST_F(FlowControlParserTest, LoopWithBreakStatement)
+{
+    chime::Loop* node;
+    
+    node = parseFirst<chime::Loop*>("loop { break }");
+    
+    ASSERT_LOOP(node);
+    ASSERT_BREAK(node->getBody()->childAtIndex(0));
+}

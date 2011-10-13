@@ -34,6 +34,9 @@ namespace ast
         
         std::string       getAnonymousFunctionName();
         
+        virtual llvm::BasicBlock* getStartBlock() const;
+        virtual llvm::BasicBlock* getEndBlock() const;
+        
     protected:
         std::vector<std::string>         _variableNames;
         std::map<std::string, Variable*> _capturedVariables;

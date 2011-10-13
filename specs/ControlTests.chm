@@ -89,4 +89,18 @@ implementation ControlTests : Test.Case
         
         Assert.equal(a, to:5)
     }
+    
+    method test_loop()
+    {
+        a = 0
+        
+        loop
+        {
+            a += 1
+            
+            break if a > 4
+        }
+        
+        Assert.equal(a, to:5)
+    }
 }

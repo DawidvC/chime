@@ -94,7 +94,14 @@ namespace ast
     
     llvm::Value* ScopedNode::getValueForIdentifier(const std::string& identifier)
     {
-        return _scopedValues[identifier];
+        llvm::Value* value;
+        
+        value = _scopedValues[identifier];
+        
+        if (value || !this->getParent())
+            return value;
+        
+        return this->getParent()->getValueForIdentifier(identifier);
     }
     
     void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value)
@@ -113,5 +120,15 @@ namespace ast
         _anonymousFunctionCount += 1;
         
         return s.str();
+    }
+    
+    llvm::BasicBlock* ScopedNode::getStartBlock() const
+    {
+        return NULL;
+    }
+    
+    llvm::BasicBlock* ScopedNode::getEndBlock() const
+    {
+        return NULL;
     }
 }
