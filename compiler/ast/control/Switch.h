@@ -14,18 +14,18 @@ namespace ast
         static ast::Node* parse(chime::parser& parser);
         
     public:
-        std::string nodeName(void) const;
+        std::string nodeName() const;
         
-        ast::NodeRef              getExpression() const;
-        void                      setExpression(ast::NodeRef expression);
-        std::vector<ast::CaseRef> getCases() const;
-        ast::NodeRef              getElse() const;
+        ast::NodeRef                getExpression() const;
+        void                        setExpression(ast::NodeRef expression);
+        std::vector<chime::CaseRef> getCases() const;
+        ast::NodeRef                getElse() const;
         
-        virtual llvm::Value*      codegen(chime::code_generator& generator);
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
     private:
-        ast::NodeRef              _expression;
-        std::vector<ast::CaseRef> _cases;
+        ast::NodeRef                _expression;
+        std::vector<chime::CaseRef> _cases;
     };
 }
 

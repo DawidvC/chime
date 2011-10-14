@@ -5,18 +5,18 @@
 
 #include "Conditional.h"
 
-namespace ast
+namespace chime
 {
     class Case : public Conditional
     {
     public:
-        static std::tr1::shared_ptr<ast::Case> parse(chime::parser& parser, Node* switchExpression);
+        static shared_ptr<Case> parse(parser& parser, Node* switchExpression);
         
     public:
         std::string nodeName(void) const;
     };
     
-    typedef std::tr1::shared_ptr<ast::Case> CaseRef;
+    typedef shared_ptr<Case> CaseRef;
 }
 
 #endif // SWITCH_H

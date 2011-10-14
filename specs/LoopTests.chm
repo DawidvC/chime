@@ -1,0 +1,56 @@
+implementation LoopTests : Test.Case
+{
+    method test_while_loop()
+    {
+        a = 0
+        
+        while a < 5
+        {
+            a += 1
+        }
+        
+        Assert.equal(a, to:5)
+    }
+    
+    method test_until_loop()
+    {
+        a = 0
+        
+        until a > 4
+        {
+            a += 1
+        }
+        
+        Assert.equal(a, to:5)
+    }
+    
+    method test_loop()
+    {
+        a = 0
+        
+        loop
+        {
+            a += 1
+            
+            break if a > 4
+        }
+        
+        Assert.equal(a, to:5)
+    }
+    
+    method test_next()
+    {
+        a = 0
+        b = 0
+        
+        while a < 5
+        {
+            a += 1
+            next if a < 3
+            
+            b += 1
+        }
+        
+        Assert.equal(b, to:3)
+    }
+}

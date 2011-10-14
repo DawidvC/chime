@@ -77,7 +77,7 @@ namespace chime
         
         return t;
     }
-    bool parser::advance_token_if_equals(const char* expected)
+    bool parser::advanceTokenIfEqual(const char* expected)
     {
         token* t;
         
@@ -90,6 +90,11 @@ namespace chime
         }
         
         return false;
+    }
+    
+    bool parser::advance_token_if_equals(const char* expected)
+    {
+        return this->advanceTokenIfEqual(expected);
     }
     std::string parser::nextTokenValue(const char* expected)
     {
@@ -286,7 +291,7 @@ namespace chime
         
         node = this->parse_expression();
         
-        node = this->parse_tailing_conditional(node);
+        node = Conditional::parseTailing(*this, node);
         
         return node;
     }
@@ -382,27 +387,6 @@ namespace chime
         }
         
         return node;
-    }
-    
-    ast::node* parser::parse_tailing_conditional(ast::node* body_node)
-    {
-        chime::token* t;
-        ast::node*    node;
-        
-        t = this->look_ahead();
-        if (!t->isConditional())
-        {
-            return body_node;
-        }
-        else if (t->equal_to("if"))
-        {
-            node = new ast::IfStatement(*this, body_node);
-            
-            this->advance_past_ending_tokens();
-            return node;
-        }
-        
-        return body_node;
     }
     
     void parser::addSourceDependency(const std::string& dependency)

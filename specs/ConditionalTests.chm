@@ -1,0 +1,48 @@
+implementation ConditionalTests : Test.Case
+{
+    method test_if_executes_only_next_statement()
+    {
+        if true
+            return
+        
+        Assert.failure()
+    }
+    
+    method test_tailing_if()
+    {
+        return if true
+        
+        Assert.failure()
+    }
+    
+    method test_if_executes_on_true_expression()
+    {
+        if (0 > 1)
+            Assert.failure()
+    }
+    
+    method test_if_executes_on_true_expression_with_local_variable()
+    {
+        a = 1
+        
+        if (a > 0)
+            return
+        
+        Assert.failure()
+    }
+    
+    method test_unless()
+    {
+        unless false
+            return
+        
+        Assert.failure()
+    }
+    
+    method test_tailing_unless()
+    {
+        return unless false
+        
+        Assert.failure()
+    }
+}

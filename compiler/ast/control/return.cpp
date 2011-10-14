@@ -4,13 +4,16 @@ namespace ast
 {
     Return::Return(chime::parser& parser)
     {
+        chime::Token* t;
+        
         parser.next_token("return");
         
-        // we need to deal with an argument to return here
-        if (!parser.look_ahead()->isStatementEnding())
-        {
-            _returnValue = ast::NodeRef(parser.parse_expression());
-        }
+        // we need to deal with an argument to return here, but there could be other things
+        t = parser.look_ahead();
+        if (t->isStatementEnding() || t->isControl())
+            return;
+        
+        _returnValue = parser.parseExpression();
     }
     
     std::string Return::nodeName(void) const

@@ -20,9 +20,9 @@ TEST_F(FlowControlParserTest, ClosureWithNext)
 
 TEST_F(FlowControlParserTest, IfWithNoElse)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = static_cast<ast::IfStatement*>(parse("if true foo()")->childAtIndex(0));
+    node = static_cast<chime::IfStatement*>(parse("if true foo()")->childAtIndex(0));
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -33,9 +33,9 @@ TEST_F(FlowControlParserTest, IfWithNoElse)
 
 TEST_F(FlowControlParserTest, IfWithElse)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if true foo() else bar()")->child_at_index(0);
+    node = (chime::IfStatement*)parse("if true foo() else bar()")->child_at_index(0);
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -45,9 +45,9 @@ TEST_F(FlowControlParserTest, IfWithElse)
 
 TEST_F(FlowControlParserTest, IfWithElseOnDifferentLines)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if true\n foo()\n else\n bar()")->child_at_index(0);
+    node = (chime::IfStatement*)parse("if true\n foo()\n else\n bar()")->child_at_index(0);
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -57,9 +57,9 @@ TEST_F(FlowControlParserTest, IfWithElseOnDifferentLines)
 
 TEST_F(FlowControlParserTest, IfWithBracesAndNoElse)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if true { foo() }")->child_at_index(0);
+    node = (chime::IfStatement*)parse("if true { foo() }")->child_at_index(0);
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -72,9 +72,9 @@ TEST_F(FlowControlParserTest, IfWithBracesAndNoElse)
 
 TEST_F(FlowControlParserTest, IfWithoutBracesAndTwoStatements)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = static_cast<ast::IfStatement*>(parse("if true\n foo()\n bar()\n")->childAtIndex(0));
+    node = static_cast<chime::IfStatement*>(parse("if true\n foo()\n bar()\n")->childAtIndex(0));
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -89,9 +89,9 @@ TEST_F(FlowControlParserTest, IfWithoutBracesAndTwoStatements)
 
 TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if true\n{\n foo()\n}\nelse\n{\nbar()\n }")->child_at_index(0);
+    node = (chime::IfStatement*)parse("if true\n{\n foo()\n}\nelse\n{\nbar()\n }")->child_at_index(0);
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -105,9 +105,9 @@ TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
 
 TEST_F(FlowControlParserTest, IfWithComplexConditionWithoutParentheses)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = static_cast<ast::IfStatement*>(parse("if true == false\n{\n foo()\n}")->childAtIndex(0));
+    node = static_cast<chime::IfStatement*>(parse("if true == false\n{\n foo()\n}")->childAtIndex(0));
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_OPERATOR("==", node->getCondition().get());
@@ -115,9 +115,9 @@ TEST_F(FlowControlParserTest, IfWithComplexConditionWithoutParentheses)
 
 TEST_F(FlowControlParserTest, IfWithNestedIf)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = (ast::IfStatement*)parse("if true if false foo()")->child_at_index(0);
+    node = (chime::IfStatement*)parse("if true if false foo()")->child_at_index(0);
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_LITERAL_TRUE(node->getCondition().get());
@@ -126,13 +126,13 @@ TEST_F(FlowControlParserTest, IfWithNestedIf)
 
 TEST_F(FlowControlParserTest, TailingIf)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = static_cast<ast::IfStatement*>(parse("a = b if c")->childAtIndex(0));
+    node = parseFirst<chime::IfStatement*>("a = b if c");
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_GLOBAL_VARIABLE("c", node->getCondition().get());
-    ASSERT_GLOBAL_ASSIGNMENT(node->getBody().get());
+    ASSERT_GLOBAL_ASSIGNMENT(node->getBody()->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, IfAfterStatement)
@@ -194,9 +194,20 @@ TEST_F(FlowControlParserTest, ThrowStatement)
 
 TEST_F(FlowControlParserTest, ReturnInIfStatement)
 {
-    ast::IfStatement* node;
+    chime::IfStatement* node;
     
-    node = static_cast<ast::IfStatement*>(parse("if false\n  return")->childAtIndex(0));
+    node = static_cast<chime::IfStatement*>(parse("if false\n  return")->childAtIndex(0));
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_RETURN(node->getBody()->childAtIndex(0));
+    ASSERT_TRUE(node->getElse() == NULL);
+}
+
+TEST_F(FlowControlParserTest, ReturnWithTailingIfStatement)
+{
+    chime::IfStatement* node;
+    
+    node = parseFirst<chime::IfStatement*>("return if true");
     
     ASSERT_IF_STATEMENT(node);
     ASSERT_RETURN(node->getBody()->childAtIndex(0));
@@ -215,8 +226,8 @@ TEST_F(FlowControlParserTest, ReturnVoidStatment)
 
 TEST_F(FlowControlParserTest, SwitchStatement)
 {
-    ast::Switch* switchNode;
-    ast::CaseRef caseNode;
+    ast::Switch*   switchNode;
+    chime::CaseRef caseNode;
     
     switchNode = static_cast<ast::Switch*>(parse("switch (a) {\n case 1\n foo()\nelse\n bar()\n}")->childAtIndex(0));
     
@@ -233,8 +244,8 @@ TEST_F(FlowControlParserTest, SwitchStatement)
 
 TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
 {
-    ast::Switch* switchNode;
-    ast::CaseRef caseNode;
+    ast::Switch*   switchNode;
+    chime::CaseRef caseNode;
     
     switchNode = static_cast<ast::Switch*>(parse("switch a\n {\n case 1\n foo()\n bar()\nelse\n bar() }")->childAtIndex(0));
     
@@ -252,8 +263,8 @@ TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
 
 TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
 {
-    ast::Switch* switchNode;
-    ast::CaseRef caseNode;
+    ast::Switch*   switchNode;
+    chime::CaseRef caseNode;
     
     switchNode = static_cast<ast::Switch*>(parse("switch (a) {\n case 1\n foo()\n}")->childAtIndex(0));
     

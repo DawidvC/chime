@@ -78,6 +78,8 @@ namespace chime
         void generateMainFunction(void);
         void fillInInternalInitFunction(void);
     };
+    
+    typedef code_generator CodeGenContext;
 }
 
 #endif // CODE_GENERATOR_H

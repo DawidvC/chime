@@ -20,6 +20,7 @@ namespace chime
         TokenRef    nextToken(const char* expected=NULL);
         token*      next_token(void);
         token*      next_token(const char* expected);
+        bool        advanceTokenIfEqual(const char* expected);
         bool        advance_token_if_equals(const char* expected);
         std::string nextTokenValue(const char* expected=NULL);
         std::string next_token_value(const char* expected=NULL);
@@ -44,7 +45,6 @@ namespace chime
         ast::NodeRef parseExpression();
         ast::node*  parse_expression(void);
         ast::node*  parse_type(void);
-        ast::node*  parse_tailing_conditional(ast::node* body_node);
         
         void        addSourceDependency(const std::string& dependency);
         void        addBinaryDependency(const std::string& dependency);

@@ -30,9 +30,9 @@ namespace ast
             
             if (t->equal_to("case"))
             {
-                CaseRef caseNode;
+                chime::CaseRef caseNode;
                 
-                caseNode = ast::Case::parse(parser, node->getExpression().get());
+                caseNode = chime::Case::parse(parser, node->getExpression().get());
                 
                 if (node->_cases.size() > 0)
                 {
@@ -73,7 +73,7 @@ namespace ast
         return node;
     }
     
-    std::string Switch::nodeName(void) const
+    std::string Switch::nodeName() const
     {
         return std::string("Switch");
     }
@@ -88,7 +88,7 @@ namespace ast
         _expression = expression;
     }
     
-    std::vector<ast::CaseRef> Switch::getCases() const
+    std::vector<chime::CaseRef> Switch::getCases() const
     {
         return _cases;
     }
@@ -100,7 +100,7 @@ namespace ast
     
     llvm::Value* Switch::codegen(chime::code_generator& generator)
     {
-        std::vector<ast::CaseRef>::iterator it;
+        std::vector<chime::CaseRef>::iterator it;
         llvm::Function*                     function;
         llvm::BasicBlock*                   endBlock;
         

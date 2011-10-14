@@ -5,11 +5,17 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class Conditional : public Node
     {
     public:
+        static Node* parse(parser& parser, Node* body=NULL);
+        static Node* parseTailing(parser& parser, Node* body);
+        
+    public:
+        virtual std::string stringRepresentation(int depth=0) const;
+        
         NodeRef getCondition() const;
         void    setCondition(NodeRef node);
         NodeRef getBody() const;
@@ -17,12 +23,12 @@ namespace ast
         NodeRef getElse() const;
         void    setElse(NodeRef node);
         
-        llvm::Value* codegenConditional(chime::code_generator& generator, llvm::BasicBlock* endBlock);
+        llvm::Value* codegenConditional(code_generator& generator, llvm::BasicBlock* endBlock, bool negate=false);
         
     private:
-        ast::NodeRef _condition;
-        ast::NodeRef _body;
-        ast::NodeRef _else;
+        NodeRef _condition;
+        NodeRef _body;
+        NodeRef _else;
     };
 }
 #endif // CONDITIONAL_H

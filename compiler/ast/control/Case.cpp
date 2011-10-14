@@ -1,31 +1,31 @@
 #include "Case.h"
 #include "compiler/ast/common/CodeBlock.h"
 
-namespace ast
+namespace chime
 {
-    ast::CaseRef Case::parse(chime::parser& parser, Node* switchExpression)
+    CaseRef Case::parse(parser& parser, Node* switchExpression)
     {
-        ast::Case*           node;
+        Case*                node;
         ast::BinaryOperator* op;
         
         parser.next_token("case");
         
-        node = new ast::Case();
+        node = new Case();
         
         op = new ast::BinaryOperator();
         op->setIdentifier("===");
         op->setLeftOperand(switchExpression);
         op->setRightOperand(parser.parse_expression());
         
-        node->setCondition(ast::NodeRef(op));
+        node->setCondition(NodeRef(op));
         
         parser.advanceToNextStatement();
         
-        node->setBody(ast::NodeRef(ast::CodeBlock::parse(parser)));
+        node->setBody(NodeRef(ast::CodeBlock::parse(parser)));
         
         parser.advanceToNextStatement();
         
-        return ast::CaseRef(node);
+        return CaseRef(node);
     }
     
     std::string Case::nodeName(void) const

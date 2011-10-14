@@ -1,13 +1,13 @@
-#include "if_statement.h"
+#include "Unless.h"
 
 namespace chime
 {
-    std::string IfStatement::nodeName() const
+    std::string Unless::nodeName() const
     {
-        return std::string("if statement");
+        return std::string("Unless");
     }
     
-    llvm::Value* IfStatement::codegen(code_generator& generator)
+    llvm::Value* Unless::codegen(code_generator& generator)
     {
         llvm::Function*   function;
         llvm::BasicBlock* endBlock;
@@ -15,9 +15,9 @@ namespace chime
         
         function = generator.builder()->GetInsertBlock()->getParent();
         
-        endBlock = llvm::BasicBlock::Create(generator.getContext(), "if.end");
+        endBlock = llvm::BasicBlock::Create(generator.getContext(), "unless.end");
         
-        value = this->codegenConditional(generator, endBlock);
+        value = this->codegenConditional(generator, endBlock, true);
         
         // guard against duplicate terminators again here
         if (!generator.builder()->GetInsertBlock()->getTerminator())

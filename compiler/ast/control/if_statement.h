@@ -5,17 +5,14 @@
 
 #include "Conditional.h"
 
-namespace ast
+namespace chime
 {
     class IfStatement : public Conditional
     {
     public:
-        IfStatement(chime::parser& parser, ast::node* body);
+        virtual std::string nodeName() const;
         
-        virtual std::string nodeName(void) const;
-        virtual std::string stringRepresentation(int depth=0) const;
-        
-        llvm::Value* codegen(chime::code_generator& generator);
+        llvm::Value* codegen(code_generator& generator);
     };
 }
 #endif // IF_STATEMENT_H

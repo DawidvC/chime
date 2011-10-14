@@ -1,6 +1,6 @@
 #include "Control.h"
 #include "Break.h"
-#include "if_statement.h"
+#include "Conditional.h"
 #include "Next.h"
 #include "return.h"
 #include "Switch.h"
@@ -23,13 +23,13 @@ namespace chime
         {
             node = chime::Next::parse(parser);
             
-            node = parser.parse_tailing_conditional(node);
+            node = Conditional::parseTailing(parser, node);
         }
         else if (t->equal_to("break"))
         {
             node = chime::Break::parse(parser);
             
-            node = parser.parse_tailing_conditional(node);
+            node = Conditional::parseTailing(parser, node);
         }
         else if (t->equal_to("try"))
         {
@@ -39,11 +39,11 @@ namespace chime
         {
             node = new ast::Throw(parser);
             
-            node = parser.parse_tailing_conditional(node);
+            node = Conditional::parseTailing(parser, node);
         }
-        else if (t->equal_to("if"))
+        else if (t->equal_to("if") || t->equal_to("unless"))
         {
-            node = new ast::IfStatement(parser, NULL);
+            node = chime::Conditional::parse(parser);
         }
         else if (t->equal_to("switch"))
         {
@@ -52,6 +52,8 @@ namespace chime
         else if (t->equal_to("return"))
         {
             node = new ast::Return(parser);
+            
+            node = Conditional::parseTailing(parser, node);
         }
         else if (t->equal_to("while"))
         {

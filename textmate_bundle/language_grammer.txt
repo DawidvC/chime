@@ -1,6 +1,6 @@
 {	scopeName = 'source.chime';
 	comment = 'This is textmate syntax grammer for chime';
-	fileTypes = ( 'chi', 'chm', 'chime' );
+	fileTypes = ( 'ci', 'chm', 'chime' );
 	foldingStartMarker = '\b(namespace|interface|implementation|method|property)\b';
 	foldingStopMarker = '(})';
 	patterns = (
@@ -9,7 +9,7 @@
 			captures = { 1 = { name = 'punctuation.definition.comment.chime'; }; };
 		},
 		{	name = 'keyword.control.chime';
-			match = '\b(if|while|until|loop|break|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
+			match = '\b(if|unless|while|until|loop|break|return|switch|case|default|else|next|do|try|catch|finally|throw)\b';
 		},
 		{	match = '(namespace|import)\s+([\w\.]+)';
 			captures = {
