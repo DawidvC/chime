@@ -1,7 +1,9 @@
 #include "binary_operator.h"
-#include "MethodCall.h"
-#include "compiler/ast/literals/literal.h"
+#include "AndOperator.h"
 #include "IndexOperator.h"
+#include "MethodCall.h"
+#include "OrOperator.h"
+#include "compiler/ast/literals/literal.h"
 
 namespace ast
 {
@@ -36,8 +38,19 @@ namespace ast
             if (currentPrecedence < precedence)
                 return leftOperand;
             
-            node = new ast::binary_operator();
-            node->identifier(parser.next_token_value());
+            if (parser.advanceTokenIfEqual("and"))
+            {
+                node = new chime::AndOperator();
+            }
+            else if (parser.advanceTokenIfEqual("or"))
+            {
+                node = new chime::OrOperator();
+            }
+            else
+            {
+                node = new ast::BinaryOperator();
+                node->identifier(parser.nextTokenValue());
+            }
             
             if (node->identifier().compare(".") == 0)
                 rightOperand = ast::MethodCall::parse(parser);
@@ -204,7 +217,7 @@ namespace ast
         
         arguments.push_back(object_load);
         
-        methodNamePtr = generator.make_constant_string(this->identifier());
+        methodNamePtr = generator.getConstantString(this->identifier());
         
         return generator.getRuntime()->callChimeObjectInvoke(l_value, methodNamePtr, arguments);
     }    

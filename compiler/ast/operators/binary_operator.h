@@ -24,10 +24,7 @@ namespace ast
         ast::node* left_operand(void) const;
         void       left_operand(ast::node* op);
         
-        llvm::Value* codegen(chime::code_generator& generator);
-    
-    protected:
-        llvm::Value* codegen_assignment(chime::code_generator& generator);
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
     private:
         int _precendence;

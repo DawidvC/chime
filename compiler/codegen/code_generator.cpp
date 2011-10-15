@@ -171,24 +171,22 @@ namespace chime
         llvm::Value*    condCompareToNull;
         llvm::Value*    condCompareToFalse;
         llvm::Constant* falseConstant;
-        llvm::Constant* zeroConstant;
+        llvm::Constant* nullConstant;
         llvm::Value*    condition;
-        llvm::Constant* zeroValue;
         llvm::Constant* falseValue;
         llvm::Value*    loadedObjectPtr;
         
         loadedObjectPtr = this->builder()->CreateLoad(cond, "value being compared");
         
-        zeroValue  = llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 0));
-        falseValue = llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 10));
+        falseValue = this->getRuntime()->getChimeLiteralFalse();
         
-        zeroConstant  = llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, zeroValue, this->getRuntime()->getChimeObjectPtrType());
+        nullConstant  = this->getRuntime()->getChimeLiteralNull();
         falseConstant = llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, falseValue, this->getRuntime()->getChimeObjectPtrType());
         
         // compare the value to to the false literal
         // compare the value to to the null literal
         condCompareToFalse = this->builder()->CreateICmpEQ(loadedObjectPtr, falseConstant);
-        condCompareToNull  = this->builder()->CreateICmpEQ(loadedObjectPtr, zeroConstant);
+        condCompareToNull  = this->builder()->CreateICmpEQ(loadedObjectPtr, nullConstant);
         
         // or those two comparisons together
         condition = this->builder()->CreateOr(condCompareToFalse, condCompareToNull);

@@ -50,8 +50,6 @@ TEST_F(OperatorParseTests, IndexerOnMethod)
     
     indexer = parseFirst<ast::IndexOperator*>("foo.bar[123]");
     
-    indexer->print();
-    
     ASSERT_INDEXER(indexer);
     ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
     
@@ -60,4 +58,26 @@ TEST_F(OperatorParseTests, IndexerOnMethod)
     ASSERT_OPERATOR(".", op);
     ASSERT_GLOBAL_VARIABLE("foo", op->getLeftOperand());
     ASSERT_METHOD_CALL("bar", op->getRightOperand());
+}
+
+TEST_F(OperatorParseTests, AndOperator)
+{
+    chime::AndOperator* op;
+    
+    op = parseFirst<chime::AndOperator*>("1 and 2");
+    
+    ASSERT_AND_OPERATOR(op);
+    ASSERT_LITERAL_INTEGER(1, op->getLeftOperand());
+    ASSERT_LITERAL_INTEGER(2, op->getRightOperand());
+}
+
+TEST_F(OperatorParseTests, OrOperator)
+{
+    chime::OrOperator* op;
+    
+    op = parseFirst<chime::OrOperator*>("1 or 2");
+    
+    ASSERT_OR_OPERATOR(op);
+    ASSERT_LITERAL_INTEGER(1, op->getLeftOperand());
+    ASSERT_LITERAL_INTEGER(2, op->getRightOperand());
 }

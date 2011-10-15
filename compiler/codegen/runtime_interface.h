@@ -59,7 +59,9 @@ namespace chime
         
         llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr, llvm::Value* length);
         
-        llvm::Value* getChimeLiteralNull();
+        llvm::Constant* getChimeLiteralNull();
+        llvm::Constant* getChimeLiteralTrue();
+        llvm::Constant* getChimeLiteralFalse();
         
         // closure functions
         llvm::Value* callChimeClosureCreate(llvm::Function* function);
@@ -101,7 +103,7 @@ namespace chime
         llvm::Function*     _functionChimeReferenceGet;
         llvm::Function*     _functionChimeReferenceSet;
         
-        llvm::Value*        _literalNull;
+        llvm::Constant*     _literalNull;
     };
 }
 

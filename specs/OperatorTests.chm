@@ -1,0 +1,18 @@
+implementation OperatorTests : Test.Case
+{
+    method test_and_operator()
+    {
+        Assert.is_true(true and true)
+        Assert.is_false(false and true)
+        Assert.is_false(true and false)
+        Assert.is_false(false and false)
+    }
+    
+    method test_or_operator()
+    {
+        Assert.is_true(true or true)
+        Assert.is_true(false or true)
+        Assert.is_true(true or false)
+        Assert.is_false(false or false)
+    }
+}

@@ -8,6 +8,7 @@ import "HashTests"
 import "ClosureTests"
 import "ArrayTests"
 import "StringTests"
+import "OperatorTests"
 
 runner = TestRunner.new()
 
@@ -20,6 +21,7 @@ runner.execute_tests_for_class(HashTests)
 runner.execute_tests_for_class(ClosureTests)
 runner.execute_tests_for_class(ArrayTests)
 runner.execute_tests_for_class(StringTests)
+runner.execute_tests_for_class(OperatorTests)
 
 if (Assert.failure_count() > 0)
 {

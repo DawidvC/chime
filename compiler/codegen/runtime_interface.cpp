@@ -601,7 +601,7 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* RuntimeInterface::getChimeLiteralNull(void)
+    llvm::Constant* RuntimeInterface::getChimeLiteralNull(void)
     {
         if (_literalNull == NULL)
         {
@@ -610,7 +610,17 @@ namespace chime
         
         return _literalNull;
     }
-
+    
+    llvm::Constant* RuntimeInterface::getChimeLiteralTrue()
+    {
+        return llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 6));
+    }
+    
+    llvm::Constant* RuntimeInterface::getChimeLiteralFalse()
+    {
+        return llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 10));
+    }
+    
 #pragma mark -
 #pragma mark Closure Functions
     llvm::Value* RuntimeInterface::callChimeClosureCreate(llvm::Function* function)

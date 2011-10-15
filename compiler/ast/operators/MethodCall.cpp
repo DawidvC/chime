@@ -84,11 +84,19 @@ namespace ast
     
     std::string MethodCall::stringRepresentation(int depth) const
     {
-        std::string str;
+        std::string                       str;
+        std::vector<ast::node*>::iterator it;
         
         str.append(depth*2, ' ');
         str.append("Method Call: ");
         str.append(this->identifier());
+        
+        str.append("\n");
+        
+        for (it = this->children()->begin(); it != this->children()->end(); ++it)
+        {
+            str.append((*it)->stringRepresentation(depth+1));
+        }
         
         return str;
     }

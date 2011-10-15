@@ -15,6 +15,7 @@ namespace chime
     class parser;
     
     class code_generator;
+    typedef code_generator CodeGenContext;;
 }
 
 namespace ast
