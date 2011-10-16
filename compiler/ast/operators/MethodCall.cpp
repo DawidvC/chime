@@ -115,7 +115,7 @@ namespace ast
             llvm::Value*    argumentValue;
             
             argumentValue = (*it)->codegen(generator);
-            assert(argumentValue);
+            assert(argumentValue && "Value of method argument must not be null");
             
             objectLoad = generator.builder()->CreateLoad(argumentValue, "loaded argument");
             

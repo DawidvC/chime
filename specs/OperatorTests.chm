@@ -1,6 +1,6 @@
 implementation OperatorTests : Test.Case
 {
-    method test_and_operator()
+    method test_and_operator_with_booleans()
     {
         Assert.is_true(true and true)
         Assert.is_false(false and true)
@@ -8,11 +8,18 @@ implementation OperatorTests : Test.Case
         Assert.is_false(false and false)
     }
     
-    method test_or_operator()
+    method test_and_operator_with_objects()
     {
-        Assert.is_true(true or true)
-        Assert.is_true(false or true)
-        Assert.is_true(true or false)
-        Assert.is_false(false or false)
+        Assert.equal(1 and 2, to:2)
+        Assert.equal(1 and false, to:false)
+        Assert.equal(false and 2, to:false)
     }
+    
+    // method test_or_operator()
+    // {
+    //     Assert.is_true(true or true)
+    //     Assert.is_true(false or true)
+    //     Assert.is_true(true or false)
+    //     Assert.is_false(false or false)
+    // }
 }

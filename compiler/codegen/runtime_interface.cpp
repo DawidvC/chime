@@ -613,12 +613,20 @@ namespace chime
     
     llvm::Constant* RuntimeInterface::getChimeLiteralTrue()
     {
-        return llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 6));
+        llvm::Constant* numericValue;
+        
+        numericValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 6));
+        
+        return llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, numericValue, this->getChimeObjectPtrType());
     }
     
     llvm::Constant* RuntimeInterface::getChimeLiteralFalse()
     {
-        return llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 10));
+        llvm::Constant* numericValue;
+        
+        numericValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 10));
+        
+        return llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, numericValue, this->getChimeObjectPtrType());
     }
     
 #pragma mark -

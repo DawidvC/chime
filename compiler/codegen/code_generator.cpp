@@ -173,15 +173,12 @@ namespace chime
         llvm::Constant* falseConstant;
         llvm::Constant* nullConstant;
         llvm::Value*    condition;
-        llvm::Constant* falseValue;
         llvm::Value*    loadedObjectPtr;
         
         loadedObjectPtr = this->builder()->CreateLoad(cond, "value being compared");
         
-        falseValue = this->getRuntime()->getChimeLiteralFalse();
-        
         nullConstant  = this->getRuntime()->getChimeLiteralNull();
-        falseConstant = llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, falseValue, this->getRuntime()->getChimeObjectPtrType());
+        falseConstant = this->getRuntime()->getChimeLiteralFalse();
         
         // compare the value to to the false literal
         // compare the value to to the null literal
