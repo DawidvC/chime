@@ -15,11 +15,18 @@ implementation OperatorTests : Test.Case
         Assert.equal(false and 2, to:false)
     }
     
-    // method test_or_operator()
-    // {
-    //     Assert.is_true(true or true)
-    //     Assert.is_true(false or true)
-    //     Assert.is_true(true or false)
-    //     Assert.is_false(false or false)
-    // }
+    method test_or_operator()
+    {
+        Assert.is_true(true or true)
+        Assert.is_true(false or true)
+        Assert.is_true(true or false)
+        Assert.is_false(false or false)
+    }
+    
+    method test_or_operator_with_objects()
+    {
+        Assert.equal(1 or 2, to:1)
+        Assert.equal(1 or false, to:1)
+        Assert.equal(false or 2, to:2)
+    }
 }
