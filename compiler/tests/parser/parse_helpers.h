@@ -109,7 +109,12 @@
     
 #define ASSERT_LITERAL_INTEGER(x, y) do { \
     ASSERT_EQ("Integer Literal", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::integer_literal*)y)->value()); \
+    ASSERT_EQ(x, ((chime::IntegerLiteral*)y)->getValue()); \
+    } while (0)
+
+#define ASSERT_LITERAL_IMAGINARY_INTEGER(x, y) do { \
+    ASSERT_EQ("Imaginary Integer Literal", y->nodeName()); \
+    ASSERT_EQ(x, ((chime::ImaginaryIntegerLiteral*)y)->getValue()); \
     } while (0)
 
 #define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName())

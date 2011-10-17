@@ -346,6 +346,14 @@ TEST_F(LexerTest, NegativeInteger)
     ExpectTokens(tokens);
 }
 
+TEST_F(LexerTest, HexadecimalInteger)
+{
+    lex("0x007");
+    
+    const char *tokens[] = {"0x007", NULL};
+    ASSERT_TOKENS(tokens);
+}
+
 TEST_F(LexerTest, FloatMethodCall)
 {
 	lex("5.6.floor");

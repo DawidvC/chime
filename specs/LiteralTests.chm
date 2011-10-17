@@ -19,4 +19,20 @@ implementation LiteralTests : Test.Case
         
         Assert.is_false(0 > 1)
     }
+    
+    method test_hexadecimal_integers()
+    {
+        Assert.equal(10, to:0x0A)
+        Assert.equal(0x0A, to:0x0A)
+        Assert.equal(0x0A, to:10)
+    }
+    
+    method test_integer_via_addition()
+    {
+        a = 0
+        
+        a += 1
+        
+        Assert.equal(1, to:a)
+    }
 }

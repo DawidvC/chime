@@ -34,6 +34,7 @@ namespace chime
         virtual bool isInterpolatedStringEnd() const;
         bool         isNumber(bool allowFloat=true) const;
         virtual bool isInteger(void) const;
+        bool         isImaginary() const;
         virtual bool isFloatingPoint(void) const;
         virtual bool isBoolean(void) const;
         virtual bool isInheritanceRelated(void) const;

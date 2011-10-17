@@ -1,5 +1,6 @@
 #include "Literal.h"
 #include "boolean_literal.h"
+#include "ImaginaryIntegerLiteral.h"
 #include "integer_literal.h"
 #include "string_literal.h"
 #include "SelfLiteral.h"
@@ -22,7 +23,12 @@ namespace ast
         }
         else if (t->isInteger())
         {
-            node = new ast::integer_literal(&parser);
+            if (t->isImaginary())
+                node = new chime::ImaginaryIntegerLiteral();
+            else
+                node = new chime::IntegerLiteral();
+            
+            static_cast<chime::IntegerLiteral*>(node)->setValue(parser.nextToken()->integerValue());
         }
         else if (t->isPlainString())
         {

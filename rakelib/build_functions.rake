@@ -118,7 +118,6 @@ def define_dependencies_for_source(source_file, options={})
   file(dependency_cache_file => options[:pch]) if options[:pch]
   file(dependency_cache_file => cached_dependencies)
   file(dependency_cache_file) do
-    log("Headers", source_file)
     string = `#{compiler_for(full_path)} -MM #{full_path}`.chomp()
     
     cached_dependencies = string.split(" \\\n  ")

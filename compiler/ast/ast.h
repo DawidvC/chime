@@ -17,6 +17,7 @@
 #include "control/loops/LoopUntil.h"
 #include "control/loops/LoopWhile.h"
 #include "literals/integer_literal.h"
+#include "literals/ImaginaryIntegerLiteral.h"
 #include "literals/InterpolatedString.h"
 #include "literals/string_literal.h"
 #include "literals/boolean_literal.h"

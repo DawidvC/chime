@@ -1,23 +1,22 @@
-// integer_literal.h
+// chime: integer_literal.h
 
 #ifndef INTEGER_LITERAL_H
 #define INTEGER_LITERAL_H
 
 #include "Literal.h"
 
-namespace ast
+namespace chime
 {
-    class integer_literal : public Literal
+    class IntegerLiteral : public ast::Literal
     {
     public:
-        integer_literal();
-        integer_literal(chime::parser* parser);
+        IntegerLiteral();
         
         virtual std::string nodeName(void) const;
-        virtual std::string to_string(void) const;
+        virtual std::string stringRepresentation(int depth=0) const;
         
-        long value(void) const;
-        void value(long v);
+        long getValue() const;
+        void setValue(long v);
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
         

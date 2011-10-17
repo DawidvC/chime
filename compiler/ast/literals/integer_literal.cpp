@@ -2,53 +2,43 @@
 
 #include <sstream>
 
-namespace ast
+namespace chime
 {
-    integer_literal::integer_literal()
+    IntegerLiteral::IntegerLiteral()
     {
-        this->value(0);
+        _value = 0;
     }
     
-    integer_literal::integer_literal(chime::parser* parser)
+    std::string IntegerLiteral::nodeName(void) const
     {
-        chime::token* t;
-        
-        assert(parser->look_ahead()->isInteger());
-        
-        t = parser->next_token();
-        this->value(t->integerValue());
-        
-        delete t;
+        return "Integer Literal";
     }
-    
-    std::string integer_literal::nodeName(void) const
-    {
-        return std::string("Integer Literal");
-    }
-    std::string integer_literal::to_string(void) const
+    std::string IntegerLiteral::stringRepresentation(int depth) const
     {
         std::stringstream s;
         
-        s << "literal: ";
-        s << this->value();
+        s << std::string("").append(depth*2, ' ');
+        s << this->nodeName();
+        s << ": ";
+        s << this->getValue();
         
         return s.str();
     }
     
-    long integer_literal::value(void) const
+    long IntegerLiteral::getValue() const
     {
         return _value;
     }
-    void integer_literal::value(long v)
+    void IntegerLiteral::setValue(long v)
     {
         _value = v;
     }
     
-    llvm::Value* integer_literal::codegen(chime::code_generator& generator)
+    llvm::Value* IntegerLiteral::codegen(chime::code_generator& generator)
     {
         llvm::Value* integerValue;
         
-        integerValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(64, this->value(), 10));
+        integerValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(64, this->getValue(), 10));
         
         return generator.getRuntime()->callChimeLiteralEncodeInteger(integerValue);
     }

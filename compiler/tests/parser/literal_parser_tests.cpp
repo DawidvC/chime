@@ -31,6 +31,26 @@ TEST_F(LiteralParserTest, NegativeInteger)
     ASSERT_LITERAL_INTEGER(-128, node->childAtIndex(0));
 }
 
+TEST_F(LiteralParserTest, HexadecimalInteger)
+{
+    ast::Node* node;
+    
+    node = parse("0x0000000A");
+    
+    ASSERT_LITERAL_INTEGER(10, node->childAtIndex(0));
+}
+
+TEST_F(LiteralParserTest, ImaginaryInteger)
+{
+    ast::Node* node;
+    
+    node = parse("7j");
+    
+    node->print();
+    
+    ASSERT_LITERAL_IMAGINARY_INTEGER(7, node->childAtIndex(0));
+}
+
 TEST_F(LiteralParserTest, True)
 {
     ast::node* node;

@@ -107,7 +107,7 @@ namespace chime
         
         ++it;
         
-        for (; it != _value.end(); ++it)
+        for (; it < _value.end()-1; ++it)
         {
             if ((*it) == '.' && !allowFloat)
                 return false;
@@ -118,12 +118,79 @@ namespace chime
                 return false;
         }
         
-        return true;
+        it = _value.end() - 1;
+        if ((*it) >= '0' && (*it) <= '9')
+            return true;
+        
+        if ((*it) == 'i' || (*it) == 'j')
+            return true;
+        
+        return false;
     }
     
     bool token::isInteger() const
     {
-        return this->isNumber(false);
+        std::string::const_iterator it;
+        
+        it = _value.begin();
+        
+        if (((*it) == '0') && (*(it+1) == 'x'))
+        {
+            it += 2;
+            
+            for (; it < _value.end()-1; ++it)
+            {
+                if ((*it) >= '0' || (*it) <= '9')
+                    continue;
+                
+                if ((*it) >= 'A' || (*it) <= 'F')
+                    continue;
+                
+                if ((*it) >= 'a' || (*it) <= 'f')
+                    continue;
+                
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // check for a possible leading '-'
+        if ((*it) == '-')
+        {
+            if (_value.length() == 1)
+                return false;
+            else
+                ++it; // advance past the '-'
+        }
+        
+        for (; it < _value.end()-1; ++it)
+        {
+            if ((*it) < '0' || (*it) > '9')
+                return false;
+        }
+        
+        it = _value.end() - 1;
+        if ((*it) >= '0' && (*it) <= '9')
+            return true;
+        
+        // if the last character is an i or j, and the length is greater than 1
+        if (((*it) == 'i' || (*it) == 'j') && (_value.length() > 1))
+            return true;
+        
+        return false;
+    }
+    
+    bool token::isImaginary() const
+    {
+        char c;
+        
+        if (!this->isNumber())
+            return false;
+        
+        c = *(_value.end() - 1);
+        
+        return c == 'j' || c == 'i';
     }
     
     bool token::isFloatingPoint(void) const
@@ -221,7 +288,7 @@ namespace chime
     
     bool token::isLiteral(void) const
     {
-        return this->isString() || this->isNumber() || this->isBoolean() || this->isInheritanceRelated();
+        return this->isString() || this->isInteger() || this->isNumber() || this->isBoolean() || this->isInheritanceRelated();
     }
     
     bool token::isIdentifier(void) const
@@ -328,6 +395,9 @@ namespace chime
     
     long token::integerValue(void)
     {
+        if ((*(_value.begin()) == '0') && (*(_value.begin()+1) == 'x'))
+            return strtol(_value.c_str(), NULL, 16);
+        
         return strtol(_value.c_str(), NULL, 10);
     }
     std::string token::stringValue(void)

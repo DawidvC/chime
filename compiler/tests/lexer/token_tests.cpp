@@ -71,11 +71,38 @@ TEST_F(TokenTest, IsInteger)
     token->set_value("-1");
     ASSERT_TRUE(token->isInteger());
     
+    token->setValue("0x01");
+    ASSERT_TRUE(token->isInteger());
+    
+    token->setValue("1i");
+    ASSERT_TRUE(token->isInteger());
+    
+    token->setValue("1j");
+    ASSERT_TRUE(token->isInteger());
+    
     token->set_value("-");
     ASSERT_FALSE(token->isInteger());
     
     token->set_value("Abc");
     ASSERT_FALSE(token->isInteger());
+    
+    token->setValue("1j1");
+    ASSERT_FALSE(token->isInteger());
+    
+    token->setValue("i");
+    ASSERT_FALSE(token->isInteger());
+    
+    token->setValue("j");
+    ASSERT_FALSE(token->isInteger());
+}
+
+TEST_F(TokenTest, IntegerValue)
+{
+    token->setValue("1");
+    ASSERT_EQ(1, token->integerValue());
+    
+    token->setValue("0x01");
+    ASSERT_EQ(1, token->integerValue());
 }
 
 TEST_F(TokenTest, IsFloatingPoint)
