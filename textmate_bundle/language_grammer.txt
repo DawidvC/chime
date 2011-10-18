@@ -35,7 +35,7 @@
 			match = '\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b';
 		},
 		{	name = 'constant.chime';
-			match = '\b(true|false)\b';
+			match = '\b(true|false|nil)\b';
 		},
 		{	match = '((class\s*)?method|property|indexer|operator)\s+(\w+)';
 			captures = {

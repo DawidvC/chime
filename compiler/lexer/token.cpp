@@ -286,8 +286,10 @@ namespace chime
         return false;
     }
     
-    bool token::isLiteral(void) const
+    bool token::isLiteral() const
     {
+        if (_value == "nil") return true;
+        
         return this->isString() || this->isInteger() || this->isNumber() || this->isBoolean() || this->isInheritanceRelated();
     }
     

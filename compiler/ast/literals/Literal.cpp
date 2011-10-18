@@ -3,6 +3,7 @@
 #include "ImaginaryIntegerLiteral.h"
 #include "integer_literal.h"
 #include "InterpolatedString.h"
+#include "NilLiteral.h"
 #include "RangeLiteral.h"
 #include "string_literal.h"
 #include "SelfLiteral.h"
@@ -69,6 +70,12 @@ namespace ast
             {
                 assert(0 && "super not parsed yet");
             }
+        }
+        else if (t->equal_to("nil"))
+        {
+            parser.nextTokenValue("nil");
+            
+            node = new chime::NilLiteral();
         }
         else
         {

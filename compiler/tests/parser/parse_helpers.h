@@ -123,6 +123,7 @@
     ASSERT_EQ(y, static_cast<chime::RangeLiteral*>(z)->getEndValue()); \
     } while (0)
 
+#define ASSERT_LITERAL_NIL(x) ASSERT_EQ("Nil Literal", x->nodeName())
 
 #define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName())
 

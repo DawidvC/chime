@@ -51,10 +51,18 @@ namespace ast
     
     llvm::Value* boolean_literal::codegen(chime::code_generator& generator)
     {
-        llvm::Value* booleanValue;
+        llvm::AllocaInst* alloca;
+        llvm::Value*      booleanValue;
         
-        booleanValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(8, this->value(), 10));
+        alloca = generator.insertChimeObjectAlloca();
         
-        return generator.getRuntime()->callChimeLiteralEncodeBoolean(booleanValue);
+        if (this->value())
+            booleanValue = generator.getRuntime()->getChimeLiteralTrue();
+        else
+            booleanValue = generator.getRuntime()->getChimeLiteralFalse();
+        
+        generator.builder()->CreateStore(booleanValue, alloca, false);
+        
+        return alloca;
     }
 }

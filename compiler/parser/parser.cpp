@@ -384,6 +384,8 @@ namespace chime
         if (t->precedence() > 0)
         {
             node = ast::binary_operator::parse(*this, 0, node);
+            
+            node = Conditional::parseTailing(*this, node);
         }
         
         return node;

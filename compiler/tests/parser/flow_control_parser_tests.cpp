@@ -214,6 +214,17 @@ TEST_F(FlowControlParserTest, ReturnWithTailingIfStatement)
     ASSERT_TRUE(node->getElse() == NULL);
 }
 
+TEST_F(FlowControlParserTest, MethodCallWithTailingIfStatement)
+{
+    chime::IfStatement* node;
+    
+    node = parseFirst<chime::IfStatement*>("Foo.bar() if true");
+    
+    ASSERT_IF_STATEMENT(node);
+    ASSERT_OPERATOR(".", node->getBody()->childAtIndex(0));
+    ASSERT_TRUE(node->getElse() == NULL);
+}
+
 TEST_F(FlowControlParserTest, ReturnVoidStatment)
 {
     ast::method_definition* method;

@@ -641,19 +641,25 @@ namespace chime
     
     llvm::Constant* RuntimeInterface::getChimeLiteralNull(void)
     {
-        if (_literalNull == NULL)
-        {
-            _literalNull = llvm::ConstantPointerNull::get(static_cast<llvm::PointerType*>(this->getChimeObjectPtrType()));
-        }
+        // if (_literalNull == NULL)
+        // {
+        //     _literalNull = llvm::ConstantPointerNull::get(static_cast<llvm::PointerType*>(this->getChimeObjectPtrType()));
+        // }
+        // 
+        // return _literalNull;
         
-        return _literalNull;
+        llvm::Constant* nilValue;
+        
+        nilValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, 0));
+        
+        return llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, nilValue, this->getChimeObjectPtrType());
     }
     
     llvm::Constant* RuntimeInterface::getChimeLiteralTrue()
     {
         llvm::Constant* numericValue;
         
-        numericValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 6));
+        numericValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, 6));
         
         return llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, numericValue, this->getChimeObjectPtrType());
     }
@@ -662,7 +668,7 @@ namespace chime
     {
         llvm::Constant* numericValue;
         
-        numericValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 10));
+        numericValue = llvm::ConstantInt::get(this->getContext(), llvm::APInt(64, 10));
         
         return llvm::ConstantExpr::getCast(llvm::Instruction::IntToPtr, numericValue, this->getChimeObjectPtrType());
     }

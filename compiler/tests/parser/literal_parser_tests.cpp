@@ -159,3 +159,12 @@ TEST_F(LiteralParserTest, RangeLiteral)
     
     ASSERT_LITERAL_RANGE(5, 6, range);
 }
+
+TEST_F(LiteralParserTest, NilLiteral)
+{
+    chime::NilLiteral* nil;
+    
+    nil = parseFirst<chime::NilLiteral*>("nil");
+    
+    ASSERT_LITERAL_NIL(nil);
+}

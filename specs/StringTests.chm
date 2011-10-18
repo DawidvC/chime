@@ -7,11 +7,13 @@ implementation StringTests : Test.Case
         r.end   = 2
         
         Assert.equal("Abc", "AbcDef"[r])
+        Assert.equal("Abc", "AbcDef"[0:2])
         
         r.start = 3
         r.end   = -1
         
         Assert.equal("Def", "AbcDef"[r])
+        Assert.equal("Def", "AbcDef"[3:-1])
     }
     
     method test_string_length()

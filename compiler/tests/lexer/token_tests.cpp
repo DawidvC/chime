@@ -295,6 +295,9 @@ TEST_F(TokenTest, IsLiteral)
     
     token->set_value("false");
     ASSERT_TRUE(token->isLiteral());
+    
+    token->set_value("nil");
+    ASSERT_TRUE(token->isLiteral());
 }
 
 TEST_F(TokenTest, IsExceptionRelated)

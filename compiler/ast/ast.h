@@ -20,6 +20,7 @@
 #include "literals/integer_literal.h"
 #include "literals/ImaginaryIntegerLiteral.h"
 #include "literals/InterpolatedString.h"
+#include "literals/NilLiteral.h"
 #include "literals/RangeLiteral.h"
 #include "literals/string_literal.h"
 #include "operators/AndOperator.h"

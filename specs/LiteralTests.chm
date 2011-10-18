@@ -43,4 +43,11 @@ implementation LiteralTests : Test.Case
         Assert.equal(1, to:a.start)
         Assert.equal(4, to:a.end)
     }
+    
+    method test_nil()
+    {
+        x = nil
+        
+        Assert.is_false(x)
+    }
 }
