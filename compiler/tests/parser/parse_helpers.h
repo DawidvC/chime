@@ -109,13 +109,20 @@
     
 #define ASSERT_LITERAL_INTEGER(x, y) do { \
     ASSERT_EQ("Integer Literal", y->nodeName()); \
-    ASSERT_EQ(x, ((chime::IntegerLiteral*)y)->getValue()); \
+    ASSERT_EQ(x, static_cast<chime::IntegerLiteral*>(y)->getValue()); \
     } while (0)
 
 #define ASSERT_LITERAL_IMAGINARY_INTEGER(x, y) do { \
     ASSERT_EQ("Imaginary Integer Literal", y->nodeName()); \
-    ASSERT_EQ(x, ((chime::ImaginaryIntegerLiteral*)y)->getValue()); \
+    ASSERT_EQ(x, static_cast<chime::ImaginaryIntegerLiteral*>(y)->getValue()); \
     } while (0)
+
+#define ASSERT_LITERAL_RANGE(x, y, z) do { \
+    ASSERT_EQ("Range Literal", z->nodeName()); \
+    ASSERT_EQ(x, static_cast<chime::RangeLiteral*>(z)->getStartValue()); \
+    ASSERT_EQ(y, static_cast<chime::RangeLiteral*>(z)->getEndValue()); \
+    } while (0)
+
 
 #define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName())
 

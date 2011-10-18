@@ -11,6 +11,8 @@ extern "C" {
 
 void chime_range_initialize(void);
 
+chime_object_t* chime_range_create(chime_object_t* start, chime_object_t* end);
+
 #ifdef __cplusplus
 }
 #endif

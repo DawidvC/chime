@@ -59,6 +59,8 @@ namespace chime
         
         llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr, llvm::Value* length);
         
+        llvm::Value* callChimeRangeCreate(llvm::Value* startValue, llvm::Value* endValue);
+        
         llvm::Constant* getChimeLiteralNull();
         llvm::Constant* getChimeLiteralTrue();
         llvm::Constant* getChimeLiteralFalse();
@@ -98,6 +100,7 @@ namespace chime
         llvm::Function*     _functionChimeLiteralEncodeInteger;
         llvm::Function*     _functionChimeLiteralEncodeBoolean;
         llvm::Function*     _functionChimeStringCreateWithCString;
+        llvm::Function*     _functionChimeRangeCreate;
         llvm::Function*     _functionChimeClosureCreate;
         llvm::Function*     _functionChimeReferenceCreate;
         llvm::Function*     _functionChimeReferenceGet;

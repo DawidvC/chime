@@ -463,3 +463,11 @@ TEST_F(LexerTest, IndexerMethodCall)
     const char *tokens[] = {"foo", "[", "123", "]", NULL};
     ASSERT_TOKENS(tokens);
 }
+
+TEST_F(LexerTest, RangeLiteral)
+{
+    lex("1:23");
+    
+    const char *tokens[] = {"1", ":", "23", NULL};
+    ASSERT_TOKENS(tokens);
+}

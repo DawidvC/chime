@@ -35,4 +35,12 @@ implementation LiteralTests : Test.Case
         
         Assert.equal(1, to:a)
     }
+    
+    method test_range()
+    {
+        a = 1:4
+        
+        Assert.equal(1, to:a.start)
+        Assert.equal(4, to:a.end)
+    }
 }

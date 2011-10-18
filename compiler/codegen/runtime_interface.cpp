@@ -28,6 +28,7 @@ namespace chime
         _functionChimeLiteralEncodeInteger     = NULL;
         _functionChimeLiteralEncodeBoolean     = NULL;
         _functionChimeStringCreateWithCString  = NULL;
+        _functionChimeRangeCreate              = NULL;
         _functionChimeClosureCreate            = NULL;
         _functionChimeReferenceCreate          = NULL;
         _functionChimeReferenceGet             = NULL;
@@ -594,6 +595,43 @@ namespace chime
         args.push_back(lengthValue);
         
         call = this->getBuilder()->CreateCall(_functionChimeStringCreateWithCString, args.begin(), args.end(), "create string");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeRangeCreate(llvm::Value* startValue, llvm::Value* endValue)
+    {
+        llvm::CallInst*           call;
+        llvm::AllocaInst*         alloca;
+        std::vector<llvm::Value*> args;
+        
+        if (_functionChimeRangeCreate == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeRangeCreate = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_range_create", this->getModule());
+            _functionChimeRangeCreate->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_range_create: return");
+        alloca->setAlignment(8);
+        
+        startValue = this->getBuilder()->CreateLoad(startValue, "chime_range_create: arg1");
+        endValue   = this->getBuilder()->CreateLoad(endValue,   "chime_range_create: arg2");
+        
+        args.push_back(startValue);
+        args.push_back(endValue);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeRangeCreate, args.begin(), args.end(), "chime_range_create: call");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);

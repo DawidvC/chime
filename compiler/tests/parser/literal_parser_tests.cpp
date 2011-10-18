@@ -46,8 +46,6 @@ TEST_F(LiteralParserTest, ImaginaryInteger)
     
     node = parse("7j");
     
-    node->print();
-    
     ASSERT_LITERAL_IMAGINARY_INTEGER(7, node->childAtIndex(0));
 }
 
@@ -153,11 +151,11 @@ TEST_F(LiteralParserTest, MultipleInterpolationString)
     ASSERT_LITERAL_INTEGER(3, leftOp->getRightOperand());
 }
 
-// TEST_F(LiteralParserTest, InterpolatedStringWithMethodCall)
-// {
-//     ast::BinaryOperator* op;
-//     
-//     op = parseOperator("\"1 {2.to_string()} 3\"");
-//     
-//     op->print();
-// }
+TEST_F(LiteralParserTest, RangeLiteral)
+{
+    chime::RangeLiteral* range;
+    
+    range = parseFirst<chime::RangeLiteral*>("5:6");
+    
+    ASSERT_LITERAL_RANGE(5, 6, range);
+}

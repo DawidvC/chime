@@ -24,13 +24,4 @@ implementation ArrayTests : Test.Case
         
         Assert.equal(6, to:value)
     }
-    
-//     method test_hash_set()
-//     {
-//         hash = Hash.new()
-//         
-//         //hash["abc"] = 10
-//         
-//         Assert.equal(10, to:hash["abc"])
-//     }
 }

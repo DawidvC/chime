@@ -2,9 +2,10 @@
 #include "boolean_literal.h"
 #include "ImaginaryIntegerLiteral.h"
 #include "integer_literal.h"
+#include "InterpolatedString.h"
+#include "RangeLiteral.h"
 #include "string_literal.h"
 #include "SelfLiteral.h"
-#include "InterpolatedString.h"
 #include "compiler/ast/operators/IndexOperator.h"
 
 namespace ast
@@ -15,7 +16,7 @@ namespace ast
         ast::node*    node;
         
         node = NULL;
-        t    = parser.look_ahead();
+        t    = parser.lookAhead();
         
         if (t->isFloatingPoint())
         {
@@ -23,12 +24,28 @@ namespace ast
         }
         else if (t->isInteger())
         {
-            if (t->isImaginary())
+            if (parser.lookAhead(2)->equal_to(":"))
+            {
+                node = new chime::RangeLiteral();
+                
+                static_cast<chime::RangeLiteral*>(node)->setStartValue(parser.nextToken()->integerValue());
+                
+                parser.nextTokenValue(":");
+                
+                static_cast<chime::RangeLiteral*>(node)->setEndValue(parser.nextToken()->integerValue());
+            }
+            else if (t->isImaginary())
+            {
                 node = new chime::ImaginaryIntegerLiteral();
+                
+                static_cast<chime::IntegerLiteral*>(node)->setValue(parser.nextToken()->integerValue());
+            }
             else
+            {
                 node = new chime::IntegerLiteral();
-            
-            static_cast<chime::IntegerLiteral*>(node)->setValue(parser.nextToken()->integerValue());
+                
+                static_cast<chime::IntegerLiteral*>(node)->setValue(parser.nextToken()->integerValue());
+            }
         }
         else if (t->isPlainString())
         {
