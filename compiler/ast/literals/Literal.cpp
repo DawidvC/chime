@@ -1,4 +1,5 @@
 #include "Literal.h"
+#include "ArrayLiteral.h"
 #include "boolean_literal.h"
 #include "ImaginaryIntegerLiteral.h"
 #include "integer_literal.h"
@@ -76,6 +77,10 @@ namespace ast
             parser.nextTokenValue("nil");
             
             node = new chime::NilLiteral();
+        }
+        else if (t->equal_to("["))
+        {
+            node = chime::ArrayLiteral::parse(parser);
         }
         else
         {

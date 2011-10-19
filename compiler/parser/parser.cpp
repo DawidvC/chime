@@ -324,7 +324,7 @@ namespace chime
             
             this->next_token_value(")");
         }
-        else if (t->isLiteral())
+        else if (t->isLiteral() || t->equal_to("[") || t->equal_to("{"))
         {
             node = ast::Literal::parse(*this);
         }

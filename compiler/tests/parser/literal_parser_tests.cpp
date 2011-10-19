@@ -168,3 +168,15 @@ TEST_F(LiteralParserTest, NilLiteral)
     
     ASSERT_LITERAL_NIL(nil);
 }
+
+TEST_F(LiteralParserTest, ArrayLiteral)
+{
+    chime::ArrayLiteral* array;
+    
+    array = parseFirst<chime::ArrayLiteral*>("[1,2,3]");
+    
+    ASSERT_LITERAL_ARRAY(array);
+    ASSERT_LITERAL_INTEGER(1, array->childAtIndex(0));
+    ASSERT_LITERAL_INTEGER(2, array->childAtIndex(1));
+    ASSERT_LITERAL_INTEGER(3, array->childAtIndex(2));
+}

@@ -73,6 +73,10 @@ namespace chime
         llvm::Value* callChimeReferenceGet(llvm::Value* referenceValue);
         void         callChimeReferenceSet(llvm::Value* referenceValue, llvm::Value* objectValue);
         
+        // array functions
+        llvm::Value* callChimeArrayCreateWithLength(llvm::Value* initialLength);
+        llvm::Value* callChimeArrayAppend(llvm::Value* arrayValue, llvm::Value* objectValue);
+        
     private:
         llvm::Module*       _module;
         llvm::IRBuilder<>*  _builder;
@@ -105,6 +109,8 @@ namespace chime
         llvm::Function*     _functionChimeReferenceCreate;
         llvm::Function*     _functionChimeReferenceGet;
         llvm::Function*     _functionChimeReferenceSet;
+        llvm::Function*     _functionChimeArrayCreateWithLength;
+        llvm::Function*     _functionChimeArrayAppend;
         
         llvm::Constant*     _literalNull;
     };

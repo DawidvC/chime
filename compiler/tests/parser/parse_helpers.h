@@ -125,6 +125,8 @@
 
 #define ASSERT_LITERAL_NIL(x) ASSERT_EQ("Nil Literal", x->nodeName())
 
+#define ASSERT_LITERAL_ARRAY(x) ASSERT_EQ("Array Literal", x->nodeName())
+
 #define ASSERT_IF_STATEMENT(x) ASSERT_EQ("if statement", x->nodeName())
 
 #define ASSERT_WHILE(x) ASSERT_EQ("While", x->nodeName())

@@ -16,6 +16,7 @@
 #include "control/loops/Until.h"
 #include "control/loops/LoopUntil.h"
 #include "control/loops/LoopWhile.h"
+#include "literals/ArrayLiteral.h"
 #include "literals/boolean_literal.h"
 #include "literals/integer_literal.h"
 #include "literals/ImaginaryIntegerLiteral.h"

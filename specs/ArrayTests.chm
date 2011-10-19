@@ -24,4 +24,17 @@ implementation ArrayTests : Test.Case
         
         Assert.equal(6, to:value)
     }
+    
+    method test_array_literal_each()
+    {
+        array = [1, 2, 3]
+        value = 0
+        
+        array.each() do (x)
+        {
+            value += x
+        }
+        
+        Assert.equal(6, to:value)
+    }
 }

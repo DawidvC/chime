@@ -50,4 +50,14 @@ implementation LiteralTests : Test.Case
         
         Assert.is_false(x)
     }
+    
+    method test_array()
+    {
+        x = [1, 2, 3]
+        
+        Assert.equal(3, to:x.length)
+        Assert.equal(1, to:x[0])
+        Assert.equal(2, to:x[1])
+        Assert.equal(3, to:x[2])
+    }
 }
