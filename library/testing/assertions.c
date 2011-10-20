@@ -99,7 +99,7 @@ void chime_assertion_initialize(void)
     chime_class_set_class_method(assertion_class, "failure",  assert_class_failure);
     chime_class_set_class_method(assertion_class, "is_true",  assert_class_is_true);
     chime_class_set_class_method(assertion_class, "is_false", assert_class_is_false);
-    chime_class_set_class_method(assertion_class, "is_null",  assert_class_is_null);
+    chime_class_set_class_method(assertion_class, "is_nil",  assert_class_is_null);
     chime_class_set_class_method(assertion_class, "equal",    assert_class_equal_to);
     
     chime_class_set_class_method(assertion_class, "failure_count",           assert_class_failure_count);

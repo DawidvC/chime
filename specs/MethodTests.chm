@@ -7,6 +7,7 @@ implementation MethodTests : Test.Case
         meaning = 42
     }
     
+    // Support methods used as test fixtures
     property meaning_of_life(value)
     {
         get
@@ -30,4 +31,36 @@ implementation MethodTests : Test.Case
         
         Assert.equal(self.meaning_of_life, to:43)
     }
+    
+    method return_nil_implicitly()
+    {
+    }
+    
+    method return_nil_explicitly()
+    {
+        return nil
+    }
+    
+    method test_return_nil()
+    {
+        Assert.is_nil(self.return_nil_implicitly())
+        Assert.is_nil(self.return_nil_explicitly())
+    }
+    
+    method return_one_argument(a)
+    {
+        return a
+    }
+    
+    method return_one_typed_argument(Object a)
+    {
+        return a
+    }
+    
+    method test_return_argument()
+    {
+        Assert.equal(1, to:self.return_one_argument(1))
+        Assert.equal(1, to:self.return_one_typed_argument(1))
+    }
+    
 }
