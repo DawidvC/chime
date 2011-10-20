@@ -69,4 +69,19 @@ implementation MethodTests : Test.Case
         Assert.equal(3, to:self.typed_return_one_typed_argument(3))
     }
     
+    method fully_typed_add(Integer; Integer a, to:Integer b)
+    {
+        return a + b
+    }
+    
+    method untyped_add(a, to:b)
+    {
+        return a + b
+    }
+    
+    method test_methods_with_labels()
+    {
+        Assert.equal(3, to:self.fully_typed_add(1, to:2))
+        Assert.equal(3, to:self.untyped_add(1,     to:2))
+    }
 }
