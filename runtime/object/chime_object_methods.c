@@ -36,6 +36,11 @@ chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_n
     return chime_object_invoke_0(instance, method);
 }
 
+chime_object_t* object_hash(chime_object_t* instance)
+{
+    return chime_object_invoke_0(instance, "to_string");
+}
+
 chime_object_t* object_to_string(chime_object_t* instance)
 {
     int             string_length;

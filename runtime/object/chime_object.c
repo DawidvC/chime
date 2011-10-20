@@ -30,7 +30,7 @@ void chime_object_initialize(void)
     chime_class_set_instance_method(_object_class, "class",     object_class);
     chime_class_set_instance_method(_object_class, "methods",   object_methods);
     chime_class_set_instance_method(_object_class, "invoke",    object_invoke);
-    chime_class_set_instance_method(_object_class, "hash",      object_to_string); // no hash method quite yet
+    chime_class_set_instance_method(_object_class, "hash",      object_hash);
     chime_class_set_instance_method(_object_class, "to_string", object_to_string);
     chime_class_set_instance_method(_object_class, "==",        object_equals);
     chime_class_set_instance_method(_object_class, "===",       object_case_compare);

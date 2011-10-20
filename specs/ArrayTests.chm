@@ -7,6 +7,16 @@ implementation ArrayTests : Test.Case
         Assert.equal(0, to:array.length)
     }
     
+    method test_literal_array_create()
+    {
+        x = [1, 2, 3]
+        
+        Assert.equal(3, to:x.length)
+        Assert.equal(1, to:x[0])
+        Assert.equal(2, to:x[1])
+        Assert.equal(3, to:x[2])
+    }
+    
     method test_array_each()
     {
         array = Array.new()

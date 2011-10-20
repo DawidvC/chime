@@ -1,6 +1,7 @@
 #include "Literal.h"
 #include "ArrayLiteral.h"
 #include "boolean_literal.h"
+#include "HashLiteral.h"
 #include "ImaginaryIntegerLiteral.h"
 #include "integer_literal.h"
 #include "InterpolatedString.h"
@@ -81,6 +82,10 @@ namespace ast
         else if (t->equal_to("["))
         {
             node = chime::ArrayLiteral::parse(parser);
+        }
+        else if (t->equal_to("{"))
+        {
+            node = chime::HashLiteral::parse(parser);
         }
         else
         {

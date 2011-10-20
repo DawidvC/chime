@@ -11,6 +11,10 @@ extern "C" {
 
 void chime_hash_initialize(void);
 
+chime_object_t* chime_hash_create(void);
+
+chime_object_t* chime_hash_set(chime_object_t* instance, chime_object_t* key, chime_object_t* value);
+
 #ifdef __cplusplus
 }
 #endif

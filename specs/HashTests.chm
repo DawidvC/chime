@@ -7,12 +7,22 @@ implementation HashTests : Test.Case
         Assert.equal(0, to:hash.length)
     }
     
-//     method test_hash_set()
-//     {
-//         hash = Hash.new()
-//         
-//         //hash["abc"] = 10
-//         
-//         Assert.equal(10, to:hash["abc"])
-//     }
+    method test_literal_hash_create()
+    {
+        hash = {"a":1, "b":2, "c":3}
+        
+        Assert.equal(3, to:hash.length)
+        Assert.equal(1, to:hash["a"])
+        Assert.equal(2, to:hash["b"])
+        Assert.equal(3, to:hash["c"])
+    }
+    
+    // method test_hash_set()
+    // {
+    //     hash = Hash.new()
+    //     
+    //     hash["abc"] = 10
+    //     
+    //     Assert.equal(10, to:hash["abc"])
+    // }
 }

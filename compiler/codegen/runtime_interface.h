@@ -77,6 +77,10 @@ namespace chime
         llvm::Value* callChimeArrayCreateWithLength(llvm::Value* initialLength);
         llvm::Value* callChimeArrayAppend(llvm::Value* arrayValue, llvm::Value* objectValue);
         
+        // hash functions
+        llvm::Value* callChimeHashCreate();
+        llvm::Value* callChimeHashSet(llvm::Value* hashValue, llvm::Value* keyValue, llvm::Value* valueValue);
+        
     private:
         llvm::Module*       _module;
         llvm::IRBuilder<>*  _builder;
@@ -111,6 +115,8 @@ namespace chime
         llvm::Function*     _functionChimeReferenceSet;
         llvm::Function*     _functionChimeArrayCreateWithLength;
         llvm::Function*     _functionChimeArrayAppend;
+        llvm::Function*     _functionChimeHashCreate;
+        llvm::Function*     _functionChimeHashSet;
         
         llvm::Constant*     _literalNull;
     };

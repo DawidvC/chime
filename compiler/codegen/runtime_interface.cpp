@@ -35,6 +35,8 @@ namespace chime
         _functionChimeReferenceSet             = NULL;
         _functionChimeArrayCreateWithLength    = NULL;
         _functionChimeArrayAppend              = NULL;
+        _functionChimeHashCreate               = NULL;
+        _functionChimeHashSet                  = NULL;
         
         _literalNull = NULL;
     }
@@ -879,6 +881,76 @@ namespace chime
         args.push_back(objectLoad);
         
         call = this->getBuilder()->CreateCall(_functionChimeArrayAppend, args.begin(), args.end(), "");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeHashCreate()
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeHashCreate == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeHashCreate = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_hash_create", this->getModule());
+            _functionChimeHashCreate->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_hash_create return");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeHashCreate, "");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeHashSet(llvm::Value* hashValue, llvm::Value* keyValue, llvm::Value* valueValue)
+    {
+        llvm::CallInst*           call;
+        llvm::LoadInst*           hashLoad;
+        llvm::LoadInst*           keyLoad;
+        llvm::LoadInst*           valueLoad;
+        llvm::AllocaInst*         alloca;
+        std::vector<llvm::Value*> args;
+        
+        if (_functionChimeHashSet == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeHashSet = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_hash_set", this->getModule());
+            _functionChimeHashSet->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_hash_set return");
+        alloca->setAlignment(8);
+        
+        hashLoad  = this->getBuilder()->CreateLoad(hashValue,  "chime_hash_set param1:hash");
+        keyLoad   = this->getBuilder()->CreateLoad(keyValue,   "chime_hash_set param2:key");
+        valueLoad = this->getBuilder()->CreateLoad(valueValue, "chime_hash_set param2:value");
+        
+        args.push_back(hashLoad);
+        args.push_back(keyLoad);
+        args.push_back(valueLoad);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeHashSet, args.begin(), args.end(), "");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);

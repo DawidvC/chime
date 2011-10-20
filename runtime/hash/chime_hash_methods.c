@@ -6,6 +6,7 @@
 #include "runtime/collections/chime_dictionary.h"
 
 #include <assert.h>
+#include <stdio.h>
 
 static chime_dictionary_t* hash_get_internal_dictionary(chime_object_t* instance);
 

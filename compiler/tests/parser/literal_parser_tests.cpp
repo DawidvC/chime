@@ -180,3 +180,18 @@ TEST_F(LiteralParserTest, ArrayLiteral)
     ASSERT_LITERAL_INTEGER(2, array->childAtIndex(1));
     ASSERT_LITERAL_INTEGER(3, array->childAtIndex(2));
 }
+
+TEST_F(LiteralParserTest, HashLiteral)
+{
+    chime::HashLiteral* hash;
+    
+    hash = parseFirst<chime::HashLiteral*>("{\"a\":1,\"b\":2,\"c\":3}");
+    
+    ASSERT_LITERAL_HASH(hash);
+    ASSERT_LITERAL_STRING( "a", hash->childAtIndex(0));
+    ASSERT_LITERAL_INTEGER(  1, hash->childAtIndex(1));
+    ASSERT_LITERAL_STRING( "b", hash->childAtIndex(2));
+    ASSERT_LITERAL_INTEGER(  2, hash->childAtIndex(3));
+    ASSERT_LITERAL_STRING( "c", hash->childAtIndex(4));
+    ASSERT_LITERAL_INTEGER(  3, hash->childAtIndex(5));
+}
