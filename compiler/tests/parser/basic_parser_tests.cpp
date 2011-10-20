@@ -236,25 +236,6 @@ TEST_F(BasicParserTest, AssignmentFromTypeMethodCall)
     ASSERT_METHOD_CALL("baz", op->getRightOperand());
 }
 
-TEST_F(BasicParserTest, TopLevelMethod)
-{
-    ast::node* node;
-    
-    node = parse("method foo() {}");
-    
-    ASSERT_METHOD_DEFINITION("foo", node->child_at_index(0));
-}
-
-TEST_F(BasicParserTest, MethodParameter)
-{
-    ast::method_definition* method;
-    
-    method = parse_method_def("method foo(one:Bar baz) {}");
-    
-    ASSERT_METHOD_DEFINITION("foo", method);
-    ASSERT_METHOD_PARAMETER("Bar", "one", "baz", method->getParameters()->childAtIndex(0));
-}
-
 TEST_F(BasicParserTest, ExpressionInMethodBody)
 {
     ast::method_definition* method;

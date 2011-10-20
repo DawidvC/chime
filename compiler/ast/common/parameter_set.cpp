@@ -7,10 +7,16 @@ namespace ast
 {
     ParameterSet::ParameterSet(chime::parser& parser)
     {
-        if (parser.look_ahead()->value() != "(")
+        // this behavior is currently important, because Closure parsing depends on having optional opening
+        // parens
+        if (!parser.advanceTokenIfEqual("("))
             return;
         
-        parser.next_token_value("(");
+        if (parser.lookAhead(2)->equal_to(";"))
+        {
+            this->setReturnType(TypeRef( new ast::type_reference(&parser)));
+            parser.nextTokenValue(";");
+        }
         
         while (true)
         {
@@ -48,5 +54,15 @@ namespace ast
     ast::method_parameter* ParameterSet::parameterAtIndex(unsigned int i) const
     {
         return static_cast<ast::method_parameter*>(this->childAtIndex(i));
+    }
+    
+    TypeRef ParameterSet::getReturnType() const
+    {
+        return _returnType;
+    }
+    
+    void ParameterSet::setReturnType(TypeRef type)
+    {
+        _returnType = type;
     }
 }

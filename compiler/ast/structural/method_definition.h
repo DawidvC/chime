@@ -29,4 +29,9 @@ namespace ast
     };
 }
 
+namespace chime
+{
+    typedef ast::method_definition MethodDefinition;
+}
+
 #endif // METHOD_DEFINITON_H

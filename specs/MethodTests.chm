@@ -57,10 +57,16 @@ implementation MethodTests : Test.Case
         return a
     }
     
+    method typed_return_one_typed_argument(Object; Object a)
+    {
+        return a
+    }
+    
     method test_return_argument()
     {
         Assert.equal(1, to:self.return_one_argument(1))
-        Assert.equal(1, to:self.return_one_typed_argument(1))
+        Assert.equal(2, to:self.return_one_typed_argument(2))
+        Assert.equal(3, to:self.typed_return_one_typed_argument(3))
     }
     
 }

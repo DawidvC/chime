@@ -18,6 +18,12 @@ namespace ast
         
         unsigned int           length() const;
         ast::method_parameter* parameterAtIndex(unsigned int i) const;
+        
+        TypeRef                getReturnType() const;
+        void                   setReturnType(TypeRef type);
+        
+    private:
+        TypeRef _returnType;
     };
     
     typedef std::tr1::shared_ptr<ast::ParameterSet> ParameterSetRef;
