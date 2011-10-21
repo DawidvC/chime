@@ -81,6 +81,11 @@ void chime_runtime_set_instance_method(chime_object_t* klass, const char* name, 
     chime_class_set_instance_method((chime_class_t*)klass, name, function);
 }
 
+void chime_runtime_set_class_method(chime_object_t* klass, const char* name, void* function)
+{
+    chime_class_set_class_method((chime_class_t*)klass, name, function);
+}
+
 chime_class_t* chime_runtime_get_class(const char* name)
 {
     chime_class_t* klass;

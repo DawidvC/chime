@@ -45,7 +45,8 @@ namespace chime
         llvm::Value*    callModuleInitFunction(const std::string& name);
         
         void            callChimeRuntimeSetInstanceMethod(llvm::Value* classValue, llvm::Value* functionNamePtr, llvm::Function* function);
-        
+        void            callChimeRuntimeSetClassMethod(llvm::Value* classValue, llvm::Value* functionNamePtr, llvm::Function* function);
+                
         // object functions
         llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);
         llvm::Value* callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr);
@@ -99,6 +100,7 @@ namespace chime
         llvm::Function*     _functionChimeRuntimeLoad;
         llvm::Function*     _functionChimeObjectCreate;
         llvm::Function*     _functionChimeRuntimeSetInstanceMethod;
+        llvm::Function*     _functionChimeRuntimeSetClassMethod;
         llvm::Function*     _functionChimeObjectGetAttribute;
         llvm::Function*     _functionChimeObjectSetAttribute;
         llvm::Function*     _functionChimeObjectInvoke0;

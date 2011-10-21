@@ -7,6 +7,7 @@ namespace ast
 {
     FunctionDefinition::FunctionDefinition()
     {
+        _isInstance = true;
     }
     
     std::string FunctionDefinition::getIdentifier(void) const
@@ -24,6 +25,16 @@ namespace ast
     void FunctionDefinition::setParameters(ParameterSetRef params)
     {
         _parameters = params;
+    }
+    
+    bool FunctionDefinition::isInstance() const
+    {
+        return _isInstance;
+    }
+    
+    void FunctionDefinition::setInstance(bool value)
+    {
+        _isInstance = value;
     }
     
     llvm::Function* FunctionDefinition::createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity)
@@ -138,8 +149,11 @@ namespace ast
         classObjectPtr = generator.getImplementationScope()->getTarget();
         
         // finally, install the method in the class
-        generator.getRuntime()->callChimeRuntimeSetInstanceMethod(classObjectPtr, functionNameCStringPtr, methodFunction);
-        
+        if (this->isInstance())
+            generator.getRuntime()->callChimeRuntimeSetInstanceMethod(classObjectPtr, functionNameCStringPtr, methodFunction);
+        else
+            generator.getRuntime()->callChimeRuntimeSetClassMethod(classObjectPtr, functionNameCStringPtr, methodFunction);
+            
         return NULL;
     }
 }

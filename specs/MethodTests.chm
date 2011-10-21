@@ -84,4 +84,20 @@ implementation MethodTests : Test.Case
         Assert.equal(3, to:self.fully_typed_add(1, to:2))
         Assert.equal(3, to:self.untyped_add(1,     to:2))
     }
+    
+    class method class_method_example()
+    {
+        return 42
+    }
+    
+    method class_method_example()
+    {
+        return 43
+    }
+    
+    method test_class_method()
+    {
+        Assert.equal(42, to:MethodTests.class_method_example())
+        Assert.equal(43, to:self.class_method_example())
+    }
 }

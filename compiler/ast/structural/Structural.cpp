@@ -27,9 +27,17 @@ namespace ast
         {
             node = ast::Implementation::parse(parser);
         }
+        else if (parser.advanceTokenIfEqual("class"))
+        {
+            node = ast::method_definition::parse(parser);
+            
+            static_cast<chime::MethodDefinition*>(node)->setInstance(false);
+        }
         else if (t->equal_to("method"))
         {
             node = ast::method_definition::parse(parser);
+            
+            static_cast<chime::MethodDefinition*>(node)->setInstance(true);
         }
         else if (t->equal_to("property"))
         {

@@ -4,13 +4,24 @@ class StructuralParseTests : public ParserTestsBase
 {
 };
 
-TEST_F(StructuralParseTests, TopLevelMethod)
+TEST_F(StructuralParseTests, Method)
 {
-    ast::Node* node;
+    chime::MethodDefinition* node;
     
-    node = parse("method foo() {}");
+    node = parseFirst<chime::MethodDefinition*>("method foo() {}");
     
-    ASSERT_METHOD_DEFINITION("foo", node->childAtIndex(0));
+    ASSERT_METHOD_DEFINITION("foo", node);
+    ASSERT_TRUE(node->isInstance());
+}
+
+TEST_F(StructuralParseTests, ClassMethod)
+{
+    chime::MethodDefinition* node;
+    
+    node = parseFirst<chime::MethodDefinition*>("class method foo() {}");
+    
+    ASSERT_METHOD_DEFINITION("foo", node);
+    ASSERT_FALSE(node->isInstance());
 }
 
 TEST_F(StructuralParseTests, MethodParameter)

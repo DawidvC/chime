@@ -17,6 +17,8 @@ namespace ast
         void            setIdentifier(const std::string& s);
         ParameterSetRef getParameters() const;
         void            setParameters(ParameterSetRef params);
+        bool            isInstance() const;
+        void            setInstance(bool value);
         
     protected:
         llvm::Function* createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity);
@@ -28,6 +30,7 @@ namespace ast
     private:
         std::string     _identifier;
         ParameterSetRef _parameters;
+        bool            _isInstance;
     };
 }
 
