@@ -6,15 +6,15 @@
 #include "compiler/ast/node.h"
 #include "compiler/ast/common/method_parameter.h"
 
-namespace ast
+namespace chime
 {
-    class ParameterSet : public node
+    class ParameterSet : public Node
     {
     public:
-        ParameterSet(chime::parser& parser);
-        virtual ~ParameterSet();
-        
-        virtual std::string  nodeName(void) const;
+        static shared_ptr<ParameterSet> parse(parser& parser);
+    
+    public:
+        virtual std::string    nodeName() const;
         
         unsigned int           length() const;
         ast::method_parameter* parameterAtIndex(unsigned int i) const;
@@ -26,6 +26,6 @@ namespace ast
         TypeRef _returnType;
     };
     
-    typedef std::tr1::shared_ptr<ast::ParameterSet> ParameterSetRef;
+    typedef shared_ptr<ParameterSet> ParameterSetRef;
 }
 #endif // PARAMETER_SET_H

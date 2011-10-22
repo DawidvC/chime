@@ -92,7 +92,7 @@ namespace ast
             assert(0 && "Unhandled literal!");
         }
         
-        node = ast::IndexOperator::parse(parser, node);
+        node = ast::IndexOperator::parse(parser, node, true);
         
         return node;
     }

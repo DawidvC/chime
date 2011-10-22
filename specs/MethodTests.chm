@@ -100,4 +100,27 @@ implementation MethodTests : Test.Case
         Assert.equal(42, to:MethodTests.class_method_example())
         Assert.equal(43, to:self.class_method_example())
     }
+    
+    indexer self[i](value)
+    {
+        get
+        {
+            return meaning * i
+        }
+        set
+        {
+            meaning = value * i
+        }
+    }
+    
+    method test_self_indexer()
+    {
+        Assert.equal( 0, to:self[0])
+        Assert.equal(42, to:self[1])
+        
+        self[2] = 3
+        
+        Assert.equal( 6, to:self[1])
+        Assert.equal(12, to:self[2])
+    }
 }

@@ -20,10 +20,10 @@ namespace ast
         virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0) const;
         
-        TypeRef    getTypeRef() const;
-        void       setTypeRef(ast::TypeRef node);
-        TypeRef    getSuperclass() const;
-        void       setSuperclass(ast::TypeRef node);
+        chime::TypeRef    getTypeRef() const;
+        void       setTypeRef(chime::TypeRef node);
+        chime::TypeRef    getSuperclass() const;
+        void       setSuperclass(chime::TypeRef node);
         NodeRef    getBody(void) const;
         
         std::string         getIdentifier() const;
@@ -34,8 +34,8 @@ namespace ast
         llvm::Value*        codegen(chime::code_generator& generator);
         
     protected:
-        TypeRef _typeRef;
-        TypeRef _superclass;
+        chime::TypeRef _typeRef;
+        chime::TypeRef _superclass;
         NodeRef _bodyBlock;
     };
 }

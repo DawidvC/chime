@@ -1,6 +1,6 @@
 #include "return.h"
 
-namespace ast
+namespace chime
 {
     Return::Return(chime::parser& parser)
     {

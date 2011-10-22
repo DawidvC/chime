@@ -17,12 +17,12 @@ implementation HashTests : Test.Case
         Assert.equal(3, to:hash["c"])
     }
     
-    // method test_hash_set()
-    // {
-    //     hash = Hash.new()
-    //     
-    //     hash["abc"] = 10
-    //     
-    //     Assert.equal(10, to:hash["abc"])
-    // }
+    method test_hash_set()
+    {
+        hash = Hash.new()
+        
+        hash["abc"] = 10
+        
+        Assert.equal(10, to:hash["abc"])
+    }
 }

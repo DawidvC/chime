@@ -15,8 +15,8 @@ namespace ast
         
         std::string     getIdentifier() const;
         void            setIdentifier(const std::string& s);
-        ParameterSetRef getParameters() const;
-        void            setParameters(ParameterSetRef params);
+        chime::ParameterSetRef getParameters() const;
+        void            setParameters(chime::ParameterSetRef params);
         bool            isInstance() const;
         void            setInstance(bool value);
         
@@ -29,7 +29,7 @@ namespace ast
         
     private:
         std::string     _identifier;
-        ParameterSetRef _parameters;
+        chime::ParameterSetRef _parameters;
         bool            _isInstance;
     };
 }

@@ -1,7 +1,7 @@
 #include "type_reference.h"
 #include "compiler/ast/common/parameter_set.h"
 
-namespace ast
+namespace chime
 {
     type_reference::type_reference(chime::parser* parser)
     {
@@ -25,7 +25,7 @@ namespace ast
         {
             // ( parameters )
             if (parser->look_ahead()->equal_to("("))
-                _parameters = ParameterSetRef(new ParameterSet(*parser));
+                _parameters = chime::ParameterSet::parse(*parser);
         }
     }
     

@@ -19,7 +19,7 @@ namespace ast
     
     protected:
         ast::Variable*       _exceptionVariable;
-        ast::type_reference* _exceptionType;
+        chime::type_reference* _exceptionType;
     };
 }
 

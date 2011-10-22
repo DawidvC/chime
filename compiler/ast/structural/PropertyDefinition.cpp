@@ -21,17 +21,15 @@ namespace ast
         t = parser.look_ahead();
         if (t->equal_to("("))
         {
-            property->setParameters(ParameterSetRef(new ParameterSet(parser)));
+            property->setParameters(chime::ParameterSet::parse(parser));
         }
         
         parser.advance_past_ending_tokens();
         parser.next_token_value("{");
         parser.advance_past_ending_tokens();
         
-        t = parser.look_ahead();
-        if (t->equal_to("get"))
+        if (parser.advanceTokenIfEqual("get"))
         {
-            parser.next_token_value("get");
             parser.advance_past_ending_tokens();
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
@@ -43,10 +41,8 @@ namespace ast
             parser.advance_past_ending_tokens();
         }
         
-        t = parser.look_ahead();
-        if (t->equal_to("set"))
+        if (parser.advanceTokenIfEqual("set"))
         {
-            parser.next_token_value("set");
             parser.advance_past_ending_tokens();
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();

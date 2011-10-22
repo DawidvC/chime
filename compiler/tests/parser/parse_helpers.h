@@ -36,7 +36,7 @@
 
 #define ASSERT_TYPE(x, y) do { \
     ASSERT_EQ("type reference", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::type_reference*)y)->identifier()); \
+    ASSERT_EQ(x, static_cast<chime::type_reference*>(y)->identifier()); \
     } while (0)
 
 #define ASSERT_IMPLEMENTATION(x, y, z) do { \
@@ -54,6 +54,11 @@
 #define ASSERT_PROPERTY_DEFINITION(x, y) do { \
     ASSERT_EQ("property definition", y->nodeName()); \
     ASSERT_EQ(x, ((ast::PropertyDefinition*)y)->getIdentifier()); \
+    } while (0)
+
+#define ASSERT_INDEXER_DEFINITION(x, y) do { \
+    ASSERT_EQ("Indexer Definition", y->nodeName()); \
+    ASSERT_EQ(x, static_cast<chime::IndexerDefinition*>(y)->getIdentifier()); \
     } while (0)
 
 #define ASSERT_ATTRIBUTE(x, y) do { \
@@ -82,7 +87,12 @@
 #define ASSERT_CLOSED_ASSIGNMENT(x) ASSERT_EQ("Closed Local Variable Assignment Operator", x->nodeName())
 
 #define ASSERT_INDEXER(x) ASSERT_EQ("Index Operator", x->nodeName())
-    
+
+#define ASSERT_INDEXER_ASSIGNMENT(x, y) do { \
+   ASSERT_EQ("Index Assignment", y->nodeName()); \
+   ASSERT_EQ(x, static_cast<chime::IndexAssignmentOperator*>(y)->getIdentifier()); \
+   } while (0)
+
 #define ASSERT_METHOD_CALL(x, y) do { \
     ASSERT_EQ("Method Call", y->nodeName()); \
     ASSERT_EQ(x, ((ast::MethodCall*)y)->identifier()); \

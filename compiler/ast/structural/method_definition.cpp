@@ -21,7 +21,7 @@ namespace ast
         parser.next_token_value("method");
         
         definition->setIdentifier(parser.next_token_value());
-        definition->setParameters(ParameterSetRef(new ParameterSet(parser)));
+        definition->setParameters(chime::ParameterSet::parse(parser));
         
         definition->_bodyBlock = CodeBlock::parse(parser);
         

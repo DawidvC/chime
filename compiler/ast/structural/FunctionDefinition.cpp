@@ -18,11 +18,11 @@ namespace ast
     {
         _identifier = s;
     }
-    ParameterSetRef FunctionDefinition::getParameters() const
+    chime::ParameterSetRef FunctionDefinition::getParameters() const
     {
         return _parameters;
     }
-    void FunctionDefinition::setParameters(ParameterSetRef params)
+    void FunctionDefinition::setParameters(chime::ParameterSetRef params)
     {
         _parameters = params;
     }

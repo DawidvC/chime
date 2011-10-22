@@ -1,25 +1,39 @@
 #include "IndexOperator.h"
+#include "IndexAssignmentOperator.h"
 
 namespace ast
 {
-    ast::node* IndexOperator::parse(chime::parser& parser, ast::node* operand)
+    ast::node* IndexOperator::parse(chime::parser& parser, ast::node* operand, bool allowAssignment)
     {
         ast::IndexOperator* indexOp;
         ast::NodeRef        argument;
         
         // check for index operators
-        while (parser.look_ahead(1)->equal_to("["))
+        while (parser.advanceTokenIfEqual("["))
         {
-            parser.next_token_value("[");
-            
-            argument = ast::NodeRef(parser.parse_expression());
+            argument = parser.parseExpression();
             assert(argument);
+            
+            parser.nextTokenValue("]");
+            
+            if (allowAssignment && parser.lookAhead()->isAssignment())
+            {
+                chime::IndexAssignmentOperator* assignment;
+                
+                parser.nextTokenValue("=");
+                
+                assignment = new chime::IndexAssignmentOperator();
+                assignment->setIdentifier("[]=");
+                assignment->setOperand(ast::NodeRef(operand));
+                assignment->setArgument(argument);
+                assignment->setRightOperand(parser.parseExpression());
+                
+                return assignment;
+            }
             
             indexOp = new IndexOperator();
             indexOp->setOperand(ast::NodeRef(operand));
             indexOp->setArgument(argument);
-            
-            parser.next_token_value("]");
             
             operand = indexOp;
         }

@@ -8,9 +8,6 @@ namespace ast
     class basic_operator : public node
     {
     public:
-        basic_operator();
-        virtual ~basic_operator();
-        
         std::string identifier() const;
         void        identifier(std::string s);
         

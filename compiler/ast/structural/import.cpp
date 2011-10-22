@@ -28,9 +28,9 @@ namespace ast
         }
         else if (t->isType())
         {
-            type_reference* type;
+            chime::type_reference* type;
             
-            type = new ast::type_reference(&parser);
+            type = new chime::type_reference(&parser);
             
             this->setImportand(type);
             
@@ -82,10 +82,10 @@ namespace ast
         
         if (node->nodeName().compare(std::string("type reference")) == 0)
         {
-            ast::type_reference* typeRef;
+            chime::type_reference* typeRef;
             llvm::Value*         cStringPtr;
             
-            typeRef    = static_cast<ast::type_reference*>(node);
+            typeRef    = static_cast<chime::type_reference*>(node);
             cStringPtr = generator.make_constant_string(typeRef->identifier());
             
             //generator.getImportedNamespaces()->push_back(->identifier());

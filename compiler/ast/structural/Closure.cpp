@@ -16,7 +16,7 @@ namespace ast
         
         parser.pushScope(closure);
         
-        closure->setParameters(ParameterSetRef(new ParameterSet(parser)));
+        closure->setParameters(chime::ParameterSet::parse(parser));
         
         // This cast is currently necessary, even though now CodeBlock::parse will
         // always return an actual CodeBlockRef.  The signature of CodeBlock::parse should

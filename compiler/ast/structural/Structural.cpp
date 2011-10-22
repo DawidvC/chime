@@ -1,5 +1,6 @@
 #include "Structural.h"
 #include "Implementation.h"
+#include "IndexerDefinition.h"
 #include "method_definition.h"
 #include "PropertyDefinition.h"
 #include "Attribute.h"
@@ -42,6 +43,10 @@ namespace ast
         else if (t->equal_to("property"))
         {
             node = ast::PropertyDefinition::parse(parser);
+        }
+        else if (t->equal_to("indexer"))
+        {
+            node = chime::IndexerDefinition::parse(parser);
         }
         else if (t->equal_to("attribute"))
         {

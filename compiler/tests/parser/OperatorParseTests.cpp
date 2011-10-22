@@ -60,6 +60,18 @@ TEST_F(OperatorParseTests, IndexerOnMethod)
     ASSERT_METHOD_CALL("bar", op->getRightOperand());
 }
 
+TEST_F(OperatorParseTests, IndexerOnSelfAssignment)
+{
+    chime::IndexAssignmentOperator* indexer;
+    
+    indexer = parseFirst<chime::IndexAssignmentOperator*>("self[123] = 4");
+    
+    ASSERT_INDEXER_ASSIGNMENT("[]=", indexer);
+    ASSERT_LITERAL_SELF(indexer->getOperand().get());
+    ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
+    ASSERT_LITERAL_INTEGER(4, indexer->getRightOperand().get());
+}
+
 TEST_F(OperatorParseTests, AndOperator)
 {
     chime::AndOperator* op;

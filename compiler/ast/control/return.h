@@ -1,21 +1,23 @@
+// chime:: Return.h
+
 #ifndef RETURN_H
 #define RETURN_H
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
-    class Return : public node
+    class Return : public Node
     {
     public:
-        Return(chime::parser& parser);
+        Return(parser& parser);
         
         virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0) const;
         
         ast::NodeRef getReturnValue() const;
         
-        virtual llvm::Value* codegen(chime::code_generator& generator);
+        virtual llvm::Value* codegen(CodeGenContext& generator);
     
     private:
         ast::NodeRef _returnValue;

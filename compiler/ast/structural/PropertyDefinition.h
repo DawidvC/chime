@@ -22,7 +22,7 @@ namespace ast
         
         Variable*    createVariable(const std::string& identifier);
         
-        llvm::Value* codegen(chime::code_generator& generator);
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
     protected:
         CodeBlockRef _getBodyBlock;

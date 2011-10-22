@@ -27,7 +27,7 @@ namespace ast
         t = parser->look_ahead();
         if (t->isType())
         {
-            this->type(new type_reference(parser));
+            this->type(new chime::type_reference(parser));
         }
         
         this->identifier(parser->next_token_value());
@@ -81,11 +81,11 @@ namespace ast
     {
         _label = s;
     }
-    ast::type_reference* method_parameter::type() const
+    chime::type_reference* method_parameter::type() const
     {
         return _type;
     }
-    void method_parameter::type(ast::type_reference* t)
+    void method_parameter::type(chime::type_reference* t)
     {
         _type = t;
     }

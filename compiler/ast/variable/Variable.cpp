@@ -11,7 +11,7 @@ namespace ast
         
         assert(parser.look_ahead()->isIdentifier());
         
-        identifier = parser.next_token_value();
+        identifier = parser.nextTokenValue();
         
         // Defer to the current scope to actually create the variable object.  This is
         // the trick to make scope-aware variables in the AST
@@ -24,7 +24,7 @@ namespace ast
         }
         
         // check for index operators
-        node = ast::IndexOperator::parse(parser, node);
+        node = ast::IndexOperator::parse(parser, node, allowAssignment);
         
         return node;
     }
@@ -37,10 +37,8 @@ namespace ast
         op = variable->createAssignment();
         op->setLeftOperand(variable);
         
-        if (parser.lookAhead()->equal_to("="))
+        if (parser.advanceTokenIfEqual("="))
         {
-            parser.nextTokenValue("="); // parse the "="
-            
             op->setRightOperand(parser.parse_expression());
             
             return op;
@@ -48,28 +46,20 @@ namespace ast
         
         binOp = new ast::BinaryOperator();
         
-        if (parser.lookAhead()->equal_to("+="))
+        if (parser.advanceTokenIfEqual("+="))
         {
-            parser.nextTokenValue("+=");
-            
             binOp->setIdentifier("+");
         }
-        else if (parser.lookAhead()->equal_to("-="))
+        else if (parser.advanceTokenIfEqual("-="))
         {
-            parser.nextTokenValue("-=");
-            
             binOp->setIdentifier("-");
         }
-        else if (parser.lookAhead()->equal_to("*="))
+        else if (parser.advanceTokenIfEqual("*="))
         {
-            parser.nextTokenValue("*=");
-            
             binOp->setIdentifier("*");
         }
-        else if (parser.lookAhead()->equal_to("/="))
+        else if (parser.advanceTokenIfEqual("/="))
         {
-            parser.nextTokenValue("/=");
-            
             binOp->setIdentifier("/");
         }
         else

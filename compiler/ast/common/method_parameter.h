@@ -19,13 +19,13 @@ namespace ast
         void                 identifier(std::string s);
         std::string          label() const;
         void                 label(std::string s);
-        ast::type_reference* type() const;
-        void                 type(ast::type_reference* t);
+        chime::type_reference* type() const;
+        void                 type(chime::type_reference* t);
         
     private:
         std::string          _identifier;
         std::string          _label;
-        ast::type_reference* _type;
+        chime::type_reference* _type;
     };
 }
 

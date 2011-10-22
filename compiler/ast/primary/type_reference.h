@@ -5,12 +5,12 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class ParameterSet;
-    typedef std::tr1::shared_ptr<ast::ParameterSet> ParameterSetRef;
+    typedef shared_ptr<ParameterSet> ParameterSetRef;
     
-    class type_reference : public node
+    class type_reference : public Node
     {
     public:
         type_reference(chime::parser* parser);
@@ -28,7 +28,7 @@ namespace ast
         ParameterSetRef _parameters;
     };
     
-    typedef std::tr1::shared_ptr<ast::type_reference> TypeRef;
+    typedef shared_ptr<type_reference> TypeRef;
 }
 
 #endif // TYPE_REFERENCE_H

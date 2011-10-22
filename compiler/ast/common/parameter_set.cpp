@@ -1,20 +1,23 @@
 // chime: parameter_set.cpp
 
 #include "parameter_set.h"
-#include "compiler/ast/common/method_parameter.h"
 
-namespace ast
+namespace chime
 {
-    ParameterSet::ParameterSet(chime::parser& parser)
+    ParameterSetRef ParameterSet::parse(parser& parser)
     {
+        ParameterSetRef parameterSet;
+        
+        parameterSet = ParameterSetRef(new ParameterSet());
+        
         // this behavior is currently important, because Closure parsing depends on having optional opening
         // parens
         if (!parser.advanceTokenIfEqual("("))
-            return;
+            return parameterSet;
         
         if (parser.lookAhead(2)->equal_to(";"))
         {
-            this->setReturnType(TypeRef( new ast::type_reference(&parser)));
+            parameterSet->setReturnType(TypeRef(new type_reference(&parser)));
             parser.nextTokenValue(";");
         }
         
@@ -22,28 +25,25 @@ namespace ast
         {
             chime::token* t;
             
-            t = parser.look_ahead();
+            t = parser.lookAhead();
             
             if (t->empty() || t->equal_to(")"))
                 break;
             
-            this->addChild(new method_parameter(&parser));
+            parameterSet->addChild(new ast::method_parameter(&parser));
             
             // take care of the commas
-            if (parser.look_ahead()->equal_to(","))
-                parser.next_token_value(",");
+            parser.advanceTokenIfEqual(",");
         }
         
         parser.next_token_value(")");
+        
+        return parameterSet;
     }
     
-    ParameterSet::~ParameterSet()
+    std::string ParameterSet::nodeName() const
     {
-    }
-    
-    std::string ParameterSet::nodeName(void) const
-    {
-        return std::string("parameter set");
+        return "parameter set";
     }
     
     unsigned int ParameterSet::length() const

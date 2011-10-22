@@ -17,16 +17,16 @@ namespace ast
         // parse the import statement
         parser.next_token_value("implementation");
         
-        implementation->setTypeRef(TypeRef(new ast::type_reference(&parser)));
+        implementation->setTypeRef(chime::TypeRef(new chime::type_reference(&parser)));
         
         // check for ": SuperClass"
         if (parser.advance_token_if_equals(":"))
         {
-            implementation->setSuperclass(TypeRef(new ast::type_reference(&parser)));
+            implementation->setSuperclass(chime::TypeRef(new chime::type_reference(&parser)));
         }
         else
         {
-            implementation->setSuperclass(TypeRef());
+            implementation->setSuperclass(chime::TypeRef());
         }
         
         // parse the body, allowing structural elements inside
@@ -60,20 +60,20 @@ namespace ast
         return str;
     }
     
-    ast::TypeRef Implementation::getTypeRef() const
+    chime::TypeRef Implementation::getTypeRef() const
     {
         return _typeRef;
     }
-    void Implementation::setTypeRef(ast::TypeRef node)
+    void Implementation::setTypeRef(chime::TypeRef node)
     {
         _typeRef = node;
     }
     
-    ast::TypeRef Implementation::getSuperclass() const
+    chime::TypeRef Implementation::getSuperclass() const
     {
         return _superclass;
     }
-    void Implementation::setSuperclass(ast::TypeRef node)
+    void Implementation::setSuperclass(chime::TypeRef node)
     {
         _superclass = node;
     }
