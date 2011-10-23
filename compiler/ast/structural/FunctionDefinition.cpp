@@ -143,7 +143,10 @@ namespace ast
         functionName           = generator.getImplementationScope()->getName() + "." + name;
         functionNameCStringPtr = generator.getConstantString(name);
         
-        methodFunction = this->codegenFunction(generator, name, body, arity);
+        // we need to scope the method name to include the class, so we don't overlap in the
+        // tranlation unit
+        
+        methodFunction = this->codegenFunction(generator, generator.getCurrentScope()->getIdentifier() + "_" + name, body, arity);
         
         // get the class object
         classObjectPtr = generator.getImplementationScope()->getTarget();

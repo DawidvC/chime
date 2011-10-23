@@ -235,7 +235,9 @@ namespace chime
         if (_value == "import")         return true;
         if (_value == "implementation") return true;
         if (_value == "interface")      return true;
+        if (_value == "trait")          return true;
         if (_value == "attribute")      return true;
+        if (_value == "include")        return true;
         
         return false;
     }

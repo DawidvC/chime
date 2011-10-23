@@ -82,7 +82,29 @@ namespace chime
     
     std::string IndexerDefinition::stringRepresentation(int depth) const
     {
-        return "unimplemented";
+        std::string str;
+        
+        str.append(depth*2, ' ');
+        str.append("indexer: ");
+        str.append(this->getIdentifier());
+        
+        if (this->getGetBody())
+        {
+            str.append("\n");
+            str.append((depth+1)*2, ' ');
+            str.append("- get:\n");
+            str.append(this->getGetBody()->stringRepresentation(depth+2));
+        }
+        
+        if (this->getSetBody())
+        {
+            str.append("\n");
+            str.append((depth+1)*2, ' ');
+            str.append("- set:\n");
+            str.append(this->getSetBody()->stringRepresentation(depth+2));
+        }
+        
+        return str;
     }
     
     llvm::Value* IndexerDefinition::codegen(CodeGenContext& context)

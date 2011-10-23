@@ -55,6 +55,12 @@
 				2 = { name = 'variable.chime'; };
 			};
 		},
+		{	match = '\s*(include)\s+([A-Z]\w+)';
+			captures = {
+				1 = { name = 'keyword.include.chime'; };
+				2 = { name = 'entity.name.type.chime'; };
+			};
+		},
 		{	name = 'keyword';
 			match = '\b(get|set)\b';
 		},

@@ -28,7 +28,8 @@ namespace chime
         ParameterSetRef _parameters;
     };
     
-    typedef shared_ptr<type_reference> TypeRef;
+    typedef type_reference Type;
+    typedef shared_ptr<Type> TypeRef;
 }
 
 #endif // TYPE_REFERENCE_H

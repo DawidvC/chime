@@ -44,8 +44,7 @@ namespace ast
     
     std::string Implementation::stringRepresentation(int depth) const
     {
-        std::string                       str;
-        std::vector<ast::node*>::iterator i;
+        std::string str;
         
         str.append(depth*2, ' ');
         str.append("implementation: ");

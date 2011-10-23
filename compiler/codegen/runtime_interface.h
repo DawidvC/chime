@@ -37,6 +37,7 @@ namespace chime
         void         callChimeLibraryInitialize(void);
         
         llvm::Value* callChimeRuntimeCreateClass(llvm::Value* classNamePtr, llvm::Value* superclassObjectPtr);
+        llvm::Value* callChimeRuntimeCreateTrait(llvm::Value* traitNamePtr);
         llvm::Value* callChimeRuntimeGetClass(llvm::Value* classNamePtr);
         
         llvm::Value* callChimeRuntimeLoad(llvm::Value* namePtr);
@@ -96,6 +97,7 @@ namespace chime
         llvm::Function*     _functionChimeRuntimeInitialize;
         llvm::Function*     _functionChimeLibraryInitialize;
         llvm::Function*     _functionChimeRuntimeCreateClass;
+        llvm::Function*     _functionChimeRuntimeCreateTrait;
         llvm::Function*     _functionChimeRuntimeGetClass;
         llvm::Function*     _functionChimeRuntimeLoad;
         llvm::Function*     _functionChimeObjectCreate;

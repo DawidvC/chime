@@ -54,6 +54,11 @@ namespace ast
             parser.advance_past_ending_tokens();
         }
         
+        if (!property->_getBodyBlock && !property->_setBodyBlock)
+        {
+            parser.addError("A property must define at least a get or set submethod");
+        }
+        
         parser.advance_past_ending_tokens();
         parser.next_token_value("}");
         parser.advance_past_ending_tokens();
@@ -70,7 +75,29 @@ namespace ast
     
     std::string PropertyDefinition::stringRepresentation(int depth) const
     {
-        return std::string("unimplemented");
+        std::string str;
+        
+        str.append(depth*2, ' ');
+        str.append("property: ");
+        str.append(this->getIdentifier());
+        
+        if (this->getGetBody())
+        {
+            str.append("\n");
+            str.append((depth+1)*2, ' ');
+            str.append("- get:\n");
+            str.append(this->getGetBody()->stringRepresentation(depth+2));
+        }
+        
+        if (this->getSetBody())
+        {
+            str.append("\n");
+            str.append((depth+1)*2, ' ');
+            str.append("- set:\n");
+            str.append(this->getSetBody()->stringRepresentation(depth+2));
+        }
+        
+        return str;
     }
     
     CodeBlockRef PropertyDefinition::getGetBody() const

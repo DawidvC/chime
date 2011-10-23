@@ -3,6 +3,7 @@
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/class/chime_class.h"
+#include "runtime/trait/chime_trait.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/object/chime_object_internal.h"
 #include "runtime/string/chime_string.h"
@@ -19,6 +20,7 @@
 
 chime_dictionary_t* _chime_classes   = NULL;
 chime_class_t*      _object_class    = NULL;
+chime_class_t*      _trait_class     = NULL;
 chime_class_t*      _string_class    = NULL;
 chime_class_t*      _array_class     = NULL;
 chime_class_t*      _hash_class      = NULL;
@@ -38,6 +40,8 @@ void chime_runtime_initialize(void)
     _chime_classes = chime_dictionary_create();
     
     chime_object_initialize(); // set up the root classes and their base methods
+    
+    chime_trait_initialize();
     
     chime_literal_initialize();
     
@@ -63,6 +67,7 @@ void chime_runtime_destroy(void)
     _chime_classes = NULL;
     
     _object_class    = NULL;
+    _trait_class     = NULL;
     _string_class    = NULL;
     _array_class     = NULL;
     _hash_class      = NULL;
@@ -74,6 +79,11 @@ void chime_runtime_destroy(void)
 chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* superclass)
 {
     return (chime_object_t*)chime_class_create(name, (chime_class_t*)superclass);
+}
+
+chime_object_t* chime_runtime_create_trait(const char* name)
+{
+    return (chime_object_t*)chime_trait_create(name);
 }
 
 void chime_runtime_set_instance_method(chime_object_t* klass, const char* name, void* function)

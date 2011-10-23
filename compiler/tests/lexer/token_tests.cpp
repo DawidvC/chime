@@ -160,6 +160,12 @@ TEST_F(TokenTest, IsStructural)
     
     token->set_value("attribute");
     ASSERT_TRUE(token->isStructural());
+    
+    token->set_value("trait");
+    ASSERT_TRUE(token->isStructural());
+    
+    token->set_value("include");
+    ASSERT_TRUE(token->isStructural());
 }
 
 TEST_F(TokenTest, IsType)

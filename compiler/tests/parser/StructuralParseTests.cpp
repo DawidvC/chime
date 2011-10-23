@@ -127,3 +127,22 @@ TEST_F(StructuralParseTests, OperatorDefinition)
     
     ASSERT_OPERATOR_DEFINITON("-", operatorDef);
 }
+
+TEST_F(StructuralParseTests, TraitDefinition)
+{
+    chime::Trait* trait;
+    
+    trait = parseFirst<chime::Trait*>("trait Nothing { }");
+    
+    ASSERT_TRAIT("Nothing", trait);
+}
+
+TEST_F(StructuralParseTests, IncludeInImplementation)
+{
+    ast::Implementation* implementation;
+    
+    implementation = parseFirst<ast::Implementation*>("implementation Foo { include Bar }");
+    
+    ASSERT_IMPLEMENTATION("Foo", NULL, implementation);
+    ASSERT_INCLUDE("Bar", implementation->getBody()->childAtIndex(0));
+}

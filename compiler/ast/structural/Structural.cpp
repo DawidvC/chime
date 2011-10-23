@@ -6,6 +6,8 @@
 #include "PropertyDefinition.h"
 #include "Attribute.h"
 #include "import.h"
+#include "Include.h"
+#include "Trait.h"
 #include "compiler/parser/parser.h"
 
 namespace ast
@@ -28,6 +30,10 @@ namespace ast
         else if (t->equal_to("implementation"))
         {
             node = ast::Implementation::parse(parser);
+        }
+        else if (t->equal_to("trait"))
+        {
+            node = chime::Trait::parse(parser);
         }
         else if (parser.advanceTokenIfEqual("class"))
         {
@@ -56,6 +62,10 @@ namespace ast
         else if (t->equal_to("attribute"))
         {
             node = new ast::Attribute(parser);
+        }
+        else if (t->equal_to("include"))
+        {
+            node = chime::Include::parse(parser);
         }
         else
         {

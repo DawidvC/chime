@@ -1,7 +1,5 @@
 #include "node.h"
-#ifndef USING_PREFIX_HEADERS
-#    include "compiler/lexer/token.h"
-#endif
+#include "compiler/lexer/token.h"
 
 namespace ast
 {

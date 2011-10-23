@@ -1,0 +1,53 @@
+// trait Test.Enumerable
+// {
+//     property length(Number;)
+//     {
+//         get
+//         {
+//             return self.size
+//         }
+//     }
+//     property count(Number;)
+//     {
+//         get
+//         {
+//             return self.size
+//         }
+//     }
+//     
+//     // method each(Function(Object) block)
+//     // {
+//     //     self.size.times() do (i)
+//     //     {
+//     //         block.call(self[i])
+//     //     }
+//     // }
+// }
+
+implementation TraitTests : Test.Case
+{
+    include Test.Enumerable
+    
+    property size()
+    {
+        get
+        {
+            return 8
+        }
+    }
+    
+    indexer self[i]
+    {
+        get
+        {
+            return i
+        }
+    }
+    
+    method test_size_methods
+    {
+        Assert.equal(8, to:self.size)
+        Assert.equal(8, to:self.count)
+        Assert.equal(8, to:self.length)
+    }
+}

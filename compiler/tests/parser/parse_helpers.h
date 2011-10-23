@@ -43,7 +43,17 @@
     ASSERT_EQ("implementation", z->node_name()); \
     ASSERT_TYPE(x, ((ast::Implementation*)z)->getTypeRef().get()); \
     } while (0)
-    
+
+#define ASSERT_TRAIT(x, y) do { \
+    ASSERT_EQ("Trait", y->nodeName()); \
+    ASSERT_TYPE(x, static_cast<chime::Trait*>(y)->getTypeRef().get()); \
+    } while (0)
+
+#define ASSERT_INCLUDE(x, y) do { \
+    ASSERT_EQ("Include", y->nodeName()); \
+    ASSERT_TYPE(x, static_cast<chime::Include*>(y)->getTraitType().get()); \
+    } while (0)
+
 #define ASSERT_CODE_BLOCK(x) ASSERT_EQ("code block", x->nodeName());
 
 #define ASSERT_METHOD_DEFINITION(x, y) do { \
