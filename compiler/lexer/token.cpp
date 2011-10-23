@@ -371,26 +371,29 @@ namespace chime
         
         return false;
     }
+    
     int token::precedence(void) const
     {
-        if (_value == ".")   return 60;
-        if (_value == "*")   return 50;
-        if (_value == "/")   return 50;
-        if (_value == "+")   return 40;
-        if (_value == "-")   return 40;
-        if (_value == "<")   return 30;
-        if (_value == ">")   return 30;
-        if (_value == "and") return 20;
-        if (_value == "or")  return 20;
-        if (_value == "<=>") return 15;
-        if (_value == "==")  return 15;
-        if (_value == ">=")  return 15;
-        if (_value == "<=")  return 15;
-        if (_value == "=")   return 10;
-        if (_value == "+=")  return 10;
-        if (_value == "*=")  return 10;
-        if (_value == "/=")  return 10;
-        if (_value == "-=")  return 10;
+        if (_value == ".")    return 60;
+        if (_value == "*")    return 50;
+        if (_value == "%")    return 50;
+        if (_value == "/")    return 50;
+        if (_value == "+")    return 40;
+        if (_value == "-")    return 40;
+        if (_value == "<")    return 30;
+        if (_value == ">")    return 30;
+        if (_value == "and")  return 20;
+        if (_value == "or")   return 20;
+        if (_value == "<=>")  return 15;
+        if (_value == "==")   return 15;
+        if (_value == "===")  return 15;
+        if (_value == ">=")   return 15;
+        if (_value == "<=")   return 15;
+        if (_value == "=")    return 10;
+        if (_value == "+=")   return 10;
+        if (_value == "*=")   return 10;
+        if (_value == "/=")   return 10;
+        if (_value == "-=")   return 10;
         
         return -1;
     }

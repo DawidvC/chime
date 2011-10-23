@@ -37,7 +37,13 @@
 		{	name = 'constant.chime';
 			match = '\b(true|false|nil)\b';
 		},
-		{	match = '((class\s*)?method|property|indexer|operator)\s+(\w+)';
+		{	match = '((class\s*)?method|property|indexer)\s+(\w+)';
+			captures = {
+				1 = { name = 'keyword'; };
+				3 = { name = 'entity.name.function.chime'; };
+			};
+		},
+		{	match = '(operator)\s+(\+|\-|\*|\/|%|<=>|===)';
 			captures = {
 				1 = { name = 'keyword'; };
 				3 = { name = 'entity.name.function.chime'; };

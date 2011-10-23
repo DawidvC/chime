@@ -16,6 +16,8 @@ chime_object_t* integer_times(chime_object_t* instance, chime_object_t* function
 chime_object_t* integer_add(chime_object_t* instance, chime_object_t* other);
 chime_object_t* integer_subtract(chime_object_t* instance, chime_object_t* other);
 chime_object_t* integer_multiply(chime_object_t* instance, chime_object_t* other);
+chime_object_t* integer_divide(chime_object_t* instance, chime_object_t* other);
+chime_object_t* integer_modulus(chime_object_t* instance, chime_object_t* other);
 chime_object_t* integer_compare(chime_object_t* instance, chime_object_t* other);
 
 chime_object_t* boolean_to_string(chime_object_t* instance);

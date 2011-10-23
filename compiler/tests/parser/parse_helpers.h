@@ -61,6 +61,11 @@
     ASSERT_EQ(x, static_cast<chime::IndexerDefinition*>(y)->getIdentifier()); \
     } while (0)
 
+#define ASSERT_OPERATOR_DEFINITON(x, y) do { \
+   ASSERT_EQ("Operator Definition", y->nodeName()); \
+   ASSERT_EQ(x, static_cast<chime::OperatorDefinition*>(y)->getIdentifier()); \
+   } while (0)
+
 #define ASSERT_ATTRIBUTE(x, y) do { \
     ASSERT_EQ("attribute", y->nodeName()); \
     ASSERT_EQ(x, ((ast::Attribute*)y)->getIdentifier()); \

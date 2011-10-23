@@ -19,6 +19,8 @@ void chime_literal_initialize(void)
     chime_class_set_instance_method(klass, "+",     integer_add);
     chime_class_set_instance_method(klass, "-",     integer_subtract);
     chime_class_set_instance_method(klass, "*",     integer_multiply);
+    chime_class_set_instance_method(klass, "/",     integer_divide);
+    chime_class_set_instance_method(klass, "%",     integer_modulus);
     chime_class_set_instance_method(klass, "<=>",   integer_compare);
     
     klass = chime_class_create_object_subclass("Boolean");

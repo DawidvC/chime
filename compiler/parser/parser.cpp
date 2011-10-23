@@ -349,9 +349,8 @@ namespace chime
         {
             chime::ParseErrorRef e;
             
-            fprintf(stderr, "Found something weird '%s'\n", t->c_str());
-            
-            __builtin_trap();
+            // fprintf(stderr, "Found something weird '%s'\n", t->c_str());
+            // __builtin_trap();
             
             e = chime::ParseErrorRef(new chime::ParseError("expression: found something weird '%s'", t->c_str()));
             

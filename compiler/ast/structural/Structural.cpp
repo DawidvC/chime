@@ -2,6 +2,7 @@
 #include "Implementation.h"
 #include "IndexerDefinition.h"
 #include "method_definition.h"
+#include "OperatorDefinition.h"
 #include "PropertyDefinition.h"
 #include "Attribute.h"
 #include "import.h"
@@ -47,6 +48,10 @@ namespace ast
         else if (t->equal_to("indexer"))
         {
             node = chime::IndexerDefinition::parse(parser);
+        }
+        else if (t->equal_to("operator"))
+        {
+            node = chime::OperatorDefinition::parse(parser);
         }
         else if (t->equal_to("attribute"))
         {

@@ -154,6 +154,34 @@ chime_object_t* integer_multiply(chime_object_t* instance, chime_object_t* other
     return CHIME_LITERAL_NULL;
 }
 
+chime_object_t* integer_divide(chime_object_t* instance, chime_object_t* other)
+{
+    if (chime_object_is_integer(other))
+    {
+        signed long result;
+        
+        result = chime_literal_decode_integer(instance) / chime_literal_decode_integer(other);
+        
+        return chime_literal_encode_integer(result);
+    }
+    
+    return CHIME_LITERAL_NULL;
+}
+
+chime_object_t* integer_modulus(chime_object_t* instance, chime_object_t* other)
+{
+    if (chime_object_is_integer(other))
+    {
+        signed long result;
+        
+        result = chime_literal_decode_integer(instance) % chime_literal_decode_integer(other);
+        
+        return chime_literal_encode_integer(result);
+    }
+    
+    return CHIME_LITERAL_NULL;
+}
+
 chime_object_t* integer_compare(chime_object_t* instance, chime_object_t* other)
 {
     assert(chime_object_is_integer(instance) && "First argument to <=> must be an Integer");

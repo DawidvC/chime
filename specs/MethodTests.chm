@@ -123,4 +123,69 @@ implementation MethodTests : Test.Case
         Assert.equal( 6, to:self[1])
         Assert.equal(12, to:self[2])
     }
+    
+    operator +(value)
+    {
+        return meaning + value
+    }
+    
+    operator -(value)
+    {
+        return meaning - value
+    }
+    
+    operator /(value)
+    {
+        return meaning / value
+    }
+    
+    operator %(value)
+    {
+        return meaning % value
+    }
+    
+    operator <=>(value)
+    {
+        return meaning <=> value
+    }
+    
+    operator ===(value)
+    {
+        return meaning === value
+    }
+    
+    method test_arithemetic_operators()
+    {
+        meaning = 10
+        
+        Assert.equal(11, to:self + 1)
+        Assert.equal( 9, to:self - 1)
+        Assert.equal( 5, to:self / 2)
+        Assert.equal( 1, to:self % 3)
+    }
+    
+    method test_comparison_operators()
+    {
+        meaning = 10
+        
+        Assert.is_true(self < 11)
+        Assert.is_true(self == 10)
+        Assert.is_true(self > 9)
+    }
+    
+    method test_case_comparison()
+    {
+        meaning = 10
+        value = 0
+        
+        switch self
+        {
+            case 10
+                value = 5
+            else
+                Assert.failure()
+        }
+        
+        Assert.equal(5, to:value)
+    }
 }

@@ -91,10 +91,9 @@ namespace ast
         str.append("Method Call: ");
         str.append(this->identifier());
         
-        str.append("\n");
-        
         for (it = this->children()->begin(); it != this->children()->end(); ++it)
         {
+            str.append("\n");
             str.append((*it)->stringRepresentation(depth+1));
         }
         

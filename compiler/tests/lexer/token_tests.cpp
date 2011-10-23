@@ -248,6 +248,9 @@ TEST_F(TokenTest, IsOperator)
     token->setValue("*");
     ASSERT_TRUE(token->precedence() > 0);
     
+    token->setValue("%");
+    ASSERT_TRUE(token->precedence() > 0);
+    
     token->setValue("*=");
     ASSERT_TRUE(token->precedence() > 0);
     

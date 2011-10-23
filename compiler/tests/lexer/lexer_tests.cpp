@@ -456,6 +456,13 @@ TEST_F(LexerTest, SpaceshipOperator)
     const char *tokens[] = {"x", "<=>", "y", NULL};
     ASSERT_TOKENS(tokens);
 }
+TEST_F(LexerTest, CaseCompareOperator)
+{
+    lex("x === y");
+    
+    const char *tokens[] = {"x", "===", "y", NULL};
+    ASSERT_TOKENS(tokens);
+}
 TEST_F(LexerTest, IndexerMethodCall)
 {
     lex("foo[123]");

@@ -118,3 +118,12 @@ TEST_F(StructuralParseTests, LabelledIndexerWithGet)
     ASSERT_RETURN(ret);
     ASSERT_LOCAL_VARIABLE("a", ret->getReturnValue().get());
 }
+
+TEST_F(StructuralParseTests, OperatorDefinition)
+{
+    chime::OperatorDefinition* operatorDef;
+    
+    operatorDef = parseFirst<chime::OperatorDefinition*>("operator -(value) { }");
+    
+    ASSERT_OPERATOR_DEFINITON("-", operatorDef);
+}

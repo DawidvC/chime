@@ -246,6 +246,10 @@ namespace chime
                         // handle '<=>'
                         if (!this->is_finished() && (this->peek() == '>') && (t->equal_to("<=")))
                             t->append(this->next_char());
+                        
+                        // handle '==='
+                        if (!this->is_finished() && (this->peek() == '=') && (t->equal_to("==")))
+                            t->append(this->next_char());
                     }
                     
                     return t;

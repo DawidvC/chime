@@ -39,6 +39,7 @@
 #include "structural/import.h"
 #include "structural/IndexerDefinition.h"
 #include "structural/method_definition.h"
+#include "structural/OperatorDefinition.h"
 #include "structural/PropertyDefinition.h"
 #include "variable/ClosedLocalVariable.h"
 #include "variable/GlobalVariable.h"
