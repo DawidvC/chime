@@ -19,7 +19,8 @@ namespace ast
         std::string              getIdentifier() const;
         
         Variable*                createVariable(const std::string& identifier);
-    
+        bool                     allowsStructuralElements() const;
+        
     private:
         std::vector<std::string> _binaryDependencies;
         std::vector<std::string> _sourceDependencies;

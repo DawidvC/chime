@@ -52,9 +52,7 @@ namespace ast
     llvm::Value* Attribute::codegen(chime::code_generator& generator)
     {
         // Here's something interesting.  We don't need to create code here, 
-        // but we do need to modify the generator to "know" about our
-        // special variable name
-        generator.getImplementationScope()->addInstanceVariableName(this->getIdentifier());
+        // since the parser now knows that this symbol is an ivar
         
         return NULL;
     }

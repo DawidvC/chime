@@ -64,6 +64,11 @@ namespace chime
         return new ast::InstanceVariable(identifier);
     }
     
+    bool Trait::allowsStructuralElements() const
+    {
+        return true;
+    }
+    
     llvm::Function* Trait::createInitFunction(CodeGenContext& context)
     {
         llvm::Function*     initFunction;
@@ -81,12 +86,11 @@ namespace chime
     
     llvm::Value* Trait::codegen(CodeGenContext& context)
     {
-        llvm::Value*                  traitNamePtr;
-        llvm::Value*                  traitPtr;
-        llvm::Function*               initFunction;
-        llvm::BasicBlock*             basicBlock;
-        llvm::BasicBlock*             currentBlock;
-        chime::ImplementationScopeRef scope;
+        llvm::Value*      traitNamePtr;
+        llvm::Value*      traitPtr;
+        llvm::Function*   initFunction;
+        llvm::BasicBlock* basicBlock;
+        llvm::BasicBlock* currentBlock;
         
         initFunction = this->createInitFunction(context);
         context.builder()->CreateCall(initFunction, "");
@@ -104,14 +108,8 @@ namespace chime
         
         // now, create the new class
         traitPtr = context.getRuntime()->callChimeTraitCreate(traitNamePtr);
+        this->setSelfObjectPtr(traitPtr);
         
-        // with it created, we can now create a new implementation scope and assign it
-        // scope = chime::ImplementationScopeRef(new chime::ImplementationScope());
-        // 
-        // scope->setTarget(traitPtr);
-        // scope->setName(this->getIdentifier());
-        // 
-        // context.setImplementationScope(scope);
         context.pushScope(this);
         
         // and now, finally, we can actually codegen the internals of the implementation

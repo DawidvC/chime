@@ -11,7 +11,6 @@ namespace ast
 }
 
 #include "compiler/codegen/runtime_interface.h"
-#include "compiler/codegen/scopes/implementation_scope.h"
 
 #include "llvm/DerivedTypes.h"
 #include "llvm/LLVMContext.h"
@@ -40,9 +39,6 @@ namespace chime
         void                   setCurrentScope(ast::ScopedNode* node);
         void                   pushScope(ast::ScopedNode* scope);
         void                   popScope();
-        ImplementationScopeRef getImplementationScope(void) const;
-        void                   setImplementationScope(ImplementationScopeRef scope);
-        std::vector<llvm::Function*>* getInitFunctions(void) const;
         
         llvm::Value*       getConstantString(std::string str);
         llvm::Value*       make_constant_string(std::string str);
@@ -64,20 +60,17 @@ namespace chime
         void generateModuleInitFunction(const std::string& moduleName);
         
     private:
-        llvm::Module*                        _module;
-        llvm::IRBuilder<>*                   _builder;
-        std::vector<llvm::Function*>*        _initFunctions;
-        llvm::Function*                      _internalInitFunction;
-        ImplementationScopeRef               _implementationScope;
-        std::vector<std::string>*            _importedNamespaces;
+        llvm::Module*             _module;
+        llvm::IRBuilder<>*        _builder;
+        std::vector<std::string>* _importedNamespaces;
         
-        ast::ScopedNode*                     _currentScope;
+        ast::ScopedNode*          _currentScope;
         
-        llvm::PointerType*                   _object_ptr_type;
-        llvm::Type*                          _c_string_ptr_type;
-        llvm::FunctionType*                  _chime_function_type;
+        llvm::PointerType*        _object_ptr_type;
+        llvm::Type*               _c_string_ptr_type;
+        llvm::FunctionType*       _chime_function_type;
         
-        RuntimeInterface*                    _runtimeInterface;
+        RuntimeInterface*         _runtimeInterface;
     };
 }
 

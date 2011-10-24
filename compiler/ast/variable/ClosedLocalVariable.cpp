@@ -25,7 +25,7 @@ namespace ast
         llvm::Value* variableNamePtr;
         
         variableNamePtr = generator.getConstantString(this->getIdentifier());
-        closure         = generator.getCurrentScope()->getValueForIdentifier("_self");
+        closure         = generator.getCurrentScope()->getSelfObjectPtr();
         reference       = generator.getRuntime()->callChimeObjectGetAttribute(closure, variableNamePtr);
         
         return reference;

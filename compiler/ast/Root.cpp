@@ -30,4 +30,9 @@ namespace ast
     {
         return new GlobalVariable(identifier);
     }
+    
+    bool Root::allowsStructuralElements() const
+    {
+        return true;
+    }
 }

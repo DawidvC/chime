@@ -72,7 +72,7 @@ namespace ast
         alloca = generator.insertChimeObjectAlloca();
         generator.builder()->CreateStore(args, alloca, false);
         
-        generator.getCurrentScope()->setValueForIdentifier("_self", alloca);
+        generator.getCurrentScope()->setSelfObjectPtr(alloca);
         
         ++args; // advance past self argument
         
@@ -140,16 +140,18 @@ namespace ast
         llvm::Value*    functionNameCStringPtr;
         llvm::Value*    classObjectPtr;
         
-        functionName           = generator.getImplementationScope()->getName() + "." + name;
+        assert(generator.getCurrentScope()->allowsStructuralElements());
+        
+        functionName           = generator.getCurrentScope()->getIdentifier() + "." + name;
         functionNameCStringPtr = generator.getConstantString(name);
         
         // we need to scope the method name to include the class, so we don't overlap in the
         // tranlation unit
         
-        methodFunction = this->codegenFunction(generator, generator.getCurrentScope()->getIdentifier() + "_" + name, body, arity);
+        methodFunction = this->codegenFunction(generator, functionName, body, arity);
         
         // get the class object
-        classObjectPtr = generator.getImplementationScope()->getTarget();
+        classObjectPtr = generator.getCurrentScope()->getSelfObjectPtr();
         
         // finally, install the method in the class
         if (this->isInstance())

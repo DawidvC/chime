@@ -28,9 +28,13 @@ namespace ast
         void              capturedVariable(Variable* variable);
         Variable*         variableForIdentifier(const std::string& identifier);
         
+        virtual bool      allowsStructuralElements() const;
+        
         // codegen support
         llvm::Value*      getValueForIdentifier(const std::string& identifier);
         void              setValueForIdentifier(const std::string& identifier, llvm::Value* value);
+        llvm::Value*      getSelfObjectPtr() const;
+        void              setSelfObjectPtr(llvm::Value* value);
         
         std::string       getAnonymousFunctionName();
         
@@ -43,6 +47,7 @@ namespace ast
         ScopedNode*                      _parent;
         
         std::map<std::string, llvm::Value*> _scopedValues;
+        llvm::Value*                        _selfObjectPtr;
         int                                 _anonymousFunctionCount;
     };
     

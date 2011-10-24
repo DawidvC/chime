@@ -6,7 +6,8 @@ namespace ast
 {
     ScopedNode::ScopedNode()
     {
-        _parent = NULL;
+        _parent        = NULL;
+        _selfObjectPtr = NULL;
         
         _anonymousFunctionCount = 1;
     }
@@ -92,6 +93,11 @@ namespace ast
         return this->createVariable(identifier);
     }
     
+    bool ScopedNode::allowsStructuralElements() const
+    {
+        return false; // most scopes do not allow this
+    }
+    
     llvm::Value* ScopedNode::getValueForIdentifier(const std::string& identifier)
     {
         llvm::Value* value;
@@ -107,6 +113,16 @@ namespace ast
     void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value)
     {
         _scopedValues[identifier] = value;
+    }
+    
+    llvm::Value* ScopedNode::getSelfObjectPtr() const
+    {
+        return _selfObjectPtr;
+    }
+    
+    void ScopedNode::setSelfObjectPtr(llvm::Value* value)
+    {
+        _selfObjectPtr = value;
     }
     
     std::string ScopedNode::getAnonymousFunctionName()

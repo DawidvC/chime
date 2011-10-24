@@ -92,6 +92,11 @@ namespace ast
         return new InstanceVariable(identifier);
     }
     
+    bool Implementation::allowsStructuralElements() const
+    {
+        return true;
+    }
+    
     llvm::Function* Implementation::createInitFunction(chime::code_generator& generator)
     {
         llvm::Function*     initFunction;
@@ -116,7 +121,6 @@ namespace ast
         llvm::Function*               initFunction;
         llvm::BasicBlock*             basicBlock;
         llvm::BasicBlock*             currentBlock;
-        chime::ImplementationScopeRef scope;
         
         initFunction = this->createInitFunction(generator);
         generator.builder()->CreateCall(initFunction, "");
@@ -146,14 +150,8 @@ namespace ast
         
         // now, create the new class
         objectClassPtr = generator.getRuntime()->callChimeRuntimeCreateClass(classNamePtr, superclassPtr);
+        this->setSelfObjectPtr(objectClassPtr);
         
-        // with it created, we can now create a new implementation scope and assign it
-        scope = chime::ImplementationScopeRef(new chime::ImplementationScope());
-        
-        scope->setTarget(objectClassPtr);
-        scope->setName(this->getTypeRef()->identifier());
-        
-        generator.setImplementationScope(scope);
         generator.pushScope(this);
         
         // and now, finally, we can actually codegen the internals of the implementation

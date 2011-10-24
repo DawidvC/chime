@@ -310,8 +310,6 @@ namespace chime
         llvm::FunctionType*            functionType;
         llvm::Function*                function;
         
-        fprintf(stderr, "Creating module init: %s\n", name.c_str());
-        
         functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
         
         function = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "init_" + name, this->getModule());

@@ -9,8 +9,6 @@ namespace chime
         _module               = NULL;
         _builder              = new llvm::IRBuilder<>(llvm::getGlobalContext());
         _importedNamespaces   = new std::vector<std::string>();
-        _initFunctions        = new std::vector<llvm::Function*>();
-        _internalInitFunction = NULL;
         
         _currentScope         = NULL;
         
@@ -19,15 +17,12 @@ namespace chime
         _chime_function_type = NULL;
         
         _runtimeInterface    = NULL;
-        
-        _implementationScope = ImplementationScopeRef();
     }
     
     code_generator::~code_generator()
     {
         delete _builder;
         delete _importedNamespaces;
-        delete _initFunctions;
         
         if (_module)
             delete _module;
@@ -97,20 +92,6 @@ namespace chime
         _currentScope = _currentScope->getParent();
     }
     
-    ImplementationScopeRef code_generator::getImplementationScope(void) const
-    {
-        return _implementationScope;
-    }
-    void code_generator::setImplementationScope(ImplementationScopeRef scope)
-    {
-        _implementationScope = scope;
-    }
-    
-    std::vector<llvm::Function*>* code_generator::getInitFunctions(void) const
-    {
-        return _initFunctions;
-    }
-    
     llvm::Value* code_generator::getConstantString(std::string str)
     {
         llvm::ArrayType*             string_array_type;
@@ -120,18 +101,18 @@ namespace chime
         llvm::Constant*              const_ptr;
         llvm::Constant*              const_c_string_array;
         
-        string_array_type = llvm::ArrayType::get(llvm::IntegerType::get(this->get_context(), 8), str.length()+1);
+        string_array_type = llvm::ArrayType::get(llvm::IntegerType::get(this->getContext(), 8), str.length()+1);
         
         global_string = new llvm::GlobalVariable(*(this->module()), string_array_type, true, llvm::GlobalValue::PrivateLinkage, 0, ".str");
         
-        const_int32 = llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, llvm::StringRef("0"), 10));
+        const_int32 = llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, llvm::StringRef("0"), 10));
         
         const_ptr_indices.push_back(const_int32);
         const_ptr_indices.push_back(const_int32);
         
         const_ptr = llvm::ConstantExpr::getGetElementPtr(global_string, &const_ptr_indices[0], const_ptr_indices.size());
         
-        const_c_string_array = llvm::ConstantArray::get(this->get_context(), str.c_str(), true);
+        const_c_string_array = llvm::ConstantArray::get(this->getContext(), str.c_str(), true);
         
         global_string->setInitializer(const_c_string_array);
         
