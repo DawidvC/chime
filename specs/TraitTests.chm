@@ -1,20 +1,20 @@
 // trait Test.Enumerable
 // {
-//     property length(Number;)
-//     {
-//         get
-//         {
-//             return self.size
-//         }
-//     }
-//     property count(Number;)
-//     {
-//         get
-//         {
-//             return self.size
-//         }
-//     }
-//     
+//     // property length(Number;)
+//     // {
+//     //     get
+//     //     {
+//     //         return self.size
+//     //     }
+//     // }
+//     // property count(Number;)
+//     // {
+//     //     get
+//     //     {
+//     //         return self.size
+//     //     }
+//     // }
+//     // 
 //     // method each(Function(Object) block)
 //     // {
 //     //     self.size.times() do (i)

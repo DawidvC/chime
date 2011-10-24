@@ -82,7 +82,7 @@ namespace chime
     llvm::Value* Trait::codegen(CodeGenContext& context)
     {
         llvm::Value*                  traitNamePtr;
-        llvm::Value*                  objectClassPtr;
+        llvm::Value*                  traitPtr;
         llvm::Function*               initFunction;
         llvm::BasicBlock*             basicBlock;
         llvm::BasicBlock*             currentBlock;
@@ -104,12 +104,12 @@ namespace chime
         traitNamePtr = context.getConstantString(this->getIdentifier());
         
         // now, create the new class
-        objectClassPtr = context.getRuntime()->callChimeRuntimeCreateTrait(traitNamePtr);
+        traitPtr = context.getRuntime()->callChimeTraitCreate(traitNamePtr);
         
         // with it created, we can now create a new implementation scope and assign it
         scope = chime::ImplementationScopeRef(new chime::ImplementationScope());
         
-        scope->setTarget(objectClassPtr);
+        scope->setTarget(traitPtr);
         scope->setName(this->getIdentifier());
         
         context.setImplementationScope(scope);

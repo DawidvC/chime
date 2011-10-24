@@ -27,6 +27,16 @@ namespace chime
     
     llvm::Value* Include::codegen(CodeGenContext& context)
     {
+        llvm::Value* traitObjectPtr;
+        llvm::Value* traitNamePtr;
+        llvm::Value* classObjectPtr;
+        
+        traitNamePtr   = context.getConstantString(this->getTraitType()->identifier());
+        traitObjectPtr = context.getRuntime()->callChimeRuntimeGetTrait(traitNamePtr);
+        classObjectPtr = context.getImplementationScope()->getTarget();
+        
+        context.getRuntime()->callChimeClassIncludeTrait(classObjectPtr, traitObjectPtr);
+        
         return NULL;
     }
 }

@@ -6,6 +6,7 @@
 #include "runtime/chime_runtime.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
 chime_class_t*  chime_class_create_object_subclass(const char* name)
@@ -26,6 +27,8 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     metaclass->object.self_class = NULL;
     
     // class portion
+    metaclass->traits = NULL;
+    
     if (superclass)
     {
         metaclass->super_class = superclass->object.self_class;
@@ -48,10 +51,11 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     // entity portion
     klass->object.methods    = chime_dictionary_create();
     klass->object.self_class = metaclass;
+    klass->object.variables  = chime_dictionary_create();
     
     // class portion
-    klass->super_class      = superclass;
-    klass->object.variables = chime_dictionary_create();
+    klass->super_class = superclass;
+    klass->traits      = NULL;
     
     assert(klass);
     
@@ -106,4 +110,17 @@ void chime_class_set_class_method(chime_class_t* klass, const char* name, void* 
     klass = chime_class_get_class(klass);
     
     chime_class_set_instance_method(klass, name, function);
+}
+
+void chime_class_include_trait(chime_class_t* klass, chime_class_t* trait)
+{
+    // assert(klass);
+    // assert(trait);
+    // 
+    // if (!klass->traits)
+    //     klass->traits = chime_runtime_array_create();
+    // 
+    // chime_runtime_array_add(klass->traits, trait);
+    
+    fprintf(stderr, "including trait\n");
 }

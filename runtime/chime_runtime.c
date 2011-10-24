@@ -19,6 +19,7 @@
 #include <string.h>
 
 chime_dictionary_t* _chime_classes   = NULL;
+chime_dictionary_t* _chime_traits    = NULL;
 chime_class_t*      _object_class    = NULL;
 chime_class_t*      _trait_class     = NULL;
 chime_class_t*      _string_class    = NULL;
@@ -38,6 +39,7 @@ void chime_runtime_initialize(void)
     chime_log_level = 3;
     
     _chime_classes = chime_dictionary_create();
+    _chime_traits  = chime_dictionary_create();
     
     chime_object_initialize(); // set up the root classes and their base methods
     
@@ -66,6 +68,9 @@ void chime_runtime_destroy(void)
     chime_dictionary_destroy(_chime_classes);
     _chime_classes = NULL;
     
+    chime_dictionary_destroy(_chime_traits);
+    _chime_traits = NULL;
+    
     _object_class    = NULL;
     _trait_class     = NULL;
     _string_class    = NULL;
@@ -78,12 +83,11 @@ void chime_runtime_destroy(void)
 
 chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* superclass)
 {
-    return (chime_object_t*)chime_class_create(name, (chime_class_t*)superclass);
-}
-
-chime_object_t* chime_runtime_create_trait(const char* name)
-{
-    return (chime_object_t*)chime_trait_create(name);
+    chime_object_t* klass;
+    
+    klass = (chime_object_t*)chime_class_create(name, (chime_class_t*)superclass);
+    
+    return klass;
 }
 
 void chime_runtime_set_instance_method(chime_object_t* klass, const char* name, void* function)
@@ -132,6 +136,20 @@ chime_object_t* chime_runtime_instantiate(chime_class_t* klass)
     assert(klass);
     
     return chime_object_invoke_0((chime_object_t*)klass, "new");
+}
+
+chime_class_t* chime_runtime_get_trait(const char* name)
+{
+    chime_class_t* trait;
+    
+    trait = chime_dictionary_get(_chime_traits, name);
+    
+    return trait;
+}
+
+void chime_runtime_include_trait(chime_class_t* klass, const char* name)
+{
+    chime_class_include_trait(klass, (chime_class_t*)chime_dictionary_get(_chime_traits, name));
 }
 
 chime_object_t* chime_runtime_load(const char* name)

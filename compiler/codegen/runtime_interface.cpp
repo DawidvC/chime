@@ -15,12 +15,14 @@ namespace chime
         _functionChimeRuntimeInitialize        = NULL;
         _functionChimeLibraryInitialize        = NULL;
         _functionChimeRuntimeCreateClass       = NULL;
-        _functionChimeRuntimeCreateTrait       = NULL;
         _functionChimeRuntimeGetClass          = NULL;
+        _functionChimeRuntimeGetTrait          = NULL;
         _functionChimeRuntimeLoad              = NULL;
         _functionChimeObjectCreate             = NULL;
         _functionChimeRuntimeSetInstanceMethod = NULL;
         _functionChimeRuntimeSetClassMethod    = NULL;
+        _functionChimeClassIncludeTrait        = NULL;
+        _functionChimeTraitCreate              = NULL;
         _functionChimeObjectGetAttribute       = NULL;
         _functionChimeObjectSetAttribute       = NULL;
         _functionChimeObjectInvoke0            = NULL;
@@ -215,35 +217,6 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* RuntimeInterface::callChimeRuntimeCreateTrait(llvm::Value* traitNamePtr)
-    {
-        llvm::CallInst*   call;
-        llvm::AllocaInst* alloca;
-        
-        if (_functionChimeRuntimeCreateTrait == NULL)
-        {
-            std::vector<const llvm::Type*> functionArgs;
-            llvm::FunctionType*            functionType;
-            
-            functionArgs.push_back(this->getCStringPtrType());
-            
-            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
-            
-            _functionChimeRuntimeCreateTrait = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_runtime_create_trait", this->getModule());
-            _functionChimeRuntimeCreateTrait->setCallingConv(llvm::CallingConv::C);
-        }
-        
-        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_runtime_create_trait return");
-        alloca->setAlignment(8);
-        
-        call = this->getBuilder()->CreateCall(_functionChimeRuntimeCreateTrait, traitNamePtr, "chime_runtime_create_trait: class");
-        call->setTailCall(false);
-        
-        this->getBuilder()->CreateStore(call, alloca, false);
-        
-        return alloca;
-    }
-    
     llvm::Value* RuntimeInterface::callChimeRuntimeGetClass(llvm::Value* classNamePtr)
     {
         llvm::CallInst*   call;
@@ -266,6 +239,35 @@ namespace chime
         alloca->setAlignment(8);
         
         call = this->getBuilder()->CreateCall(_functionChimeRuntimeGetClass, classNamePtr, "class lookup");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeRuntimeGetTrait(llvm::Value* traitNamePtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeRuntimeGetTrait == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getCStringPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeRuntimeGetTrait = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_runtime_get_trait", this->getModule());
+            _functionChimeRuntimeGetTrait->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_runtime_get_trait: return");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeRuntimeGetTrait, traitNamePtr, "chime_runtime_get_trait call");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);
@@ -387,6 +389,68 @@ namespace chime
         
         call = this->getBuilder()->CreateCall(_functionChimeRuntimeSetClassMethod, args.begin(), args.end(), "");
         call->setTailCall(false);
+    }
+
+// Class Functions
+    void RuntimeInterface::callChimeClassIncludeTrait(llvm::Value* classPtr, llvm::Value* traitPtr)
+    {
+        llvm::CallInst*           call;
+        llvm::LoadInst*           loadedClassPtr;
+        llvm::LoadInst*           loadedTraitPtr;
+        std::vector<llvm::Value*> args;
+        
+        if (_functionChimeClassIncludeTrait == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getVoidPtrType(), functionArgs, false);
+            
+            _functionChimeClassIncludeTrait = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_class_include_trait", this->getModule());
+            _functionChimeClassIncludeTrait->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        loadedClassPtr = this->getBuilder()->CreateLoad(classPtr, "chime_class_include_trait param1:class");
+        loadedTraitPtr = this->getBuilder()->CreateLoad(traitPtr, "chime_class_include_trait param2:trait");
+        
+        args.push_back(loadedClassPtr);
+        args.push_back(loadedTraitPtr);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeClassIncludeTrait, args.begin(), args.end(), "");
+        call->setTailCall(false);
+    }
+    
+// Trait Functions
+    llvm::Value* RuntimeInterface::callChimeTraitCreate(llvm::Value* traitNamePtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeTraitCreate == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getCStringPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeTraitCreate = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_trait_create", this->getModule());
+            _functionChimeTraitCreate->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_trait_create: return");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeTraitCreate, traitNamePtr, "chime_trait_create call");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
     }
     
 #pragma mark -

@@ -7,6 +7,7 @@
 #include "runtime/class/chime_class.h"
 
 extern chime_dictionary_t* _chime_classes;
+extern chime_dictionary_t* _chime_traits;
 
 extern chime_class_t*      _object_class;
 extern chime_class_t*      _method_class;

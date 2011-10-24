@@ -11,7 +11,7 @@ extern "C" {
 
 void chime_trait_initialize(void);
 
-chime_object_t* chime_trait_create(const char* name);
+chime_class_t* chime_trait_create(const char* name);
 
 #ifdef __cplusplus
 }

@@ -6,8 +6,9 @@
 #include "runtime/object/chime_object_internal.h"
 
 struct _chime_class {
-    struct _chime_object object;      // make it an object
-    struct _chime_class* super_class; // with an extra field for the superclass
+    struct _chime_object   object;      // make it an object
+    struct _chime_class*   super_class;
+    chime_runtime_array_t* traits;
 };
 
 #endif // CHIME_CLASS_INTERNAL_H

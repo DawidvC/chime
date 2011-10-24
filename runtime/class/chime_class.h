@@ -19,6 +19,7 @@ char*           chime_class_get_name(chime_class_t* klass);
 
 void            chime_class_set_instance_method(chime_class_t* klass, const char* name, void* function);
 void            chime_class_set_class_method(chime_class_t* klass, const char* name, void* function);
+void            chime_class_include_trait(chime_class_t* klass, chime_class_t* trait);
 
 #ifdef __cplusplus
 }

@@ -125,14 +125,15 @@ namespace ast
         // generator's list
         initFunction = this->createInitFunction(generator);
         
-        generator.getInitFunctions()->push_back(initFunction);
+        
+        //generator.getInitFunctions()->push_back(initFunction);
         
         // setup our insertion point in the init function
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", initFunction, 0);
         generator.builder()->SetInsertPoint(basicBlock);
         
         // first create the c-string name of the new class
-        classNamePtr = generator.make_constant_string(this->getTypeRef()->identifier());
+        classNamePtr = generator.getConstantString(this->getTypeRef()->identifier());
         
         // if we have a superclass, create a c-string name for the superclass,
         // and then get that class object
@@ -142,7 +143,7 @@ namespace ast
         }
         else
         {
-            superclassNamePtr = generator.make_constant_string("Object");
+            superclassNamePtr = generator.getConstantString("Object");
         }
         
         superclassPtr = generator.getRuntime()->callChimeRuntimeGetClass(superclassNamePtr);
@@ -162,8 +163,7 @@ namespace ast
         // and now, finally, we can actually codegen the internals of the implementation
         _bodyBlock->codegen(generator);
         
-        llvm::ReturnInst::Create(generator.getContext(), generator.builder()->GetInsertBlock());
-        //generator.builder()->CreateRet();
+        generator.builder()->CreateRetVoid();
         
         // verify the function
         llvm::verifyFunction(*initFunction);

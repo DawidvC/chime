@@ -37,8 +37,8 @@ namespace chime
         void         callChimeLibraryInitialize(void);
         
         llvm::Value* callChimeRuntimeCreateClass(llvm::Value* classNamePtr, llvm::Value* superclassObjectPtr);
-        llvm::Value* callChimeRuntimeCreateTrait(llvm::Value* traitNamePtr);
         llvm::Value* callChimeRuntimeGetClass(llvm::Value* classNamePtr);
+        llvm::Value* callChimeRuntimeGetTrait(llvm::Value* traitNamePtr);
         
         llvm::Value* callChimeRuntimeLoad(llvm::Value* namePtr);
         
@@ -47,7 +47,13 @@ namespace chime
         
         void            callChimeRuntimeSetInstanceMethod(llvm::Value* classValue, llvm::Value* functionNamePtr, llvm::Function* function);
         void            callChimeRuntimeSetClassMethod(llvm::Value* classValue, llvm::Value* functionNamePtr, llvm::Function* function);
-                
+        
+        // class functions
+        void         callChimeClassIncludeTrait(llvm::Value* classPtr, llvm::Value* traitPtr);
+        
+        // trait functions
+        llvm::Value* callChimeTraitCreate(llvm::Value* traitNamePtr);
+        
         // object functions
         llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);
         llvm::Value* callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr);
@@ -97,12 +103,14 @@ namespace chime
         llvm::Function*     _functionChimeRuntimeInitialize;
         llvm::Function*     _functionChimeLibraryInitialize;
         llvm::Function*     _functionChimeRuntimeCreateClass;
-        llvm::Function*     _functionChimeRuntimeCreateTrait;
         llvm::Function*     _functionChimeRuntimeGetClass;
+        llvm::Function*     _functionChimeRuntimeGetTrait;
         llvm::Function*     _functionChimeRuntimeLoad;
         llvm::Function*     _functionChimeObjectCreate;
         llvm::Function*     _functionChimeRuntimeSetInstanceMethod;
         llvm::Function*     _functionChimeRuntimeSetClassMethod;
+        llvm::Function*     _functionChimeClassIncludeTrait;
+        llvm::Function*     _functionChimeTraitCreate;
         llvm::Function*     _functionChimeObjectGetAttribute;
         llvm::Function*     _functionChimeObjectSetAttribute;
         llvm::Function*     _functionChimeObjectInvoke0;

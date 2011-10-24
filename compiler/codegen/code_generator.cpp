@@ -303,7 +303,7 @@ namespace chime
     {
         std::vector<ast::node*>::iterator i;
         
-        assert(node != NULL);
+        assert(node);
         
         this->pushScope(node);
         
