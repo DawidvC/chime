@@ -22,7 +22,7 @@ namespace chime
         SourceFile(const std::string& path);
         
         std::string   getPath(void) const;
-        std::string   getModuleName(void) const;
+        std::string   getModuleName() const;
         std::string   getOutputFilePath(void) const;
         
         ast::RootRef  getASTRoot(void);

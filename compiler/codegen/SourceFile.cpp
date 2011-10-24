@@ -1,8 +1,6 @@
 #include "SourceFile.h"
-#ifndef USING_PREFIX_HEADERS
-#    include "compiler/parser/parser.h"
-#    include "compiler/codegen/code_generator.h"
-#endif
+#include "compiler/parser/parser.h"
+#include "compiler/codegen/code_generator.h"
 #include "compiler/lexer/file_lexer.h"
 
 #include <libgen.h>
@@ -37,9 +35,18 @@ namespace chime
         return _path;
     }
     
-    std::string SourceFile::getModuleName(void) const
+    std::string SourceFile::getModuleName() const
     {
-        return _path;
+        size_t lastSlashPos;
+        size_t lastPeriodPos;
+        
+        lastSlashPos  = _path.find_last_of("/");
+        lastPeriodPos = _path.find_last_of(".");
+        
+        if (lastSlashPos > 0)
+            lastSlashPos += 1;
+        
+        return _path.substr(lastSlashPos, lastPeriodPos-lastSlashPos);
     }
     
     std::string SourceFile::getOutputFilePath(void) const

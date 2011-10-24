@@ -98,7 +98,7 @@ namespace ast
         llvm::FunctionType* functionType;
         std::string         functionName;
         
-        functionName = "init_" + this->getTypeRef()->identifier();
+        functionName = "init_implementation_" + this->getTypeRef()->identifier();
         
         functionType = generator.getRuntime()->getChimeModuleInitFunctionType();
         
@@ -113,20 +113,16 @@ namespace ast
         llvm::Value*                  superclassNamePtr;
         llvm::Value*                  objectClassPtr;
         llvm::Value*                  superclassPtr;
-        llvm::Function*   initFunction;
-        llvm::BasicBlock* basicBlock;
-        llvm::BasicBlock* currentBlock;
+        llvm::Function*               initFunction;
+        llvm::BasicBlock*             basicBlock;
+        llvm::BasicBlock*             currentBlock;
         chime::ImplementationScopeRef scope;
+        
+        initFunction = this->createInitFunction(generator);
+        generator.builder()->CreateCall(initFunction, "");
         
         // capture the current block
         currentBlock = generator.builder()->GetInsertBlock();
-        
-        // create the class's initialization function, and add it to the
-        // generator's list
-        initFunction = this->createInitFunction(generator);
-        
-        
-        //generator.getInitFunctions()->push_back(initFunction);
         
         // setup our insertion point in the init function
         basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", initFunction, 0);
@@ -139,7 +135,7 @@ namespace ast
         // and then get that class object
         if (this->getSuperclass().get())
         {
-            superclassNamePtr = generator.make_constant_string(this->getSuperclass()->identifier());
+            superclassNamePtr = generator.getConstantString(this->getSuperclass()->identifier());
         }
         else
         {

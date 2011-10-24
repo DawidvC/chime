@@ -59,7 +59,11 @@ namespace chime
         
         void generate(ast::Root* node, const std::string& moduleName, bool asMain);
         
-    protected:
+    private:
+        void generateMainFunction();
+        void generateModuleInitFunction(const std::string& moduleName);
+        
+    private:
         llvm::Module*                        _module;
         llvm::IRBuilder<>*                   _builder;
         std::vector<llvm::Function*>*        _initFunctions;
@@ -74,9 +78,6 @@ namespace chime
         llvm::FunctionType*                  _chime_function_type;
         
         RuntimeInterface*                    _runtimeInterface;
-        
-        void generateMainFunction(void);
-        void fillInInternalInitFunction(void);
     };
 }
 

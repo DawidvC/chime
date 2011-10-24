@@ -207,6 +207,7 @@ namespace chime
         llvm::Function*     initFunction;
         llvm::FunctionType* functionType;
         std::string         functionName;
+        llvm::CallInst*     call;
         
         functionName = "init_" + name;
         
@@ -214,23 +215,13 @@ namespace chime
         
         initFunction = this->createFunction(functionType, functionName);
         
-        // If there was already a function defined, llvm will automatically rename the
-        // new one.  We need to check here to make sure that didn't happen
-        // fprintf(stderr, "name = %s f->getName = %s\n", name.c_str(), initFunction->getName().c_str());
-        // if (initFunction->getName() != name)
-        // {
-        //     assert(0 && "This case needs to be handled");
-        // }
-        
-        llvm::CallInst* call;
-        
         call = this->builder()->CreateCall(initFunction, "");
         call->setTailCall(false);
         
         return NULL;
     }
     
-    void code_generator::generateMainFunction(void)
+    void code_generator::generateMainFunction()
     {
         llvm::LLVMContext&             context = this->module()->getContext();
         const llvm::IntegerType*       int32_type;
@@ -238,6 +229,7 @@ namespace chime
         std::vector<const llvm::Type*> functionArgs;
         llvm::FunctionType*            functionType; 
         llvm::Function*                function;
+        llvm::BasicBlock*              block;
         
         // create the main function
         int32_type    = llvm::IntegerType::get(context, 32);
@@ -251,52 +243,22 @@ namespace chime
         function = this->createFunction(functionType, std::string("main"));
         
         // function body
-        llvm::BasicBlock* label_entry = llvm::BasicBlock::Create(context, "entry", function, 0);
-        this->builder()->SetInsertPoint(label_entry);
+        block = llvm::BasicBlock::Create(context, "entry", function, 0);
+        this->builder()->SetInsertPoint(block);
         
         this->getRuntime()->callChimeRuntimeInitialize();
         this->getRuntime()->callChimeLibraryInitialize();
-        
-        // now, create our internal init function and call it.  This function is
-        // really just used as a placeholder we'll fill in after codegen
-        // with compiled and/or linked implemenations
-        
-        functionArgs.clear();
-        
-        functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
-        
-        _internalInitFunction = this->createFunction(functionType, "internal_initialize");
-        
-        this->builder()->CreateCall(_internalInitFunction, "");
     }
     
-    void code_generator::fillInInternalInitFunction(void)
+    void code_generator::generateModuleInitFunction(const std::string& moduleName)
     {
-        llvm::BasicBlock*                      basicBlock;
-        llvm::BasicBlock*                      currentBlock;
-        std::vector<llvm::Function*>::iterator i;
+        llvm::Function*   function;
+        llvm::BasicBlock* block;
         
-        assert(_internalInitFunction && "_internalInitFunction cannot be NULL");
+        function = this->getRuntime()->createModuleInitFunction(moduleName);
         
-        // capture the current block
-        currentBlock = this->builder()->GetInsertBlock();
-        
-        // setup our insertion point in the init function
-        basicBlock = llvm::BasicBlock::Create(this->getContext(), "entry", _internalInitFunction, 0);
-        this->builder()->SetInsertPoint(basicBlock);
-        
-        for (i = _initFunctions->begin(); i < _initFunctions->end(); ++i)
-        {
-            this->builder()->CreateCall((*i), "");
-        }
-        
-        this->builder()->CreateRetVoid();
-        
-        // verify the function
-        llvm::verifyFunction(*_internalInitFunction);
-        
-        // restore the builder's position
-        this->builder()->SetInsertPoint(currentBlock);
+        block = llvm::BasicBlock::Create(this->getContext(), "entry", function, 0);
+        this->builder()->SetInsertPoint(block);
     }
     
     void code_generator::generate(ast::Root* node, const std::string& moduleName, bool asMain)
@@ -317,17 +279,11 @@ namespace chime
         }
         else
         {
-            llvm::Function*   function;
-            llvm::BasicBlock* labelEntry;
-            
-            function = this->getRuntime()->createModuleInitFunction(moduleName);
-            
-            labelEntry = llvm::BasicBlock::Create(this->getContext(), "entry", function, 0);
-            this->builder()->SetInsertPoint(labelEntry);
+            this->generateModuleInitFunction(moduleName);
         }
         
         // actually do the codegen
-        for (i=node->children()->begin(); i < node->children()->end(); ++i)
+        for (i = node->children()->begin(); i < node->children()->end(); ++i)
         {
             (*i)->codegen(*this);
         }
@@ -335,10 +291,7 @@ namespace chime
         if (asMain)
         {
             // by default, return a zero
-            this->builder()->CreateRet(llvm::ConstantInt::get(this->get_context(), llvm::APInt(32, 0, false)));
-            
-            // and now, generate all of the internal init calls
-            this->fillInInternalInitFunction();
+            this->builder()->CreateRet(llvm::ConstantInt::get(this->getContext(), llvm::APInt(32, 0, false)));
         }
         else
         {

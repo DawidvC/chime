@@ -70,7 +70,7 @@ namespace chime
         llvm::FunctionType* functionType;
         std::string         functionName;
         
-        functionName = "init_" + this->getIdentifier();
+        functionName = "init_trait_" + this->getIdentifier();
         
         functionType = context.getRuntime()->getChimeModuleInitFunctionType();
         
@@ -88,13 +88,12 @@ namespace chime
         llvm::BasicBlock*             currentBlock;
         chime::ImplementationScopeRef scope;
         
+        initFunction = this->createInitFunction(context);
+        context.builder()->CreateCall(initFunction, "");
+        
         // create the class's initialization function, and add it to the
         // context's list
         currentBlock = context.builder()->GetInsertBlock();
-        
-        initFunction = this->createInitFunction(context);
-        
-        context.getInitFunctions()->push_back(initFunction);
         
         // setup our insertion point in the init function
         basicBlock = llvm::BasicBlock::Create(context.getContext(), "entry", initFunction, 0);
@@ -107,18 +106,18 @@ namespace chime
         traitPtr = context.getRuntime()->callChimeTraitCreate(traitNamePtr);
         
         // with it created, we can now create a new implementation scope and assign it
-        scope = chime::ImplementationScopeRef(new chime::ImplementationScope());
-        
-        scope->setTarget(traitPtr);
-        scope->setName(this->getIdentifier());
-        
-        context.setImplementationScope(scope);
+        // scope = chime::ImplementationScopeRef(new chime::ImplementationScope());
+        // 
+        // scope->setTarget(traitPtr);
+        // scope->setName(this->getIdentifier());
+        // 
+        // context.setImplementationScope(scope);
         context.pushScope(this);
         
         // and now, finally, we can actually codegen the internals of the implementation
         _bodyBlock->codegen(context);
         
-        llvm::ReturnInst::Create(context.getContext(), context.builder()->GetInsertBlock());
+        context.builder()->CreateRetVoid();
         
         // verify the function
         llvm::verifyFunction(*initFunction);
