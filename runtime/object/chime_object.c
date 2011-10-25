@@ -6,6 +6,7 @@
 #include "chime_object_methods.h"
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/class/chime_class_internal.h"
 #include "runtime/class/chime_class_methods.h"
 #include "runtime/string/chime_string.h"
 #include "runtime/literals/chime_literal.h"
@@ -196,8 +197,10 @@ void chime_object_set_attribute(chime_object_t* instance, const char* name, chim
 
 void* chime_object_resolve_invoke(chime_object_t* instance, const char* name)
 {
-    chime_class_t* klass;
-    void*          function;
+    chime_class_t*         klass;
+    void*                  function;
+    chime_runtime_array_t* trait_array;
+    unsigned long          i;
     
     function = NULL;
     
@@ -207,9 +210,28 @@ void* chime_object_resolve_invoke(chime_object_t* instance, const char* name)
     // we now need to hunt up the inheritance chain for the right method
     do
     {
+        // check the class functions
         function = chime_dictionary_get(chime_object_get_methods((chime_object_t*)klass), name);
         if (function)
             break;
+        
+        // no dice, so check our traits
+        trait_array = klass->traits;
+        if (trait_array)
+        {
+            for (i = 0; i < chime_runtime_array_count(trait_array); ++i)
+            {
+                chime_class_t* trait;
+                
+                trait = chime_runtime_array_get(trait_array, i);
+                function = chime_dictionary_get(chime_object_get_methods((chime_object_t*)trait), name);
+                if (function)
+                    break;
+            }
+            
+            if (function)
+                break;
+        }
         
         // Be careful here.  We need to use the chime_class_x methods, because
         // we know we have a class instance.  This is one of the few places where the

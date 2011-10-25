@@ -49,7 +49,6 @@ chime_class_t* chime_trait_create(const char* name)
     
     assert(trait);
     
-    fprintf(stderr, "Created trait %s\n", name);
     chime_dictionary_set(_chime_traits, name, trait);
     
     return trait;

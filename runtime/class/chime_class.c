@@ -114,13 +114,11 @@ void chime_class_set_class_method(chime_class_t* klass, const char* name, void* 
 
 void chime_class_include_trait(chime_class_t* klass, chime_class_t* trait)
 {
-    // assert(klass);
-    // assert(trait);
-    // 
-    // if (!klass->traits)
-    //     klass->traits = chime_runtime_array_create();
-    // 
-    // chime_runtime_array_add(klass->traits, trait);
+    assert(klass);
+    assert(trait);
     
-    fprintf(stderr, "including trait\n");
+    if (!klass->traits)
+        klass->traits = chime_runtime_array_create();
+    
+    chime_runtime_array_add(klass->traits, trait);
 }
