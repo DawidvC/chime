@@ -13,6 +13,7 @@
 bool                              print_ast;
 bool                              emit_llvm_ir;
 bool                              _executeBinary;
+bool                              _traceSteps;
 std::string                       _inputFileName;
 const char*                       _outputFileName;
 std::vector<chime::SourceFileRef> _compiledSources;
@@ -34,9 +35,10 @@ void get_options(int argc, char* argv[])
     print_ast       = false;
     emit_llvm_ir    = false;
     _executeBinary  = true;
+    _traceSteps     = false;
     _outputFileName = NULL;
     
-    while ((c = getopt_long(argc, argv, "ceho:p", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "ceho:pt", longopts, NULL)) != -1)
     {
         switch (c)
         {
@@ -52,6 +54,9 @@ void get_options(int argc, char* argv[])
             case 'p':
                 print_ast = true;
                 break;
+            case 't':
+                _traceSteps = true;
+                break;
             case 'h':
             default:
                 printf("usage: chime [options] [--] [file] [arguments]\n");
@@ -61,6 +66,7 @@ void get_options(int argc, char* argv[])
                 printf("  -h (--help)       print this help message and exit\n");
                 printf("  -o (--output)     name of output file\n");
                 printf("  -p (--print)      print out the AST representation for the input file\n");
+                printf("  -t (--trace)      trace compilation steps\n");
                 exit(0);
                 break;
         }
@@ -107,7 +113,8 @@ bool compile(chime::SourceFileRef sourceFile, bool asMain)
     std::vector<std::string>           dependencies;
     std::string                        sourcePath;
     
-    fprintf(stdout, "[Compile] %s\n", sourceFile->getPath().c_str());
+    if (_traceSteps)
+        fprintf(stdout, "[Compile] %s\n", sourceFile->getPath().c_str());
     
     if (!sourceFile->writeObjectFile(asMain))
     {
@@ -167,6 +174,9 @@ bool link(void)
         linkCommand.append(_outputFileName);
     }
     
+    if (_traceSteps)
+        fprintf(stdout, "[Link] %s\n", _outputFileName);
+        
     if (system(linkCommand.c_str()) != 0)
     {
         fprintf(stderr, "Link failed\n");
