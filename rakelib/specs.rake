@@ -20,5 +20,5 @@ file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchimeruntime.a")
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/chime")
 file("#{BUILD_PATH}/language_test" => LANGUAGE_TEST_SOURCES) do
   log("Build", "#{BUILD_PATH}/language_test")
-  sh("#{CHIME_COMPILER} -o #{BUILD_PATH}/language_test specs/Tests.chm")
+  sh("#{CHIME_COMPILER} -c -o #{BUILD_PATH}/language_test specs/Tests.chm")
 end

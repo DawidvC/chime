@@ -54,6 +54,11 @@ namespace chime
         return SourceFile::pathWithNewExtension(_path, ".chc");
     }
     
+    std::string SourceFile::getBinaryFilePath() const
+    {
+        return SourceFile::pathWithNewExtension(_path, "");
+    }
+    
     ast::RootRef SourceFile::getASTRoot(void)
     {
         if (!_astRoot)

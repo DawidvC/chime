@@ -24,6 +24,7 @@ namespace chime
         std::string   getPath(void) const;
         std::string   getModuleName() const;
         std::string   getOutputFilePath(void) const;
+        std::string   getBinaryFilePath() const;
         
         ast::RootRef  getASTRoot(void);
         llvm::Module* getModule(bool asMain);

@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <string>
 #include <getopt.h>
+#include <unistd.h>
 
 #include <llvm/Pass.h>
 #include <llvm/PassManager.h>
@@ -11,6 +12,7 @@
 
 bool                              print_ast;
 bool                              emit_llvm_ir;
+bool                              _executeBinary;
 std::string                       _inputFileName;
 const char*                       _outputFileName;
 std::vector<chime::SourceFileRef> _compiledSources;
@@ -31,6 +33,7 @@ void get_options(int argc, char* argv[])
     
     print_ast       = false;
     emit_llvm_ir    = false;
+    _executeBinary  = true;
     _outputFileName = NULL;
     
     while ((c = getopt_long(argc, argv, "ceho:p", longopts, NULL)) != -1)
@@ -38,6 +41,7 @@ void get_options(int argc, char* argv[])
         switch (c)
         {
             case 'c':
+                _executeBinary = false;
                 break;
             case 'e':
                 emit_llvm_ir = true;
@@ -203,8 +207,17 @@ int main(int argc, char* argv[])
     if (!compile(sourceFile, true))
         return 1;
     
+    // set a default path if needed
+    if (!_outputFileName)
+        _outputFileName = sourceFile->getBinaryFilePath().c_str();
+    
     if (!link())
         return 1;
+    
+    if (_executeBinary)
+    {
+        return execl(_outputFileName, NULL);
+    }
     
     return 0;
 }
