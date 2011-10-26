@@ -183,25 +183,6 @@ namespace chime
         return function;
     }
     
-    llvm::Value* code_generator::callModuleInitFunction(const std::string& name)
-    {
-        llvm::Function*     initFunction;
-        llvm::FunctionType* functionType;
-        std::string         functionName;
-        llvm::CallInst*     call;
-        
-        functionName = "init_" + name;
-        
-        functionType = this->getRuntime()->getChimeModuleInitFunctionType();
-        
-        initFunction = this->createFunction(functionType, functionName);
-        
-        call = this->builder()->CreateCall(initFunction, "");
-        call->setTailCall(false);
-        
-        return NULL;
-    }
-    
     void code_generator::generateMainFunction()
     {
         llvm::LLVMContext&             context = this->module()->getContext();

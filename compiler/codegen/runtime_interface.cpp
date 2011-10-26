@@ -320,6 +320,21 @@ namespace chime
     
     llvm::Value* RuntimeInterface::callModuleInitFunction(const std::string& name)
     {
+        llvm::Function*     initFunction;
+        llvm::FunctionType* functionType;
+        std::string         functionName;
+        llvm::CallInst*     call;
+        
+        functionName = "init_" + name;
+        
+        functionType = this->getChimeModuleInitFunctionType();
+        
+        initFunction = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, functionName, this->getModule());
+        initFunction->setCallingConv(llvm::CallingConv::C);
+        
+        call = this->getBuilder()->CreateCall(initFunction, "");
+        call->setTailCall(false);
+        
         return NULL;
     }
     

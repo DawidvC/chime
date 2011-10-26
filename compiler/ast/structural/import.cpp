@@ -85,20 +85,20 @@ namespace ast
             chime::type_reference* typeRef;
             llvm::Value*         cStringPtr;
             
-            typeRef    = static_cast<chime::type_reference*>(node);
-            cStringPtr = generator.make_constant_string(typeRef->identifier());
+            typeRef    = dynamic_cast<chime::type_reference*>(node);
+            cStringPtr = generator.getConstantString(typeRef->identifier());
             
             //generator.getImportedNamespaces()->push_back(->identifier());
             //generator.getRuntime()->callChimeRuntimeLoad(cStringPtr);
-            generator.callModuleInitFunction(typeRef->identifier());
+            generator.getRuntime()->callModuleInitFunction(typeRef->identifier());
         }
         else if (node->nodeName().compare(std::string("string literal")) == 0)
         {
             std::string typeIdentifier;
             
-            typeIdentifier = static_cast<string_literal*>(node)->value();
+            typeIdentifier = dynamic_cast<string_literal*>(node)->value();
             
-            generator.callModuleInitFunction(typeIdentifier);
+            generator.getRuntime()->callModuleInitFunction(typeIdentifier);
         }
         else
         {

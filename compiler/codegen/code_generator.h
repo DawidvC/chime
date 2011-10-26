@@ -51,8 +51,6 @@ namespace chime
         llvm::Value*       createCondition(llvm::Value* cond);
         llvm::Function*    createFunction(const llvm::FunctionType* type, const std::string name);
         
-        llvm::Value*    callModuleInitFunction(const std::string& name);
-        
         void generate(ast::Root* node, const std::string& moduleName, bool asMain);
         
     private:
