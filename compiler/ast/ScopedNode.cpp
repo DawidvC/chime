@@ -93,6 +93,28 @@ namespace ast
         return this->createVariable(identifier);
     }
     
+    chime::SelfLiteral* ScopedNode::createSelf()
+    {
+        return NULL;
+    }
+    
+    chime::SelfLiteral* ScopedNode::getSelf()
+    {
+        ScopedNode*         node;
+        chime::SelfLiteral* self;
+        
+        node = this;
+        
+        while (node && !self)
+        {
+            self = node->createSelf();
+            
+            node = node->getParent();
+        }
+        
+        return self;
+    }
+    
     bool ScopedNode::allowsStructuralElements() const
     {
         return false; // most scopes do not allow this

@@ -5,6 +5,7 @@
 
 #include "FunctionDefinition.h"
 #include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/literals/SelfLiteral.h"
 
 #include <map>
 
@@ -23,6 +24,8 @@ namespace ast
         
         CodeBlockRef           getBody() const;
         std::vector<Variable*> getClosedVariables() const;
+        
+        chime::SelfLiteral*    createSelf();
         
         Variable*    createVariable(const std::string& identifier);
         Variable*    transformVariable(Variable* variable);

@@ -90,7 +90,7 @@ implementation ClosureTests : Test.Case
     //     
     //     f = do
     //     {
-    //         global = global + 1
+    //         global += 1
     //     }
     //     
     //     Assert.equal(0, to:global)
@@ -99,4 +99,29 @@ implementation ClosureTests : Test.Case
     //     
     //     Assert.equal(1, to:global)
     // }
+    
+    method argument_used_in_closure(value)
+    {
+        2.times() do (i)
+        {
+            value += 1
+        }
+        
+        return value
+    }
+    
+    method test_method_argument_in_closure()
+    {
+        Assert.equal(6, self.argument_used_in_closure(4))
+    }
+    
+    method test_self_in_closure()
+    {
+        function = do
+        {
+            Assert.equal("ClosureTests", to:self.class.name)
+        }
+        
+        function.call()
+    }
 }

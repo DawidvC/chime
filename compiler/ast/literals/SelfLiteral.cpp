@@ -1,10 +1,9 @@
 #include "SelfLiteral.h"
 
-namespace ast
+namespace chime
 {
-    SelfLiteral::SelfLiteral(chime::parser& parser)
+    SelfLiteral::SelfLiteral()
     {
-        parser.next_token_value("self");
     }
     
     std::string SelfLiteral::nodeName(void) const

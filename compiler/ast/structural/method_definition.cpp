@@ -23,6 +23,22 @@ namespace ast
         definition->setIdentifier(parser.next_token_value());
         definition->setParameters(chime::ParameterSet::parse(parser));
         
+        // we now need to create variables (which should be strictly local) for
+        // all the parameters
+        for (unsigned int i = 0; i < definition->getParameters()->length(); ++i)
+        {
+            ast::method_parameter* parameter;
+            ast::Variable*         variable;
+            
+            parameter = definition->getParameters()->parameterAtIndex(i);
+            
+            variable = definition->variableForIdentifier(parameter->identifier());
+            if (variable->nodeName() != "Local Variable")
+            {
+                parser.addError("Method argument shadows a variable in scope");
+            }
+        }
+        
         definition->_bodyBlock = CodeBlock::parse(parser);
         
         parser.popScope();

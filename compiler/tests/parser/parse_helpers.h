@@ -126,7 +126,9 @@
     } while (0)
 
 #define ASSERT_LITERAL_SELF(x) ASSERT_EQ("self literal", x->node_name())
-    
+
+#define ASSERT_CLOSED_LITERAL_SELF(x) ASSERT_EQ("Closed Self Literal", x->nodeName())
+
 #define ASSERT_LITERAL_STRING(x, y) do { \
     ASSERT_EQ("string literal", y->nodeName()); \
     ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \

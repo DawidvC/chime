@@ -37,6 +37,11 @@ namespace ast
         _isInstance = value;
     }
     
+    chime::SelfLiteral* FunctionDefinition::createSelf()
+    {
+        return new chime::SelfLiteral();
+    }
+    
     llvm::Function* FunctionDefinition::createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity)
     {
         llvm::Function*                function;

@@ -4,6 +4,7 @@
 #define SCOPED_NODE_H
 
 #include "compiler/ast/node.h"
+#include "compiler/ast/literals/SelfLiteral.h"
 #include "compiler/ast/variable/Variable.h"
 
 #include <map>
@@ -27,6 +28,9 @@ namespace ast
         virtual Variable* transformVariable(Variable* variable);
         void              capturedVariable(Variable* variable);
         Variable*         variableForIdentifier(const std::string& identifier);
+        
+        virtual chime::SelfLiteral* createSelf();
+        chime::SelfLiteral*         getSelf();
         
         virtual bool      allowsStructuralElements() const;
         

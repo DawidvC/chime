@@ -1,5 +1,6 @@
 #include "Closure.h"
 #include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/literals/ClosedSelfLiteral.h"
 #include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/ast/variable/ClosedLocalVariable.h"
 #include "compiler/codegen/code_generator.h"
@@ -80,6 +81,11 @@ namespace ast
         return variables;
     }
     
+    chime::SelfLiteral* Closure::createSelf()
+    {
+        return new chime::ClosedSelfLiteral();
+    }
+    
     Variable* Closure::createVariable(const std::string& identifier)
     {
         //if (_closedVariables.find(identifier) != _closedVariables.end())
@@ -105,6 +111,7 @@ namespace ast
         llvm::Function* function;
         llvm::Value*    closureValue;
         std::string     name;
+        llvm::Value*    referenceValue;
         
         name = generator.getCurrentScope()->getAnonymousFunctionName();
         this->setIdentifier(name);
@@ -118,7 +125,6 @@ namespace ast
         
         for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
         {
-            llvm::Value* referenceValue;
             llvm::Value* variableNameCStringPtr;
             
             variableNameCStringPtr = generator.getConstantString(it->first);
@@ -128,6 +134,9 @@ namespace ast
             
             generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
         }
+        
+        // finally, do self
+        generator.getRuntime()->callChimeObjectSetAttribute(closureValue, generator.getConstantString("self"), generator.getCurrentScope()->getSelfObjectPtr());
         
         return closureValue;
     }

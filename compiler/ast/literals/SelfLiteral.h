@@ -1,16 +1,18 @@
+// chime:: SelfLiteral.h
+
 #ifndef SELF_LITERAL_H
 #define SELF_LITERAL_H
 
 #include "Literal.h"
 
-namespace ast
+namespace chime
 {
-    class SelfLiteral : public Literal
+    class SelfLiteral : public ast::Literal
     {
     public:
-        SelfLiteral(chime::parser& parser);
+        SelfLiteral();
         
-        virtual std::string nodeName(void) const;
+        virtual std::string nodeName() const;
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };

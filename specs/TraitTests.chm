@@ -15,13 +15,13 @@ trait Test.Enumerable
         }
     }
     
-    // method each(Function(Object) block)
-    // {
-    //     self.size.times() do (i)
-    //     {
-    //         block.call(self[i])
-    //     }
-    // }
+    method each(Function(Object) block)
+    {
+        self.size.times() do (i)
+        {
+            block.call(self[i])
+        }
+    }
 }
 
 implementation TraitTests : Test.Case
@@ -40,14 +40,27 @@ implementation TraitTests : Test.Case
     {
         get
         {
-            return i
+            return i * 2
         }
     }
     
-    method test_size_methods
+    method test_size_methods()
     {
         Assert.equal(8, to:self.size)
         Assert.equal(8, to:self.count)
         Assert.equal(8, to:self.length)
+    }
+    
+    method test_each_method()
+    {
+        value = 0
+        
+        // 0 + 2 + 4 + 6 + 8 + 10 + 12 + 14
+        self.each() do (i)
+        {
+            value += i
+        }
+        
+        Assert.equal(56, to:value)
     }
 }

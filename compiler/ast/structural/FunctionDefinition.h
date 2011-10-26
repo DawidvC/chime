@@ -5,6 +5,7 @@
 
 #include "compiler/ast/ScopedNode.h"
 #include "compiler/ast/common/parameter_set.h"
+#include "compiler/ast/literals/SelfLiteral.h"
 
 namespace ast
 {
@@ -19,6 +20,8 @@ namespace ast
         void            setParameters(chime::ParameterSetRef params);
         bool            isInstance() const;
         void            setInstance(bool value);
+        
+        chime::SelfLiteral* createSelf();
         
     protected:
         llvm::Function* createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity);

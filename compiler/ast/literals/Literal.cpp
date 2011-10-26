@@ -64,9 +64,9 @@ namespace ast
         }
         else if (t->isInheritanceRelated())
         {
-            if (t->equal_to("self"))
+            if (parser.advanceTokenIfEqual("self"))
             {
-                node = new ast::SelfLiteral(parser);
+                node = parser.getCurrentScope()->createSelf();
             }
             else
             {

@@ -134,11 +134,45 @@ TEST_F(ClosureParseTests, NestedClosedLocalVariablesInMethod)
     
     method = parse_method_def("method foo() {\n  a = 42\n  b = 0\n do { a = a + 1 \n do { b = b + 5 }\n }\n a.print()\n b.print()\n }");
     
-    closure = static_cast<ast::Closure*>(method->getBody()->childAtIndex(2));
+    closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(2));
     ASSERT_CLOSURE(closure);
     
     closedVariables = closure->getClosedVariables();
     ASSERT_EQ(2, closedVariables.size());
     ASSERT_EQ("a", closedVariables[0]->getIdentifier());
     ASSERT_EQ("b", closedVariables[1]->getIdentifier());
+}
+
+TEST_F(ClosureParseTests, MethodParameterUsedInClosure)
+{
+    chime::MethodDefinition* method;
+    ast::Closure*            closure;
+    ast::BinaryOperator*     op;
+    
+    method = parseFirst<chime::MethodDefinition*>("method foo(a) { do { a += 1 } }");
+    
+    ASSERT_METHOD_DEFINITION("foo", method);
+    
+    closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(0));
+    ASSERT_CLOSURE(closure);
+    
+    op = dynamic_cast<ast::BinaryOperator*>(closure->getBody()->childAtIndex(0));
+    ASSERT_CLOSED_LOCAL_VARIABLE("a", op->getLeftOperand());
+}
+
+TEST_F(ClosureParseTests, SelfInClosure)
+{
+    chime::MethodDefinition* method;
+    ast::Closure*            closure;
+    ast::BinaryOperator*     op;
+    
+    method = parseFirst<chime::MethodDefinition*>("method foo(a) { do { self.bar() } }");
+    
+    ASSERT_METHOD_DEFINITION("foo", method);
+    
+    closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(0));
+    ASSERT_CLOSURE(closure);
+    
+    op = dynamic_cast<ast::BinaryOperator*>(closure->getBody()->childAtIndex(0));
+    ASSERT_CLOSED_LITERAL_SELF(op->getLeftOperand());
 }

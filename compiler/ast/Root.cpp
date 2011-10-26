@@ -31,6 +31,12 @@ namespace ast
         return new GlobalVariable(identifier);
     }
     
+    chime::SelfLiteral* Root::createSelf()
+    {
+        fprintf(stderr, "Creating global self here\n");
+        return new chime::SelfLiteral();
+    }
+    
     bool Root::allowsStructuralElements() const
     {
         return true;
