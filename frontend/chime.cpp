@@ -14,6 +14,7 @@ bool                              print_ast;
 bool                              emit_llvm_ir;
 bool                              _executeBinary;
 bool                              _traceSteps;
+bool                              _buildOptimized;
 std::string                       _inputFileName;
 const char*                       _outputFileName;
 std::vector<chime::SourceFileRef> _compiledSources;
@@ -25,10 +26,12 @@ void get_options(int argc, char* argv[])
     
     static struct option longopts[] = {
         { "compile",   no_argument,       NULL, 'c' },
+        { "debug",     no_argument,       NULL, 'd' },
         { "emit-llvm", no_argument,       NULL, 'e' },
         { "help",      no_argument,       NULL, 'h' },
         { "output",    required_argument, NULL, 'o' },
         { "print",     no_argument,       NULL, 'p' },
+        { "trace",     no_argument,       NULL, 't' },
         { NULL,        0,                 NULL, 0   }
     };
     
@@ -36,14 +39,18 @@ void get_options(int argc, char* argv[])
     emit_llvm_ir    = false;
     _executeBinary  = true;
     _traceSteps     = false;
+    _buildOptimized = true;
     _outputFileName = NULL;
     
-    while ((c = getopt_long(argc, argv, "ceho:pt", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "cdeho:pt", longopts, NULL)) != -1)
     {
         switch (c)
         {
             case 'c':
                 _executeBinary = false;
+                break;
+            case 'd':
+                _buildOptimized = false;
                 break;
             case 'e':
                 emit_llvm_ir = true;
@@ -62,6 +69,7 @@ void get_options(int argc, char* argv[])
                 printf("usage: chime [options] [--] [file] [arguments]\n");
                 printf("\n");
                 printf("  -c                run only compile and assemble steps\n");
+                printf("  -d (--debug)      disable optimizations\n");
                 printf("  -e (--emit-llvm)  create llvm IR\n");
                 printf("  -h (--help)       print this help message and exit\n");
                 printf("  -o (--output)     name of output file\n");
@@ -116,7 +124,7 @@ bool compile(chime::SourceFileRef sourceFile, bool asMain)
     if (_traceSteps)
         fprintf(stdout, "[Compile] %s\n", sourceFile->getPath().c_str());
     
-    if (!sourceFile->writeObjectFile(asMain))
+    if (!sourceFile->writeObjectFile(asMain, _buildOptimized))
     {
         fprintf(stderr, "Compilation failed\n");
         

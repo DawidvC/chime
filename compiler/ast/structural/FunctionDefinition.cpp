@@ -156,7 +156,7 @@ namespace ast
         methodFunction = this->codegenFunction(generator, functionName, body, arity);
         
         // get the class object
-        classObjectPtr = generator.getCurrentScope()->getSelfObjectPtr();
+        classObjectPtr = generator.getCurrentScope()->getSelfValue(generator);
         
         // finally, install the method in the class
         if (this->isInstance())

@@ -13,6 +13,6 @@ namespace chime
     
     llvm::Value* SelfLiteral::codegen(chime::code_generator& generator)
     {
-        return generator.getCurrentScope()->getSelfObjectPtr();
+        return generator.getCurrentScope()->getSelfValue(generator);
     }
 }

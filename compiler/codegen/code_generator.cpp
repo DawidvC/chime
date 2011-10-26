@@ -244,8 +244,6 @@ namespace chime
     
     void code_generator::generate(ast::Root* node, const std::string& moduleName, bool asMain)
     {
-        std::vector<ast::node*>::iterator i;
-        
         assert(node);
         
         this->pushScope(node);
@@ -264,10 +262,7 @@ namespace chime
         }
         
         // actually do the codegen
-        for (i = node->children()->begin(); i < node->children()->end(); ++i)
-        {
-            (*i)->codegen(*this);
-        }
+        node->codegen(*this);
         
         if (asMain)
         {

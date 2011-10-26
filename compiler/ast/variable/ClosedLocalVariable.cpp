@@ -24,6 +24,7 @@ namespace ast
         llvm::Value* reference;
         llvm::Value* variableNamePtr;
         
+        // this is tricky - we don't want to reference "self", we want to reference the closure itself
         variableNamePtr = generator.getConstantString(this->getIdentifier());
         closure         = generator.getCurrentScope()->getSelfObjectPtr();
         reference       = generator.getRuntime()->callChimeObjectGetAttribute(closure, variableNamePtr);

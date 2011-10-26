@@ -86,6 +86,15 @@ namespace ast
         return new chime::ClosedSelfLiteral();
     }
     
+    llvm::Value* Closure::getSelfValue(chime::CodeGenContext& context)
+    {
+        llvm::Value* closureValue;
+        
+        closureValue = context.getCurrentScope()->getSelfObjectPtr();
+        
+        return context.getRuntime()->callChimeObjectGetAttribute(closureValue, context.getConstantString("self"));
+    }
+    
     Variable* Closure::createVariable(const std::string& identifier)
     {
         //if (_closedVariables.find(identifier) != _closedVariables.end())
@@ -136,7 +145,7 @@ namespace ast
         }
         
         // finally, do self
-        generator.getRuntime()->callChimeObjectSetAttribute(closureValue, generator.getConstantString("self"), generator.getCurrentScope()->getSelfObjectPtr());
+        generator.getRuntime()->callChimeObjectSetAttribute(closureValue, generator.getConstantString("self"), generator.getCurrentScope()->getSelfValue(generator));
         
         return closureValue;
     }

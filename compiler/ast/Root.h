@@ -4,7 +4,6 @@
 #define AST_ROOT_H
 
 #include "ScopedNode.h"
-#include "compiler/ast/literals/SelfLiteral.h"
 
 namespace ast
 {
@@ -22,6 +21,8 @@ namespace ast
         Variable*                createVariable(const std::string& identifier);
         chime::SelfLiteral*      createSelf();
         bool                     allowsStructuralElements() const;
+        
+        llvm::Value*             codegen(chime::CodeGenContext& context);
         
     private:
         std::vector<std::string> _binaryDependencies;

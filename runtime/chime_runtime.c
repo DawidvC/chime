@@ -21,6 +21,7 @@
 chime_dictionary_t* _chime_classes   = NULL;
 chime_dictionary_t* _chime_traits    = NULL;
 chime_class_t*      _object_class    = NULL;
+chime_class_t*      _module_class    = NULL;
 chime_class_t*      _trait_class     = NULL;
 chime_class_t*      _string_class    = NULL;
 chime_class_t*      _array_class     = NULL;
@@ -42,6 +43,8 @@ void chime_runtime_initialize(void)
     _chime_traits  = chime_dictionary_create();
     
     chime_object_initialize(); // set up the root classes and their base methods
+    
+    _module_class = chime_class_create_object_subclass("Module");
     
     chime_trait_initialize();
     
@@ -72,6 +75,7 @@ void chime_runtime_destroy(void)
     _chime_traits = NULL;
     
     _object_class    = NULL;
+    _module_class    = NULL;
     _trait_class     = NULL;
     _string_class    = NULL;
     _array_class     = NULL;

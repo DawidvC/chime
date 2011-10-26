@@ -137,6 +137,11 @@ namespace ast
         _scopedValues[identifier] = value;
     }
     
+    llvm::Value* ScopedNode::getSelfValue(chime::CodeGenContext&)
+    {
+        return this->getSelfObjectPtr();
+    }
+    
     llvm::Value* ScopedNode::getSelfObjectPtr() const
     {
         return _selfObjectPtr;

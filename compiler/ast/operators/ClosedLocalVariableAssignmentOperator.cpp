@@ -18,6 +18,7 @@ namespace ast
         rValue = this->getRightOperand()->codegen(generator);
         assert(rValue);
         
+        // tricky - don't want self, want the closure
         variableNamePtr = generator.getConstantString(this->getVariable()->getIdentifier());
         closureValue    = generator.getCurrentScope()->getSelfObjectPtr();
         referenceValue  = generator.getRuntime()->callChimeObjectGetAttribute(closureValue, variableNamePtr);

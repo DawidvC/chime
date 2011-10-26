@@ -29,7 +29,7 @@ namespace chime
         ast::RootRef  getASTRoot(void);
         llvm::Module* getModule(bool asMain);
         
-        bool          writeObjectFile(bool asMain);
+        bool          writeObjectFile(bool asMain, bool optimized);
         
         std::vector<std::string> getSourceDependencies(void);
         std::vector<std::string> getBinaryDependencies(void);

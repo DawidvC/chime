@@ -32,13 +32,14 @@ namespace ast
         virtual chime::SelfLiteral* createSelf();
         chime::SelfLiteral*         getSelf();
         
-        virtual bool      allowsStructuralElements() const;
+        virtual bool         allowsStructuralElements() const;
         
         // codegen support
-        llvm::Value*      getValueForIdentifier(const std::string& identifier);
-        void              setValueForIdentifier(const std::string& identifier, llvm::Value* value);
-        llvm::Value*      getSelfObjectPtr() const;
-        void              setSelfObjectPtr(llvm::Value* value);
+        llvm::Value*         getValueForIdentifier(const std::string& identifier);
+        void                 setValueForIdentifier(const std::string& identifier, llvm::Value* value);
+        virtual llvm::Value* getSelfValue(chime::CodeGenContext& context);
+        llvm::Value*         getSelfObjectPtr() const;
+        void                 setSelfObjectPtr(llvm::Value* value);
         
         std::string       getAnonymousFunctionName();
         

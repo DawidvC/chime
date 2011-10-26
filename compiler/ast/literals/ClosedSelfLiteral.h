@@ -11,8 +11,6 @@ namespace chime
     {
     public:
         virtual std::string nodeName() const;
-        
-        virtual llvm::Value* codegen(CodeGenContext& context);
     };
 }
 

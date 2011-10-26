@@ -33,12 +33,38 @@ namespace ast
     
     chime::SelfLiteral* Root::createSelf()
     {
-        fprintf(stderr, "Creating global self here\n");
         return new chime::SelfLiteral();
     }
     
     bool Root::allowsStructuralElements() const
     {
         return true;
+    }
+    
+    llvm::Value* Root::codegen(chime::CodeGenContext& context)
+    {
+        llvm::Value*                      cStringPtr;
+        llvm::Value*                      moduleClassPtr;
+        llvm::Value*                      moduleObjectPtr;
+        std::vector<ast::node*>::iterator it;
+        
+        assert(context.getCurrentScope()->allowsStructuralElements());
+        
+        cStringPtr      = context.getConstantString("Module");
+        moduleClassPtr  = context.getRuntime()->callChimeRuntimeGetClass(cStringPtr);
+        
+        cStringPtr      = context.getConstantString("new");
+        moduleObjectPtr = context.getRuntime()->callChimeObjectInvoke(moduleClassPtr, cStringPtr, std::vector<llvm::Value*>());
+        
+        context.getCurrentScope()->setSelfObjectPtr(moduleObjectPtr);
+        
+        for (it = this->children()->begin(); it < this->children()->end(); ++it)
+        {
+            (*it)->codegen(context);
+        }
+        
+        // here, we can destory the self object
+        
+        return NULL;
     }
 }

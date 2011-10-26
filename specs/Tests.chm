@@ -3,6 +3,7 @@ import "LiteralTests"
 import "LoopTests"
 import "ConditionalTests"
 import "MethodTests"
+import "ModuleTests"
 import "ReflectionTests"
 import "TraitTests"
 import "HashTests"
@@ -17,6 +18,7 @@ runner.execute_tests_for_class(LiteralTests)
 runner.execute_tests_for_class(LoopTests)
 runner.execute_tests_for_class(ConditionalTests)
 runner.execute_tests_for_class(MethodTests)
+runner.execute_tests_for_class(ModuleTests)
 runner.execute_tests_for_class(ReflectionTests)
 runner.execute_tests_for_class(TraitTests)
 runner.execute_tests_for_class(HashTests)

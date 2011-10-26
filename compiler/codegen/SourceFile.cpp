@@ -93,16 +93,17 @@ namespace chime
         return generator->module();
     }
     
-    bool SourceFile::writeObjectFile(bool asMain)
+    bool SourceFile::writeObjectFile(bool asMain, bool optimized)
     {
-        llvm::Module*        module;
-        llvm::PassManager    passManager;
-        std::string          errorString;
-        llvm::Triple         triple;
-        const llvm::Target*  target = 0;
-        llvm::TargetMachine* targetMachine;
-        std::string          featuresString;
-        llvm::raw_ostream*   stream;
+        llvm::Module*           module;
+        llvm::PassManager       passManager;
+        std::string             errorString;
+        llvm::Triple            triple;
+        const llvm::Target*     target = 0;
+        llvm::TargetMachine*    targetMachine;
+        std::string             featuresString;
+        llvm::raw_ostream*      stream;
+        llvm::CodeGenOpt::Level optimizationLevel;
         
         module = this->getModule(asMain);
         
@@ -130,8 +131,13 @@ namespace chime
         
         targetMachine->setAsmVerbosityDefault(true);
         
+        if (optimized)
+            optimizationLevel = llvm::CodeGenOpt::Aggressive;
+        else
+            optimizationLevel = llvm::CodeGenOpt::None;
+        
         // llvm::TargetMachine::CGFT_ObjectFile
-        if (targetMachine->addPassesToEmitFile(passManager, formatted_ostream, llvm::TargetMachine::CGFT_ObjectFile, llvm::CodeGenOpt::None, false))
+        if (targetMachine->addPassesToEmitFile(passManager, formatted_ostream, llvm::TargetMachine::CGFT_ObjectFile, optimizationLevel, false))
         {
             fprintf(stderr, "Target type does not support object file generation\n");
             return false;

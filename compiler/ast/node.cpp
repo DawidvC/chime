@@ -103,8 +103,6 @@ namespace ast
     
     llvm::Value* node::codegen(chime::code_generator& generator)
     {
-        //assert(false);
-        
         return NULL;
     }
 }

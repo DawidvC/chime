@@ -124,4 +124,19 @@ implementation ClosureTests : Test.Case
         
         function.call()
     }
+    
+    method test_self_in_nested_closure()
+    {
+        function = do
+        {
+            sub_function = do
+            {
+                Assert.equal("ClosureTests", to:self.class.name)
+            }
+            
+            sub_function.call()
+        }
+        
+        function.call()
+    }
 }
