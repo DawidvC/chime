@@ -211,6 +211,8 @@ namespace chime
                     {
                         assert(_inString);
                         _interpolatingString = false; // toggle state
+                        if (t->empty())
+                            continue;  // this is a weird case.  We do not want to swallow the }
                     }
                     
                     if (t->empty())
