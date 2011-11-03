@@ -35,7 +35,7 @@ namespace chime
         
         traitNamePtr   = context.getConstantString(this->getTraitType()->identifier());
         traitObjectPtr = context.getRuntime()->callChimeRuntimeGetTrait(traitNamePtr);
-        classObjectPtr = context.getCurrentScope()->getSelfValue(context);
+        classObjectPtr = context.getCurrentScope()->getClassObjectPtr();
         
         context.getRuntime()->callChimeClassIncludeTrait(classObjectPtr, traitObjectPtr);
         

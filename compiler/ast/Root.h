@@ -10,6 +10,8 @@ namespace ast
     class Root : public ScopedNode
     {
     public:
+        Root();
+        
         std::vector<std::string> getBinaryDependencies(void) const;
         void                     addBinaryDependency(const std::string& dependency);
         
@@ -17,6 +19,7 @@ namespace ast
         void                     addSourceDependency(const std::string& dependency);
         
         std::string              getIdentifier() const;
+        void                     setIdentifier(const std::string& identifier);
         
         Variable*                createVariable(const std::string& identifier);
         chime::SelfLiteral*      createSelf();
@@ -25,6 +28,7 @@ namespace ast
         llvm::Value*             codegen(chime::CodeGenContext& context);
         
     private:
+        std::string              _identifier;
         std::vector<std::string> _binaryDependencies;
         std::vector<std::string> _sourceDependencies;
     };

@@ -1,6 +1,6 @@
 implementation ModuleTests : Test.Case
 {
-    // method test_global_variable()
+    // method test_name()
     // {
     // }
 }

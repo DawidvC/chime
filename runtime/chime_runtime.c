@@ -3,6 +3,7 @@
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/class/chime_class.h"
+#include "runtime/class/chime_class_internal.h"
 #include "runtime/trait/chime_trait.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/object/chime_object_internal.h"
@@ -130,7 +131,26 @@ char* chime_runtime_get_class_name(chime_class_t* klass)
     
     name = chime_dictionary_get_key(_chime_classes, klass);
     if (!name)
+    {
+        // maybe someone is trying to look up a meta-class.  I cannot think of how to do this fast
+        unsigned long i;
+        chime_runtime_array_t* keys;
+        
+        keys = chime_dictionary_get_keys(_chime_classes);
+        
+        for (i = 0; i < chime_runtime_array_count(keys); ++i)
+        {
+            chime_class_t* klassItem;
+            
+            klassItem = (chime_class_t*)chime_dictionary_get(_chime_classes, chime_runtime_array_get(keys, i));
+            if (klass == klassItem->object.self_class)
+            {
+                return "MetaClass";
+            }
+        }
+        
         return "UndefinedClassName";
+    }
     
     return name;
 }

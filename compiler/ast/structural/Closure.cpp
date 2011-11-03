@@ -19,6 +19,8 @@ namespace ast
         
         closure->setParameters(chime::ParameterSet::parse(parser));
         
+        closure->defineParametersAsLocalVariables(parser);
+        
         // This cast is currently necessary, even though now CodeBlock::parse will
         // always return an actual CodeBlockRef.  The signature of CodeBlock::parse should
         // really fixed, but that affects a lot of classes.

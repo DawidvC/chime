@@ -42,6 +42,25 @@ namespace ast
         return new chime::SelfLiteral();
     }
     
+    void FunctionDefinition::defineParametersAsLocalVariables(chime::parser& parser)
+    {
+        // we now need to create variables (which should be strictly local) for
+        // all the parameters
+        for (unsigned int i = 0; i < this->getParameters()->length(); ++i)
+        {
+            ast::method_parameter* parameter;
+            ast::Variable*         variable;
+            
+            parameter = this->getParameters()->parameterAtIndex(i);
+            
+            variable = this->variableForIdentifier(parameter->identifier());
+            if (variable->nodeName() != "Local Variable")
+            {
+                parser.addError("Method argument shadows a variable in scope");
+            }
+        }
+    }
+    
     llvm::Function* FunctionDefinition::createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity)
     {
         llvm::Function*                function;
@@ -156,7 +175,8 @@ namespace ast
         methodFunction = this->codegenFunction(generator, functionName, body, arity);
         
         // get the class object
-        classObjectPtr = generator.getCurrentScope()->getSelfValue(generator);
+        classObjectPtr = generator.getCurrentScope()->getClassObjectPtr();
+        assert(classObjectPtr);
         
         // finally, install the method in the class
         if (this->isInstance())

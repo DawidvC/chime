@@ -61,6 +61,8 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     
     chime_dictionary_set(_chime_classes, name, klass);
     
+    // fprintf(stderr, "Creating class %s => %p, %p\n", name, klass, metaclass);
+    
     return klass;
 }
 
@@ -106,7 +108,6 @@ void chime_class_set_instance_method(chime_class_t* klass, const char* name, voi
 void chime_class_set_class_method(chime_class_t* klass, const char* name, void* function)
 {
     // a class method is really an instance method registered to the meta class
-    
     klass = chime_class_get_class(klass);
     
     chime_class_set_instance_method(klass, name, function);

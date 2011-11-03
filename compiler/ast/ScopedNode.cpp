@@ -6,8 +6,9 @@ namespace ast
 {
     ScopedNode::ScopedNode()
     {
-        _parent        = NULL;
-        _selfObjectPtr = NULL;
+        _parent         = NULL;
+        _selfObjectPtr  = NULL;
+        _classObjectPtr = NULL;
         
         _anonymousFunctionCount = 1;
     }
@@ -150,6 +151,15 @@ namespace ast
     void ScopedNode::setSelfObjectPtr(llvm::Value* value)
     {
         _selfObjectPtr = value;
+    }
+    
+    llvm::Value* ScopedNode::getClassObjectPtr() const
+    {
+        return _classObjectPtr;
+    }
+    void ScopedNode::setClassObjectPtr(llvm::Value* value)
+    {
+        _classObjectPtr = value;
     }
     
     std::string ScopedNode::getAnonymousFunctionName()

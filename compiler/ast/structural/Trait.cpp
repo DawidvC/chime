@@ -108,7 +108,7 @@ namespace chime
         
         // now, create the new class
         traitPtr = context.getRuntime()->callChimeTraitCreate(traitNamePtr);
-        this->setSelfObjectPtr(traitPtr);
+        this->setClassObjectPtr(traitPtr);
         
         context.pushScope(this);
         

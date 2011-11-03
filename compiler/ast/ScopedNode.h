@@ -40,6 +40,8 @@ namespace ast
         virtual llvm::Value* getSelfValue(chime::CodeGenContext& context);
         llvm::Value*         getSelfObjectPtr() const;
         void                 setSelfObjectPtr(llvm::Value* value);
+        llvm::Value*         getClassObjectPtr() const;
+        void                 setClassObjectPtr(llvm::Value* value);
         
         std::string       getAnonymousFunctionName();
         
@@ -53,6 +55,7 @@ namespace ast
         
         std::map<std::string, llvm::Value*> _scopedValues;
         llvm::Value*                        _selfObjectPtr;
+        llvm::Value*                        _classObjectPtr;
         int                                 _anonymousFunctionCount;
     };
     

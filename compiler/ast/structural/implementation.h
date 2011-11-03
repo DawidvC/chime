@@ -20,19 +20,19 @@ namespace ast
         virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0) const;
         
-        chime::TypeRef    getTypeRef() const;
-        void       setTypeRef(chime::TypeRef node);
-        chime::TypeRef    getSuperclass() const;
-        void       setSuperclass(chime::TypeRef node);
-        NodeRef    getBody(void) const;
+        chime::TypeRef  getTypeRef() const;
+        void            setTypeRef(chime::TypeRef node);
+        chime::TypeRef  getSuperclass() const;
+        void            setSuperclass(chime::TypeRef node);
+        NodeRef         getBody(void) const;
         
-        std::string         getIdentifier() const;
+        std::string     getIdentifier() const;
         
-        Variable*           createVariable(const std::string& identifier);
-        bool                allowsStructuralElements() const;
+        Variable*       createVariable(const std::string& identifier);
+        bool            allowsStructuralElements() const;
         
-        llvm::Function*     createInitFunction(chime::code_generator& generator);
-        llvm::Value*        codegen(chime::code_generator& generator);
+        llvm::Function* createInitFunction(chime::code_generator& generator);
+        llvm::Value*    codegen(chime::code_generator& generator);
         
     protected:
         chime::TypeRef _typeRef;

@@ -114,13 +114,13 @@ namespace ast
     
     llvm::Value* Implementation::codegen(chime::code_generator& generator)
     {
-        llvm::Value*                  classNamePtr;
-        llvm::Value*                  superclassNamePtr;
-        llvm::Value*                  objectClassPtr;
-        llvm::Value*                  superclassPtr;
-        llvm::Function*               initFunction;
-        llvm::BasicBlock*             basicBlock;
-        llvm::BasicBlock*             currentBlock;
+        llvm::Value*      classNamePtr;
+        llvm::Value*      superclassNamePtr;
+        llvm::Value*      objectClassPtr;
+        llvm::Value*      superclassPtr;
+        llvm::Function*   initFunction;
+        llvm::BasicBlock* basicBlock;
+        llvm::BasicBlock* currentBlock;
         
         initFunction = this->createInitFunction(generator);
         generator.builder()->CreateCall(initFunction, "");
@@ -150,7 +150,7 @@ namespace ast
         
         // now, create the new class
         objectClassPtr = generator.getRuntime()->callChimeRuntimeCreateClass(classNamePtr, superclassPtr);
-        this->setSelfObjectPtr(objectClassPtr);
+        this->setClassObjectPtr(objectClassPtr);
         
         generator.pushScope(this);
         

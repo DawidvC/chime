@@ -243,6 +243,7 @@ namespace chime
         }
         
         // actually do the codegen
+        node->setIdentifier(moduleName);
         node->codegen(*this);
         
         if (asMain)
