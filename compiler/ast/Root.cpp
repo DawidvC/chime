@@ -8,6 +8,11 @@ namespace ast
         _identifier = "Root";
     }
     
+    std::string Root::nodeName() const
+    {
+        return "Root";
+    }
+    
     std::vector<std::string> Root::getBinaryDependencies(void) const
     {
         return _binaryDependencies;

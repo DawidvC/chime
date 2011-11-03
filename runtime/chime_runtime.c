@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+chime_dictionary_t* _chime_modules   = NULL;
 chime_dictionary_t* _chime_classes   = NULL;
 chime_dictionary_t* _chime_traits    = NULL;
 chime_class_t*      _object_class    = NULL;
@@ -40,6 +41,7 @@ void chime_runtime_initialize(void)
     old_level = chime_log_level;
     chime_log_level = 3;
     
+    _chime_modules = chime_dictionary_create();
     _chime_classes = chime_dictionary_create();
     _chime_traits  = chime_dictionary_create();
     
@@ -69,6 +71,9 @@ void chime_runtime_initialize(void)
 void chime_runtime_destroy(void)
 {
     // this should also remove all of the contained objects
+    chime_dictionary_destroy(_chime_modules);
+    _chime_modules = NULL;
+    
     chime_dictionary_destroy(_chime_classes);
     _chime_classes = NULL;
     
@@ -129,27 +134,15 @@ char* chime_runtime_get_class_name(chime_class_t* klass)
     
     assert(klass);
     
+    //fprintf(stderr, "Looking up %p\n", klass);
+    
     name = chime_dictionary_get_key(_chime_classes, klass);
     if (!name)
     {
-        // maybe someone is trying to look up a meta-class.  I cannot think of how to do this fast
-        unsigned long i;
-        chime_runtime_array_t* keys;
-        
-        keys = chime_dictionary_get_keys(_chime_classes);
-        
-        for (i = 0; i < chime_runtime_array_count(keys); ++i)
-        {
-            chime_class_t* klassItem;
-            
-            klassItem = (chime_class_t*)chime_dictionary_get(_chime_classes, chime_runtime_array_get(keys, i));
-            if (klass == klassItem->object.self_class)
-            {
-                return "MetaClass";
-            }
-        }
-        
-        return "UndefinedClassName";
+        // ok, maybe it's a module
+        name = chime_dictionary_get_key(_chime_modules, klass);
+        if (!name)
+            return "UndefinedClassName";
     }
     
     return name;

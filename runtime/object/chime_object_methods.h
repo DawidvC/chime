@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 chime_object_t* object_class(chime_object_t* instance);
+chime_object_t* object_superclass(chime_object_t* instance);
 chime_object_t* object_methods(chime_object_t* instance);
 chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_name);
 chime_object_t* object_hash(chime_object_t* instance);

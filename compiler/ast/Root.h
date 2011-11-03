@@ -12,6 +12,8 @@ namespace ast
     public:
         Root();
         
+        std::string nodeName() const;
+        
         std::vector<std::string> getBinaryDependencies(void) const;
         void                     addBinaryDependency(const std::string& dependency);
         

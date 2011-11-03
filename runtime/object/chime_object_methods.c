@@ -18,6 +18,11 @@ chime_object_t* object_class(chime_object_t* instance)
     return (chime_object_t*)chime_object_get_class(instance);
 }
 
+chime_object_t* object_superclass(chime_object_t* instance)
+{
+    return (chime_object_t*)chime_object_get_superclass(instance);
+}
+
 chime_object_t* object_methods(chime_object_t* instance)
 {
     return class_methods(object_class(instance));

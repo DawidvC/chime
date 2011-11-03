@@ -7,7 +7,7 @@ implementation ReflectionTests : Test.Case
     
     method test_self_class()
     {
-        Assert.equal(ReflectionTests, to:self.class)
+        Assert.is_true(ReflectionTests == self.class)
     }
     
     method test_self_class_name()
@@ -19,16 +19,17 @@ implementation ReflectionTests : Test.Case
     {
         methods = Object.new().methods
         
-        Assert.equal(9, to:methods.length)
+        Assert.equal(10, to:methods.length)
         
-        Assert.equal("class",     to:methods[0].name)
-        Assert.equal("methods",   to:methods[1].name)
-        Assert.equal("invoke",    to:methods[2].name)
-        Assert.equal("hash",      to:methods[3].name)
-        Assert.equal("to_string", to:methods[4].name)
-        Assert.equal("==",        to:methods[5].name)
-        Assert.equal("===",       to:methods[6].name)
-        Assert.equal(">",         to:methods[7].name)
-        Assert.equal("<",         to:methods[8].name)
+        Assert.equal("class",      to:methods[0].name)
+        Assert.equal("superclass", to:methods[1].name)
+        Assert.equal("methods",    to:methods[2].name)
+        Assert.equal("invoke",     to:methods[3].name)
+        Assert.equal("hash",       to:methods[4].name)
+        Assert.equal("to_string",  to:methods[5].name)
+        Assert.equal("==",         to:methods[6].name)
+        Assert.equal("===",        to:methods[7].name)
+        Assert.equal(">",          to:methods[8].name)
+        Assert.equal("<",          to:methods[9].name)
     }
 }

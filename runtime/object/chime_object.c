@@ -23,20 +23,22 @@ void chime_object_initialize(void)
     
     _method_class = chime_class_create_object_subclass("Method");
     
-    chime_class_set_class_method(_object_class,  "new",     class_new); 
-    chime_class_set_class_method(_object_class,  "name",    class_name); 
-    chime_class_set_class_method(_object_class,  "<=>",     class_compare);
-    chime_class_set_class_method(_object_class,  "methods", class_methods);
+    chime_class_set_class_method(_object_class, "new",       class_new); 
+    chime_class_set_class_method(_object_class, "name",      class_name);
+    chime_class_set_class_method(_object_class, "==",        class_equals);
+    chime_class_set_class_method(_object_class, "methods",   class_methods);
+    chime_class_set_class_method(_object_class, "to_string", object_to_string);
     
-    chime_class_set_instance_method(_object_class, "class",     object_class);
-    chime_class_set_instance_method(_object_class, "methods",   object_methods);
-    chime_class_set_instance_method(_object_class, "invoke",    object_invoke);
-    chime_class_set_instance_method(_object_class, "hash",      object_hash);
-    chime_class_set_instance_method(_object_class, "to_string", object_to_string);
-    chime_class_set_instance_method(_object_class, "==",        object_equals);
-    chime_class_set_instance_method(_object_class, "===",       object_case_compare);
-    chime_class_set_instance_method(_object_class, ">",         object_greater_than);
-    chime_class_set_instance_method(_object_class, "<",         object_less_than);
+    chime_class_set_instance_method(_object_class, "class",      object_class);
+    chime_class_set_instance_method(_object_class, "superclass", object_superclass);
+    chime_class_set_instance_method(_object_class, "methods",    object_methods);
+    chime_class_set_instance_method(_object_class, "invoke",     object_invoke);
+    chime_class_set_instance_method(_object_class, "hash",       object_hash);
+    chime_class_set_instance_method(_object_class, "to_string",  object_to_string);
+    chime_class_set_instance_method(_object_class, "==",         object_equals);
+    chime_class_set_instance_method(_object_class, "===",        object_case_compare);
+    chime_class_set_instance_method(_object_class, ">",          object_greater_than);
+    chime_class_set_instance_method(_object_class, "<",          object_less_than);
     
     chime_class_set_instance_method(_method_class, "name", method_name);
 }

@@ -23,13 +23,15 @@ namespace ast
         // Assignments can also "create" variables.  If needed, we do that here
         variable = static_cast<ast::Variable*>(this->getLeftOperand());
         
-        lValue = generator.getCurrentScope()->getValueForIdentifier(variable->getIdentifier());
-        if (!lValue)
-        {
-            lValue = generator.insertChimeObjectAlloca();
-            
-            generator.getCurrentScope()->setValueForIdentifier(variable->getIdentifier(), lValue);
-        }
+        lValue = variable->codegen(generator);
+        //lValue = generator.getCurrentScope()->getValueForIdentifier(variable->getIdentifier());
+        //if (!lValue)
+        //{
+        //    
+        //    lValue = generator.insertChimeObjectAlloca();
+        //    
+        //    generator.getCurrentScope()->setValueForIdentifier(variable->getIdentifier(), lValue);
+        //}
         
         assert(lValue);
         

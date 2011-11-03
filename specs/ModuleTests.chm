@@ -1,6 +1,15 @@
+obj = self
+
 implementation ModuleTests : Test.Case
 {
-    // method test_name()
-    // {
-    // }
+    method test_name()
+    {
+        Assert.is_true(Module == obj.superclass)
+        Assert.equal("Module", to:obj.superclass.name)
+        Assert.equal("ModuleTests", to:obj.class.name)
+        
+        // this should be false because ModuleTests refers to a class,
+        // not to the Module "ModuleTests"
+        Assert.is_false(ModuleTests == obj)
+    }
 }

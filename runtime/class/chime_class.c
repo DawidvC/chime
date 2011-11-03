@@ -5,6 +5,7 @@
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/chime_runtime.h"
 
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -18,6 +19,15 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
 {
     chime_class_t*  klass;
     chime_class_t*  metaclass;
+    char*           metaclass_name;
+    
+    metaclass_name = malloc(strlen(name) + 4);
+    metaclass_name[0] = 'M';
+    metaclass_name[1] = 'e';
+    metaclass_name[2] = 't';
+    metaclass_name[3] = 'a';
+    
+    strcpy(metaclass_name+4, name);
     
     // create the metaclass first
     metaclass = (chime_class_t*)malloc(sizeof(chime_class_t));
@@ -59,9 +69,18 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     
     assert(klass);
     
-    chime_dictionary_set(_chime_classes, name, klass);
-    
-    // fprintf(stderr, "Creating class %s => %p, %p\n", name, klass, metaclass);
+    if ((superclass == _module_class) && superclass && _module_class)
+    {
+        chime_dictionary_set(_chime_modules, name, klass);
+        chime_dictionary_set(_chime_modules, metaclass_name, metaclass);
+        //fprintf(stderr, "Creating module %s => %p, %p, %p\n", name, klass, metaclass, superclass);
+    }
+    else
+    {
+        chime_dictionary_set(_chime_classes, name, klass);
+        chime_dictionary_set(_chime_classes, metaclass_name, metaclass);
+        //fprintf(stderr, "Creating class %s => %p, %p, %p\n", name, klass, metaclass, superclass);
+    }
     
     return klass;
 }
