@@ -10,7 +10,7 @@ TEST_F(ClosureParseTests, MethodCallWithClosure)
     
     call = parseMethodCall("call(a, b) do {}");
     
-    ASSERT_METHOD_CALL("call", call);
+    ASSERT_METHOD_CALL("call:::", call);
     ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
     ASSERT_GLOBAL_VARIABLE("b", call->childAtIndex(1));
     ASSERT_CLOSURE(call->childAtIndex(2));
@@ -23,7 +23,7 @@ TEST_F(ClosureParseTests, MethodCallWithClosureParameters)
     
     call = parseMethodCall("call() do (a) { }");
     
-    ASSERT_METHOD_CALL("call", call);
+    ASSERT_METHOD_CALL("call:", call);
     
     closure = static_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
@@ -39,7 +39,7 @@ TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)
     
     call = parseMethodCall("call() do { a = \"string\" }");
     
-    ASSERT_METHOD_CALL("call", call);
+    ASSERT_METHOD_CALL("call:", call);
     
     closure = static_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
@@ -68,7 +68,7 @@ TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
     
     call = parseMethodCall("on_queue(queue, async:) do { queue = 0 }");
     
-    ASSERT_METHOD_CALL("on_queue", call);
+    ASSERT_METHOD_CALL("on_queue:async:", call);
     ASSERT_GLOBAL_VARIABLE("queue", call->childAtIndex(0));
     
     closure = static_cast<ast::Closure*>(call->childAtIndex(1));
@@ -101,7 +101,7 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     ASSERT_OPERATOR(".", op);
     
     call = static_cast<ast::MethodCall*>(op->getRightOperand());
-    ASSERT_METHOD_CALL("times", call);
+    ASSERT_METHOD_CALL("times:", call);
     
     closure = static_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
@@ -151,7 +151,7 @@ TEST_F(ClosureParseTests, MethodParameterUsedInClosure)
     
     method = parseFirst<chime::MethodDefinition*>("method foo(a) { do { a += 1 } }");
     
-    ASSERT_METHOD_DEFINITION("foo", method);
+    ASSERT_METHOD_DEFINITION("foo:", method);
     
     closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(0));
     ASSERT_CLOSURE(closure);
@@ -168,7 +168,7 @@ TEST_F(ClosureParseTests, SelfInClosure)
     
     method = parseFirst<chime::MethodDefinition*>("method foo(a) { do { self.bar() } }");
     
-    ASSERT_METHOD_DEFINITION("foo", method);
+    ASSERT_METHOD_DEFINITION("foo:", method);
     
     closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(0));
     ASSERT_CLOSURE(closure);

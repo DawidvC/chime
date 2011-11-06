@@ -30,6 +30,9 @@ chime_object_t* chime_object_create_with_name(const char* class_name);
 chime_object_t* chime_object_create(chime_class_t* klass);
 void            chime_object_destroy(chime_object_t* instance);
 
+void chime_object_retain(chime_object_t* instance);
+void chime_object_release(chime_object_t* instance);
+
 chime_object_type_t chime_object_get_type(chime_object_t* instance);
 
 chime_class_t*  chime_object_get_class(chime_object_t* instance);

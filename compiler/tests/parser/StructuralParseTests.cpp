@@ -14,6 +14,48 @@ TEST_F(StructuralParseTests, Method)
     ASSERT_TRUE(node->isInstance());
 }
 
+TEST_F(StructuralParseTests, MethodDefinitionWithOneParameter)
+{
+    chime::MethodDefinition* method;
+    
+    method = parseFirst<chime::MethodDefinition*>("method new(arg1) { }");
+    
+    ASSERT_METHOD_DEFINITION("new:", method);
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
+}
+
+TEST_F(StructuralParseTests, MethodDefinitionWithOneTypedParameter)
+{
+    chime::MethodDefinition* method;
+    
+    method = parseFirst<chime::MethodDefinition*>("method new(Hash arg1) { }");
+    
+    ASSERT_METHOD_DEFINITION("new:", method);
+    ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
+}
+
+TEST_F(StructuralParseTests, MethodDefinitionWithTwoParameters)
+{
+    chime::MethodDefinition* method;
+    
+    method = parseFirst<chime::MethodDefinition*>("method new(arg1, arg2) { }");
+    
+    ASSERT_METHOD_DEFINITION("new::", method);
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg2", method->getParameters()->childAtIndex(1));
+}
+
+TEST_F(StructuralParseTests, MethodDefinitionWithFunction)
+{
+    chime::MethodDefinition* method;
+    
+    method = parseFirst<chime::MethodDefinition*>("method foo(a, label:Function(data) block) {}");
+    
+    ASSERT_METHOD_DEFINITION("foo:label:", method);
+    ASSERT_METHOD_PARAMETER(NULL,       NULL, "a",     method->getParameters()->childAtIndex(0));
+    ASSERT_METHOD_PARAMETER("Function", NULL, "block", method->getParameters()->childAtIndex(1));
+}
+
 TEST_F(StructuralParseTests, ClassMethod)
 {
     chime::MethodDefinition* node;
@@ -28,10 +70,10 @@ TEST_F(StructuralParseTests, MethodParameter)
 {
     chime::MethodDefinition* method;
     
-    method = parseFirst<chime::MethodDefinition*>("method foo(one:Bar baz) {}");
+    method = parseFirst<chime::MethodDefinition*>("method foo(Bar baz) {}");
     
-    ASSERT_METHOD_DEFINITION("foo", method);
-    ASSERT_METHOD_PARAMETER("Bar", "one", "baz", method->getParameters()->childAtIndex(0));
+    ASSERT_METHOD_DEFINITION("foo:", method);
+    ASSERT_METHOD_PARAMETER("Bar", NULL, "baz", method->getParameters()->childAtIndex(0));
 }
 
 TEST_F(StructuralParseTests, MethodWithTypedReturnAndOneTypedArgument)
@@ -40,7 +82,7 @@ TEST_F(StructuralParseTests, MethodWithTypedReturnAndOneTypedArgument)
     
     method = parseFirst<chime::MethodDefinition*>("method foo(Bar; Baz a) { return a }");
     
-    ASSERT_METHOD_DEFINITION("foo", method);
+    ASSERT_METHOD_DEFINITION("foo:", method);
     ASSERT_METHOD_PARAMETER("Baz", NULL, "a", method->getParameters()->childAtIndex(0));
     ASSERT_TYPE("Bar", method->getParameters()->getReturnType().get());
 }
@@ -164,4 +206,22 @@ TEST_F(StructuralParseTests, IncludeInImplementation)
     
     ASSERT_IMPLEMENTATION("Foo", NULL, implementation);
     ASSERT_INCLUDE("Bar", implementation->getBody()->childAtIndex(0));
+}
+
+TEST_F(StructuralParseTests, ImplementationMethodWithParameterUsedInBody)
+{
+    ast::Implementation*    implementation;
+    ast::method_definition* method;
+    ast::binary_operator*   op;
+    
+    implementation = parseFirst<ast::Implementation*>("implementation Foo\n { attribute a\n method foo(value) { a = value } }");
+    ASSERT_IMPLEMENTATION("Foo", NULL, implementation);
+    
+    method = static_cast<ast::method_definition*>(implementation->getBody()->childAtIndex(1));
+    ASSERT_METHOD_DEFINITION("foo:", method);
+    
+    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
+    ASSERT_INSTANCE_ASSIGNMENT(op);
+    ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
+    ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
 }

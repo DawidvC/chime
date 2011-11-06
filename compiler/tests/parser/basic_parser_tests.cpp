@@ -113,58 +113,6 @@ TEST_F(BasicParserTest, SimpleMethodDefinition)
     ASSERT_METHOD_DEFINITION("new", method);
 }
 
-TEST_F(BasicParserTest, MethodDefinitionWithOneParameter)
-{
-    ast::method_definition* method;
-    
-    method = parse_method_def("method new(arg1) { }");
-    
-    ASSERT_METHOD_DEFINITION("new", method);
-    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
-}
-
-TEST_F(BasicParserTest, MethodDefinitionWithOneTypedParameter)
-{
-    ast::method_definition* method;
-    
-    method = parse_method_def("method new(Hash arg1) { }");
-    
-    ASSERT_METHOD_DEFINITION("new", method);
-    ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
-}
-
-TEST_F(BasicParserTest, MethodDefinitionWithOneTypedLabelledParameter)
-{
-    ast::method_definition* method;
-    
-    method = parse_method_def("method new(one:Hash arg1) { }");
-    
-    ASSERT_METHOD_DEFINITION("new", method);
-    ASSERT_METHOD_PARAMETER("Hash", NULL, "arg1", method->getParameters()->childAtIndex(0));
-}
-
-TEST_F(BasicParserTest, MethodDefinitionWithTwoParameters)
-{
-    ast::method_definition* method;
-    
-    method = parse_method_def("method new(arg1, arg2) { }");
-    
-    ASSERT_METHOD_DEFINITION("new", method);
-    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()->childAtIndex(0));
-    ASSERT_METHOD_PARAMETER(NULL, NULL, "arg2", method->getParameters()->childAtIndex(1));
-}
-
-TEST_F(BasicParserTest, MethodDefinitionWithFunction)
-{
-    ast::method_definition* method;
-    
-    method = parse_method_def("method foo(a, label:Function(data) block) {}");
-    
-    ASSERT_METHOD_DEFINITION("foo", method);
-    ASSERT_METHOD_PARAMETER(NULL,       NULL, "a",     method->getParameters()->childAtIndex(0));
-    ASSERT_METHOD_PARAMETER("Function", NULL, "block", method->getParameters()->childAtIndex(1));
-}
-
 TEST_F(BasicParserTest, AssignmentExpression)
 {
     ast::node*            node;
@@ -320,7 +268,7 @@ TEST_F(BasicParserTest, MethodCallArguments)
     
     call = parseMethodCall("call(a, b)");
     
-    ASSERT_METHOD_CALL("call", call);
+    ASSERT_METHOD_CALL("call::", call);
     ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
     ASSERT_GLOBAL_VARIABLE("b", call->childAtIndex(1));
 }
@@ -332,7 +280,7 @@ TEST_F(BasicParserTest, MethodCallArgumentWithParentheses)
     
     call = parseMethodCall("call((a + b) * c)");
     
-    ASSERT_METHOD_CALL("call", call);
+    ASSERT_METHOD_CALL("call:", call);
     
     op = (ast::binary_operator*)call->childAtIndex(0);
     ASSERT_OPERATOR("*", op);
@@ -348,9 +296,9 @@ TEST_F(BasicParserTest, MethodCallWithLabelledParams)
 {
     ast::MethodCall* call;
     
-    call = parseMethodCall("foo(bar:a, baz:b)");
+    call = parseMethodCall("foo(a, bar:b)");
     
-    ASSERT_METHOD_CALL("foo", call);
+    ASSERT_METHOD_CALL("foo:bar:", call);
     ASSERT_GLOBAL_VARIABLE("a", call->childAtIndex(0));
     ASSERT_GLOBAL_VARIABLE("b", call->childAtIndex(1));
 }
@@ -368,23 +316,4 @@ TEST_F(BasicParserTest, MethodWithOperatorsOnType)
     ASSERT_OPERATOR(".", op);
     ASSERT_TYPE("Bar", op->getLeftOperand());
     ASSERT_METHOD_CALL("baz", op->getRightOperand());
-}
-
-TEST_F(BasicParserTest, ImplementationMethodWithParameterUsedInBody)
-{
-    ast::Implementation*    implemenation;
-    ast::method_definition* method;
-    ast::binary_operator*   op;
-    
-    implemenation = parse_implementation("implementation Foo\n { attribute a\n method foo(value) { a = value } }");
-    ASSERT_IMPLEMENTATION("Foo", NULL, implemenation);
-    
-    method = static_cast<ast::method_definition*>(implemenation->getBody()->childAtIndex(1));
-    ASSERT_METHOD_DEFINITION("foo", method);
-    
-    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
-    ASSERT_INSTANCE_ASSIGNMENT(op);
-    ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
-    ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
-    
 }

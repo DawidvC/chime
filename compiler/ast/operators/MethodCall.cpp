@@ -11,12 +11,12 @@ namespace ast
         
         call = new ast::MethodCall();
         
-        call->identifier(parser.next_token_value());
+        call->identifier(parser.nextTokenValue());
         
         t = parser.look_ahead();
         if (t->equal_to("="))
         {
-            parser.next_token_value("=");
+            parser.nextTokenValue("=");
             
             // we have a property setter
             call->identifier(call->identifier() + "=");
@@ -37,27 +37,35 @@ namespace ast
         chime::token* t;
         ast::node*    node;
         
-        parser.next_token_value("(");
+        parser.nextTokenValue("(");
         
         while (true)
         {
             t = parser.look_ahead();
             
             if (t->empty() || t->equal_to(")"))
+            {
+                // handle the case of call() do ...
+                if (parser.look_ahead(2)->equal_to("do"))
+                    call->identifier(call->identifier() + ":");
+                
                 break;
+            }
             
             // handle labels
             if (parser.look_ahead(2)->equal_to(":"))
             {
-                parser.next_token();
+                call->identifier(call->identifier() + parser.nextTokenValue());
                 parser.next_token_value(":");
                 if (parser.look_ahead()->equal_to(")"))
                 {
-                    //there needs to be a block after this
+                    call->identifier(call->identifier() + ":");
+                    // there needs to be a closure after this
                     break;
                 }
             }
             
+            call->identifier(call->identifier() + ":");
             node = parser.parse_expression();
             if (node == NULL)
                 break;

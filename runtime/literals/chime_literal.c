@@ -15,13 +15,13 @@ void chime_literal_initialize(void)
     
     klass = chime_class_create_object_subclass("Integer");
     chime_class_set_instance_method(klass, "to_string", integer_to_string);
-    chime_class_set_instance_method(klass, "times", integer_times);
-    chime_class_set_instance_method(klass, "+",     integer_add);
-    chime_class_set_instance_method(klass, "-",     integer_subtract);
-    chime_class_set_instance_method(klass, "*",     integer_multiply);
-    chime_class_set_instance_method(klass, "/",     integer_divide);
-    chime_class_set_instance_method(klass, "%",     integer_modulus);
-    chime_class_set_instance_method(klass, "<=>",   integer_compare);
+    chime_class_set_instance_method(klass, "times:",    integer_times);
+    chime_class_set_instance_method(klass, "+",         integer_add);
+    chime_class_set_instance_method(klass, "-",         integer_subtract);
+    chime_class_set_instance_method(klass, "*",         integer_multiply);
+    chime_class_set_instance_method(klass, "/",         integer_divide);
+    chime_class_set_instance_method(klass, "%",         integer_modulus);
+    chime_class_set_instance_method(klass, "<=>",       integer_compare);
     
     klass = chime_class_create_object_subclass("Boolean");
     chime_class_set_instance_method(klass, "to_string", boolean_to_string);

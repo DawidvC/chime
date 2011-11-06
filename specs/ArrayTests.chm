@@ -47,4 +47,26 @@ implementation ArrayTests : Test.Case
         
         Assert.equal(6, to:value)
     }
+    
+    method test_array_collect()
+    {
+        array = [1, 2, 3]
+        
+        array = array.collect() do (x)
+        {
+            return x * 2
+        }
+        
+        Assert.equal(2, to:array[0])
+        Assert.equal(4, to:array[1])
+        Assert.equal(6, to:array[2])
+    }
+    
+    method test_array_membership_tests()
+    {
+        array = [1, 2, 3]
+        
+        Assert.is_true(array.contains(2))
+        Assert.is_false(array.contains(4))
+    }
 }

@@ -25,7 +25,7 @@ implementation ReflectionTests : Test.Case
         Assert.equal("class",      to:methods[1].name)
         Assert.equal("superclass", to:methods[2].name)
         Assert.equal("methods",    to:methods[3].name)
-        Assert.equal("invoke",     to:methods[4].name)
+        Assert.equal("invoke:",    to:methods[4].name)
         Assert.equal("hash",       to:methods[5].name)
         Assert.equal("to_string",  to:methods[6].name)
         Assert.equal("==",         to:methods[7].name)

@@ -12,6 +12,7 @@ namespace ast
     method_definition* method_definition::parse(chime::parser& parser)
     {
         method_definition* definition;
+        std::string        identifier;
         
         definition = new ast::method_definition();
         
@@ -20,8 +21,24 @@ namespace ast
         // "method identifier"
         parser.next_token_value("method");
         
-        definition->setIdentifier(parser.next_token_value());
+        identifier = parser.nextTokenValue();
         definition->setParameters(chime::ParameterSet::parse(parser));
+        
+        // create the identifier
+        if (definition->getParameters()->length() > 0)
+            identifier.append(":");
+        
+        for (unsigned int i = 1; i < definition->getParameters()->length(); ++i)
+        {
+            ast::method_parameter* param;
+            
+            param = definition->getParameters()->parameterAtIndex(i);
+            
+            identifier.append(param->label());
+            identifier.append(":");
+        }
+        
+        definition->setIdentifier(identifier);
         
         definition->defineParametersAsLocalVariables(parser);
         

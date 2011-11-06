@@ -11,7 +11,7 @@ TEST_F(FlowControlParserTest, ClosureWithNext)
     
     call = parseMethodCall("call() do (a) { next }");
     
-    ASSERT_METHOD_CALL("call", call);
+    ASSERT_METHOD_CALL("call:", call);
     
     closure = static_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);

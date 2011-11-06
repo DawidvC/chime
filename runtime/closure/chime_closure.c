@@ -16,6 +16,7 @@ void chime_closure_initialize(void)
     
     chime_class_set_instance_method(klass, "to_string", closure_to_string);
     chime_class_set_instance_method(klass, "call",      closure_call);
+    chime_class_set_instance_method(klass, "call:",     closure_call);
 }
 
 chime_closure_t* chime_closure_create(void* function)

@@ -33,7 +33,7 @@ void chime_object_initialize(void)
     chime_class_set_instance_method(_object_class, "class",      object_class);
     chime_class_set_instance_method(_object_class, "superclass", object_superclass);
     chime_class_set_instance_method(_object_class, "methods",    object_methods);
-    chime_class_set_instance_method(_object_class, "invoke",     object_invoke);
+    chime_class_set_instance_method(_object_class, "invoke:",    object_invoke);
     chime_class_set_instance_method(_object_class, "hash",       object_hash);
     chime_class_set_instance_method(_object_class, "to_string",  object_to_string);
     chime_class_set_instance_method(_object_class, "==",         object_equals);
@@ -85,6 +85,32 @@ void chime_object_destroy(chime_object_t* object)
     chime_dictionary_destroy(object->variables);
     
     free(object);
+}
+
+void chime_object_retain(chime_object_t* instance)
+{
+    assert(instance);
+    
+    // lower 32 bits for the retain count
+    instance->flags = (instance->flags & 0xFFFFFFFF) + 1;
+    
+    fprintf(stderr, "[runtime] %p retain out of %lu\n", instance, (instance->flags & 0xFFFFFFFF));
+}
+
+void chime_object_release(chime_object_t* instance)
+{
+    assert(instance);
+    
+    // lower 32 bits for the retain count
+    instance->flags = (instance->flags & 0xFFFFFFFF) - 1;
+    
+    fprintf(stderr, "[runtime] %p retain out of %lu\n", instance, (instance->flags & 0xFFFFFFFF));
+    
+    if ((instance->flags & 0xFFFFFFFF) == 0)
+    {
+        fprintf(stderr, "[runtime] %p destroy\n", instance);
+        chime_object_destroy(instance);
+    }
 }
 
 chime_object_type_t chime_object_get_type(chime_object_t* instance)

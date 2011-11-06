@@ -94,7 +94,7 @@ implementation ClosureTests : Test.Case
     
     method test_method_argument_in_closure()
     {
-        Assert.equal(6, self.argument_used_in_closure(4))
+        Assert.equal(6, to:self.argument_used_in_closure(4))
     }
     
     method test_self_in_closure()
