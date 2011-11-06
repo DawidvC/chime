@@ -1,0 +1,28 @@
+<h2>Introduction</h2>
+<p>Chime has a C-like syntax, and it's basic features are easy to pick up. &nbsp;This tutorial covers only a few of the features, but should be enough to get you started. &nbsp;It is designed to take about 15 minutes to complete.</p>
+<h3>Installation</h3>
+<p>You can download and install Chime by selecting one of the download options to the right. &nbsp;Once you have Chime installed, you're ready to begin writing code.</p>
+<h3>hello, world</h3>
+<p>To write our first program, start by creating a new plain-text document. &nbsp;Enter the following, and save it as <em>Tutorial.chm</em>.</p>
+<p><code>
+<span class="string">"hello, world"</span>.<span class="function">print</span>()
+</code></p>
+<p><strong>"hello, world"</strong> is a <strong>string</strong> object, and <strong>print()</strong> is a method called on that object. &nbsp;<strong>print</strong> writes a string to <strong>stdout</strong>.</p>
+<h3>Compile and Execute</h3>
+<p>By default, Chime will automatically compile and excute your program. &nbsp;We can run our new program by opening a terminal, moving to the directory we've saved <em>Tutorial.chm</em> to, and executing:</p>
+<p><code>
+<span class="code_comment"># </span>chime Tutorial.chm<br />
+hello, world
+</code></p>
+<p>And there we go! &nbsp;If you take a look in the current directory, you'll see that chime has produces two additional files. &nbsp;"tutorial.chc" is the object-file version of your program - compiled but unlinked. &nbsp;"tutorial" is the actual binary, linked to both the chime runtime and chime core library and is a standalone executable.</p>
+<h3>Expressions, Loops, and Closures</h3>
+<p>This next step will combine three concepts into one. &nbsp;We'll see how chime evaluates expressions and how closures work. &nbsp;We can try this out by modifying <em>Tutorial.chm</em> to the following:</p>
+<p><code>
+(<span class="literal">2</span>*<span class="literal">2</span>).<span class="function">times</span>() <span class="keyword">do</span><br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br />
+}
+</code></p>
+<p>&nbsp;Execute your program by running chime again.</p>
+<p>There's a lot going on here, so let's take it one part at a time. &nbsp;First, we're doing a little math in the parenthesis - resulting in the <strong>integer</strong> 4. &nbsp;Next, we are invoking the method <strong>times</strong> on that <strong>integer</strong>. &nbsp;The <strong>times</strong> method executes a provided block of code the number of times represented by its object value. &nbsp;Finally, we have the <strong>do</strong> statement. &nbsp;<strong>do</strong> creates a new <strong>closure</strong> object, capturing whatever is in braces. &nbsp;Adding <strong>do</strong> to the end of a method call is equivalent to making it the last argument of the call. &nbsp;We'll see how that works next.</p>
+<p><a href="/tutorial-2">Onwards!</a></p>

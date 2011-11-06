@@ -1,0 +1,44 @@
+<h3>Built-In Classes</h3>
+<p>Chime features a few classes built into the runtime. &nbsp;Here are a few that can be created with literal forms:</p>
+<p><code>
+<span class="code_comment">// Ranges</span><br />
+<span class="string">"hello, world"</span>[<span class="literal">0</span>:<span class="literal">6</span>].<span class="function">print</span>()<br />
+<span class="string">"hello, world"</span>[<span class="literal">7</span>:<span class="literal">-1</span>].<span class="function">print</span>()<br />
+<br />
+<span class="code_comment">// Arrays</span><br />
+[<span class="string">"hello"</span>, <span class="string">","</span>, <span class="string">"world"</span>].<span class="function">each</span>() <span class="keyword">do</span> (string)<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;string.<span class="function">print</span>()<br />
+}<br />
+<br />
+<span class="code_comment">// Hashes</span><br />
+hash = {<span class="string">"a"</span>:<span class="string">"world"</span>, <span class="string">"b"</span>:<span class="string">"hello"</span>, <span class="string">"c"</span>:<span class="string">","</span>}<br />
+hash[<span class="string">"b"</span>].<span class="function">print</span>()<br />
+hash[<span class="string">"c"</span>].<span class="function">print</span>()<br />
+hash[<span class="string">"a"</span>].<span class="function">print</span>()
+</code></p>
+<h3>More Method Types</h3>
+<p>There are actually four different method types you can define with Chime. &nbsp;These different types have slightly different rules for execution and allow for different syntax.</p>
+<p><strong>Properties</strong>&nbsp;allow you to have convenient get and set access, supporting assignment with the&nbsp;<strong>equal operator</strong>.</p>
+<p><code>
+<span class="keyword">property</span> <span class="function">greeting</span>()<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">get</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="string">"hello"</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+}<br />
+<br />
+<span class="string">"{</span><span class="keyword">self</span>.<span class="function">greeting</span><span class="string">}, world"</span>.<span class="function">print</span>()
+</code></p>
+<p><strong>Indexers</strong>&nbsp;give you array-style access and also include the ability to assign with&nbsp;<strong>equals</strong>.</p>
+<p><code><span class="keyword">indexer</span> <span class="keyword">self</span>[x]<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">get</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="string">"hello, {</span>x<span class="string">}"</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+}<br />
+<br />
+<span class="keyword">self</span>[<span class="string">"everyone"</span>].<span class="function">print</span>()</code></p>
+<p><a href="/tutorial-4">Moving Along</a></p>

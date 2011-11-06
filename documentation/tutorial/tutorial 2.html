@@ -1,0 +1,31 @@
+<h3>Closures and Arguments</h3>
+<p>&nbsp;Check out this next program:</p>
+<p><code>
+<span class="literal">4</span>.<span class="function">times</span>(&nbsp;<span class="keyword">do</span> { <span class="string">"hello, world"</span>.<span class="function">print</span>() } )
+</code></p>
+<p>Definitely more dense, this illustrates how a tailing-do is really the same as an inline do. &nbsp;But, just to further re-inforce the issue, consider this:</p>
+<p><code>
+function = <span class="keyword">do</span> { <span class="string">"hello, world"</span>.<span class="function">print</span>() }<br />
+<span class="literal">4</span>.<span class="function">times</span>(function)
+</code></p>
+<p>Here, we've created a variable to hold our closure and passed it in as the argument to "times".</p>
+<h3>Methods</h3>
+<p>Chime has a few different concepts for methods. &nbsp;The simplest looks like this:</p>
+<p><code>
+<span class="keyword">method</span> <span class="function">hello</span>()<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br />
+}<br />
+<br />
+<span class="keyword">self</span>.<span class="keyword">hello</span>() </code></p>
+<p>In this case, self refers to the object instance in the current scope. &nbsp;We're at the very top level of a file, which Chime calls the "Module Scope". &nbsp;"self", in this case, refers to the loadable module this file defines.</p>
+<h3>Classes</h3>
+<p>Chime is an object-oriented language. &nbsp;You can, of course, define your own classes using the "implementation" keyword.</p>
+<p><code> <span class="keyword">implementation</span> <span class="entity">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> greeter = <span class="entity">Greeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>()</code></p>
+<p>Everyone loves inheritance and Chime supports single-inheritance like this:</p>
+<p><code> <span class="keyword">implementation</span> <span class="entity">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> <span class="keyword">implementation</span> <span class="entity">UniversalGreeter</span> : <span class="superclass">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, universe"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> greeter = <span class="entity">UniversalGreeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>() </code></p>
+<h3>Traits</h3>
+<p>You might be more familar with the concept of <a href="http://en.wikipedia.org/wiki/Perl_6#Roles">Roles</a> in Perl 6, <a href="http://ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">Modules</a> in Ruby. &nbsp;Traits are <a href="http://en.wikipedia.org/wiki/Mixin">mixins</a> that let you define behavior without using inheritance.</p>
+<p><code> <span class="keyword">trait</span> <span class="entity">Greetable</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> <span class="keyword">implementation</span> <span class="entity">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">include</span> <span class="entity">Greetable</span><br /> }<br /> <br /> greeter = <span class="entity">Greeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>() </code></p>
+<p>Traits are not classes - they cannot be subclassed or instantiated.</p>
+<p><a href="/tutorial-3">Next, please!</a></p>
