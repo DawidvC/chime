@@ -30,7 +30,7 @@ namespace chime
         _path = path;
     }
     
-    std::string SourceFile::getPath(void) const
+    std::string SourceFile::getPath() const
     {
         return _path;
     }
@@ -49,7 +49,7 @@ namespace chime
         return _path.substr(lastSlashPos, lastPeriodPos-lastSlashPos);
     }
     
-    std::string SourceFile::getOutputFilePath(void) const
+    std::string SourceFile::getOutputFilePath() const
     {
         return SourceFile::pathWithNewExtension(_path, ".chc");
     }
@@ -59,7 +59,7 @@ namespace chime
         return SourceFile::pathWithNewExtension(_path, "");
     }
     
-    ast::RootRef SourceFile::getASTRoot(void)
+    ast::RootRef SourceFile::getASTRoot()
     {
         if (!_astRoot)
         {
@@ -148,12 +148,12 @@ namespace chime
         return true;
     }
     
-    std::vector<std::string> SourceFile::getSourceDependencies(void)
+    std::vector<std::string> SourceFile::getSourceDependencies()
     {
         return this->getASTRoot()->getSourceDependencies();
     }
     
-    std::vector<std::string> SourceFile::getBinaryDependencies(void)
+    std::vector<std::string> SourceFile::getBinaryDependencies()
     {
         return this->getASTRoot()->getBinaryDependencies();
     }

@@ -4,6 +4,7 @@
 #include <string>
 #include <getopt.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include <llvm/Pass.h>
 #include <llvm/PassManager.h>
@@ -16,7 +17,7 @@ bool                              _executeBinary;
 bool                              _traceSteps;
 bool                              _buildOptimized;
 std::string                       _inputFileName;
-const char*                       _outputFileName;
+std::string                       _outputFileName;
 std::vector<chime::SourceFileRef> _compiledSources;
 std::vector<std::string>          _binaryDependencies;
 
@@ -40,7 +41,6 @@ void get_options(int argc, char* argv[])
     _executeBinary  = true;
     _traceSteps     = false;
     _buildOptimized = true;
-    _outputFileName = NULL;
     
     while ((c = getopt_long(argc, argv, "cdeho:pt", longopts, NULL)) != -1)
     {
@@ -56,7 +56,7 @@ void get_options(int argc, char* argv[])
                 emit_llvm_ir = true;
                 break;
             case 'o':
-                _outputFileName = optarg;
+                _outputFileName = std::string(optarg);
                 break;
             case 'p':
                 print_ast = true;
@@ -86,11 +86,11 @@ void produce_ir(llvm::Module& module)
     llvm::PassManager  passManager;
     llvm::raw_ostream* stream;
     
-    if (_outputFileName)
+    if (!_outputFileName.empty())
     {
         std::string errorString;
         
-        stream = new llvm::raw_fd_ostream(_outputFileName, errorString, 0);
+        stream = new llvm::raw_fd_ostream(_outputFileName.c_str(), errorString, 0);
     }
     else
     {
@@ -120,13 +120,14 @@ bool compile(chime::SourceFileRef sourceFile, bool asMain)
     std::vector<std::string>::iterator i;
     std::vector<std::string>           dependencies;
     std::string                        sourcePath;
+    struct stat                        results;
     
     if (_traceSteps)
         fprintf(stdout, "[Compile] %s\n", sourceFile->getPath().c_str());
     
     if (!sourceFile->writeObjectFile(asMain, _buildOptimized))
     {
-        fprintf(stderr, "Compilation failed\n");
+        fprintf(stderr, "[Compile] failed\n");
         
         return false;
     }
@@ -148,11 +149,17 @@ bool compile(chime::SourceFileRef sourceFile, bool asMain)
         
         dependencyPath = resolvedPathForDependency((*i));
         
+        if (lstat(dependencyPath.c_str(), &results) != 0)
+        {
+            fprintf(stderr, "[Compile] Dependency '%s' could not be resolved\n", dependencyPath.c_str());
+            return false;
+        }
+        
         dependencySource = chime::SourceFileRef(new chime::SourceFile(dependencyPath));
         
         if (!compile(dependencySource, false))
         {
-            fprintf(stderr, "Sub compilation failed for %s\n", dependencySource->getPath().c_str());
+            fprintf(stderr, "[Compile] Sub compilation failed for %s\n", dependencySource->getPath().c_str());
             
             return false;
         }
@@ -163,32 +170,46 @@ bool compile(chime::SourceFileRef sourceFile, bool asMain)
 
 bool link(void)
 {
-    std::vector<chime::SourceFileRef>::iterator i;
-    std::string                                 linkCommand;
+    std::string linkCommand;
+    struct stat results;
     
     linkCommand = std::string("/usr/bin/ld");
-    linkCommand.append(" -dynamic -arch x86_64 -macosx_version_min 10.6.0 -lcrt1.10.6.o -lSystem");
-    linkCommand.append(" -L/tmp/chime -lchimeruntime -lchime");
     
+    if (lstat(linkCommand.c_str(), &results) != 0)
+    {
+        fprintf(stderr, "[Link] Could not access the linker command '%s'\n", linkCommand.c_str());
+        return false;
+    }
+    
+    linkCommand.append(" -dynamic -arch x86_64 -macosx_version_min 10.6.0 -lcrt1.10.6.o -lSystem");
+    linkCommand.append(" -lchimeruntime -lchime");
+    
+    if (_compiledSources.size() == 0)
+    {
+        fprintf(stderr, "[Link] Zero compiled sources to link\n");
+        return false;
+    }
+    
+    std::vector<chime::SourceFileRef>::iterator i;
     for (i = _compiledSources.begin(); i < _compiledSources.end(); ++i)
     {
         linkCommand.append(" ");
         linkCommand.append((*i)->getOutputFilePath());
     }
     
-    if (_outputFileName)
+    if (!_outputFileName.empty())
     {
         linkCommand.append(" -o ");
         linkCommand.append(_outputFileName);
     }
     
     if (_traceSteps)
-        fprintf(stdout, "[Link] %s\n", _outputFileName);
+        fprintf(stdout, "[Link] %s\n", _outputFileName.c_str());
         
     if (system(linkCommand.c_str()) != 0)
     {
-        fprintf(stderr, "Link failed\n");
-        fprintf(stderr, "Link command: %s\n", linkCommand.c_str());
+        fprintf(stderr, "[Link] failed\n");
+        fprintf(stderr, "[Link] command: %s\n", linkCommand.c_str());
         
         return false;
     }
@@ -199,10 +220,24 @@ bool link(void)
 int main(int argc, char* argv[])
 {
     chime::SourceFileRef sourceFile;
+    struct stat          results;
     
     get_options(argc, argv);
     argc -= optind;
     argv += optind;
+    
+    if (argc == 0)
+    {
+        // no input files, should go to interactive mode here
+        fprintf(stderr, "[Compile] No input files\n");
+        return 1;
+    }
+    
+    if (lstat(argv[0], &results) != 0)
+    {
+        fprintf(stderr, "[Compile] Could not access the file '%s'\n", argv[0]);
+        return 1;
+    }
     
     _inputFileName = std::string(argv[0]);
     
@@ -226,15 +261,17 @@ int main(int argc, char* argv[])
         return 1;
     
     // set a default path if needed
-    if (!_outputFileName)
-        _outputFileName = sourceFile->getBinaryFilePath().c_str();
+    if (_outputFileName.empty())
+    {
+        _outputFileName = sourceFile->getBinaryFilePath();
+    }
     
     if (!link())
         return 1;
     
     if (_executeBinary)
     {
-        return execl(_outputFileName, NULL);
+        return execl(_outputFileName.c_str(), NULL);
     }
     
     return 0;

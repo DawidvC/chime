@@ -21,18 +21,18 @@ namespace chime
     public:
         SourceFile(const std::string& path);
         
-        std::string   getPath(void) const;
+        std::string   getPath() const;
         std::string   getModuleName() const;
         std::string   getOutputFilePath(void) const;
         std::string   getBinaryFilePath() const;
         
-        ast::RootRef  getASTRoot(void);
+        ast::RootRef  getASTRoot();
         llvm::Module* getModule(bool asMain);
         
         bool          writeObjectFile(bool asMain, bool optimized);
         
-        std::vector<std::string> getSourceDependencies(void);
-        std::vector<std::string> getBinaryDependencies(void);
+        std::vector<std::string> getSourceDependencies();
+        std::vector<std::string> getBinaryDependencies();
         
     private:
         std::string  _path;
