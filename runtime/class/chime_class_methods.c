@@ -15,7 +15,13 @@
 
 chime_object_t* class_new(chime_object_t* instance)
 {
-    return chime_object_create((chime_class_t*)instance);
+    chime_object_t* object;
+    
+    object = chime_object_create((chime_class_t*)instance);
+    
+    chime_object_invoke_0(object, "initialize");
+    
+    return object;
 }
 
 chime_object_t* class_name(chime_object_t* instance)

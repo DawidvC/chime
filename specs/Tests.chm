@@ -1,31 +1,34 @@
 import "TestRunner"
+
+import "ArrayTests"
+import "ClassTests"
+import "ClosureTests"
+import "ConditionalTests"
+import "HashTests"
 import "LiteralTests"
 import "LoopTests"
-import "ConditionalTests"
 import "MethodTests"
 import "ModuleTests"
+import "OperatorTests"
 import "ReflectionTests"
 import "TraitTests"
-import "HashTests"
-import "ClosureTests"
-import "ArrayTests"
 import "StringTests"
-import "OperatorTests"
 
 runner = TestRunner.new()
 
+runner.execute_tests_for_class(ArrayTests)
+runner.execute_tests_for_class(ClassTests)
+runner.execute_tests_for_class(ClosureTests)
+runner.execute_tests_for_class(ConditionalTests)
+runner.execute_tests_for_class(HashTests)
 runner.execute_tests_for_class(LiteralTests)
 runner.execute_tests_for_class(LoopTests)
-runner.execute_tests_for_class(ConditionalTests)
 runner.execute_tests_for_class(MethodTests)
 runner.execute_tests_for_class(ModuleTests)
+runner.execute_tests_for_class(OperatorTests)
 runner.execute_tests_for_class(ReflectionTests)
 runner.execute_tests_for_class(TraitTests)
-runner.execute_tests_for_class(HashTests)
-runner.execute_tests_for_class(ClosureTests)
-runner.execute_tests_for_class(ArrayTests)
 runner.execute_tests_for_class(StringTests)
-runner.execute_tests_for_class(OperatorTests)
 
 if (Assert.failure_count() > 0)
 {

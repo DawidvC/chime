@@ -13,6 +13,11 @@
 #include <stdio.h>
 #include <assert.h>
 
+chime_object_t* object_initialize(chime_object_t* instance)
+{
+    return CHIME_LITERAL_NULL;
+}
+
 chime_object_t* object_class(chime_object_t* instance)
 {
     return (chime_object_t*)chime_object_get_class(instance);
@@ -130,6 +135,36 @@ chime_object_t* object_less_than(chime_object_t* instance, chime_object_t* other
         return CHIME_LITERAL_TRUE;
     
     return CHIME_LITERAL_FALSE;
+}
+
+chime_object_t* object_less_or_equal(chime_object_t* instance, chime_object_t* other)
+{
+    chime_object_t* result;
+    
+    result = chime_object_invoke_1(instance, "<=>", other);
+    
+    if (!chime_object_is_integer(result))
+        return CHIME_LITERAL_FALSE;
+    
+    if (chime_literal_decode_integer(result) == 1)
+        return CHIME_LITERAL_FALSE;
+    
+    return CHIME_LITERAL_TRUE;
+}
+
+chime_object_t* object_greater_or_equal(chime_object_t* instance, chime_object_t* other)
+{
+    chime_object_t* result;
+    
+    result = chime_object_invoke_1(instance, "<=>", other);
+    
+    if (!chime_object_is_integer(result))
+        return CHIME_LITERAL_FALSE;
+    
+    if (chime_literal_decode_integer(result) == -1)
+        return CHIME_LITERAL_FALSE;
+    
+    return CHIME_LITERAL_TRUE;
 }
 
 chime_object_t* method_name(chime_object_t* instance)

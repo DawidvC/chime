@@ -1,0 +1,31 @@
+implementation ClassTests : Test.Case
+{
+    method test_new_method()
+    {
+        obj = TestClass.new()
+        
+        Assert.equal(10, to:obj.ivar)
+    }
+}
+
+implementation TestClass
+{
+    attribute ivar
+    
+    method initialize()
+    {
+        self.ivar = 10
+    }
+    
+    property ivar(value)
+    {
+        get
+        {
+            return ivar
+        }
+        set
+        {
+            ivar = value
+        }
+    }
+}
