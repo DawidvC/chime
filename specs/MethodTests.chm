@@ -20,9 +20,18 @@ implementation MethodTests : Test.Case
         }
     }
     
+    property alternate_meaning
+    {
+        get
+        {
+            return meaning
+        }
+    }
+    
     method test_get_property()
     {
         Assert.equal(self.meaning_of_life, to:42)
+        Assert.equal(self.alternate_meaning, to:42)
     }
     
     method test_set_property()

@@ -48,11 +48,30 @@ TEST_F(StructuralParseTests, MethodWithTypedReturnAndOneTypedArgument)
 TEST_F(StructuralParseTests, PropertyWithGetAndSet)
 {
     ast::PropertyDefinition* property;
+    chime::Return*           ret;
     
     property = parseFirst<ast::PropertyDefinition*>("property foo(value) { get { return a } set { a = value } }");
     
     ASSERT_PROPERTY_DEFINITION("foo", property);
     ASSERT_METHOD_PARAMETER(NULL, NULL, "value", property->getParameters()->childAtIndex(0));
+    
+    ret = static_cast<chime::Return*>(property->getGetBody()->childAtIndex(0));
+    ASSERT_LOCAL_VARIABLE("a", ret->getReturnValue().get());
+}
+
+TEST_F(StructuralParseTests, PropertyWithGetMissingParentheses)
+{
+    ast::PropertyDefinition* property;
+    chime::Return*           ret;
+    
+    property = parseFirst<ast::PropertyDefinition*>("property foo { get { return a } }");
+    
+    ASSERT_PROPERTY_DEFINITION("foo", property);
+    
+    ret = static_cast<chime::Return*>(property->getGetBody()->childAtIndex(0));
+    ASSERT_LOCAL_VARIABLE("a", ret->getReturnValue().get());
+    
+    ASSERT_FALSE(property->getSetBody());
 }
 
 TEST_F(StructuralParseTests, AttributeAccessedInGetProperty)

@@ -23,6 +23,10 @@ namespace ast
         {
             property->setParameters(chime::ParameterSet::parse(parser));
         }
+        else
+        {
+            
+        }
         
         parser.advance_past_ending_tokens();
         parser.next_token_value("{");

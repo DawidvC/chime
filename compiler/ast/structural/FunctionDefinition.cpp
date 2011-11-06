@@ -100,7 +100,8 @@ namespace ast
         
         ++args; // advance past self argument
         
-        assert(this->getParameters());
+        if (!this->getParameters())
+            return;
         
         // Careful here.  Properties define two methods, one that has params and one that does not.  The
         // safest thing to do here is to iterate over the function arguments, and fill in as we go
