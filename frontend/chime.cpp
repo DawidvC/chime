@@ -1,4 +1,5 @@
 #include "compiler/compiler.h"
+#include "Version.h"
 
 #include <cstdio>
 #include <string>
@@ -33,6 +34,7 @@ void get_options(int argc, char* argv[])
         { "output",    required_argument, NULL, 'o' },
         { "print",     no_argument,       NULL, 'p' },
         { "trace",     no_argument,       NULL, 't' },
+        { "version",   no_argument,       NULL, 'v' },
         { NULL,        0,                 NULL, 0   }
     };
     
@@ -42,7 +44,7 @@ void get_options(int argc, char* argv[])
     _traceSteps     = false;
     _buildOptimized = true;
     
-    while ((c = getopt_long(argc, argv, "cdeho:pt", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "cdeho:ptv", longopts, NULL)) != -1)
     {
         switch (c)
         {
@@ -64,6 +66,13 @@ void get_options(int argc, char* argv[])
             case 't':
                 _traceSteps = true;
                 break;
+            case 'v':
+                printf("   Chime Release: %s\n\n", CHIME_RELEASE_VERSION);
+                printf("Frontend Version: %d\n", CHIME_FRONTEND_VERSION);
+                printf(" Runtime Version: %d\n", CHIME_RUNTIME_VERSION);
+                printf(" Library Version: %d\n", CHIME_LIBRARY_VERSION);
+                exit(0);
+                break;
             case 'h':
             default:
                 printf("usage: chime [options] [--] [file] [arguments]\n");
@@ -75,6 +84,7 @@ void get_options(int argc, char* argv[])
                 printf("  -o (--output)     name of output file\n");
                 printf("  -p (--print)      print out the AST representation for the input file\n");
                 printf("  -t (--trace)      trace compilation steps\n");
+                printf("  -v (--version)    print Chime component versions\n");
                 exit(0);
                 break;
         }
