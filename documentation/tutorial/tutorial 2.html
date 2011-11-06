@@ -3,12 +3,50 @@
 <p><code>
 <span class="literal">4</span>.<span class="function">times</span>(&nbsp;<span class="keyword">do</span> { <span class="string">"hello, world"</span>.<span class="function">print</span>() } )
 </code></p>
-<p>Definitely more dense, this illustrates how a tailing-do is really the same as an inline do. &nbsp;But, just to further re-inforce the issue, consider this:</p>
+<p>Definitely more dense, this illustrates how a tailing-do is really the same as an inline do. &nbsp;But, just to further re-enforce this, consider this next code block:</p>
 <p><code>
 function = <span class="keyword">do</span> { <span class="string">"hello, world"</span>.<span class="function">print</span>() }<br />
 <span class="literal">4</span>.<span class="function">times</span>(function)
 </code></p>
 <p>Here, we've created a variable to hold our closure and passed it in as the argument to "times".</p>
+<h3>More Loops</h3>
+<p>In addition to the <strong>times()</strong> mechanism, Chime also supports some looping keywords.  You can use the keywords <strong>while</strong>, <strong>until</strong>, and <strong>loop</strong> to construct a number of different loops.</p>
+<p><code>
+i = <span class="literal">0</span><br />
+<span class="keyword">loop</span><br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;i += <span class="literal">1</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span> <span class="keyword">if</span> i > <span class="literal">3</span><br />
+}
+</code></p>
+<p>This bit of code also shows off the <strong>break</strong> keyword, along with a tailing <strong>if</strong> statement.  Without this, <strong>loop</strong> goes forever.</p>
+<p><code>
+i = <span class="literal">0</span><br />
+<span class="keyword">until</span> i > 3<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;i += <span class="literal">1</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br />
+}
+</code></p>
+<p>Both <strong>while</strong> and <strong>until</strong> allow you to evaluate a condition that controls the termination of the loop.  Chime's definition of truth is anything non-nil except for the <strong>false</strong> object.  Since the integer 0 is non-nil, it evaluates to <strong>true</strong>.</p>
+<h3>Flow Control</h3>
+<p>We've seen a little flow control so far, but there are a few other bits of syntax worth look at.  <strong>if</strong> and <strong>else</strong> work just like they do in C, including the optional braces for a single-line statement.  Chime also includes an <strong>unless</strong> keyword to negate a condition.  There is also a switch statement, but it behaves much more like Ruby's case than C's switch.</p>
+<p><code>
+value = <span class="string">"world"</span><br />
+<span class="keyword">switch</span> value<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span> <span class="string">"world"</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span> <span class="string">"universe"</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, universe"</span>.<span class="function">print</span>()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, ?"</span>.<span class="function">print</span>()<br />
+}
+</code></p>
+<p>A <strong>case</strong> statement is selected using the <strong>===</strong> case-compare operator.  The first statement that evaluates to true is executed.  This makes <strong>switch</strong> a very easy way to condense complex conditionals into easier-to-reach statements.  Play around with different values for the variable to see how it works.</p>
 <h3>Methods</h3>
 <p>Chime has a few different concepts for methods. &nbsp;The simplest looks like this:</p>
 <p><code>
@@ -17,15 +55,16 @@ function = <span class="keyword">do</span> { <span class="string">"hello, world"
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br />
 }<br />
 <br />
-<span class="keyword">self</span>.<span class="keyword">hello</span>() </code></p>
+<span class="keyword">self</span>.<span class="function">hello</span>() </code></p>
 <p>In this case, self refers to the object instance in the current scope. &nbsp;We're at the very top level of a file, which Chime calls the "Module Scope". &nbsp;"self", in this case, refers to the loadable module this file defines.</p>
-<h3>Classes</h3>
-<p>Chime is an object-oriented language. &nbsp;You can, of course, define your own classes using the "implementation" keyword.</p>
-<p><code> <span class="keyword">implementation</span> <span class="entity">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> greeter = <span class="entity">Greeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>()</code></p>
-<p>Everyone loves inheritance and Chime supports single-inheritance like this:</p>
-<p><code> <span class="keyword">implementation</span> <span class="entity">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> <span class="keyword">implementation</span> <span class="entity">UniversalGreeter</span> : <span class="superclass">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, universe"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> greeter = <span class="entity">UniversalGreeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>() </code></p>
-<h3>Traits</h3>
-<p>You might be more familar with the concept of <a href="http://en.wikipedia.org/wiki/Perl_6#Roles">Roles</a> in Perl 6, <a href="http://ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">Modules</a> in Ruby. &nbsp;Traits are <a href="http://en.wikipedia.org/wiki/Mixin">mixins</a> that let you define behavior without using inheritance.</p>
-<p><code> <span class="keyword">trait</span> <span class="entity">Greetable</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;{<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, world"</span>.<span class="function">print</span>()<br /> &nbsp;&nbsp;&nbsp;&nbsp;}<br /> }<br /> <br /> <span class="keyword">implementation</span> <span class="entity">Greeter</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">include</span> <span class="entity">Greetable</span><br /> }<br /> <br /> greeter = <span class="entity">Greeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>() </code></p>
-<p>Traits are not classes - they cannot be subclassed or instantiated.</p>
+<p>It might not have looked like it so far, but Chime does have a simple type system. &nbsp;Types can be useful for compile-time checking and optimizations, and sometimes they can just offer some nice in-line documentation.  Let's take a look at a more complex method to see how this works.</p>
+<p><code>
+<span class="keyword">method</span> <span class="function">say</span>(<span class="entity">String</span> word, <span class="function">to:</span><span class="entity">String</span> thing)<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="string">"{</span>word<span class="string">}, {</span>thing<span class="string">}"</span><br />
+}<br />
+<br />
+<span class="keyword">self</span>.<span class="function">say</span>(<span class="string">"greetings"</span>, <span class="function">to:</span><span class="string">"human"</span>).<span class="function">print</span>()
+</code></p>
+<p>First, you can see the types in the method signature.  Notice that before the second argument, there is a <strong>label</strong>.  Argument labels are <em>required</em> for all but the first argument of method calls.  In the method's body, we use the <strong>return</strong> statement just as in many other languages.  Finally, you can see some <strong>string interpolation</strong> being used.  Everything between braces within a string is evaluated and the <strong>to_string</strong> method is invoked on the result.</p>
 <p><a href="/tutorial-3">Next, please!</a></p>

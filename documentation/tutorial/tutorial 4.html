@@ -1,5 +1,36 @@
+<h3>More Method Types and Attributes</h3>
+<p>Classes can also define instance variables, and can include a few other types of methods.</p>
+<p><code>
+<span class="keyword">implementation</span> <span class="entity">Greeter</span><br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">attribute</span> addresse<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span> <span class="function">greet</span>()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"hello, {</span><span class="keyword">self</span>.addresse<span class="string">}"</span>.<span class="function">print</span>()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">property</span> <span class="function">addresse</span>(value)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">get</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> addresse<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">set</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addresse = value<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+}<br />
+<br />
+greeter = <span class="entity">Greeter</span>.new()<br />
+greeter.addresse = <span class="string">"universe"</span><br />
+<br />
+greeter.<span class="function">greet</span>()
+</code></p>
+<p>You can use the <strong>attribute</strong> keyword to define instance variables.  A <strong>property</strong> is just like a method, but makes it possible to do assignments with the <strong>=</strong> operator.</p>
 <h3>Multi-File Programs</h3>
 <p>It can be pretty hard to fit all of your code in one file.  Chime's solution to this problem looks a lot like a scripting language.  You simply write another file and import it.  Chime automatically pre-compiles the code it needs and links things appropriately.</p>
-<p><code> <span class="keyword">import</span> <span class="string">"Tutorial"</span><br /> <br /> greeter = <span class="keyword">Greeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>() </code></p>
+<p><code> <span class="keyword">import</span> <span class="string">"Tutorial"</span><br /> <br /> greeter = <span class="entity">Greeter</span>.<span class="function">new</span>()<br /> greeter.<span class="function">greet</span>() </code></p>
 <h3>You Are Ready</h3>
 <p>Check things out, experiment, and please report the bugs you find.</p>

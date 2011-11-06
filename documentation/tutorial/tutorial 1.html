@@ -9,12 +9,12 @@
 </code></p>
 <p><strong>"hello, world"</strong> is a <strong>string</strong> object, and <strong>print()</strong> is a method called on that object. &nbsp;<strong>print</strong> writes a string to <strong>stdout</strong>.</p>
 <h3>Compile and Execute</h3>
-<p>By default, Chime will automatically compile and excute your program. &nbsp;We can run our new program by opening a terminal, moving to the directory we've saved <em>Tutorial.chm</em> to, and executing:</p>
+<p>By default, Chime will automatically compile and execute your program. &nbsp;We can run our new program by opening a terminal, moving to the directory we've saved <em>Tutorial.chm</em> to, and executing:</p>
 <p><code>
 <span class="code_comment"># </span>chime Tutorial.chm<br />
 hello, world
 </code></p>
-<p>And there we go! &nbsp;If you take a look in the current directory, you'll see that chime has produces two additional files. &nbsp;"tutorial.chc" is the object-file version of your program - compiled but unlinked. &nbsp;"tutorial" is the actual binary, linked to both the chime runtime and chime core library and is a standalone executable.</p>
+<p>And there we go! &nbsp;If you take a look in the current directory, you'll see that chime has produces two additional files. &nbsp;<em>"tutorial.chc"</em> is the object version of your program - compiled, but unlinked. &nbsp;<em>tutorial</em> is the actual binary, linked to both the chime runtime and chime core library and is a standalone executable.</p>
 <h3>Expressions, Loops, and Closures</h3>
 <p>This next step will combine three concepts into one. &nbsp;We'll see how chime evaluates expressions and how closures work. &nbsp;We can try this out by modifying <em>Tutorial.chm</em> to the following:</p>
 <p><code>
