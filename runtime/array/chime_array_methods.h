@@ -15,7 +15,7 @@ chime_object_t* array_length(chime_object_t* instance);
 chime_object_t* array_contains(chime_object_t* instance, chime_object_t* value);
 chime_object_t* array_append(chime_object_t* instance, chime_object_t* object);
 chime_object_t* array_each(chime_object_t* instance, chime_object_t* function);
-chime_object_t* array_collect(chime_object_t* instance, chime_object_t* function);
+chime_object_t* array_map(chime_object_t* instance, chime_object_t* function);
 chime_object_t* array_indexer_get(chime_object_t* instance, chime_object_t* index);
 
 #ifdef __cplusplus

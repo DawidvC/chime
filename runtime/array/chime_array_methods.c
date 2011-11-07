@@ -93,7 +93,7 @@ chime_object_t* array_each(chime_object_t* instance, chime_object_t* function)
     return CHIME_LITERAL_NULL;
 }
 
-chime_object_t* array_collect(chime_object_t* instance, chime_object_t* function)
+chime_object_t* array_map(chime_object_t* instance, chime_object_t* function)
 {
     chime_object_t*        new_array;
     chime_runtime_array_t* internal_array;

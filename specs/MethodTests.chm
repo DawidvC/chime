@@ -93,10 +93,10 @@ implementation MethodTests : Test.Case
         Assert.equal(3, to:self.fully_typed_add(1, to:2))
         Assert.equal(3, to:self.untyped_add(1,     to:2))
         
-        method_names = self.methods.collect() do (x) { return x.name }
+        method_names = self.methods.map() do (x) { return x.name }
         
-        Assert.is_true(method_names.contains("untyped_add:to:"))
-        Assert.is_false(method_names.contains("untyped_add"))
+        Assert.is_true(method_names.contains?("untyped_add:to:"))
+        Assert.is_false(method_names.contains?("untyped_add"))
     }
     
     class method class_method_example()

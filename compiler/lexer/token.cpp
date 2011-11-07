@@ -384,8 +384,6 @@ namespace chime
         if (_value == "-")    return 40;
         if (_value == "<")    return 30;
         if (_value == ">")    return 30;
-        if (_value == "and")  return 20;
-        if (_value == "or")   return 20;
         if (_value == "<=>")  return 15;
         if (_value == "==")   return 15;
         if (_value == "===")  return 15;
@@ -396,6 +394,8 @@ namespace chime
         if (_value == "*=")   return 10;
         if (_value == "/=")   return 10;
         if (_value == "-=")   return 10;
+        if (_value == "and")  return 5;
+        if (_value == "or")   return 5;
         
         return -1;
     }
