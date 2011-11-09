@@ -20,6 +20,10 @@ void chime_float_initialize(void)
     
     // instance methods
     chime_class_set_instance_method(_float_class, "<=>",  float_compare);
+    chime_class_set_instance_method(_float_class, "+",    float_add);
+    chime_class_set_instance_method(_float_class, "-",    float_subtract);
+    chime_class_set_instance_method(_float_class, "/",    float_divide);
+    chime_class_set_instance_method(_float_class, "*",    float_multiply);
 }
 
 chime_object_t* chime_float_create(double value)

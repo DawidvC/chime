@@ -58,4 +58,12 @@ implementation LiteralTests : Test.Case
         Assert.equal(1.0, to:1.0)
         Assert.is_true(1.0 == 1.0)
     }
+    
+    method test_floating_point_operations()
+    {
+        Assert.equal(2.0, to:1.0 + 1.0)
+        Assert.equal(1.0, to:2.0 - 1.0)
+        Assert.equal(4.0, to:2.0 * 2.0)
+        Assert.equal(2.0, to:4.0 / 2.0)
+    }
 }

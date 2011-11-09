@@ -10,6 +10,10 @@ extern "C" {
 #endif
 
 chime_object_t* float_compare(chime_object_t* instance, chime_object_t* other);
+chime_object_t* float_add(chime_object_t* instance, chime_object_t* other);
+chime_object_t* float_subtract(chime_object_t* instance, chime_object_t* other);
+chime_object_t* float_divide(chime_object_t* instance, chime_object_t* other);
+chime_object_t* float_multiply(chime_object_t* instance, chime_object_t* other);
 
 #ifdef __cplusplus
 }
