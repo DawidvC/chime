@@ -15,6 +15,7 @@ void chime_hash_initialize(void)
     
     // instance methods
     chime_class_set_instance_method(_hash_class, "length", hash_length);
+    chime_class_set_instance_method(_hash_class, "count",  hash_length);
     chime_class_set_instance_method(_hash_class, "[]",     hash_indexer_get);
     chime_class_set_instance_method(_hash_class, "[]=",    hash_indexer_set);
 }

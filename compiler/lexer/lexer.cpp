@@ -185,7 +185,7 @@ namespace chime
                         _peeked_char = this->peek();
                         
                         // check for a number
-                        if ((_peeked_char <= '0') || (_peeked_char >= '9'))
+                        if ((_peeked_char < '0') || (_peeked_char > '9'))
                         {
                             return t;
                         }

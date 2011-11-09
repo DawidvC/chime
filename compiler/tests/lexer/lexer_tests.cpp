@@ -323,13 +323,30 @@ TEST_F(LexerTest, UnterminatedString)
     ExpectTokens(tokens);
 }
 
+TEST_F(LexerTest, OnePointOhFloatingPoint)
+{
+    lex("1.0");
+    
+    const char *tokens[] = {"1.0", NULL};
+    ASSERT_TOKENS(tokens);
+}
+
 TEST_F(LexerTest, SingleFloatingPoint)
 {
     lex("5.667");
     
     const char *tokens[] = {"5.667", NULL};
-    ExpectTokens(tokens);
+    ASSERT_TOKENS(tokens);
 }
+
+TEST_F(LexerTest, FloatingPointMethodCall)
+{
+    lex("5.667.foo()");
+    
+    const char *tokens[] = {"5.667", ".", "foo", "(", ")", NULL};
+    ASSERT_TOKENS(tokens);
+}
+
 TEST_F(LexerTest, IntegerMethodCall)
 {
     lex("5.times");

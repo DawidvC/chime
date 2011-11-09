@@ -178,15 +178,6 @@ implementation MethodTests : Test.Case
         Assert.equal( 1, to:self % 3)
     }
     
-    method test_comparison_operators()
-    {
-        meaning = 10
-        
-        Assert.is_true(self < 11)
-        Assert.is_true(self == 10)
-        Assert.is_true(self > 9)
-    }
-    
     method test_case_comparison()
     {
         meaning = 10

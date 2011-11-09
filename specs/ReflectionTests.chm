@@ -19,7 +19,9 @@ implementation ReflectionTests : Test.Case
     {
         methods = Object.new().methods
         
-        Assert.equal(13, to:methods.length)
+        Assert.equal(8, to:methods.length)
+        
+        return if methods.length < 8
         
         Assert.equal("initialize", to:methods[0].name)
         Assert.equal("class",      to:methods[1].name)
@@ -28,11 +30,6 @@ implementation ReflectionTests : Test.Case
         Assert.equal("invoke:",    to:methods[4].name)
         Assert.equal("hash",       to:methods[5].name)
         Assert.equal("to_string",  to:methods[6].name)
-        Assert.equal("==",         to:methods[7].name)
-        Assert.equal("===",        to:methods[8].name)
-        Assert.equal(">",          to:methods[9].name)
-        Assert.equal("<",          to:methods[10].name)
-        Assert.equal("<=",         to:methods[11].name)
-        Assert.equal(">=",         to:methods[12].name)
+        Assert.equal("===",        to:methods[7].name)
     }
 }

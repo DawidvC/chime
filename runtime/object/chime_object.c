@@ -36,12 +36,12 @@ void chime_object_initialize(void)
     chime_class_set_instance_method(_object_class, "invoke:",    object_invoke);
     chime_class_set_instance_method(_object_class, "hash",       object_hash);
     chime_class_set_instance_method(_object_class, "to_string",  object_to_string);
-    chime_class_set_instance_method(_object_class, "==",         object_equals);
+    //chime_class_set_instance_method(_object_class, "==",         object_equals);
     chime_class_set_instance_method(_object_class, "===",        object_case_compare);
-    chime_class_set_instance_method(_object_class, ">",          object_greater_than);
-    chime_class_set_instance_method(_object_class, "<",          object_less_than);
-    chime_class_set_instance_method(_object_class, "<=",         object_less_or_equal);
-    chime_class_set_instance_method(_object_class, ">=",         object_greater_or_equal);
+    //chime_class_set_instance_method(_object_class, ">",          object_greater_than);
+    //chime_class_set_instance_method(_object_class, "<",          object_less_than);
+    //chime_class_set_instance_method(_object_class, "<=",         object_less_or_equal);
+    //chime_class_set_instance_method(_object_class, ">=",         object_greater_or_equal);
     
     chime_class_set_instance_method(_method_class, "name", method_name);
 }

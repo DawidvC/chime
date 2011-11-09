@@ -2,7 +2,9 @@
 
 #include "chime_literal.h"
 #include "runtime/chime_runtime.h"
+#include "runtime/chime_runtime_internal.h"
 #include "chime_literal_methods.h"
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -14,6 +16,9 @@ void chime_literal_initialize(void)
     chime_class_set_instance_method(klass, "print", null_print);
     
     klass = chime_class_create_object_subclass("Integer");
+    
+    chime_class_include_trait(klass, _comparable_trait);
+    
     chime_class_set_instance_method(klass, "to_string", integer_to_string);
     chime_class_set_instance_method(klass, "times:",    integer_times);
     chime_class_set_instance_method(klass, "+",         integer_add);
@@ -24,6 +29,9 @@ void chime_literal_initialize(void)
     chime_class_set_instance_method(klass, "<=>",       integer_compare);
     
     klass = chime_class_create_object_subclass("Boolean");
+    
+    chime_class_include_trait(klass, _comparable_trait);
+    
     chime_class_set_instance_method(klass, "to_string", boolean_to_string);
     chime_class_set_instance_method(klass, "<=>",       boolean_compare);
 }

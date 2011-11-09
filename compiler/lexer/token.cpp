@@ -407,6 +407,12 @@ namespace chime
         
         return strtol(_value.c_str(), NULL, 10);
     }
+    
+    double token::floatValue()
+    {
+        return strtod(_value.c_str(), NULL);
+    }
+    
     std::string token::stringValue(void)
     {
         // needs to be a little smarter

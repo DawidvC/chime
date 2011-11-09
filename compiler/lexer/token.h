@@ -55,7 +55,8 @@ namespace chime
         virtual bool isExceptionRelated(void) const;
         virtual int precedence(void) const;
         
-        virtual long integerValue(void);
+        virtual long integerValue();
+        virtual double floatValue();
         virtual std::string stringValue(void);
     
     protected:

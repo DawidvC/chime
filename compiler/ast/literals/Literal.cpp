@@ -1,6 +1,7 @@
 #include "Literal.h"
 #include "ArrayLiteral.h"
 #include "boolean_literal.h"
+#include "FloatLiteral.h"
 #include "HashLiteral.h"
 #include "ImaginaryIntegerLiteral.h"
 #include "integer_literal.h"
@@ -23,7 +24,8 @@ namespace ast
         
         if (t->isFloatingPoint())
         {
-            assert(0 && "Floating point numbers not parsed yet");
+            node = new chime::FloatLiteral();
+            static_cast<chime::FloatLiteral*>(node)->setValue(parser.nextToken()->floatValue());
         }
         else if (t->isInteger())
         {

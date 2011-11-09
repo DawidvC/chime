@@ -5,13 +5,15 @@
 #include "runtime/class/chime_class.h"
 #include "runtime/class/chime_class_internal.h"
 #include "runtime/trait/chime_trait.h"
+#include "runtime/traits/comparable/chime_comparable.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/object/chime_object_internal.h"
 #include "runtime/string/chime_string.h"
 #include "runtime/array/chime_array.h"
+#include "runtime/closure/chime_closure.h"
+#include "runtime/float/chime_float.h"
 #include "runtime/hash/chime_hash.h"
 #include "runtime/reference/chime_reference.h"
-#include "runtime/closure/chime_closure.h"
 #include "runtime/range/chime_range.h"
 
 #include <assert.h>
@@ -19,19 +21,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-chime_dictionary_t* _chime_modules   = NULL;
-chime_dictionary_t* _chime_classes   = NULL;
-chime_dictionary_t* _chime_traits    = NULL;
-chime_class_t*      _object_class    = NULL;
-chime_class_t*      _module_class    = NULL;
-chime_class_t*      _trait_class     = NULL;
-chime_class_t*      _string_class    = NULL;
-chime_class_t*      _array_class     = NULL;
-chime_class_t*      _hash_class      = NULL;
-chime_class_t*      _range_class     = NULL;
-chime_class_t*      _method_class    = NULL;
-chime_class_t*      _undefined_class = NULL;
-unsigned char       chime_log_level  = 4;
+chime_dictionary_t* _chime_modules    = NULL;
+chime_dictionary_t* _chime_classes    = NULL;
+chime_dictionary_t* _chime_traits     = NULL;
+chime_class_t*      _object_class     = NULL;
+chime_class_t*      _module_class     = NULL;
+chime_class_t*      _trait_class      = NULL;
+chime_class_t*      _string_class     = NULL;
+chime_class_t*      _array_class      = NULL;
+chime_class_t*      _hash_class       = NULL;
+chime_class_t*      _range_class      = NULL;
+chime_class_t*      _float_class      = NULL;
+chime_class_t*      _method_class     = NULL;
+chime_class_t*      _undefined_class  = NULL;
+
+chime_class_t*      _comparable_trait = NULL;
+
+unsigned char       chime_log_level   = 4;
 
 void chime_runtime_initialize(void)
 {
@@ -50,6 +56,7 @@ void chime_runtime_initialize(void)
     _module_class = chime_class_create_object_subclass("Module");
     
     chime_trait_initialize();
+    chime_comparable_initialize();
     
     chime_literal_initialize();
     
@@ -64,6 +71,8 @@ void chime_runtime_initialize(void)
     chime_closure_initialize();
     
     chime_range_initialize();
+    
+    chime_float_initialize();
     
     chime_log_level = old_level;
 }
@@ -80,15 +89,18 @@ void chime_runtime_destroy(void)
     chime_dictionary_destroy(_chime_traits);
     _chime_traits = NULL;
     
-    _object_class    = NULL;
-    _module_class    = NULL;
-    _trait_class     = NULL;
-    _string_class    = NULL;
-    _array_class     = NULL;
-    _hash_class      = NULL;
-    _range_class     = NULL;
-    _method_class    = NULL;
-    _undefined_class = NULL;
+    _object_class     = NULL;
+    _module_class     = NULL;
+    _trait_class      = NULL;
+    _string_class     = NULL;
+    _array_class      = NULL;
+    _hash_class       = NULL;
+    _range_class      = NULL;
+    _float_class      = NULL;
+    _method_class     = NULL;
+    _undefined_class  = NULL;
+    
+    _comparable_trait = NULL;
 }
 
 chime_object_t* chime_runtime_create_class(const char* name, chime_object_t* superclass)

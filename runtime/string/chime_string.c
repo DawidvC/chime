@@ -15,6 +15,9 @@ void chime_string_initialize(void)
 {
     _string_class = chime_class_create_object_subclass("String");
     
+    // traits
+    chime_class_include_trait(_string_class, _comparable_trait);
+    
     // class methods
     chime_class_set_class_method(_string_class, "new", string_class_new);
     

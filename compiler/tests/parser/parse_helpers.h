@@ -139,6 +139,11 @@
     ASSERT_EQ(x, static_cast<chime::IntegerLiteral*>(y)->getValue()); \
     } while (0)
 
+#define ASSERT_LITERAL_FLOAT(x, y) do { \
+    ASSERT_EQ("Float Literal", y->nodeName()); \
+    ASSERT_EQ(x, static_cast<chime::FloatLiteral*>(y)->getValue()); \
+    } while (0)
+
 #define ASSERT_LITERAL_IMAGINARY_INTEGER(x, y) do { \
     ASSERT_EQ("Imaginary Integer Literal", y->nodeName()); \
     ASSERT_EQ(x, static_cast<chime::ImaginaryIntegerLiteral*>(y)->getValue()); \

@@ -19,5 +19,8 @@ extern chime_class_t*      _string_class;
 extern chime_class_t*      _array_class;
 extern chime_class_t*      _hash_class;
 extern chime_class_t*      _range_class;
+extern chime_class_t*      _float_class;
+
+extern chime_class_t*      _comparable_trait;
 
 #endif

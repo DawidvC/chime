@@ -1,3 +1,3 @@
 // chime runtime: Version.h
 
-#define CHIME_RUNTIME_VERSION 2
+#define CHIME_RUNTIME_VERSION 3

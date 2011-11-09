@@ -22,6 +22,15 @@ TEST_F(LiteralParserTest, Integer)
     ASSERT_LITERAL_INTEGER(128, node->childAtIndex(0));
 }
 
+TEST_F(LiteralParserTest, FloatingPoint)
+{
+    ast::node* node;
+    
+    node = parse("1.0");
+    
+    ASSERT_LITERAL_FLOAT(1.0, node->childAtIndex(0));
+}
+
 TEST_F(LiteralParserTest, NegativeInteger)
 {
     ast::node* node;

@@ -39,6 +39,7 @@ namespace chime
         _functionChimeReferenceSet             = NULL;
         _functionChimeArrayCreateWithLength    = NULL;
         _functionChimeArrayAppend              = NULL;
+        _functionChimeFloatCreate              = NULL;
         _functionChimeHashCreate               = NULL;
         _functionChimeHashSet                  = NULL;
         
@@ -1021,6 +1022,35 @@ namespace chime
         args.push_back(objectLoad);
         
         call = this->getBuilder()->CreateCall(_functionChimeArrayAppend, args.begin(), args.end(), "");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeFloatCreate(llvm::Value* doubleValue)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeFloatCreate == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(llvm::Type::getDoubleTy(this->getContext()));
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeFloatCreate = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_float_create", this->getModule());
+            _functionChimeFloatCreate->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_float_create return");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeFloatCreate, doubleValue, "");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);
