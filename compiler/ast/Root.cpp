@@ -41,7 +41,7 @@ namespace ast
         _identifier = identifier;
     }
     
-    Variable* Root::createVariable(const std::string& identifier)
+    chime::Variable* Root::createVariable(const std::string& identifier)
     {
         return new GlobalVariable(identifier);
     }
@@ -64,8 +64,6 @@ namespace ast
         llvm::Value*                      moduleObjectPtr;
         std::vector<ast::node*>::iterator it;
         
-        assert(context.getCurrentScope()->allowsStructuralElements());
-        
         cStringPtr      = context.getConstantString("Module");
         moduleClassPtr  = context.getRuntime()->callChimeRuntimeGetClass(cStringPtr);
         
@@ -74,12 +72,12 @@ namespace ast
         
         this->setClassObjectPtr(classPtr);
         
-        //context.pushScope(this);
-        
         cStringPtr      = context.getConstantString("new");
         moduleObjectPtr = context.getRuntime()->callChimeObjectInvoke(classPtr, cStringPtr, std::vector<llvm::Value*>());
         
         this->setSelfObjectPtr(moduleObjectPtr);
+        
+        context.pushScope(this);
         
         for (it = this->children()->begin(); it < this->children()->end(); ++it)
         {
@@ -87,7 +85,7 @@ namespace ast
         }
         
         // restore scope and the builder's position
-        //context.popScope();
+        context.popScope();
         
         return NULL;
     }

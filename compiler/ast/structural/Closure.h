@@ -23,13 +23,13 @@ namespace ast
         std::string            stringRepresentation(int depth=0) const;
         
         CodeBlockRef           getBody() const;
-        std::vector<Variable*> getClosedVariables() const;
+        std::vector<chime::Variable*> getClosedVariables() const;
         
         chime::SelfLiteral*    createSelf();
         llvm::Value*           getSelfValue(chime::CodeGenContext& context);
         
-        Variable*    createVariable(const std::string& identifier);
-        Variable*    transformVariable(Variable* variable);
+        chime::Variable*    createVariable(const std::string& identifier);
+        chime::Variable*    transformVariable(chime::Variable* variable);
         
         llvm::Value* codegen(chime::code_generator& generator);
     
@@ -38,7 +38,7 @@ namespace ast
         CodeBlockRef _bodyBlock;
         
         // codegen members
-        std::map<std::string, Variable*> _closedVariables;
+        std::map<std::string, chime::Variable*> _closedVariables;
     };
     
     typedef std::tr1::shared_ptr<Closure> ClosureRef;

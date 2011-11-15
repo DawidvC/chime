@@ -19,6 +19,7 @@ chime_object_t* class_new(chime_object_t* instance)
     
     object = chime_object_create((chime_class_t*)instance);
     
+    // we actually need to walk the inheritance chain and initialize all super classes too
     chime_object_invoke_0(object, "initialize");
     
     return object;

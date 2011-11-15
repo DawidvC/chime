@@ -41,6 +41,9 @@ namespace ast
         virtual std::string      stringRepresentation(int depth=0) const;
         void                     print(void);
         
+        virtual bool             isVariable() const;
+        virtual bool             requiresRelease() const;
+        
         virtual llvm::Value*     codegen(chime::code_generator& generator);
         
     protected:

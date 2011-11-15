@@ -1,0 +1,53 @@
+object_count = 0
+
+implementation ManagedObject
+{
+    method initialize()
+    {
+        object_count += 1
+    }
+    
+    method finalize()
+    {
+        object_count -= 1
+    }
+    
+    class method count
+    {
+        return object_count
+    }
+}
+
+implementation MemoryManagementTests : Test.Case
+{
+    method setup()
+    {
+        Assert.equal(0, to:ManagedObject.count)
+    }
+    
+    method teardown()
+    {
+        Assert.equal(0, to:ManagedObject.count)
+    }
+    
+    // some helper methods
+    method object_create_and_return()
+    {
+        return ManagedObject.new()
+    }
+    
+    // actual test methods
+    method test_creation()
+    {
+        ManagedObject.new()
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_create_and_return()
+    {
+        self.object_create_and_return()
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+}

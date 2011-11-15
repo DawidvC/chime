@@ -235,6 +235,34 @@ TEST_F(FlowControlParserTest, ReturnVoidStatment)
     ASSERT_RETURN(method->getBody()->childAtIndex(0));
 }
 
+TEST_F(FlowControlParserTest, ReturnSingleVariableStatment)
+{
+    chime::MethodDefinition* method;
+    chime::Return*           returnNode;
+    
+    method = parseFirst<chime::MethodDefinition*>("method foo() { x = 0\n return x }");
+    
+    ASSERT_METHOD_DEFINITION("foo", method);
+    
+    returnNode = dynamic_cast<chime::Return*>(method->getBody()->childAtIndex(1));
+    ASSERT_SINGLE_VARIABLE_RETURN(returnNode);
+    ASSERT_LOCAL_VARIABLE("x", returnNode->getReturnValue().get());
+}
+
+TEST_F(FlowControlParserTest, ReturnExpression)
+{
+    chime::MethodDefinition* method;
+    chime::Return*           returnNode;
+    
+    method = parseFirst<chime::MethodDefinition*>("method foo() { return x + 1 }");
+    
+    ASSERT_METHOD_DEFINITION("foo", method);
+    
+    returnNode = dynamic_cast<chime::Return*>(method->getBody()->childAtIndex(0));
+    ASSERT_RETURN(returnNode);
+    ASSERT_OPERATOR("+", returnNode->getReturnValue().get());
+}
+
 TEST_F(FlowControlParserTest, SwitchStatement)
 {
     ast::Switch*   switchNode;

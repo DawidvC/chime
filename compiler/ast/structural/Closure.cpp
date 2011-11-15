@@ -28,11 +28,11 @@ namespace ast
         
         // before we pop the scope, we need to inform the enclosing scope of any
         // local variables that now need to be shared
-        std::map<std::string, Variable*>::iterator it;
+        std::map<std::string, chime::Variable*>::const_iterator it;
         
         for (it = closure->_closedVariables.begin(); it != closure->_closedVariables.end(); ++it)
         {
-            closure->getParent()->capturedVariable(it->second);
+            closure->parent()->capturedVariable(it->second);
         }
         
         parser.popScope();
@@ -69,11 +69,11 @@ namespace ast
         return _bodyBlock;
     }
     
-    std::vector<Variable*> Closure::getClosedVariables() const
+    std::vector<chime::Variable*> Closure::getClosedVariables() const
     {
         // iterator must be const, since the method is marked const
-        std::map<std::string, Variable*>::const_iterator it;
-        std::vector<Variable*>                           variables;
+        std::map<std::string, chime::Variable*>::const_iterator it;
+        std::vector<chime::Variable*>                           variables;
         
         for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it )
         {
@@ -94,10 +94,12 @@ namespace ast
         
         closureValue = context.getCurrentScope()->getSelfObjectPtr();
         
+        assert(closureValue);
+        
         return context.getRuntime()->callChimeObjectGetAttribute(closureValue, context.getConstantString("self"));
     }
     
-    Variable* Closure::createVariable(const std::string& identifier)
+    chime::Variable* Closure::createVariable(const std::string& identifier)
     {
         //if (_closedVariables.find(identifier) != _closedVariables.end())
         //    return new ClosedLocalVariable(identifier);
@@ -105,7 +107,7 @@ namespace ast
         return new LocalVariable(identifier);
     }
     
-    Variable* Closure::transformVariable(Variable* variable)
+    chime::Variable* Closure::transformVariable(chime::Variable* variable)
     {
         _closedVariables[variable->getIdentifier()] = variable;
         
@@ -132,7 +134,7 @@ namespace ast
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
         
         // put in the closed values
-        std::map<std::string, Variable*>::const_iterator it;
+        std::map<std::string, chime::Variable*>::const_iterator it;
         
         for (it = _closedVariables.begin(); it != _closedVariables.end(); ++it)
         {

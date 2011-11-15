@@ -61,6 +61,9 @@ namespace chime
         
         llvm::Value* callChimeObjectInvoke(llvm::Value* objectValue, llvm::Value* namePtr, std::vector<llvm::Value*> args);
         
+        void         callChimeObjectRetain(llvm::Value* objectValue);
+        void         callChimeObjectRelease(llvm::Value* objectValue);
+        
         // literal functions
         llvm::Value* callChimeLiteralEncodeInteger(llvm::Value* integerValue);
         llvm::Value* callChimeLiteralEncodeBoolean(llvm::Value* booleanValue);
@@ -133,6 +136,8 @@ namespace chime
         llvm::Function*     _functionChimeFloatCreate;
         llvm::Function*     _functionChimeHashCreate;
         llvm::Function*     _functionChimeHashSet;
+        
+        std::map<std::string, llvm::Function*> _runtimeFunctions;
         
         llvm::Constant*     _literalNull;
     };

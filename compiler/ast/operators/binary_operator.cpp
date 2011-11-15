@@ -112,7 +112,7 @@ namespace ast
         }
         else if (t->isIdentifier())
         {
-            node = ast::Variable::parse(parser);
+            node = chime::Variable::parse(parser);
         }
         else
         {
@@ -190,6 +190,7 @@ namespace ast
         llvm::Value*              l_value;
         llvm::Value*              r_value;
         llvm::Value*              methodNamePtr;
+        llvm::Value*              result;
         llvm::LoadInst*           object_load;
         std::vector<llvm::Value*> arguments;
         
@@ -205,7 +206,11 @@ namespace ast
             l_value = this->getLeftOperand()->codegen(generator);
             assert(l_value);
             
-            return call->codegenWithTarget(generator, l_value);
+            result = call->codegenWithTarget(generator, l_value);
+            
+            generator.getCurrentScope()->addLooseValue(result);
+            
+            return result;
         }
         
         // this is just a plain operator that we need to invoke as a method
@@ -219,6 +224,10 @@ namespace ast
         
         methodNamePtr = generator.getConstantString(this->identifier());
         
-        return generator.getRuntime()->callChimeObjectInvoke(l_value, methodNamePtr, arguments);
+        result = generator.getRuntime()->callChimeObjectInvoke(l_value, methodNamePtr, arguments);
+        
+        generator.getCurrentScope()->addLooseValue(result);
+        
+        return result;
     }    
 }

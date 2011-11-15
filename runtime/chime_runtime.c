@@ -27,6 +27,8 @@ chime_dictionary_t* _chime_traits     = NULL;
 chime_class_t*      _object_class     = NULL;
 chime_class_t*      _module_class     = NULL;
 chime_class_t*      _trait_class      = NULL;
+chime_class_t*      _reference_class  = NULL;
+chime_class_t*      _closure_class    = NULL;
 chime_class_t*      _string_class     = NULL;
 chime_class_t*      _array_class      = NULL;
 chime_class_t*      _hash_class       = NULL;
@@ -92,6 +94,8 @@ void chime_runtime_destroy(void)
     _object_class     = NULL;
     _module_class     = NULL;
     _trait_class      = NULL;
+    _reference_class  = NULL;
+    _closure_class    = NULL;
     _string_class     = NULL;
     _array_class      = NULL;
     _hash_class       = NULL;

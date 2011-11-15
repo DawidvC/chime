@@ -10,7 +10,8 @@ namespace chime
         _builder              = new llvm::IRBuilder<>(llvm::getGlobalContext());
         _importedNamespaces   = new std::vector<std::string>();
         
-        _currentScope         = NULL;
+        _currentScope               = NULL;
+        _currentImplementationScope = NULL;
         
         _object_ptr_type     = NULL;
         _c_string_ptr_type   = NULL;
@@ -71,15 +72,31 @@ namespace chime
         _currentScope = node;
     }
     
+    ast::ScopedNode* code_generator::currentImplementation() const
+    {
+        return _currentImplementationScope;
+    }
+    
     void code_generator::pushScope(ast::ScopedNode* scope)
     {
         if (!_currentScope)
         {
             _currentScope = scope;
+            
+            if (scope->allowsStructuralElements())
+                _currentImplementationScope = scope;
+            
             return;
         }
         
+        assert(_currentScope);
+        assert(_currentImplementationScope);
+        
         scope->setParent(_currentScope);
+        scope->setEnclosingImplementation(_currentImplementationScope);
+        
+        if (scope->allowsStructuralElements())
+            _currentImplementationScope = scope;
         
         _currentScope = scope;
     }
@@ -87,9 +104,19 @@ namespace chime
     void code_generator::popScope()
     {
         assert(_currentScope);
-        assert(_currentScope->getParent());
         
-        _currentScope = _currentScope->getParent();
+        // here, instruct the scope to do any cleanup it needs
+        _currentScope->codegenScopeExit(*this);
+        
+        _currentImplementationScope = _currentScope->enclosingImplementation();
+        
+        if (!_currentScope->parent())
+        {
+            _currentScope = NULL;
+            return;
+        }
+        
+        _currentScope = _currentScope->parent();
     }
     
     llvm::Value* code_generator::getConstantString(std::string str)
@@ -226,8 +253,6 @@ namespace chime
     void code_generator::generate(ast::Root* node, const std::string& moduleName, bool asMain)
     {
         assert(node);
-        
-        this->pushScope(node);
         
         _module = new llvm::Module(moduleName, llvm::getGlobalContext());
         

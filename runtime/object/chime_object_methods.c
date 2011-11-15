@@ -18,6 +18,11 @@ chime_object_t* object_initialize(chime_object_t* instance)
     return CHIME_LITERAL_NULL;
 }
 
+chime_object_t* object_finalize(chime_object_t* instance)
+{
+    return CHIME_LITERAL_NULL;
+}
+
 chime_object_t* object_class(chime_object_t* instance)
 {
     return (chime_object_t*)chime_object_get_class(instance);
@@ -31,6 +36,14 @@ chime_object_t* object_superclass(chime_object_t* instance)
 chime_object_t* object_methods(chime_object_t* instance)
 {
     return class_methods(object_class(instance));
+}
+
+chime_object_t* object_retain_count(chime_object_t* instance)
+{
+    if (chime_object_is_literal(instance))
+        return chime_literal_encode_integer(1);
+    
+    return chime_literal_encode_integer(instance->retain_count);
 }
 
 chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_name)
@@ -79,14 +92,8 @@ chime_object_t* object_to_string(chime_object_t* instance)
 
 chime_object_t* object_equals(chime_object_t* instance, chime_object_t* other)
 {
-    chime_object_t* result;
-    
-    result = chime_object_invoke_1(instance, "<=>", other);
-    
-    if (!chime_object_is_integer(result))
-        return CHIME_LITERAL_FALSE;
-    
-    if (chime_literal_decode_integer(result) == 0)
+    // basic pointer comparison
+    if (instance == other)
         return CHIME_LITERAL_TRUE;
     
     return CHIME_LITERAL_FALSE;
@@ -107,67 +114,13 @@ chime_object_t* object_case_compare(chime_object_t* instance, chime_object_t* ot
     return CHIME_LITERAL_FALSE;
 }
 
-chime_object_t* object_greater_than(chime_object_t* instance, chime_object_t* other)
-{
-    chime_object_t* result;
-    
-    result = chime_object_invoke_1(instance, "<=>", other);
-    
-    if (!chime_object_is_integer(result))
-        return CHIME_LITERAL_FALSE;
-    
-    if (chime_literal_decode_integer(result) == 1)
-        return CHIME_LITERAL_TRUE;
-    
-    return CHIME_LITERAL_FALSE;
-}
-
-chime_object_t* object_less_than(chime_object_t* instance, chime_object_t* other)
-{
-    chime_object_t* result;
-    
-    result = chime_object_invoke_1(instance, "<=>", other);
-    
-    if (!chime_object_is_integer(result))
-        return CHIME_LITERAL_FALSE;
-    
-    if (chime_literal_decode_integer(result) == -1)
-        return CHIME_LITERAL_TRUE;
-    
-    return CHIME_LITERAL_FALSE;
-}
-
-chime_object_t* object_less_or_equal(chime_object_t* instance, chime_object_t* other)
-{
-    chime_object_t* result;
-    
-    result = chime_object_invoke_1(instance, "<=>", other);
-    
-    if (!chime_object_is_integer(result))
-        return CHIME_LITERAL_FALSE;
-    
-    if (chime_literal_decode_integer(result) == 1)
-        return CHIME_LITERAL_FALSE;
-    
-    return CHIME_LITERAL_TRUE;
-}
-
-chime_object_t* object_greater_or_equal(chime_object_t* instance, chime_object_t* other)
-{
-    chime_object_t* result;
-    
-    result = chime_object_invoke_1(instance, "<=>", other);
-    
-    if (!chime_object_is_integer(result))
-        return CHIME_LITERAL_FALSE;
-    
-    if (chime_literal_decode_integer(result) == -1)
-        return CHIME_LITERAL_FALSE;
-    
-    return CHIME_LITERAL_TRUE;
-}
-
 chime_object_t* method_name(chime_object_t* instance)
 {
-    return chime_object_get_property(instance, "_name");
+    chime_object_t* object;
+    
+    object = chime_object_get_property(instance, "_name");
+    
+    chime_object_retain(object);
+    
+    return object;
 }

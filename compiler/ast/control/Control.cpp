@@ -51,7 +51,7 @@ namespace chime
         }
         else if (t->equal_to("return"))
         {
-            node = new chime::Return(parser);
+            node = chime::Return::parse(parser);
             
             node = Conditional::parseTailing(parser, node);
         }

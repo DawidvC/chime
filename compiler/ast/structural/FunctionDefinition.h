@@ -23,6 +23,8 @@ namespace ast
         
         chime::SelfLiteral* createSelf();
         
+        bool                isFunction() const;
+        
     protected:
         void            defineParametersAsLocalVariables(chime::parser& parser);
         

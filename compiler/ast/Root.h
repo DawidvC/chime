@@ -23,7 +23,7 @@ namespace ast
         std::string              getIdentifier() const;
         void                     setIdentifier(const std::string& identifier);
         
-        Variable*                createVariable(const std::string& identifier);
+        chime::Variable*         createVariable(const std::string& identifier);
         chime::SelfLiteral*      createSelf();
         bool                     allowsStructuralElements() const;
         

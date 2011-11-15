@@ -20,7 +20,7 @@ namespace ast
         CodeBlockRef getGetBody() const;
         CodeBlockRef getSetBody() const;
         
-        Variable*    createVariable(const std::string& identifier);
+        chime::Variable* createVariable(const std::string& identifier);
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
         

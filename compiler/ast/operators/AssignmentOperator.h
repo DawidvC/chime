@@ -5,7 +5,7 @@
 
 #include "binary_operator.h"
 
-namespace ast
+namespace chime
 {
     class Variable;
 }
@@ -15,7 +15,7 @@ namespace ast
     class AssignmentOperator : public binary_operator
     {
     public:
-        Variable* getVariable() const;
+        chime::Variable* getVariable() const;
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };

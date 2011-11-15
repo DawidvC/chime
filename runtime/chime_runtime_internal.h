@@ -14,6 +14,8 @@ extern chime_class_t*      _object_class;
 extern chime_class_t*      _method_class;
 extern chime_class_t*      _trait_class;
 extern chime_class_t*      _module_class;
+extern chime_class_t*      _reference_class;
+extern chime_class_t*      _closure_class;
 
 extern chime_class_t*      _string_class;
 extern chime_class_t*      _array_class;

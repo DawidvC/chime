@@ -31,11 +31,9 @@ namespace chime
         llvm::Value* traitNamePtr;
         llvm::Value* classObjectPtr;
         
-        assert(context.getCurrentScope()->allowsStructuralElements());
-        
         traitNamePtr   = context.getConstantString(this->getTraitType()->identifier());
         traitObjectPtr = context.getRuntime()->callChimeRuntimeGetTrait(traitNamePtr);
-        classObjectPtr = context.getCurrentScope()->getClassObjectPtr();
+        classObjectPtr = context.currentImplementation()->getClassObjectPtr();
         
         context.getRuntime()->callChimeClassIncludeTrait(classObjectPtr, traitObjectPtr);
         

@@ -50,8 +50,7 @@ namespace chime
     {
     }
     
-#pragma mark -
-#pragma mark Accessors
+// Accessors
     llvm::Module* RuntimeInterface::getModule(void) const
     {
         return _module;
@@ -67,8 +66,7 @@ namespace chime
         return _builder;
     }
 
-#pragma mark -
-#pragma mark Basic Types
+// Basic Types
     llvm::Type* RuntimeInterface::getVoidPtrType(void)
     {
         return llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0);
@@ -79,8 +77,7 @@ namespace chime
         return llvm::PointerType::get(llvm::IntegerType::get(this->getContext(), 8), 0);
     }
 
-#pragma mark -
-#pragma mark Types
+// Chime Types
     llvm::Type* RuntimeInterface::getChimeObjectPtrType(void)
     {
         llvm::OpaqueType* objectStructType;
@@ -146,8 +143,7 @@ namespace chime
         return llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
     }
     
-#pragma mark -
-#pragma mark Runtime Functions
+// Runtime Functions
     void RuntimeInterface::callChimeRuntimeInitialize(void)
     {
         if (_functionChimeRuntimeInitialize == NULL)
@@ -469,8 +465,7 @@ namespace chime
         return alloca;
     }
     
-#pragma mark -
-#pragma mark Object Functions
+// Object Functions
     llvm::Value* RuntimeInterface::callChimeObjectCreate(llvm::Value* classPtr)
     {
         llvm::CallInst*   call;
@@ -653,8 +648,61 @@ namespace chime
         return alloca;
     }
     
-#pragma mark -
-#pragma mark Literal Functions
+    void RuntimeInterface::callChimeObjectRetain(llvm::Value* objectValue)
+    {
+        llvm::CallInst* call;
+        llvm::LoadInst* loadedObjectPtr;
+        
+        if (_runtimeFunctions["chime_object_retain"] == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            llvm::Function*                function;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+            
+            function = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_retain", this->getModule());
+            function->setCallingConv(llvm::CallingConv::C);
+            
+            _runtimeFunctions["chime_object_retain"] = function;
+        }
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "chime_object_retain arg1:instance");
+        
+        call = this->getBuilder()->CreateCall(_runtimeFunctions["chime_object_retain"], loadedObjectPtr, "");
+        call->setTailCall(false);
+    }
+    
+    void RuntimeInterface::callChimeObjectRelease(llvm::Value* objectValue)
+    {
+        llvm::CallInst* call;
+        llvm::LoadInst* loadedObjectPtr;
+        
+        if (_runtimeFunctions["chime_object_release"] == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            llvm::Function*                function;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            
+            functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(this->getContext()), functionArgs, false);
+            
+            function = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_release", this->getModule());
+            function->setCallingConv(llvm::CallingConv::C);
+            
+            _runtimeFunctions["chime_object_release"] = function;
+        }
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "chime_object_release arg1:instance");
+        
+        call = this->getBuilder()->CreateCall(_runtimeFunctions["chime_object_release"], loadedObjectPtr, "");
+        call->setTailCall(false);
+    }
+    
+// Literal Functions
     llvm::Value* RuntimeInterface::callChimeLiteralEncodeInteger(llvm::Value* integerValue)
     {
         llvm::CallInst*   call;

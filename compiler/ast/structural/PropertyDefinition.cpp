@@ -114,7 +114,7 @@ namespace ast
         return _setBodyBlock;
     }
     
-    Variable* PropertyDefinition::createVariable(const std::string& identifier)
+    chime::Variable* PropertyDefinition::createVariable(const std::string& identifier)
     {
         return new LocalVariable(identifier);
     }

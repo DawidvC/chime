@@ -42,6 +42,11 @@ namespace ast
         return new chime::SelfLiteral();
     }
     
+    bool FunctionDefinition::isFunction() const
+    {
+        return true;
+    }
+    
     void FunctionDefinition::defineParametersAsLocalVariables(chime::parser& parser)
     {
         // we now need to create variables (which should be strictly local) for
@@ -49,7 +54,7 @@ namespace ast
         for (unsigned int i = 0; i < this->getParameters()->length(); ++i)
         {
             ast::method_parameter* parameter;
-            ast::Variable*         variable;
+            chime::Variable*       variable;
             
             parameter = this->getParameters()->parameterAtIndex(i);
             
@@ -118,6 +123,11 @@ namespace ast
             alloca = generator.insertChimeObjectAlloca();
             generator.builder()->CreateStore(args, alloca, false);
             generator.getCurrentScope()->setValueForIdentifier(param->identifier(), alloca);
+            
+            // parameters are all +0 objects.  If we tracked them differently from local variables,
+            // we could be a lot more efficient here.  For now, just retain them.
+            
+            generator.getRuntime()->callChimeObjectRetain(alloca);
         }
     }
     
@@ -143,6 +153,9 @@ namespace ast
         // now body
         body->codegen(generator);
         
+        // pop our scope
+        generator.popScope();
+        
         // only do this if we haven't yet terminated the block
         if (!generator.builder()->GetInsertBlock()->getTerminator())
         {
@@ -152,7 +165,6 @@ namespace ast
         llvm::verifyFunction(*function);
         
         // restore the builder's position
-        generator.popScope();
         generator.builder()->SetInsertPoint(currentBlock);
         
         return function;
@@ -165,18 +177,22 @@ namespace ast
         llvm::Value*    functionNameCStringPtr;
         llvm::Value*    classObjectPtr;
         
-        assert(generator.getCurrentScope()->allowsStructuralElements());
+        assert(generator.currentImplementation());
         
-        functionName           = generator.getCurrentScope()->getIdentifier() + "." + name;
+        functionName           = generator.currentImplementation()->getIdentifier() + "." + name;
         functionNameCStringPtr = generator.getConstantString(name);
+        
+        fprintf(stderr, "name: %s\n", functionName.c_str());
         
         // we need to scope the method name to include the class, so we don't overlap in the
         // tranlation unit
         
         methodFunction = this->codegenFunction(generator, functionName, body, arity);
         
+        assert(generator.currentImplementation());
+        
         // get the class object
-        classObjectPtr = generator.getCurrentScope()->getClassObjectPtr();
+        classObjectPtr = generator.currentImplementation()->getClassObjectPtr();
         assert(classObjectPtr);
         
         // finally, install the method in the class

@@ -6,13 +6,13 @@
 #include "compiler/ast/node.h"
 #include "compiler/ast/operators/AssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
-    class Variable : public node
+    class Variable : public Node
     {
     public:
-        static Node* parse(chime::parser& parser, bool allowAssignment=true);
-        static Node* parseAssignment(chime::parser& parser, Variable* variable);
+        static Node* parse(parser& parser, bool allowAssignment=true);
+        static Node* parseAssignment(parser& parser, Variable* variable);
         
     public:
         Variable(const std::string& identifier);
@@ -21,15 +21,22 @@ namespace ast
         
         std::string getIdentifier() const;
         
-        virtual AssignmentOperator* createAssignment() = 0;
+        bool        isDefined() const;
+        void        setDefined(bool value);
         
-        virtual llvm::Value* codegenReference(chime::code_generator& generator);
+        bool        isVariable() const;
+        bool        requiresRelease() const;
+        
+        virtual ast::AssignmentOperator* createAssignment() = 0;
+        
+        virtual llvm::Value* codegenReference(CodeGenContext& generator);
     
     protected:
         std::string _identifier;
+        bool        _defined;
     };
     
-    typedef std::tr1::shared_ptr<Variable> VariableRef;
+    typedef shared_ptr<Variable> VariableRef;
 }
 
 #endif // VARIABLE_H

@@ -33,8 +33,10 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     metaclass = (chime_class_t*)malloc(sizeof(chime_class_t));
     
     // entity portion
-    metaclass->object.methods    = chime_dictionary_create();
-    metaclass->object.self_class = NULL;
+    metaclass->object.methods      = chime_dictionary_create();
+    metaclass->object.self_class   = NULL;
+    metaclass->object.flags        = ObjectIsClass;
+    metaclass->object.retain_count = 0;
     
     // class portion
     metaclass->traits = NULL;
@@ -59,9 +61,11 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     klass = (chime_class_t*)malloc(sizeof(chime_class_t));
     
     // entity portion
-    klass->object.methods    = chime_dictionary_create();
-    klass->object.self_class = metaclass;
-    klass->object.variables  = chime_dictionary_create();
+    klass->object.methods      = chime_dictionary_create();
+    klass->object.self_class   = metaclass;
+    klass->object.flags        = ObjectIsClass;
+    klass->object.retain_count = 0;
+    klass->object.variables    = chime_dictionary_create();
     
     // class portion
     klass->super_class = superclass;

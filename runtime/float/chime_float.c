@@ -32,10 +32,11 @@ chime_object_t* chime_float_create(double value)
     
     number = (chime_object_t*)malloc(sizeof(chime_object_t));
     
-    number->self_class = _float_class;
-    number->flags      = 0;
-    number->methods    = chime_dictionary_create();
-    number->variables  = 0; // hijack this pointer
+    number->self_class   = _float_class;
+    number->flags        = 0;
+    number->retain_count = 1;
+    number->methods      = chime_dictionary_create();
+    number->variables    = 0; // hijack this pointer
     
     chime_float_set_value(number, value);
     

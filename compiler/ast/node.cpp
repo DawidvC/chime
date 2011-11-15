@@ -101,6 +101,16 @@ namespace ast
         fprintf(stderr, "%s\n", this->stringRepresentation().c_str());
     }
     
+    bool node::isVariable() const
+    {
+        return false;
+    }
+    
+    bool node::requiresRelease() const
+    {
+        return false;
+    }
+    
     llvm::Value* node::codegen(chime::code_generator& generator)
     {
         return NULL;

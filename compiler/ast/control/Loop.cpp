@@ -51,12 +51,6 @@ namespace chime
         return node;
     }
     
-    Loop::Loop()
-    {
-        _startBlock = NULL;
-        _endBlock       = NULL;
-    }
-    
     std::string Loop::nodeName(void) const
     {
         return std::string("Loop");
@@ -112,33 +106,16 @@ namespace chime
         
         this->getBody()->codegen(generator);
         
+        generator.popScope();
+        
         // guard against duplicate terminators again here
         if (!generator.builder()->GetInsertBlock()->getTerminator())
         {
             generator.builder()->CreateBr(this->getStartBlock()); // go back to the beginning
         }
         
-        generator.popScope();
         generator.builder()->SetInsertPoint(this->getEndBlock());
         
         return NULL;
-    }
-    
-    llvm::BasicBlock* Loop::getStartBlock() const
-    {
-        return _startBlock;
-    }
-    void Loop::setStartBlock(llvm::BasicBlock* block)
-    {
-        _startBlock = block;
-    }
-    
-    llvm::BasicBlock* Loop::getEndBlock() const
-    {
-        return _endBlock;
-    }
-    void Loop::setEndBlock(llvm::BasicBlock* block)
-    {
-        _endBlock = block;
     }
 }

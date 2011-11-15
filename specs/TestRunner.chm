@@ -5,15 +5,12 @@ implementation TestRunner
         test         = klass.new()
         test_methods = 0
         failures     = 0
-        range        = Range.new()
-        range.start  = 0
-        range.end    = 3
         
         test.methods.each() do (test_method)
         {
             original_count = Assert.failure_count()
             
-            if test_method.name[range] == "test"
+            if test_method.name[0:3] == "test"
             {
                 test_methods = test_methods + 1
                 

@@ -180,5 +180,6 @@
 #define ASSERT_NEXT(x) ASSERT_EQ("Next", x->nodeName())
 
 #define ASSERT_RETURN(x) ASSERT_EQ("return", x->nodeName())
+#define ASSERT_SINGLE_VARIABLE_RETURN(x) ASSERT_EQ("Single Variable Return", x->nodeName())
 
 #define ASSERT_BREAK(x) ASSERT_EQ("Break", x->nodeName())

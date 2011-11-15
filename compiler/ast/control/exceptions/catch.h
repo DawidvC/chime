@@ -18,7 +18,7 @@ namespace ast
         virtual std::string nodeName(void) const;
     
     protected:
-        ast::Variable*       _exceptionVariable;
+        chime::Variable*       _exceptionVariable;
         chime::type_reference* _exceptionType;
     };
 }

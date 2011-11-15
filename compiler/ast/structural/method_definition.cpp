@@ -77,7 +77,7 @@ namespace ast
         return _bodyBlock;
     }
     
-    Variable* method_definition::createVariable(const std::string& identifier)
+    chime::Variable* method_definition::createVariable(const std::string& identifier)
     {
         // if this variable has been captured, at this point in the state of
         // parsing, then we need to do something special

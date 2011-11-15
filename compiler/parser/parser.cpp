@@ -213,9 +213,9 @@ namespace chime
     void parser::popScope()
     {
         assert(_currentScope);
-        assert(_currentScope->getParent());
+        assert(_currentScope->parent());
         
-        _currentScope = _currentScope->getParent();
+        _currentScope = _currentScope->parent();
     }
     
 #pragma mark -
@@ -343,7 +343,7 @@ namespace chime
                 return ast::MethodCall::parse(*this);
             }
             
-            node = ast::Variable::parse(*this);
+            node = Variable::parse(*this);
         }
         else
         {

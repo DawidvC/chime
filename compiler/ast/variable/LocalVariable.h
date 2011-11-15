@@ -7,7 +7,7 @@
 
 namespace ast
 {
-    class LocalVariable : public Variable
+    class LocalVariable : public chime::Variable
     {
     public:
         LocalVariable(const std::string& identifier);

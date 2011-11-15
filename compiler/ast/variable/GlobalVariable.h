@@ -7,7 +7,7 @@
 
 namespace ast
 {
-    class GlobalVariable : public Variable
+    class GlobalVariable : public chime::Variable
     {
     public:
         GlobalVariable(const std::string& identifier);

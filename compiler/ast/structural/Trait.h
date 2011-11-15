@@ -24,7 +24,7 @@ namespace chime
         
         std::string     getIdentifier() const;
         
-        ast::Variable*  createVariable(const std::string& identifier);
+        Variable*       createVariable(const std::string& identifier);
         bool            allowsStructuralElements() const;
         
         llvm::Function* createInitFunction(CodeGenContext& context);

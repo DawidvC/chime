@@ -59,7 +59,7 @@ namespace chime
         return this->getTypeRef()->identifier();
     }
     
-    ast::Variable* Trait::createVariable(const std::string& identifier)
+    Variable* Trait::createVariable(const std::string& identifier)
     {
         return new ast::InstanceVariable(identifier);
     }
@@ -115,13 +115,14 @@ namespace chime
         // and now, finally, we can actually codegen the internals of the implementation
         _bodyBlock->codegen(context);
         
+        context.popScope();
+        
         context.builder()->CreateRetVoid();
         
         // verify the function
         llvm::verifyFunction(*initFunction);
         
         // restore scope and the builder's position
-        context.popScope();
         context.builder()->SetInsertPoint(currentBlock);
         
         return NULL;

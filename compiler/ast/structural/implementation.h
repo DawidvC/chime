@@ -28,8 +28,8 @@ namespace ast
         
         std::string     getIdentifier() const;
         
-        Variable*       createVariable(const std::string& identifier);
-        bool            allowsStructuralElements() const;
+        chime::Variable* createVariable(const std::string& identifier);
+        bool             allowsStructuralElements() const;
         
         llvm::Function* createInitFunction(chime::code_generator& generator);
         llvm::Value*    codegen(chime::code_generator& generator);
@@ -37,7 +37,7 @@ namespace ast
     protected:
         chime::TypeRef _typeRef;
         chime::TypeRef _superclass;
-        NodeRef _bodyBlock;
+        NodeRef        _bodyBlock;
     };
 }
 

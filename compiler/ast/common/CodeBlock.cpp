@@ -104,6 +104,23 @@ namespace ast
         return str;
     }
     
+    std::string CodeBlock::getIdentifier() const
+    {
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            // we can just walk through our parents looking for a node that defines "self".  That
+            // should be sufficient
+            if (node->getSelfObjectPtr())
+            {
+                return node->getIdentifier();
+            }
+        }
+        
+        assert(0 && "Unable to determine a good identifier for a code block - this will cause link failures");
+        
+        return this->nodeName();
+    }
+    
     void CodeBlock::addChild(const ast::node& node)
     {
         this->add_child((ast::node*)&node);
@@ -116,12 +133,16 @@ namespace ast
     
     llvm::Value* CodeBlock::codegen(chime::code_generator& generator)
     {
-        std::vector<ast::node*>::iterator i;
+        std::vector<ast::node*>::iterator it;
         
-        for (i = this->children()->begin(); i < this->children()->end(); ++i)
+        generator.pushScope(this);
+        
+        for (it = this->children()->begin(); it < this->children()->end(); ++it)
         {
-            (*i)->codegen(generator);
+            (*it)->codegen(generator);
         }
+        
+        generator.popScope();
         
         return NULL;
     }

@@ -7,7 +7,7 @@
 
 namespace ast
 {
-    class SharedLocalVariable : public Variable
+    class SharedLocalVariable : public chime::Variable
     {
     public:
         SharedLocalVariable(const std::string& identifier);

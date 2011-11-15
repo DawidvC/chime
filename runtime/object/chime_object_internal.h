@@ -10,11 +10,16 @@ extern "C" {
 #include "runtime/class/chime_class.h"
 #include "runtime/collections/chime_dictionary.h"
 
+enum _object_flags {
+    ObjectIsClass = 0x00000001
+};
+
 struct _chime_object {
-    struct _chime_class* self_class;
-    unsigned long        flags;
-    chime_dictionary_t*  methods;
-    chime_dictionary_t*  variables;
+    struct _chime_class*  self_class;
+    unsigned int          flags;
+    volatile int          retain_count;
+    chime_dictionary_t*   methods;
+    chime_dictionary_t*   variables;
 };
 
 chime_dictionary_t* chime_object_get_methods(struct _chime_object* instance);

@@ -29,7 +29,6 @@ unsigned char   chime_literal_decode_boolean(chime_object_t* object);
 
 unsigned char chime_object_is_literal(chime_object_t* object);
 unsigned char chime_object_is_integer(chime_object_t* object);
-unsigned char chime_object_is_string(chime_object_t* instance);
 unsigned char chime_object_is_boolean(chime_object_t* instance);
 
 #ifdef __cplusplus

@@ -10,8 +10,8 @@ namespace chime
     class LocalScopedNode : public ast::ScopedNode
     {
     public:
-        virtual std::string    getIdentifier() const;
-        virtual ast::Variable* createVariable(const std::string& identifier);
+        virtual std::string getIdentifier() const;
+        virtual Variable*   createVariable(const std::string& identifier);
     };
 }
 

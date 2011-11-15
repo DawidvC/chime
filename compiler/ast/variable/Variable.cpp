@@ -2,12 +2,12 @@
 #include "compiler/ast/operators/binary_operator.h"
 #include "compiler/ast/operators/IndexOperator.h"
 
-namespace ast
+namespace chime
 {
-    Node* Variable::parse(chime::parser& parser, bool allowAssignment)
+    Node* Variable::parse(parser& parser, bool allowAssignment)
     {
         std::string identifier;
-        node*       node;
+        Node*       node;
         
         assert(parser.look_ahead()->isIdentifier());
         
@@ -29,10 +29,10 @@ namespace ast
         return node;
     }
     
-    Node* Variable::parseAssignment(chime::parser& parser, Variable* variable)
+    Node* Variable::parseAssignment(parser& parser, Variable* variable)
     {
-        AssignmentOperator* op;
-        BinaryOperator*     binOp;
+        ast::AssignmentOperator* op;
+        BinaryOperator*          binOp;
         
         op = variable->createAssignment();
         op->setLeftOperand(variable);
@@ -78,6 +78,7 @@ namespace ast
     Variable::Variable(const std::string& identifier)
     {
         _identifier = identifier;
+        _defined    = false;
     }
     
     std::string Variable::stringRepresentation(int depth) const
@@ -98,7 +99,27 @@ namespace ast
         return _identifier;
     }
     
-    llvm::Value* Variable::codegenReference(chime::code_generator& generator)
+    bool Variable::isVariable() const
+    {
+        return true;
+    }
+    
+    bool Variable::requiresRelease() const
+    {
+        return true;
+    }
+    
+    bool Variable::isDefined() const
+    {
+        return _defined;
+    }
+    
+    void Variable::setDefined(bool value)
+    {
+        _defined = value;
+    }
+    
+    llvm::Value* Variable::codegenReference(CodeGenContext& generator)
     {
         llvm::Value* variableValue;
         llvm::Value* referenceValue;

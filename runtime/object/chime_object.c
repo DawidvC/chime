@@ -8,6 +8,8 @@
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/class/chime_class_internal.h"
 #include "runtime/class/chime_class_methods.h"
+#include "runtime/closure/chime_closure.h"
+#include "runtime/reference/chime_reference.h"
 #include "runtime/string/chime_string.h"
 #include "runtime/literals/chime_literal.h"
 
@@ -29,19 +31,16 @@ void chime_object_initialize(void)
     chime_class_set_class_method(_object_class, "methods",   class_methods);
     chime_class_set_class_method(_object_class, "to_string", object_to_string);
     
-    chime_class_set_instance_method(_object_class, "initialize", object_initialize);
-    chime_class_set_instance_method(_object_class, "class",      object_class);
-    chime_class_set_instance_method(_object_class, "superclass", object_superclass);
-    chime_class_set_instance_method(_object_class, "methods",    object_methods);
-    chime_class_set_instance_method(_object_class, "invoke:",    object_invoke);
-    chime_class_set_instance_method(_object_class, "hash",       object_hash);
-    chime_class_set_instance_method(_object_class, "to_string",  object_to_string);
-    //chime_class_set_instance_method(_object_class, "==",         object_equals);
-    chime_class_set_instance_method(_object_class, "===",        object_case_compare);
-    //chime_class_set_instance_method(_object_class, ">",          object_greater_than);
-    //chime_class_set_instance_method(_object_class, "<",          object_less_than);
-    //chime_class_set_instance_method(_object_class, "<=",         object_less_or_equal);
-    //chime_class_set_instance_method(_object_class, ">=",         object_greater_or_equal);
+    chime_class_set_instance_method(_object_class, "initialize",   object_initialize);
+    chime_class_set_instance_method(_object_class, "finalize",     object_finalize);
+    chime_class_set_instance_method(_object_class, "class",        object_class);
+    chime_class_set_instance_method(_object_class, "superclass",   object_superclass);
+    chime_class_set_instance_method(_object_class, "methods",      object_methods);
+    chime_class_set_instance_method(_object_class, "retain_count", object_retain_count);
+    chime_class_set_instance_method(_object_class, "invoke:",      object_invoke);
+    chime_class_set_instance_method(_object_class, "hash",         object_hash);
+    chime_class_set_instance_method(_object_class, "to_string",    object_to_string);
+    chime_class_set_instance_method(_object_class, "===",          object_case_compare);
     
     chime_class_set_instance_method(_method_class, "name", method_name);
 }
@@ -66,10 +65,11 @@ chime_object_t* chime_object_create(chime_class_t* object_class)
     
     object = (chime_object_t*)malloc(sizeof(chime_object_t));
     
-    object->self_class = object_class;
-    object->flags      = 0;
-    object->methods    = chime_dictionary_create();
-    object->variables  = chime_dictionary_create();
+    object->self_class   = object_class;
+    object->flags        = 0;
+    object->retain_count = 1;
+    object->methods      = chime_dictionary_create();
+    object->variables    = chime_dictionary_create();
     
     return object;
 }
@@ -78,6 +78,22 @@ void chime_object_destroy(chime_object_t* object)
 {
     if (chime_object_is_literal(object))
         return;
+    
+    // this is not quite correct, because we have to finalize all
+    // super-classes
+    chime_object_invoke_0(object, "finalize");
+    
+    if (object->self_class == _reference_class)
+    {
+        chime_reference_destroy(object);
+        return;
+    }
+    
+    if (object->self_class == _closure_class)
+    {
+        chime_closure_destroy((chime_closure_t*)object);
+        return;
+    }
     
     assert(object);
     
@@ -89,28 +105,42 @@ void chime_object_destroy(chime_object_t* object)
 
 void chime_object_retain(chime_object_t* instance)
 {
-    assert(instance);
+    if (chime_object_is_literal(instance))
+        return;
+        
+    chime_atomic_increment32_barrier(&instance->retain_count);
     
-    // lower 32 bits for the retain count
-    instance->flags = (instance->flags & 0xFFFFFFFF) + 1;
-    
-    fprintf(stderr, "[runtime] %p retain out of %lu\n", instance, (instance->flags & 0xFFFFFFFF));
+    fprintf(stderr, "[runtime] %p retain, count: %u\n", instance, instance->retain_count);
 }
 
 void chime_object_release(chime_object_t* instance)
 {
-    assert(instance);
+    int new_count;
     
-    // lower 32 bits for the retain count
-    instance->flags = (instance->flags & 0xFFFFFFFF) - 1;
+    if (chime_object_is_literal(instance))
+        return;
     
-    fprintf(stderr, "[runtime] %p retain out of %lu\n", instance, (instance->flags & 0xFFFFFFFF));
+    if (instance->flags & ObjectIsClass)
+        return;
     
-    if ((instance->flags & 0xFFFFFFFF) == 0)
+    new_count = chime_atomic_decrement32_barrier(&instance->retain_count);
+    if (new_count == 0)
     {
         fprintf(stderr, "[runtime] %p destroy\n", instance);
         chime_object_destroy(instance);
+        return;
     }
+    else if (new_count < 0)
+    {
+        assert(0 && "Object overrelease");
+    }
+    
+    fprintf(stderr, "[runtime] %p release, count: %u\n", instance, instance->retain_count);
+}
+
+int chime_object_get_retain_count(chime_object_t* instance)
+{
+    return instance->retain_count;
 }
 
 chime_object_type_t chime_object_get_type(chime_object_t* instance)

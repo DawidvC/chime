@@ -31,6 +31,8 @@ chime_object_t* string_class_new(chime_class_t* klass)
 
 chime_object_t* string_to_string(chime_object_t* instance)
 {
+    chime_object_retain(instance);
+    
     return instance;
 }
 
@@ -54,6 +56,8 @@ chime_object_t* string_compare(chime_object_t* instance, chime_object_t* other)
     
     s1 = chime_string_to_c_string(instance);
     s2 = chime_string_to_c_string(other_as_string);
+    
+    chime_object_release(other_as_string);
     
     result = strcmp(s1, s2);
     
@@ -86,10 +90,15 @@ chime_object_t* string_add(chime_object_t* instance, chime_object_t* other)
     instance_length = chime_literal_decode_integer(string_length_get(instance));
     other_length    = chime_literal_decode_integer(string_length_get(other_as_string));
     
+    // This function does not currently satisfy the +1 garantee, and messes everything up.
+    // Retaining doesn't seem to fix it.
+    chime_object_retain(instance);
+    
     // special-case when the other string has zero length
     if (other_length <= 0)
     {
         assert(other_length == 0);
+        chime_object_release(other_as_string);
         return instance;
     }
     
@@ -144,6 +153,8 @@ chime_object_t* string_add(chime_object_t* instance, chime_object_t* other)
     string_set_buffer(instance, STRING_EMPTY_BUFFER_FLAG);
     
     assert((instance_length + other_length) == chime_literal_decode_integer(string_length_get(instance)));
+    
+    chime_object_release(other_as_string);
     
     return instance; // to allow chaining, this is important
 }
@@ -218,6 +229,8 @@ chime_object_t* string_length_set(chime_object_t* instance, signed long length)
 
 chime_object_t* string_concatenate(chime_object_t* instance, chime_object_t* other)
 {
+    chime_object_retain(instance);
+    
     return instance;
 }
 

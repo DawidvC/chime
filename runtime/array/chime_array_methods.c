@@ -72,6 +72,7 @@ chime_object_t* array_append(chime_object_t* instance, chime_object_t* object)
     internal_array = array_get_internal_array(instance);
     
     chime_runtime_array_add(internal_array, object);
+    chime_object_retain(object);
     
     return CHIME_LITERAL_NULL;
 }
@@ -120,13 +121,18 @@ chime_object_t* array_map(chime_object_t* instance, chime_object_t* function)
 chime_object_t* array_indexer_get(chime_object_t* instance, chime_object_t* index)
 {
     chime_runtime_array_t* internal_array;
+    chime_object_t*        object;
     unsigned long          i;
     
     internal_array = array_get_internal_array(instance);
     
     i = chime_literal_decode_integer(index);
     
-    return chime_runtime_array_get(internal_array, i);
+    object = chime_runtime_array_get(internal_array, i);
+    
+    chime_object_retain(object);
+    
+    return object;
 }
 
 static chime_runtime_array_t* array_get_internal_array(chime_object_t* instance)

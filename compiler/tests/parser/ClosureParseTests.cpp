@@ -81,58 +81,58 @@ TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
 
 TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
 {
-    ast::method_definition*     method;
-    ast::binary_operator*       op;
-    ast::MethodCall*           call;
-    ast::Closure*               closure;
-    std::vector<ast::Variable*> closedVariables;
+    chime::MethodDefinition*      method;
+    ast::binary_operator*         op;
+    ast::MethodCall*              call;
+    ast::Closure*                 closure;
+    std::vector<chime::Variable*> closedVariables;
     
-    method = parse_method_def("method foo() {\n a = 42\n a.times() do { a = a + 1 }\n a.print()\n }");
+    method = parseFirst<chime::MethodDefinition*>("method foo() {\n a = 42\n a.times() do { a = a + 1 }\n a.print()\n }");
     
     ASSERT_METHOD_DEFINITION("foo", method);
     
     // a = 42
-    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
+    op = dynamic_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
     ASSERT_LOCAL_ASSIGNMENT(op);
     ASSERT_LOCAL_VARIABLE("a", op->getLeftOperand());
     
     // a.times()....
-    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(1));
+    op = dynamic_cast<ast::binary_operator*>(method->getBody()->childAtIndex(1));
     ASSERT_OPERATOR(".", op);
     
-    call = static_cast<ast::MethodCall*>(op->getRightOperand());
+    call = dynamic_cast<ast::MethodCall*>(op->getRightOperand());
     ASSERT_METHOD_CALL("times:", call);
     
-    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    closure = dynamic_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
     
     closedVariables = closure->getClosedVariables();
     ASSERT_EQ(1, closedVariables.size());
     ASSERT_EQ("a", closedVariables[0]->getIdentifier());
     
-    op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
+    op = dynamic_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
     ASSERT_CLOSED_ASSIGNMENT(op);
     ASSERT_CLOSED_LOCAL_VARIABLE("a", op->getLeftOperand());
     
-    op = static_cast<ast::binary_operator*>(op->getRightOperand());
+    op = dynamic_cast<ast::binary_operator*>(op->getRightOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_CLOSED_LOCAL_VARIABLE("a", op->getLeftOperand());
     
     // a.print()
-    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(2));
+    op = dynamic_cast<ast::binary_operator*>(method->getBody()->childAtIndex(2));
     ASSERT_OPERATOR(".", op);
     ASSERT_SHARED_LOCAL_VARIABLE("a", op->getLeftOperand());
 }
 
 TEST_F(ClosureParseTests, NestedClosedLocalVariablesInMethod)
 {
-    ast::method_definition*     method;
+    chime::MethodDefinition*     method;
     //ast::binary_operator*       op;
     //ast::MethodCall*           call;
     ast::Closure*               closure;
-    std::vector<ast::Variable*> closedVariables;
+    std::vector<chime::Variable*> closedVariables;
     
-    method = parse_method_def("method foo() {\n  a = 42\n  b = 0\n do { a = a + 1 \n do { b = b + 5 }\n }\n a.print()\n b.print()\n }");
+    method = parseFirst<chime::MethodDefinition*>("method foo() {\n  a = 42\n  b = 0\n do { a = a + 1 \n do { b = b + 5 }\n }\n a.print()\n b.print()\n }");
     
     closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(2));
     ASSERT_CLOSURE(closure);

@@ -26,7 +26,7 @@ namespace ast
         if (t->isIdentifier())
         {
             // do not allow assignment
-            _exceptionVariable = static_cast<ast::Variable*>(ast::Variable::parse(parser, false));
+            _exceptionVariable = static_cast<chime::Variable*>(chime::Variable::parse(parser, false));
         }
         
         parser.next_token(")");

@@ -37,6 +37,7 @@ namespace chime
         
         ast::ScopedNode*       getCurrentScope() const;
         void                   setCurrentScope(ast::ScopedNode* node);
+        ast::ScopedNode*       currentImplementation() const;
         void                   pushScope(ast::ScopedNode* scope);
         void                   popScope();
         
@@ -63,6 +64,7 @@ namespace chime
         std::vector<std::string>* _importedNamespaces;
         
         ast::ScopedNode*          _currentScope;
+        ast::ScopedNode*          _currentImplementationScope;
         
         llvm::PointerType*        _object_ptr_type;
         llvm::Type*               _c_string_ptr_type;

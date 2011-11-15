@@ -16,12 +16,21 @@ extern "C" {
 #define chime_allocate(x)   malloc(x*CHIME_ALLOCATION_UNIT)
 #define chime_deallocate(x) free(x)
 
+// atomic operations
+#include <libkern/OSAtomic.h>
+#define chime_atomic_increment32_barrier(x) OSAtomicIncrement32(x)
+#define chime_atomic_decrement32_barrier(x) OSAtomicDecrement32Barrier(x)
+
 #ifndef __cplusplus
+
+#ifndef bool
 typedef unsigned char bool;
 
 #define true (1)
 #define false (0)
-#endif
+#endif // bool
+
+#endif // __cplusplus
 
 #ifdef __cplusplus
 }

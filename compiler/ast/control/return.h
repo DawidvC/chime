@@ -1,4 +1,4 @@
-// chime:: Return.h
+// chime: Return.h
 
 #ifndef RETURN_H
 #define RETURN_H
@@ -10,9 +10,10 @@ namespace chime
     class Return : public Node
     {
     public:
-        Return(parser& parser);
+        static Return* parse(parser& parser);
         
-        virtual std::string nodeName(void) const;
+    public:
+        virtual std::string nodeName() const;
         virtual std::string stringRepresentation(int depth=0) const;
         
         ast::NodeRef getReturnValue() const;

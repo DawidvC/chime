@@ -41,10 +41,15 @@ namespace ast
     {
         llvm::Value* cStringPtr;
         llvm::Value* lengthValue;
+        llvm::Value* stringValue;
         
         cStringPtr  = generator.getConstantString(this->value());
         lengthValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(64, this->value().length(), 10));
         
-        return generator.getRuntime()->callChimeStringCreateWithCString(cStringPtr, lengthValue);
+        stringValue = generator.getRuntime()->callChimeStringCreateWithCString(cStringPtr, lengthValue);
+        
+        generator.getCurrentScope()->addLooseValue(stringValue);
+        
+        return stringValue;
     }
 }

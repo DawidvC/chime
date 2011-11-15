@@ -27,6 +27,10 @@ namespace ast
         // this is tricky - we don't want to reference "self", we want to reference the closure itself
         variableNamePtr = generator.getConstantString(this->getIdentifier());
         closure         = generator.getCurrentScope()->getSelfObjectPtr();
+        
+        assert(closure);
+        assert(variableNamePtr);
+        
         reference       = generator.getRuntime()->callChimeObjectGetAttribute(closure, variableNamePtr);
         
         return reference;

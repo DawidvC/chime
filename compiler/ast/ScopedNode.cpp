@@ -7,25 +7,38 @@ namespace ast
     ScopedNode::ScopedNode()
     {
         _parent         = NULL;
+        _implementation = NULL;
         _selfObjectPtr  = NULL;
         _classObjectPtr = NULL;
         
         _anonymousFunctionCount = 1;
+        
+        _startBlock = NULL;
+        _endBlock   = NULL;
     }
     
-    ScopedNode* ScopedNode::getParent() const
+    ScopedNode* ScopedNode::parent() const
     {
         return _parent;
     }
     
     void ScopedNode::setParent(ScopedNode* parent)
     {
+        assert(parent != this);
+        
         _parent = parent;
     }
     
-    std::vector<std::string> ScopedNode::getContainedVariableNames()
+    ScopedNode* ScopedNode::enclosingImplementation() const
     {
-        return std::vector<std::string>();
+        return _implementation;
+    }
+    
+    void ScopedNode::setEnclosingImplementation(ScopedNode* implementation)
+    {
+        assert(implementation != this);
+        
+        _implementation = implementation;
     }
     
     bool ScopedNode::definedIdentifier(const std::string& identifier)
@@ -38,37 +51,38 @@ namespace ast
         return _capturedVariables.count(identifier) == 1; 
     }
     
-    Variable* ScopedNode::createVariable(const std::string& identifier)
+    chime::Variable* ScopedNode::createVariable(const std::string& identifier)
     {
         return NULL;
     }
     
-    Variable* ScopedNode::transformVariable(Variable* variable)
+    chime::Variable* ScopedNode::transformVariable(chime::Variable* variable)
     {
         return variable;
     }
     
-    void ScopedNode::capturedVariable(Variable* variable)
+    void ScopedNode::capturedVariable(chime::Variable* variable)
     {
         _capturedVariables[variable->getIdentifier()] = variable;
     }
     
-    Variable* ScopedNode::variableForIdentifier(const std::string& identifier)
+    chime::Variable* ScopedNode::variableForIdentifier(const std::string& identifier)
     {
         ScopedNode*              node;
         std::vector<ScopedNode*> nodesPassedOver;
         
-        node = this->getParent();
+        node = this->parent();
         
         while (node)
         {
             if (node->definedIdentifier(identifier))
             {
-                Variable* v;
+                chime::Variable* v;
                 
                 // allow the node that actually defined the identifier to make
                 // the variable node
                 v = node->createVariable(identifier);
+                v->setDefined(true);
                 
                 // This is kind of a hack.  It gives all of the inner nodes a chance
                 // to transform the variable.  This is specifically so that closures
@@ -87,10 +101,13 @@ namespace ast
             
             nodesPassedOver.push_back(node);
             
-            node = node->getParent();
+            node = node->parent();
         }
         
         _variableNames.push_back(identifier); // track it here
+        
+        // If node is null at this point, this variable has yet to be defined.
+        
         return this->createVariable(identifier);
     }
     
@@ -110,7 +127,7 @@ namespace ast
         {
             self = node->createSelf();
             
-            node = node->getParent();
+            node = node->parent();
         }
         
         return self;
@@ -121,16 +138,38 @@ namespace ast
         return false; // most scopes do not allow this
     }
     
+    bool ScopedNode::isFunction() const
+    {
+        return false;
+    }
+    
+    void ScopedNode::addLooseValue(llvm::Value* value)
+    {
+        fprintf(stderr, "<%p> tracking %p\n", this, value);
+        _looseValues.push_back(value);
+    }
+    
+    void ScopedNode::removeLooseValue(llvm::Value* value)
+    {
+        std::vector<llvm::Value*>::iterator it;
+        
+        it = std::find(_looseValues.begin(), _looseValues.end(), value);
+        if (it == _looseValues.end())
+            return;
+        
+        fprintf(stderr, "<%p> not tracking %p\n", this, value);
+        _looseValues.erase(it);
+    }
+    
     llvm::Value* ScopedNode::getValueForIdentifier(const std::string& identifier)
     {
-        llvm::Value* value;
+        if (_scopedValues.count(identifier) > 0)
+            return _scopedValues[identifier];
         
-        value = _scopedValues[identifier];
+        if (!this->parent())
+            return NULL;
         
-        if (value || !this->getParent())
-            return value;
-        
-        return this->getParent()->getValueForIdentifier(identifier);
+        return this->parent()->getValueForIdentifier(identifier);
     }
     
     void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value)
@@ -145,7 +184,16 @@ namespace ast
     
     llvm::Value* ScopedNode::getSelfObjectPtr() const
     {
-        return _selfObjectPtr;
+        if (_selfObjectPtr)
+            return _selfObjectPtr;
+        
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            if (node->getSelfObjectPtr())
+                return node->getSelfObjectPtr();
+        }
+        
+        return NULL;
     }
     
     void ScopedNode::setSelfObjectPtr(llvm::Value* value)
@@ -156,10 +204,67 @@ namespace ast
     llvm::Value* ScopedNode::getClassObjectPtr() const
     {
         return _classObjectPtr;
+        
+        if (_classObjectPtr)
+            return _classObjectPtr;
+        
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            if (node->getClassObjectPtr())
+                return node->getClassObjectPtr();
+        }
+        
+        return NULL;
     }
     void ScopedNode::setClassObjectPtr(llvm::Value* value)
     {
         _classObjectPtr = value;
+    }
+    
+    std::map<std::string, llvm::Value*> ScopedNode::scopedValues() const
+    {
+        return _scopedValues;
+    }
+    
+    void ScopedNode::codegenScopeExit(chime::CodeGenContext& context, std::vector<std::string> identifiersToSkip)
+    {
+        std::map<std::string, llvm::Value*>::const_iterator it;
+        
+        if (context.builder()->GetInsertBlock()->getTerminator())
+            return;
+        
+        for (it = _scopedValues.begin(); it != _scopedValues.end(); ++it)
+        {
+            // if this is in our list to skip, do not release
+            if (std::find(identifiersToSkip.begin(), identifiersToSkip.end(), it->first) != identifiersToSkip.end())
+            {
+                
+                continue;
+            }
+            
+            fprintf(stderr, "<%p> release: %s\n", this, it->first.c_str());
+            context.getRuntime()->callChimeObjectRelease(it->second);
+        }
+        
+        std::vector<llvm::Value*>::const_iterator vit;
+        for (vit = _looseValues.begin(); vit != _looseValues.end(); ++vit)
+        {
+            fprintf(stderr, "<%p> loose release: %p\n", this, (*vit));
+            context.getRuntime()->callChimeObjectRelease((*vit));
+        }
+    }
+    
+    void ScopedNode::codegenFunctionExit(chime::CodeGenContext& context, std::vector<std::string> identifiersToSkip)
+    {
+        ScopedNode* node;
+        
+        node = this;
+        
+        do
+        {
+            node->codegenScopeExit(context, identifiersToSkip);
+            node = node->parent();
+        } while (node && !node->isFunction());
     }
     
     std::string ScopedNode::getAnonymousFunctionName()
@@ -177,11 +282,39 @@ namespace ast
     
     llvm::BasicBlock* ScopedNode::getStartBlock() const
     {
+        if (_startBlock)
+            return _startBlock;
+        
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            if (node->getStartBlock())
+                return node->getStartBlock();
+        }
+        
         return NULL;
+    }
+    
+    void ScopedNode::setStartBlock(llvm::BasicBlock* block)
+    {
+        _startBlock = block;
     }
     
     llvm::BasicBlock* ScopedNode::getEndBlock() const
     {
+        if (_endBlock)
+            return _endBlock;
+        
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            if (node->getEndBlock())
+                return node->getEndBlock();
+        }
+        
         return NULL;
+    }
+    
+    void ScopedNode::setEndBlock(llvm::BasicBlock* block)
+    {
+        _endBlock = block;
     }
 }

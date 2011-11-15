@@ -1,9 +1,7 @@
 #ifndef SOURCE_FILE_H
 #define SOURCE_FILE_H
 
-#ifndef USING_PREFIX_HEADERS
-#    include "compiler/ast/Root.h"
-#endif
+#include "compiler/ast/Root.h"
 
 #include <string>
 #include <vector>

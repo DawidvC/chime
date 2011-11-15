@@ -4,7 +4,7 @@ namespace ast
 {
     Attribute::Attribute(chime::parser& parser)
     {
-        Variable* v;
+        chime::Variable* v;
         
         parser.next_token_value("attribute");
         

@@ -7,7 +7,7 @@
 
 namespace ast
 {
-    class InstanceVariable : public Variable
+    class InstanceVariable : public chime::Variable
     {
     public:
         InstanceVariable(const std::string& identifier);
