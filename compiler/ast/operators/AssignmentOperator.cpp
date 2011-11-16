@@ -18,6 +18,13 @@ namespace ast
         rValue = this->getRightOperand()->codegen(generator);
         assert(rValue);
         
+        // if this is a variable, we cannot rely on the +1 gaurantee, and we
+        // need to retain explicitly
+        if (this->getRightOperand()->isVariable())
+        {
+            generator.getRuntime()->callChimeObjectRetain(rValue);
+        }
+        
         generator.getCurrentScope()->removeLooseValue(rValue);
         
         objectLoad = generator.builder()->CreateLoad(rValue, "assignment rValue");
@@ -29,19 +36,12 @@ namespace ast
         assert(lValue);
         
         // if the variable being assigned to is defined, we have to release what
-        // it was pointing to, and then retain the new value.  But!  If, the variable
-        // is being defined for the first time AND the thing we are assigning it to is
-        // not itself a variable, then we can rely on the +1 garantee
+        // it was pointing to
         if (variable->isDefined())
         {
-            fprintf(stderr, "defined: %s\n", variable->getIdentifier().c_str());
+            // fprintf(stderr, "defined: %s\n", variable->getIdentifier().c_str());
             // here, we need to decrement the retain count first!
             generator.getRuntime()->callChimeObjectRelease(lValue);
-        }
-        
-        if (this->getRightOperand()->isVariable())
-        {
-            generator.getRuntime()->callChimeObjectRetain(rValue);
         }
         
         generator.builder()->CreateStore(objectLoad, lValue, false);

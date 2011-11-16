@@ -1,0 +1,98 @@
+object_count = 0
+
+implementation ManagedObject
+{
+    method initialize()
+    {
+        object_count += 1
+    }
+    
+    method finalize()
+    {
+        object_count -= 1
+    }
+    
+    class method count
+    {
+        return object_count
+    }
+}
+
+implementation ObjectLifeCycleTests : Test.Case
+{
+    method setup()
+    {
+        Assert.equal(0, to:ManagedObject.count)
+    }
+    
+    method teardown()
+    {
+        Assert.equal(0, to:ManagedObject.count)
+    }
+    
+    // some helper methods
+    method object_create_and_return()
+    {
+        return ManagedObject.new()
+    }
+    
+    method object_passthrough(a)
+    {
+        return a
+    }
+    
+    method object_passthrough_with_assignment(a)
+    {
+        b = a
+        
+        return b
+    }
+    
+    // actual test methods
+    method test_creation()
+    {
+        ManagedObject.new()
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_create_and_return()
+    {
+        self.object_create_and_return()
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_object_passthrough()
+    {
+        a = ManagedObject.new()
+        
+        Assert.equal(1, to:ManagedObject.count)
+        
+        // here, both object_a and object_b point to the same object
+        b = self.object_passthrough(a)
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_object_passthrough_with_assignment()
+    {
+        a = ManagedObject.new()
+        Assert.equal(1, to:ManagedObject.count)
+        
+        b = self.object_passthrough_with_assignment(a)
+        Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_release_via_assignment()
+    {
+        a = ManagedObject.new()
+        b = ManagedObject.new()
+        
+        Assert.equal(2, to:ManagedObject.count)
+        
+        b = a
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+}

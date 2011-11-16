@@ -22,6 +22,12 @@ namespace ast
         void                addChild(const ast::node& node);
         ast::node*          childAtIndex(unsigned int i) const;
         
+        llvm::Value* selfValue(chime::CodeGenContext& context);
+        llvm::Value* selfObjectPtr() const;
+        void         setSelfObjectPtr(llvm::Value* value);
+        llvm::Value* classObjectPtr() const;
+        void         setClassObjectPtr(llvm::Value* value);
+        
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };
     

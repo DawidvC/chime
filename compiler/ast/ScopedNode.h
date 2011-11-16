@@ -41,11 +41,11 @@ namespace ast
         void                 removeLooseValue(llvm::Value* value);
         llvm::Value*         getValueForIdentifier(const std::string& identifier);
         void                 setValueForIdentifier(const std::string& identifier, llvm::Value* value);
-        virtual llvm::Value* getSelfValue(chime::CodeGenContext& context);
-        llvm::Value*         getSelfObjectPtr() const;
-        void                 setSelfObjectPtr(llvm::Value* value);
-        llvm::Value*         getClassObjectPtr() const;
-        void                 setClassObjectPtr(llvm::Value* value);
+        virtual llvm::Value* selfValue(chime::CodeGenContext& context);
+        virtual llvm::Value* selfObjectPtr() const;
+        virtual void         setSelfObjectPtr(llvm::Value* value);
+        virtual llvm::Value* classObjectPtr() const;
+        virtual void         setClassObjectPtr(llvm::Value* value);
         
         void                 codegenScopeExit(chime::CodeGenContext& context, std::vector<std::string> identifiersToSkip=std::vector<std::string>());
         void                 codegenFunctionExit(chime::CodeGenContext& context, std::vector<std::string> identifiersToSkip=std::vector<std::string>());

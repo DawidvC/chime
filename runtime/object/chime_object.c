@@ -17,6 +17,9 @@
 #include <stdio.h>
 #include <assert.h>
 
+// #define PRINT_LIFECYCLE 1
+// #define PERFORM_RELEASES
+
 void chime_object_initialize(void)
 {
     // create the root class, Object, and it's MetaClass, which is at
@@ -109,13 +112,19 @@ void chime_object_retain(chime_object_t* instance)
         return;
         
     chime_atomic_increment32_barrier(&instance->retain_count);
-    
+
+#ifdef PRINT_LIFECYCLE
     fprintf(stderr, "[runtime] %p retain, count: %u\n", instance, instance->retain_count);
+#endif
 }
 
 void chime_object_release(chime_object_t* instance)
 {
     int new_count;
+    
+#ifndef PERFORM_RELEASES
+    return;
+#endif
     
     if (chime_object_is_literal(instance))
         return;
@@ -126,7 +135,9 @@ void chime_object_release(chime_object_t* instance)
     new_count = chime_atomic_decrement32_barrier(&instance->retain_count);
     if (new_count == 0)
     {
+#ifdef PRINT_LIFECYCLE
         fprintf(stderr, "[runtime] %p destroy\n", instance);
+#endif
         chime_object_destroy(instance);
         return;
     }
@@ -135,7 +146,9 @@ void chime_object_release(chime_object_t* instance)
         assert(0 && "Object overrelease");
     }
     
+#ifdef PRINT_LIFECYCLE
     fprintf(stderr, "[runtime] %p release, count: %u\n", instance, instance->retain_count);
+#endif
 }
 
 int chime_object_get_retain_count(chime_object_t* instance)

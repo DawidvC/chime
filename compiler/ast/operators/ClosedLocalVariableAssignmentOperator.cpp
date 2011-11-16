@@ -20,7 +20,7 @@ namespace ast
         
         // tricky - don't want self, want the closure
         variableNamePtr = generator.getConstantString(this->getVariable()->getIdentifier());
-        closureValue    = generator.getCurrentScope()->getSelfObjectPtr();
+        closureValue    = generator.getCurrentScope()->selfObjectPtr();
         referenceValue  = generator.getRuntime()->callChimeObjectGetAttribute(closureValue, variableNamePtr);
         
         generator.getRuntime()->callChimeReferenceSet(referenceValue, rValue);

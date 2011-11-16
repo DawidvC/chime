@@ -88,11 +88,11 @@ namespace ast
         return new chime::ClosedSelfLiteral();
     }
     
-    llvm::Value* Closure::getSelfValue(chime::CodeGenContext& context)
+    llvm::Value* Closure::selfValue(chime::CodeGenContext& context)
     {
         llvm::Value* closureValue;
         
-        closureValue = context.getCurrentScope()->getSelfObjectPtr();
+        closureValue = context.getCurrentScope()->selfObjectPtr();
         
         assert(closureValue);
         
@@ -113,7 +113,12 @@ namespace ast
         
         if (variable->nodeName() == "Local Variable")
         {
+            bool defined;
+            
+            defined = variable->isDefined();
+            
             variable = new ClosedLocalVariable(variable->getIdentifier());
+            variable->setDefined(defined);
         }
         
         return variable;
@@ -126,9 +131,11 @@ namespace ast
         std::string     name;
         llvm::Value*    referenceValue;
         
+        // create the function name, based on the current function
         name = generator.getCurrentScope()->getAnonymousFunctionName();
         this->setIdentifier(name);
         
+        // create the actual function
         function = this->codegenFunction(generator, name, this->getBody(), this->getParameters()->length());
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
@@ -149,7 +156,7 @@ namespace ast
         }
         
         // finally, do self
-        generator.getRuntime()->callChimeObjectSetAttribute(closureValue, generator.getConstantString("self"), generator.getCurrentScope()->getSelfValue(generator));
+        generator.getRuntime()->callChimeObjectSetAttribute(closureValue, generator.getConstantString("self"), generator.getCurrentScope()->selfValue(generator));
         
         return closureValue;
     }

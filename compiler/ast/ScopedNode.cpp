@@ -69,7 +69,17 @@ namespace ast
     chime::Variable* ScopedNode::variableForIdentifier(const std::string& identifier)
     {
         ScopedNode*              node;
+        chime::Variable*         v;
         std::vector<ScopedNode*> nodesPassedOver;
+        
+        // check the simple case, that we've defined it at this scope level
+        if (this->definedIdentifier(identifier))
+        {
+            v = this->createVariable(identifier);
+            v->setDefined(true);
+            
+            return v;
+        }
         
         node = this->parent();
         
@@ -77,8 +87,6 @@ namespace ast
         {
             if (node->definedIdentifier(identifier))
             {
-                chime::Variable* v;
-                
                 // allow the node that actually defined the identifier to make
                 // the variable node
                 v = node->createVariable(identifier);
@@ -145,7 +153,7 @@ namespace ast
     
     void ScopedNode::addLooseValue(llvm::Value* value)
     {
-        fprintf(stderr, "<%p> tracking %p\n", this, value);
+        // fprintf(stderr, "<%p> tracking %p\n", this, value);
         _looseValues.push_back(value);
     }
     
@@ -157,7 +165,7 @@ namespace ast
         if (it == _looseValues.end())
             return;
         
-        fprintf(stderr, "<%p> not tracking %p\n", this, value);
+        // fprintf(stderr, "<%p> not tracking %p\n", this, value);
         _looseValues.erase(it);
     }
     
@@ -177,23 +185,14 @@ namespace ast
         _scopedValues[identifier] = value;
     }
     
-    llvm::Value* ScopedNode::getSelfValue(chime::CodeGenContext&)
+    llvm::Value* ScopedNode::selfValue(chime::CodeGenContext& context)
     {
-        return this->getSelfObjectPtr();
+        return this->selfObjectPtr();
     }
     
-    llvm::Value* ScopedNode::getSelfObjectPtr() const
+    llvm::Value* ScopedNode::selfObjectPtr() const
     {
-        if (_selfObjectPtr)
-            return _selfObjectPtr;
-        
-        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
-        {
-            if (node->getSelfObjectPtr())
-                return node->getSelfObjectPtr();
-        }
-        
-        return NULL;
+        return _selfObjectPtr;
     }
     
     void ScopedNode::setSelfObjectPtr(llvm::Value* value)
@@ -201,20 +200,9 @@ namespace ast
         _selfObjectPtr = value;
     }
     
-    llvm::Value* ScopedNode::getClassObjectPtr() const
+    llvm::Value* ScopedNode::classObjectPtr() const
     {
         return _classObjectPtr;
-        
-        if (_classObjectPtr)
-            return _classObjectPtr;
-        
-        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
-        {
-            if (node->getClassObjectPtr())
-                return node->getClassObjectPtr();
-        }
-        
-        return NULL;
     }
     void ScopedNode::setClassObjectPtr(llvm::Value* value)
     {
@@ -242,14 +230,14 @@ namespace ast
                 continue;
             }
             
-            fprintf(stderr, "<%p> release: %s\n", this, it->first.c_str());
+            // fprintf(stderr, "<%p> release: %s\n", this, it->first.c_str());
             context.getRuntime()->callChimeObjectRelease(it->second);
         }
         
         std::vector<llvm::Value*>::const_iterator vit;
         for (vit = _looseValues.begin(); vit != _looseValues.end(); ++vit)
         {
-            fprintf(stderr, "<%p> loose release: %p\n", this, (*vit));
+            // fprintf(stderr, "<%p> loose release: %p\n", this, (*vit));
             context.getRuntime()->callChimeObjectRelease((*vit));
         }
     }
@@ -280,6 +268,7 @@ namespace ast
         return s.str();
     }
     
+    // these should be virtual too, so I can play the same tricks with the CodeBlock
     llvm::BasicBlock* ScopedNode::getStartBlock() const
     {
         if (_startBlock)

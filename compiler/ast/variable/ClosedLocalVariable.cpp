@@ -26,7 +26,7 @@ namespace ast
         
         // this is tricky - we don't want to reference "self", we want to reference the closure itself
         variableNamePtr = generator.getConstantString(this->getIdentifier());
-        closure         = generator.getCurrentScope()->getSelfObjectPtr();
+        closure         = generator.getCurrentScope()->selfObjectPtr();
         
         assert(closure);
         assert(variableNamePtr);

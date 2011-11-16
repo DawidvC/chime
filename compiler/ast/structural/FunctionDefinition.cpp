@@ -63,6 +63,8 @@ namespace ast
             {
                 parser.addError("Method argument shadows a variable in scope");
             }
+            
+            variable->setDefined(true); // parameters are all, by definition, defined
         }
     }
     
@@ -177,22 +179,18 @@ namespace ast
         llvm::Value*    functionNameCStringPtr;
         llvm::Value*    classObjectPtr;
         
-        assert(generator.currentImplementation());
-        
-        functionName           = generator.currentImplementation()->getIdentifier() + "." + name;
+        functionName           = generator.getCurrentScope()->getIdentifier() + "." + name;
         functionNameCStringPtr = generator.getConstantString(name);
         
-        fprintf(stderr, "name: %s\n", functionName.c_str());
+        // fprintf(stderr, "name: %s\n", functionName.c_str());
         
         // we need to scope the method name to include the class, so we don't overlap in the
         // tranlation unit
         
         methodFunction = this->codegenFunction(generator, functionName, body, arity);
-        
-        assert(generator.currentImplementation());
-        
+                
         // get the class object
-        classObjectPtr = generator.currentImplementation()->getClassObjectPtr();
+        classObjectPtr = generator.getCurrentScope()->classObjectPtr();
         assert(classObjectPtr);
         
         // finally, install the method in the class

@@ -25,7 +25,7 @@ namespace ast
         
         attributeNameCStringPtr = generator.getConstantString(this->getIdentifier());
         
-        self = generator.getCurrentScope()->getSelfValue(generator);
+        self = generator.getCurrentScope()->selfValue(generator);
         
         return generator.getRuntime()->callChimeObjectGetAttribute(self, attributeNameCStringPtr);
     }

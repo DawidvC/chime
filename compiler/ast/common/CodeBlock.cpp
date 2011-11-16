@@ -110,7 +110,7 @@ namespace ast
         {
             // we can just walk through our parents looking for a node that defines "self".  That
             // should be sufficient
-            if (node->getSelfObjectPtr())
+            if (node->selfObjectPtr())
             {
                 return node->getIdentifier();
             }
@@ -129,6 +129,31 @@ namespace ast
     ast::node* CodeBlock::childAtIndex(unsigned int i) const
     {
         return this->child_at_index(i);
+    }
+    
+    llvm::Value* CodeBlock::selfValue(chime::CodeGenContext& context)
+    {
+        return this->parent()->selfValue(context);
+    }
+    
+    llvm::Value* CodeBlock::selfObjectPtr() const
+    {
+        return this->parent()->selfObjectPtr();
+    }
+    
+    void CodeBlock::setSelfObjectPtr(llvm::Value* value)
+    {
+        this->parent()->setSelfObjectPtr(value);
+    }
+    
+    llvm::Value* CodeBlock::classObjectPtr() const
+    {
+        return this->parent()->classObjectPtr();
+    }
+    
+    void CodeBlock::setClassObjectPtr(llvm::Value* value)
+    {
+        this->parent()->setClassObjectPtr(value);
     }
     
     llvm::Value* CodeBlock::codegen(chime::code_generator& generator)

@@ -26,7 +26,7 @@ namespace ast
         std::vector<chime::Variable*> getClosedVariables() const;
         
         chime::SelfLiteral*    createSelf();
-        llvm::Value*           getSelfValue(chime::CodeGenContext& context);
+        llvm::Value*           selfValue(chime::CodeGenContext& context);
         
         chime::Variable*    createVariable(const std::string& identifier);
         chime::Variable*    transformVariable(chime::Variable* variable);
