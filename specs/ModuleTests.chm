@@ -5,8 +5,8 @@ implementation ModuleTests : Test.Case
     method test_name()
     {
         Assert.is_true(Module == global_self.superclass)
-        // Assert.equal("Module", to:global_self.superclass.name)
-        // Assert.equal("ModuleTests", to:global_self.class.name)
+        Assert.equal("Module", to:global_self.superclass.name)
+        Assert.equal("ModuleTests", to:global_self.class.name)
         
         // this should be false because ModuleTests refers to a class,
         // not to the Module "ModuleTests"
