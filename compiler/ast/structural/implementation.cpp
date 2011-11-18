@@ -17,12 +17,12 @@ namespace ast
         // parse the import statement
         parser.next_token_value("implementation");
         
-        implementation->setTypeRef(chime::TypeRef(new chime::type_reference(&parser)));
+        implementation->setTypeRef(chime::TypeRef(new chime::Type(&parser)));
         
         // check for ": SuperClass"
         if (parser.advance_token_if_equals(":"))
         {
-            implementation->setSuperclass(chime::TypeRef(new chime::type_reference(&parser)));
+            implementation->setSuperclass(chime::TypeRef(new chime::Type(&parser)));
         }
         else
         {
@@ -30,7 +30,7 @@ namespace ast
         }
         
         // parse the body, allowing structural elements inside
-        implementation->_bodyBlock = CodeBlock::parse(parser, true);
+        implementation->_bodyBlock = chime::CodeBlock::parse(parser, true);
         
         parser.popScope();
         

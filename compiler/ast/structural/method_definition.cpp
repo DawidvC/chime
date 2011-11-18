@@ -3,7 +3,7 @@
 #include "method_definition.h"
 #include "compiler/parser/parser.h"
 #include "compiler/codegen/code_generator.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 #include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/ast/variable/SharedLocalVariable.h"
 
@@ -22,17 +22,17 @@ namespace ast
         parser.next_token_value("method");
         
         identifier = parser.nextTokenValue();
-        definition->setParameters(chime::ParameterSet::parse(parser));
+        definition->setParameters(chime::Parameter::parseList(parser));
         
         // create the identifier
-        if (definition->getParameters()->length() > 0)
+        if (definition->getParameters().size() > 0)
             identifier.append(":");
         
-        for (unsigned int i = 1; i < definition->getParameters()->length(); ++i)
+        for (unsigned int i = 1; i < definition->getParameters().size(); ++i)
         {
-            ast::method_parameter* param;
+            chime::ParameterRef param;
             
-            param = definition->getParameters()->parameterAtIndex(i);
+            param = definition->getParameters()[i];
             
             identifier.append(param->label());
             identifier.append(":");
@@ -42,7 +42,7 @@ namespace ast
         
         definition->defineParametersAsLocalVariables(parser);
         
-        definition->_bodyBlock = CodeBlock::parse(parser);
+        definition->_bodyBlock = chime::CodeBlock::parse(parser);
         
         parser.popScope();
         
@@ -91,6 +91,6 @@ namespace ast
     
     llvm::Value* method_definition::codegen(chime::code_generator& generator)
     {
-        return this->createMethod(generator, this->getIdentifier(), this->getBody(), this->getParameters()->child_count());
+        return this->createMethod(generator, this->getIdentifier(), this->getBody(), this->getParameters().size());
     }
 }

@@ -99,6 +99,7 @@ namespace chime
         return _identifier;
     }
     
+    // all of these are totally un-OO
     bool Variable::isVariable() const
     {
         return true;

@@ -1,7 +1,7 @@
 #include "import.h"
 #include "compiler/parser/parser.h"
 #include "compiler/codegen/code_generator.h"
-#include "compiler/ast/primary/type_reference.h"
+#include "compiler/ast/structural/Type.h"
 #include "compiler/ast/literals/string_literal.h"
 
 namespace ast
@@ -28,9 +28,9 @@ namespace ast
         }
         else if (t->isType())
         {
-            chime::type_reference* type;
+            chime::Type* type;
             
-            type = new chime::type_reference(&parser);
+            type = new chime::Type(&parser);
             
             this->setImportand(type);
             
@@ -82,10 +82,10 @@ namespace ast
         
         if (node->nodeName().compare(std::string("type reference")) == 0)
         {
-            chime::type_reference* typeRef;
+            chime::Type* typeRef;
             llvm::Value*         cStringPtr;
             
-            typeRef    = dynamic_cast<chime::type_reference*>(node);
+            typeRef    = dynamic_cast<chime::Type*>(node);
             cStringPtr = generator.getConstantString(typeRef->identifier());
             
             //generator.getImportedNamespaces()->push_back(->identifier());

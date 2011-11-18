@@ -1,9 +1,9 @@
-#include "type_reference.h"
-#include "compiler/ast/common/parameter_set.h"
+#include "Type.h"
+#include "compiler/ast/variable/Parameter.h"
 
 namespace chime
 {
-    type_reference::type_reference(chime::parser* parser)
+    Type::Type(chime::parser* parser)
     {
         std::string str;
         
@@ -16,24 +16,24 @@ namespace chime
             parser->next_token_value(".");
             
             str += ".";
-            str +=parser->next_token_value();
+            str += parser->next_token_value();
         }
         
-        this->identifier(str);
+        this->setIdentifier(str);
         
         if (this->identifier() == "Function")
         {
             // ( parameters )
             if (parser->look_ahead()->equal_to("("))
-                _parameters = chime::ParameterSet::parse(*parser);
+                _parameters = chime::Parameter::parseList(*parser);
         }
     }
     
-    std::string type_reference::nodeName(void) const
+    std::string Type::nodeName() const
     {
-        return std::string("type reference");
+        return "Type";
     }
-    std::string type_reference::stringRepresentation(int depth) const
+    std::string Type::stringRepresentation(int depth) const
     {
         std::string str;
         
@@ -44,16 +44,16 @@ namespace chime
         return str;
     }
     
-    std::string type_reference::identifier() const
+    std::string Type::identifier() const
     {
         return _identifier;
     }
-    void type_reference::identifier(std::string s)
+    void Type::setIdentifier(const std::string& s)
     {
         _identifier = s;
     }
     
-    llvm::Value* type_reference::codegen(chime::code_generator& generator)
+    llvm::Value* Type::codegen(chime::code_generator& generator)
     {
         llvm::Value* class_name_ptr;
         

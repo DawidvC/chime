@@ -4,7 +4,7 @@
 #define CATCH_H
 
 #include "compiler/ast/control/exception_flow.h"
-#include "compiler/ast/primary/type_reference.h"
+#include "compiler/ast/structural/Type.h"
 #include "compiler/ast/variable/Variable.h"
 
 namespace ast
@@ -18,8 +18,8 @@ namespace ast
         virtual std::string nodeName(void) const;
     
     protected:
-        chime::Variable*       _exceptionVariable;
-        chime::type_reference* _exceptionType;
+        chime::Variable* _exceptionVariable;
+        chime::Type*     _exceptionType;
     };
 }
 

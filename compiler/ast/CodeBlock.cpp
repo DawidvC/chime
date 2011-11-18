@@ -3,7 +3,7 @@
 #include "CodeBlock.h"
 #include "compiler/ast/structural/Structural.h"
 
-namespace ast
+namespace chime
 {
     NodeRef CodeBlock::parse(chime::parser& parser, bool allowStructural)
     {
@@ -12,7 +12,7 @@ namespace ast
         
         parser.advanceToNextStatement();
         
-        block = CodeBlockRef(new ast::CodeBlock());
+        block = CodeBlockRef(new CodeBlock());
         
         openBraceFound = parser.advance_token_if_equals("{");
         
@@ -33,7 +33,7 @@ namespace ast
             
             if (allowStructural)
             {
-                node = Structural::parse(parser);
+                node = ast::Structural::parse(parser);
             }
             else
             {

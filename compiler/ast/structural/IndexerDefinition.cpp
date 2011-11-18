@@ -4,8 +4,8 @@ namespace chime
 {
     IndexerDefinition* IndexerDefinition::parse(parser& parser)
     {
-        IndexerDefinition* indexer;
-        ParameterSetRef    parameters;
+        IndexerDefinition*        indexer;
+        std::vector<ParameterRef> parameters;
         
         indexer = new IndexerDefinition();
         
@@ -22,15 +22,13 @@ namespace chime
             indexer->setIdentifier(parser.nextTokenValue() + "[]");
         }
         
-        parameters = ParameterSetRef(new ParameterSet());
-        
         parser.nextTokenValue("[");
-        parameters->addChild(new ast::method_parameter(&parser));
+        parameters.push_back(Parameter::parse(parser));
         parser.nextTokenValue("]");
         
         if (parser.advanceTokenIfEqual("("))
         {
-            parameters->addChild(new ast::method_parameter(&parser));
+            parameters.push_back(Parameter::parse(parser));
             parser.nextTokenValue(")");
         }
         
@@ -46,7 +44,7 @@ namespace chime
             parser.nextTokenValue("{");
             parser.advanceToNextStatement();
             
-            indexer->_getBodyBlock = static_pointer_cast<ast::CodeBlock>(ast::CodeBlock::parse(parser));
+            indexer->_getBodyBlock = static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
             
             parser.advanceToNextStatement();
             parser.nextTokenValue("}");
@@ -59,7 +57,7 @@ namespace chime
             parser.nextTokenValue("{");
             parser.advanceToNextStatement();
             
-            indexer->_setBodyBlock = static_pointer_cast<ast::CodeBlock>(ast::CodeBlock::parse(parser));
+            indexer->_setBodyBlock = static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
             
             parser.advanceToNextStatement();
             parser.nextTokenValue("}");
@@ -109,7 +107,7 @@ namespace chime
     
     llvm::Value* IndexerDefinition::codegen(CodeGenContext& context)
     {
-        ast::CodeBlockRef body;
+        chime::CodeBlockRef body;
         
         body = this->getGetBody();
         if (body)

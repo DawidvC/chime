@@ -4,7 +4,7 @@
 #define TRAIT_H
 
 #include "compiler/ast/ScopedNode.h"
-#include "compiler/ast/primary/type_reference.h"
+#include "compiler/ast/structural/Type.h"
 
 #include <llvm/Function.h>
 

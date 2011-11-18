@@ -14,6 +14,8 @@ namespace chime
         
         virtual std::string nodeName() const;
         
+        bool isSelf() const;
+        
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };
 }

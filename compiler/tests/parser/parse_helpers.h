@@ -35,8 +35,8 @@
    } while (0)
 
 #define ASSERT_TYPE(x, y) do { \
-    ASSERT_EQ("type reference", y->nodeName()); \
-    ASSERT_EQ(x, static_cast<chime::type_reference*>(y)->identifier()); \
+    ASSERT_EQ("Type", y->nodeName()); \
+    ASSERT_EQ(x, dynamic_cast<chime::Type*>(y)->identifier()); \
     } while (0)
 
 #define ASSERT_IMPLEMENTATION(x, y, z) do { \
@@ -82,10 +82,10 @@
     } while (0)
 
 #define ASSERT_METHOD_PARAMETER(w, x, y, z) do { \
-    ASSERT_EQ("method parameter", ((ast::method_parameter*)z)->node_name()); \
-    ASSERT_EQ(y, ((ast::method_parameter*)z)->identifier()); \
-    if (w) ASSERT_TYPE((const char*)w, ((ast::method_parameter*)z)->type()); \
-    if (x) ASSERT_EQ((const char *)x, ((ast::method_parameter*)z)->label()); \
+    ASSERT_EQ("Parameter", dynamic_pointer_cast<chime::Parameter>(z)->nodeName()); \
+    ASSERT_EQ(y, dynamic_pointer_cast<chime::Parameter>(z)->getIdentifier()); \
+    if (w) ASSERT_TYPE((const char*)w, dynamic_pointer_cast<chime::Parameter>(z)->type().get()); \
+    if (x) ASSERT_EQ((const char *)x, dynamic_pointer_cast<chime::Parameter>(z)->label()); \
     } while (0)
 
 #define ASSERT_OPERATOR(x, y) do { \

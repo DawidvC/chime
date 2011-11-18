@@ -12,6 +12,7 @@ extern "C" {
 void chime_float_initialize(void);
 
 chime_object_t* chime_float_create(double value);
+void            chime_float_destroy(chime_object_t* instance);
 
 void chime_float_set_value(chime_object_t* instance, double value);
 double chime_float_get_value(chime_object_t* instance);

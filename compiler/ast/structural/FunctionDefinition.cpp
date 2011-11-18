@@ -18,11 +18,11 @@ namespace ast
     {
         _identifier = s;
     }
-    chime::ParameterSetRef FunctionDefinition::getParameters() const
+    std::vector<chime::ParameterRef> FunctionDefinition::getParameters() const
     {
         return _parameters;
     }
-    void FunctionDefinition::setParameters(chime::ParameterSetRef params)
+    void FunctionDefinition::setParameters(const std::vector<chime::ParameterRef>& params)
     {
         _parameters = params;
     }
@@ -49,23 +49,23 @@ namespace ast
     
     void FunctionDefinition::defineParametersAsLocalVariables(chime::parser& parser)
     {
-        // we now need to create variables (which should be strictly local) for
-        // all the parameters
-        for (unsigned int i = 0; i < this->getParameters()->length(); ++i)
-        {
-            ast::method_parameter* parameter;
-            chime::Variable*       variable;
-            
-            parameter = this->getParameters()->parameterAtIndex(i);
-            
-            variable = this->variableForIdentifier(parameter->identifier());
-            if (variable->nodeName() != "Local Variable")
-            {
-                parser.addError("Method argument shadows a variable in scope");
-            }
-            
-            variable->setDefined(true); // parameters are all, by definition, defined
-        }
+        // std::vector<chime::ParameterRef>::iterator it;
+        // // we now need to create variables (which should be strictly local) for
+        // // all the parameters
+        // for (it = _parameters.begin(); it != _parameters.end(); ++it)
+        // {
+        //     chime::Variable*       variable;
+        //     
+        //     parameter = this->getParameters()->parameterAtIndex(i);
+        //     
+        //     variable = this->variableForIdentifier(parameter->identifier());
+        //     if (variable->nodeName() != "Local Variable")
+        //     {
+        //         parser.addError("Method argument shadows a variable in scope");
+        //     }
+        //     
+        //     variable->setDefined(true); // parameters are all, by definition, defined
+        // }
     }
     
     llvm::Function* FunctionDefinition::createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity)
@@ -107,7 +107,7 @@ namespace ast
         
         ++args; // advance past self argument
         
-        if (!this->getParameters())
+        if (this->getParameters().size() == 0)
             return;
         
         // Careful here.  Properties define two methods, one that has params and one that does not.  The
@@ -115,16 +115,14 @@ namespace ast
         
         for (i = 0; args != function->arg_end(); ++args, ++i)
         {
-            ast::method_parameter* param;
-            llvm::AllocaInst*      alloca;
+            chime::ParameterRef param;
+            llvm::AllocaInst*   alloca;
             
-            assert(args != function->arg_end());
-            
-            param = this->getParameters()->parameterAtIndex(i);
+            param = this->getParameters()[i];
             
             alloca = generator.insertChimeObjectAlloca();
             generator.builder()->CreateStore(args, alloca, false);
-            generator.getCurrentScope()->setValueForIdentifier(param->identifier(), alloca);
+            generator.getCurrentScope()->setValueForIdentifier(param->getIdentifier(), alloca);
             
             // parameters are all +0 objects.  If we tracked them differently from local variables,
             // we could be a lot more efficient here.  For now, just retain them.

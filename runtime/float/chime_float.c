@@ -8,6 +8,7 @@
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -41,6 +42,15 @@ chime_object_t* chime_float_create(double value)
     chime_float_set_value(number, value);
     
     return number;
+}
+
+void chime_float_destroy(chime_object_t* instance)
+{
+    assert(instance);
+    
+    chime_dictionary_destroy(instance->methods);
+    
+    free(instance);
 }
 
 void chime_float_set_value(chime_object_t* instance, double value)

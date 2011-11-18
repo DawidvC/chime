@@ -1,6 +1,6 @@
 #include "Switch.h"
 #include "Case.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace ast
 {
@@ -52,7 +52,7 @@ namespace ast
                     return node;
                 }
                 
-                node->_cases.back()->setElse(ast::CodeBlock::parse(parser));
+                node->_cases.back()->setElse(chime::CodeBlock::parse(parser));
                 break;
             }
             else if(t->equal_to("}"))

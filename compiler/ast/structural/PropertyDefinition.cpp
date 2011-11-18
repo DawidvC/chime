@@ -21,11 +21,7 @@ namespace ast
         t = parser.look_ahead();
         if (t->equal_to("("))
         {
-            property->setParameters(chime::ParameterSet::parse(parser));
-        }
-        else
-        {
-            
+            property->setParameters(chime::Parameter::parseList(parser));
         }
         
         parser.advance_past_ending_tokens();
@@ -38,7 +34,7 @@ namespace ast
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
             
-            property->_getBodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
+            property->_getBodyBlock = dynamic_pointer_cast<chime::CodeBlock>(chime::CodeBlock::parse(parser));
             
             parser.advance_past_ending_tokens();
             parser.next_token_value("}");
@@ -51,7 +47,7 @@ namespace ast
             parser.next_token_value("{");
             parser.advance_past_ending_tokens();
             
-            property->_setBodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
+            property->_setBodyBlock = dynamic_pointer_cast<chime::CodeBlock>(chime::CodeBlock::parse(parser));
             
             parser.advance_past_ending_tokens();
             parser.next_token_value("}");
@@ -104,12 +100,12 @@ namespace ast
         return str;
     }
     
-    CodeBlockRef PropertyDefinition::getGetBody() const
+    chime::CodeBlockRef PropertyDefinition::getGetBody() const
     {
         return _getBodyBlock;
     }
     
-    CodeBlockRef PropertyDefinition::getSetBody() const
+    chime::CodeBlockRef PropertyDefinition::getSetBody() const
     {
         return _setBodyBlock;
     }
@@ -121,7 +117,7 @@ namespace ast
     
     llvm::Value* PropertyDefinition::codegen(chime::code_generator& generator)
     {
-        CodeBlockRef body;
+        chime::CodeBlockRef body;
         
         body = this->getGetBody();
         if (body)

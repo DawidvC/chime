@@ -4,7 +4,7 @@
 #define INDEXER_DEFINITON_H
 
 #include "PropertyDefinition.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace chime
 {

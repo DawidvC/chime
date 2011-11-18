@@ -4,7 +4,7 @@
 #define INCLUDE_H
 
 #include "compiler/ast/node.h"
-#include "compiler/ast/primary/type_reference.h"
+#include "compiler/ast/structural/Type.h"
 
 namespace chime
 {

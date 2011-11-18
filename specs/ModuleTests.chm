@@ -1,15 +1,15 @@
-obj = self
+global_self = self
 
 implementation ModuleTests : Test.Case
 {
     method test_name()
     {
-        Assert.is_true(Module == obj.superclass)
-        Assert.equal("Module", to:obj.superclass.name)
-        Assert.equal("ModuleTests", to:obj.class.name)
+        Assert.is_true(Module == global_self.superclass)
+        // Assert.equal("Module", to:global_self.superclass.name)
+        // Assert.equal("ModuleTests", to:global_self.class.name)
         
         // this should be false because ModuleTests refers to a class,
         // not to the Module "ModuleTests"
-        Assert.is_false(ModuleTests == obj)
+        Assert.is_false(ModuleTests == global_self)
     }
 }

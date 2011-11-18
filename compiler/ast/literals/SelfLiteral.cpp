@@ -6,9 +6,14 @@ namespace chime
     {
     }
     
-    std::string SelfLiteral::nodeName(void) const
+    std::string SelfLiteral::nodeName() const
     {
-        return std::string("self literal");
+        return "self literal";
+    }
+    
+    bool SelfLiteral::isSelf() const
+    {
+        return true;
     }
     
     llvm::Value* SelfLiteral::codegen(chime::code_generator& generator)

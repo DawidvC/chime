@@ -272,7 +272,7 @@ namespace chime
             }
             else if (t->isIdentifier())
             {
-                return new ast::variable_definition(this, static_cast<chime::type_reference*>(node));
+                return new ast::variable_definition(this, static_cast<chime::Type*>(node));
             }
             else if (t->precedence() > 0)
             {
@@ -376,7 +376,7 @@ namespace chime
         chime::token* t;
         ast::node*    node;
         
-        node = new chime::type_reference(this);
+        node = new chime::Type(this);
         
         t = this->look_ahead();
         // we might have an operator on a type

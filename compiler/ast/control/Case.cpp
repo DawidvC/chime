@@ -1,5 +1,5 @@
 #include "Case.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace chime
 {
@@ -21,7 +21,7 @@ namespace chime
         
         parser.advanceToNextStatement();
         
-        node->setBody(NodeRef(ast::CodeBlock::parse(parser)));
+        node->setBody(NodeRef(CodeBlock::parse(parser)));
         
         parser.advanceToNextStatement();
         

@@ -9,6 +9,7 @@
 #include "runtime/class/chime_class_internal.h"
 #include "runtime/class/chime_class_methods.h"
 #include "runtime/closure/chime_closure.h"
+#include "runtime/float/chime_float.h"
 #include "runtime/reference/chime_reference.h"
 #include "runtime/string/chime_string.h"
 #include "runtime/literals/chime_literal.h"
@@ -18,7 +19,7 @@
 #include <assert.h>
 
 // #define PRINT_LIFECYCLE 1
-// #define PERFORM_RELEASES
+// #define SKIP_RELEASES
 
 void chime_object_initialize(void)
 {
@@ -98,6 +99,12 @@ void chime_object_destroy(chime_object_t* object)
         return;
     }
     
+    if (object->self_class == _float_class)
+    {
+        chime_float_destroy(object);
+        return;
+    }
+    
     assert(object);
     
     chime_dictionary_destroy(object->methods);
@@ -122,7 +129,7 @@ void chime_object_release(chime_object_t* instance)
 {
     int new_count;
     
-#ifndef PERFORM_RELEASES
+#ifdef SKIP_RELEASES
     return;
 #endif
     

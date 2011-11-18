@@ -1,5 +1,5 @@
 #include "While.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace chime
 {
@@ -17,7 +17,7 @@ namespace chime
         
         parser.pushScope(node);
         
-        node->setBody(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
+        node->setBody(CodeBlock::parseBlockWithOptionalBraces(parser));
         
         parser.advanceToNextStatement();
         

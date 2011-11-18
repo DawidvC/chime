@@ -1,6 +1,6 @@
 #include "Trait.h"
 #include "compiler/ast/variable/InstanceVariable.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace chime
 {
@@ -18,7 +18,7 @@ namespace chime
         trait->_typeRef = TypeRef(new Type(&parser));
         
         // parse the body, allowing structural elements inside
-        trait->_bodyBlock = ast::CodeBlock::parse(parser, true);
+        trait->_bodyBlock = CodeBlock::parse(parser, true);
         
         parser.popScope();
         

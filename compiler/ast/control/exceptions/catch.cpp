@@ -18,7 +18,7 @@ namespace ast
         t = parser.look_ahead();
         if (t->isType())
         {
-            _exceptionType = new chime::type_reference(&parser);
+            _exceptionType = new chime::Type(&parser);
             
             t = parser.look_ahead();
         }

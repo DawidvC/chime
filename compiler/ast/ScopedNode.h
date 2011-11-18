@@ -22,7 +22,8 @@ namespace ast
         ScopedNode* enclosingImplementation() const;
         void        setEnclosingImplementation(ScopedNode* implemenation);
         
-        bool                     definedIdentifier(const std::string& identifier);
+        bool                     definedIdentifier(const std::string& identifier) const;
+        void                     defineIdentifier(const std::string& identifier);
         bool                     capturedIdentifier(const std::string& identifier);
         
         virtual chime::Variable* createVariable(const std::string& identifier);
@@ -59,7 +60,7 @@ namespace ast
         llvm::BasicBlock* getEndBlock() const;
         void              setEndBlock(llvm::BasicBlock* block);
         
-    protected:
+    private:
         std::vector<std::string>                _variableNames;
         std::map<std::string, chime::Variable*> _capturedVariables;
         ScopedNode*                             _parent;

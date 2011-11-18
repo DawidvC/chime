@@ -20,7 +20,7 @@ namespace ast
         
         // if this is a variable, we cannot rely on the +1 gaurantee, and we
         // need to retain explicitly
-        if (this->getRightOperand()->isVariable())
+        if (this->getRightOperand()->isVariable() || this->getRightOperand()->isSelf())
         {
             generator.getRuntime()->callChimeObjectRetain(rValue);
         }

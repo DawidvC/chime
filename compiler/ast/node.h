@@ -42,6 +42,8 @@ namespace ast
         void                     print(void);
         
         virtual bool             isVariable() const;
+        virtual bool             isParameter() const;
+        virtual bool             isSelf() const;
         virtual bool             requiresRelease() const;
         
         virtual llvm::Value*     codegen(chime::code_generator& generator);

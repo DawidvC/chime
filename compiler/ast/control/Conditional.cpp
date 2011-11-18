@@ -1,5 +1,5 @@
 #include "Conditional.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 #include "compiler/ast/control/if_statement.h"
 #include "compiler/ast/control/Unless.h"
 
@@ -30,16 +30,16 @@ namespace chime
         
         if (body)
         {
-            ast::CodeBlockRef block;
+            CodeBlockRef block;
             
-            block = ast::CodeBlockRef(new ast::CodeBlock());
+            block = CodeBlockRef(new CodeBlock());
             block->addChild(*body);
             
             node->setBody(block);
         }
         else
         {
-            node->setBody(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
+            node->setBody(CodeBlock::parseBlockWithOptionalBraces(parser));
         }
         
         parser.advanceToNextStatement();
@@ -50,7 +50,7 @@ namespace chime
         
         if (parser.advanceTokenIfEqual("else"))
         {
-            node->setElse(ast::CodeBlock::parseBlockWithOptionalBraces(parser));
+            node->setElse(CodeBlock::parseBlockWithOptionalBraces(parser));
         }
         
         return node;

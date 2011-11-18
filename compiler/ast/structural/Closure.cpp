@@ -1,5 +1,5 @@
 #include "Closure.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 #include "compiler/ast/literals/ClosedSelfLiteral.h"
 #include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/ast/variable/ClosedLocalVariable.h"
@@ -17,14 +17,14 @@ namespace ast
         
         parser.pushScope(closure);
         
-        closure->setParameters(chime::ParameterSet::parse(parser));
+        closure->setParameters(chime::Parameter::parseList(parser));
         
         closure->defineParametersAsLocalVariables(parser);
         
         // This cast is currently necessary, even though now CodeBlock::parse will
         // always return an actual CodeBlockRef.  The signature of CodeBlock::parse should
         // really fixed, but that affects a lot of classes.
-        closure->_bodyBlock = std::tr1::static_pointer_cast<CodeBlock>(CodeBlock::parse(parser));
+        closure->_bodyBlock = dynamic_pointer_cast<chime::CodeBlock>(chime::CodeBlock::parse(parser));
         
         // before we pop the scope, we need to inform the enclosing scope of any
         // local variables that now need to be shared
@@ -64,7 +64,7 @@ namespace ast
         return str;
     }
     
-    CodeBlockRef Closure::getBody() const
+    chime::CodeBlockRef Closure::getBody() const
     {
         return _bodyBlock;
     }
@@ -136,7 +136,7 @@ namespace ast
         this->setIdentifier(name);
         
         // create the actual function
-        function = this->codegenFunction(generator, name, this->getBody(), this->getParameters()->length());
+        function = this->codegenFunction(generator, name, this->getBody(), this->getParameters().size());
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
         

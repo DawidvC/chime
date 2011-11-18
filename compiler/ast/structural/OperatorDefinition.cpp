@@ -1,7 +1,7 @@
 // chime: OperatorDefinition.h
 
 #include "OperatorDefinition.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace chime
 {
@@ -25,13 +25,13 @@ namespace chime
         
         parser.pushScope(definition);
         
-        definition->setParameters(chime::ParameterSet::parse(parser));
-        if (definition->getParameters()->length() != 1)
+        definition->setParameters(chime::Parameter::parseList(parser));
+        if (definition->getParameters().size() != 1)
         {
             parser.addError("An operator overload should have exactly one argument");
         }
         
-        definition->_bodyBlock = ast::CodeBlock::parse(parser);
+        definition->_bodyBlock = CodeBlock::parse(parser);
         
         parser.popScope();
         

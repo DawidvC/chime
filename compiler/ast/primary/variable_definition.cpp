@@ -2,7 +2,7 @@
 
 namespace ast
 {
-    variable_definition::variable_definition(chime::parser* parser, chime::type_reference* type)
+    variable_definition::variable_definition(chime::parser* parser, chime::Type* type)
     {
         assert(parser->look_ahead()->isIdentifier());
         
@@ -30,11 +30,11 @@ namespace ast
         return s;
     }
     
-    chime::type_reference* variable_definition::variable_type() const
+    chime::Type* variable_definition::variable_type() const
     {
         return _type_ref;
     }
-    void variable_definition::variable_type(chime::type_reference* n)
+    void variable_definition::variable_type(chime::Type* n)
     {
         assert(n != NULL);
         

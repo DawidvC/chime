@@ -12,7 +12,7 @@ namespace ast
     public:
         LocalVariable(const std::string& identifier);
         
-        std::string nodeName(void) const;
+        virtual std::string nodeName() const;
         
         AssignmentOperator* createAssignment();
         

@@ -4,8 +4,8 @@
 #define FUNCTION_DEFINITON_H
 
 #include "compiler/ast/ScopedNode.h"
-#include "compiler/ast/common/parameter_set.h"
 #include "compiler/ast/literals/SelfLiteral.h"
+#include "compiler/ast/variable/Parameter.h"
 
 namespace ast
 {
@@ -16,8 +16,8 @@ namespace ast
         
         std::string     getIdentifier() const;
         void            setIdentifier(const std::string& s);
-        chime::ParameterSetRef getParameters() const;
-        void            setParameters(chime::ParameterSetRef params);
+        std::vector<chime::ParameterRef> getParameters() const;
+        void            setParameters(const std::vector<chime::ParameterRef>& params);
         bool            isInstance() const;
         void            setInstance(bool value);
         
@@ -36,7 +36,7 @@ namespace ast
         
     private:
         std::string     _identifier;
-        chime::ParameterSetRef _parameters;
+        std::vector<chime::ParameterRef> _parameters;
         bool            _isInstance;
     };
 }

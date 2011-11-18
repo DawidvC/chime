@@ -4,7 +4,7 @@
 #define CLOSURE_H
 
 #include "FunctionDefinition.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 #include "compiler/ast/literals/SelfLiteral.h"
 
 #include <map>
@@ -22,7 +22,7 @@ namespace ast
         virtual std::string    nodeName(void) const;
         std::string            stringRepresentation(int depth=0) const;
         
-        CodeBlockRef           getBody() const;
+        chime::CodeBlockRef           getBody() const;
         std::vector<chime::Variable*> getClosedVariables() const;
         
         chime::SelfLiteral*    createSelf();
@@ -35,13 +35,13 @@ namespace ast
     
     private:
         // parsing members
-        CodeBlockRef _bodyBlock;
+        chime::CodeBlockRef _bodyBlock;
         
         // codegen members
         std::map<std::string, chime::Variable*> _closedVariables;
     };
     
-    typedef std::tr1::shared_ptr<Closure> ClosureRef;
+    typedef shared_ptr<Closure> ClosureRef;
 }
 
 #endif

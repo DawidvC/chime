@@ -41,9 +41,14 @@ namespace ast
         _implementation = implementation;
     }
     
-    bool ScopedNode::definedIdentifier(const std::string& identifier)
+    bool ScopedNode::definedIdentifier(const std::string& identifier) const
     {
         return std::find(_variableNames.begin(), _variableNames.end(), identifier) != _variableNames.end();
+    }
+    
+    void ScopedNode::defineIdentifier(const std::string& identifier)
+    {
+        _variableNames.push_back(identifier); // track it here
     }
     
     bool ScopedNode::capturedIdentifier(const std::string& identifier)
@@ -112,7 +117,7 @@ namespace ast
             node = node->parent();
         }
         
-        _variableNames.push_back(identifier); // track it here
+        this->defineIdentifier(identifier);
         
         // If node is null at this point, this variable has yet to be defined.
         
@@ -226,11 +231,10 @@ namespace ast
             // if this is in our list to skip, do not release
             if (std::find(identifiersToSkip.begin(), identifiersToSkip.end(), it->first) != identifiersToSkip.end())
             {
-                
                 continue;
             }
             
-            // fprintf(stderr, "<%p> release: %s\n", this, it->first.c_str());
+            // fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
             context.getRuntime()->callChimeObjectRelease(it->second);
         }
         

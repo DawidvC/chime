@@ -65,7 +65,7 @@ TEST_F(FlowControlParserTest, IfWithBracesAndNoElse)
     ASSERT_LITERAL_TRUE(node->getCondition().get());
     
     ASSERT_CODE_BLOCK(node->getBody().get());
-    ASSERT_METHOD_CALL("foo", ((ast::CodeBlock*)node->getBody().get())->childAtIndex(0));
+    ASSERT_METHOD_CALL("foo", ((chime::CodeBlock*)node->getBody().get())->childAtIndex(0));
     
     ASSERT_TRUE(node->getElse() == NULL);
 }
@@ -82,7 +82,7 @@ TEST_F(FlowControlParserTest, IfWithoutBracesAndTwoStatements)
     ASSERT_CODE_BLOCK(node->getBody().get());
     ASSERT_EQ(1, node->getBody()->childCount());
     
-    ASSERT_METHOD_CALL("foo", std::tr1::static_pointer_cast<ast::CodeBlock>(node->getBody())->childAtIndex(0));
+    ASSERT_METHOD_CALL("foo", std::tr1::static_pointer_cast<chime::CodeBlock>(node->getBody())->childAtIndex(0));
     
     ASSERT_TRUE(node->getElse() == NULL);
 }
@@ -97,10 +97,10 @@ TEST_F(FlowControlParserTest, IfWithElseAndBracesOnNewLines)
     ASSERT_LITERAL_TRUE(node->getCondition().get());
     
     ASSERT_CODE_BLOCK(node->getBody().get());
-    ASSERT_METHOD_CALL("foo", ((ast::CodeBlock*)node->getBody().get())->childAtIndex(0));
+    ASSERT_METHOD_CALL("foo", ((chime::CodeBlock*)node->getBody().get())->childAtIndex(0));
     
     ASSERT_CODE_BLOCK(node->getElse().get());
-    ASSERT_METHOD_CALL("bar", ((ast::CodeBlock*)node->getElse().get())->childAtIndex(0));
+    ASSERT_METHOD_CALL("bar", ((chime::CodeBlock*)node->getElse().get())->childAtIndex(0));
 }
 
 TEST_F(FlowControlParserTest, IfWithComplexConditionWithoutParentheses)

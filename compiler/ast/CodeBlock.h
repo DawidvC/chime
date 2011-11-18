@@ -5,9 +5,9 @@
 
 #include "compiler/ast/ScopedNode.h"
 
-namespace ast
+namespace chime
 {
-    class CodeBlock : public ScopedNode
+    class CodeBlock : public ast::ScopedNode
     {
     public:
         static NodeRef parse(chime::parser& parser, bool allowStructural=false);
@@ -31,6 +31,7 @@ namespace ast
         virtual llvm::Value* codegen(chime::code_generator& generator);
     };
     
-    typedef std::tr1::shared_ptr<ast::CodeBlock> CodeBlockRef;
+    typedef shared_ptr<CodeBlock> CodeBlockRef;
 }
+
 #endif // CODE_BLOCK_H

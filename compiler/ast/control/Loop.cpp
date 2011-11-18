@@ -1,7 +1,7 @@
 #include "Loop.h"
 #include "loops/LoopUntil.h"
 #include "loops/LoopWhile.h"
-#include "compiler/ast/common/CodeBlock.h"
+#include "compiler/ast/CodeBlock.h"
 
 namespace chime
 {
@@ -14,7 +14,7 @@ namespace chime
         parser.nextToken("loop");
         
         node = NULL;
-        body = ast::CodeBlock::parseBlockWithOptionalBraces(parser);
+        body = CodeBlock::parseBlockWithOptionalBraces(parser);
         
         t = parser.look_ahead();
         if (t->equal_to("while"))

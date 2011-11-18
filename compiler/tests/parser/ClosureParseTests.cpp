@@ -25,10 +25,10 @@ TEST_F(ClosureParseTests, MethodCallWithClosureParameters)
     
     ASSERT_METHOD_CALL("call:", call);
     
-    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    closure = dynamic_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
     
-    ASSERT_METHOD_PARAMETER(NULL, NULL, "a", closure->getParameters()->childAtIndex(0));
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "a", closure->getParameters()[0]);
 }
 
 TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)
