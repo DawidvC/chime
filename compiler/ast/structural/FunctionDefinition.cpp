@@ -122,7 +122,7 @@ namespace ast
             
             alloca = generator.insertChimeObjectAlloca();
             generator.builder()->CreateStore(args, alloca, false);
-            generator.getCurrentScope()->setValueForIdentifier(param->getIdentifier(), alloca);
+            generator.getCurrentScope()->setValueForIdentifier(param->getIdentifier(), alloca, false);
             
             // parameters are all +0 objects.  If we tracked them differently from local variables,
             // we could be a lot more efficient here.  For now, just retain them.

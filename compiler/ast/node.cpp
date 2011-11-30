@@ -106,11 +106,6 @@ namespace ast
         return false;
     }
     
-    bool node::isParameter() const
-    {
-        return false;
-    }
-    
     bool node::isSelf() const
     {
         return false;

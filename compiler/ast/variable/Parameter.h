@@ -24,8 +24,6 @@ namespace chime
         
         TypeRef     type() const;
         
-        bool        isParameter() const;
-        
     private:
         std::string _label;
         TypeRef     _type; // this should really be part of a variable

@@ -185,9 +185,12 @@ namespace ast
         return this->parent()->getValueForIdentifier(identifier);
     }
     
-    void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value)
+    void ScopedNode::setValueForIdentifier(const std::string& identifier, llvm::Value* value, bool shouldRelease)
     {
         _scopedValues[identifier] = value;
+        
+        if (!shouldRelease)
+            _scopedValuesToSkip.push_back(identifier);
     }
     
     llvm::Value* ScopedNode::selfValue(chime::CodeGenContext& context)
@@ -230,9 +233,11 @@ namespace ast
         {
             // if this is in our list to skip, do not release
             if (std::find(identifiersToSkip.begin(), identifiersToSkip.end(), it->first) != identifiersToSkip.end())
-            {
                 continue;
-            }
+            
+            // if the value is in our skip list, we do not need to release
+            if (std::find(_scopedValuesToSkip.begin(), _scopedValuesToSkip.end(), it->first) != _scopedValuesToSkip.end())
+                return;
             
             // fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
             context.getRuntime()->callChimeObjectRelease(it->second);

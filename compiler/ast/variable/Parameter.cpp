@@ -86,6 +86,7 @@ namespace chime
     Parameter::Parameter(const std::string& identifier) :
         LocalVariable(identifier)
     {
+        this->setDefined(true);
     }
     
     std::string Parameter::nodeName() const
@@ -106,10 +107,5 @@ namespace chime
     TypeRef Parameter::type() const
     {
         return _type;
-    }
-    
-    bool Parameter::isParameter() const
-    {
-        return true;
     }
 }

@@ -18,7 +18,7 @@ namespace ast
         rValue = this->getRightOperand()->codegen(generator);
         assert(rValue);
         
-        // if this is a variable, we cannot rely on the +1 gaurantee, and we
+        // if this is a variable, we cannot rely on the +1 guarantee, and we
         // need to retain explicitly
         if (this->getRightOperand()->isVariable() || this->getRightOperand()->isSelf())
         {
@@ -35,11 +35,11 @@ namespace ast
         lValue = variable->codegen(generator);
         assert(lValue);
         
+        //fprintf(stderr, "name:%s defined:%d\n", variable->getIdentifier().c_str(), variable->isDefined());
         // if the variable being assigned to is defined, we have to release what
         // it was pointing to
         if (variable->isDefined())
         {
-            // fprintf(stderr, "defined: %s\n", variable->getIdentifier().c_str());
             // here, we need to decrement the retain count first!
             generator.getRuntime()->callChimeObjectRelease(lValue);
         }

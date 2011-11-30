@@ -18,20 +18,12 @@ namespace chime
         
         value = this->returnVariable()->codegen(generator);
         
-        // load it, so we can return the result
+        // I think there is some extra efficiency to be had here, but I've not
+        // yet figured out exactly how to extract it.
+        
         value = generator.builder()->CreateLoad(value, "return value load");
         
-        // after getting a reference to our return value, above, we need
-        // to clear out all of our scope references, all the way up to
-        // the enclosing function
-        
-        // But (!), we do not want to release the variable we are returning,
-        // so we can save doing a retain on it as well
-        std::vector<std::string> identifiersToSkip;
-        
-        identifiersToSkip.push_back(this->returnVariable()->getIdentifier());
-        
-        generator.getCurrentScope()->codegenFunctionExit(generator, identifiersToSkip);
+        generator.getCurrentScope()->codegenFunctionExit(generator);
         
         generator.builder()->CreateRet(value);
         

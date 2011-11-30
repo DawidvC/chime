@@ -41,7 +41,7 @@ namespace ast
         void                 addLooseValue(llvm::Value* value);
         void                 removeLooseValue(llvm::Value* value);
         llvm::Value*         getValueForIdentifier(const std::string& identifier);
-        void                 setValueForIdentifier(const std::string& identifier, llvm::Value* value);
+        void                 setValueForIdentifier(const std::string& identifier, llvm::Value* value, bool shouldRelease=true);
         virtual llvm::Value* selfValue(chime::CodeGenContext& context);
         virtual llvm::Value* selfObjectPtr() const;
         virtual void         setSelfObjectPtr(llvm::Value* value);
@@ -67,6 +67,7 @@ namespace ast
         ScopedNode*                             _implementation;
         
         std::map<std::string, llvm::Value*> _scopedValues;
+        std::vector<std::string>            _scopedValuesToSkip;
         std::vector<llvm::Value*>           _looseValues;
         llvm::Value*                        _selfObjectPtr;
         llvm::Value*                        _classObjectPtr;
