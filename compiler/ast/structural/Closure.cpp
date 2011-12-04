@@ -155,6 +155,9 @@ namespace ast
             generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue, false);
             
             generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
+            
+            // this is a hit to efficiency.  We should be able to tell the attribute system if it needs to retain
+            generator.getRuntime()->callChimeObjectRelease(referenceValue);
         }
         
         // finally, do self

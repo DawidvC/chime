@@ -6,6 +6,7 @@
 #include "runtime/chime_runtime_internal.h"
 #include "chime_closure_methods.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -39,6 +40,8 @@ chime_closure_t* chime_closure_create(void* function)
 void chime_closure_destroy(chime_closure_t* closure)
 {
     assert(closure);
+    
+    fprintf(stderr, "Destroying a closure %p\n", closure);
     
     chime_dictionary_destroy(closure->object.methods);
     chime_dictionary_destroy(closure->object.variables);
