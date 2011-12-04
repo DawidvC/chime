@@ -85,7 +85,7 @@ chime_object_t* assert_class_increment_failure_count(chime_object_t* instance)
     
     failure_count = chime_object_invoke_1(failure_count, "+", chime_literal_encode_integer(1));
     
-    chime_object_set_property(instance, "failure_count", failure_count);
+    chime_object_set_attribute(instance, "failure_count", failure_count);
     
     return failure_count;
 }
@@ -105,5 +105,5 @@ void chime_assertion_initialize(void)
     chime_class_set_class_method(assertion_class, "failure_count",           assert_class_failure_count);
     chime_class_set_class_method(assertion_class, "increment_failure_count", assert_class_increment_failure_count);
     
-    chime_object_set_property((chime_object_t*)assertion_class, "failure_count", chime_literal_encode_integer(0));
+    chime_object_set_attribute((chime_object_t*)assertion_class, "failure_count", chime_literal_encode_integer(0));
 }

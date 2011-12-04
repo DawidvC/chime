@@ -1,11 +1,13 @@
 // Chime Runtime: chime_array_methods.c
 
+#include "chime_array.h"
 #include "chime_array_methods.h"
 #include "runtime/literals/chime_literal.h"
 #include "runtime/closure/chime_closure.h"
 #include "runtime/collections/chime_runtime_array.h"
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/object/chime_object_internal.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -14,18 +16,7 @@ static chime_runtime_array_t* array_get_internal_array(chime_object_t* instance)
 
 chime_object_t* array_class_new(chime_class_t* klass)
 {
-    chime_object_t*        array_instance;
-    chime_runtime_array_t* internal_array;
-    
-    // first thing to do is invoke new on super
-    array_instance = chime_object_create(klass);
-    internal_array = chime_runtime_array_create((chime_collection_finalizer)chime_object_release);
-    
-    assert(internal_array);
-    
-    chime_object_set_property(array_instance, "_internal_array", (chime_object_t*)internal_array);
-    
-    return array_instance;
+    return chime_array_create();
 }
 
 chime_object_t* array_to_string(chime_object_t* instance)
@@ -137,5 +128,5 @@ chime_object_t* array_indexer_get(chime_object_t* instance, chime_object_t* inde
 
 static chime_runtime_array_t* array_get_internal_array(chime_object_t* instance)
 {
-    return (chime_runtime_array_t*)chime_object_get_property(instance, "_internal_array");
+    return (chime_runtime_array_t*)chime_object_get_attributes(instance);
 }

@@ -24,6 +24,8 @@ chime_object_t* chime_reference_create(chime_object_t* object)
     
     reference = chime_object_raw_create(_reference_class, sizeof(chime_object_t), false);
     
+    fprintf(stderr, "Creating a reference %p for %p\n", reference, object);
+    
     chime_reference_set(reference, object);
     fprintf(stderr, "Created a reference %p for %p\n", reference, object);
     
@@ -34,10 +36,12 @@ void chime_reference_destroy(chime_object_t* reference)
 {
     assert(reference);
     
-    fprintf(stderr, "Destroyed a reference %p for %p\n", reference, reference->variables);
+    fprintf(stderr, "Destroying a reference %p for %p\n", reference, reference->variables);
     
     chime_dictionary_destroy(reference->methods);
     chime_object_release((chime_object_t*)reference->variables);
+    
+    fprintf(stderr, "Destroyed a reference %p for %p\n", reference, reference->variables);
     
     free(reference);
 }

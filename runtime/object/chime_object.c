@@ -6,6 +6,7 @@
 #include "chime_object_methods.h"
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/array/chime_array.h"
 #include "runtime/class/chime_class_internal.h"
 #include "runtime/class/chime_class_methods.h"
 #include "runtime/closure/chime_closure.h"
@@ -118,6 +119,12 @@ void chime_object_destroy(chime_object_t* object)
     if (object->self_class == _string_class)
     {
         chime_string_destroy(object);
+        return;
+    }
+    
+    if (object->self_class == _array_class)
+    {
+        chime_array_destroy(object);
         return;
     }
     

@@ -14,16 +14,16 @@ namespace chime
     
     llvm::Value* SingleVariableReturn::codegen(CodeGenContext& generator)
     {
-        llvm::Value* value;
+        llvm::Value*             value;
+        std::vector<std::string> identifiersToSkip;
         
         value = this->returnVariable()->codegen(generator);
         
-        // I think there is some extra efficiency to be had here, but I've not
-        // yet figured out exactly how to extract it.
-        
         value = generator.builder()->CreateLoad(value, "return value load");
         
-        generator.getCurrentScope()->codegenFunctionExit(generator);
+        identifiersToSkip.push_back(this->returnVariable()->getIdentifier());
+        
+        generator.getCurrentScope()->codegenFunctionExit(generator, identifiersToSkip);
         
         generator.builder()->CreateRet(value);
         

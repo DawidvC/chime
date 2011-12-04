@@ -5,6 +5,10 @@
 #include "runtime/class/chime_class.h"
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/object/chime_object_internal.h"
+#include "runtime/support.h"
+
+#include <assert.h>
 
 void chime_array_initialize(void)
 {
@@ -25,7 +29,23 @@ void chime_array_initialize(void)
 
 chime_object_t* chime_array_create(void)
 {
-    return chime_runtime_instantiate(_array_class);
+    chime_object_t* array;
+    
+    array = chime_object_raw_create(_array_class, sizeof(chime_object_t), false);
+    
+    array->variables = (chime_dictionary_t*)chime_runtime_array_create((chime_collection_finalizer)chime_object_release);
+    
+    return array;
+}
+
+void chime_array_destroy(chime_object_t* instance)
+{
+    assert(instance);
+    
+    chime_dictionary_destroy(instance->methods);
+    chime_runtime_array_destroy((chime_runtime_array_t*)chime_object_get_attributes(instance));
+    
+    free(instance);
 }
 
 chime_object_t* chime_array_create_with_length(unsigned long initial_length)

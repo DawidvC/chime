@@ -226,18 +226,28 @@ namespace ast
     {
         std::map<std::string, llvm::Value*>::const_iterator it;
         
+        fprintf(stderr, "scope exit: %p\n", this);
         if (context.builder()->GetInsertBlock()->getTerminator())
+        {
+            fprintf(stderr, "<%s> terminated, no releases possible\n", this->getIdentifier().c_str());
             return;
+        }
         
         for (it = _scopedValues.begin(); it != _scopedValues.end(); ++it)
         {
             // if this is in our list to skip, do not release
             if (std::find(identifiersToSkip.begin(), identifiersToSkip.end(), it->first) != identifiersToSkip.end())
+            {
+                fprintf(stderr, "<%s> instructed to skip %s\n", this->getIdentifier().c_str(), it->first.c_str());
                 continue;
+            }
             
             // if the value is in our skip list, we do not need to release
             if (std::find(_scopedValuesToSkip.begin(), _scopedValuesToSkip.end(), it->first) != _scopedValuesToSkip.end())
-                return;
+            {
+                fprintf(stderr, "<%s> listed as a scoped value to skip %s\n", this->getIdentifier().c_str(), it->first.c_str());
+                continue;
+            }
             
             fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
             context.getRuntime()->callChimeObjectRelease(it->second);
@@ -257,11 +267,15 @@ namespace ast
         
         node = this;
         
-        do
+        while (node)
         {
             node->codegenScopeExit(context, identifiersToSkip);
+            
+            if (node->isFunction())
+                break;
+            
             node = node->parent();
-        } while (node && !node->isFunction());
+        }
     }
     
     std::string ScopedNode::getAnonymousFunctionName()
