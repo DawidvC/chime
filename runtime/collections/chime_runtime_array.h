@@ -7,9 +7,11 @@
 extern "C" {
 #endif
 
+typedef void (*chime_collection_finalizer)(void*);
+
 typedef struct _chime_runtime_array chime_runtime_array_t;
 
-chime_runtime_array_t* chime_runtime_array_create(void);
+chime_runtime_array_t* chime_runtime_array_create(chime_collection_finalizer finalizer);
 void           chime_runtime_array_destroy(chime_runtime_array_t* array);
 
 unsigned long chime_runtime_array_count(chime_runtime_array_t* array);

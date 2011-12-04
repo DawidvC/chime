@@ -48,6 +48,11 @@ implementation ObjectLifeCycleTests : Test.Case
         return b
     }
     
+    method closure_capture(a)
+    {
+        return do { return a }
+    }
+    
     // actual test methods
     method test_creation()
     {
@@ -94,5 +99,12 @@ implementation ObjectLifeCycleTests : Test.Case
         b = a
         
         Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_closure_create()
+    {
+        a = ManagedObject.new()
+        
+        self.closure_capture(a)
     }
 }

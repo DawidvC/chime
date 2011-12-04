@@ -29,8 +29,8 @@ chime_closure_t* chime_closure_create(void* function)
     closure->object.self_class   = _closure_class;
     closure->object.flags        = 0;
     closure->object.retain_count = 1;
-    closure->object.methods      = chime_dictionary_create();
-    closure->object.variables    = chime_dictionary_create();
+    closure->object.methods      = chime_dictionary_create(NULL);
+    closure->object.variables    = chime_dictionary_create((chime_collection_finalizer)chime_object_release);
     closure->function            = function;
     
     return closure;

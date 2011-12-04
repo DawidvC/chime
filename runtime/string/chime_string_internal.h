@@ -4,11 +4,19 @@
 #define CHIME_STRING_INTERNAL_H
 
 #include "runtime/collections/chime_runtime_array.h"
+#include "runtime/object/chime_object_internal.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+struct _chime_string {
+    struct _chime_object   object;         // make it an object
+    chime_runtime_array_t* internal_array;
+    char*                  buffer;
+    signed long            length;
+};
+    
 chime_runtime_array_t* string_get_internal_array(chime_object_t* instance);
 
 char*                  string_get_buffer(chime_object_t* instance);

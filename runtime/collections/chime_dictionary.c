@@ -7,14 +7,14 @@
 #include <assert.h>
 #include <stdio.h>
 
-chime_dictionary_t* chime_dictionary_create(void)
+chime_dictionary_t* chime_dictionary_create(chime_collection_finalizer value_finalizer)
 {
     chime_dictionary_t* dictionary;
     
     dictionary = (chime_dictionary_t*)malloc(sizeof(chime_dictionary_t));
     
-    dictionary->key_array   = chime_runtime_array_create();
-    dictionary->value_array = chime_runtime_array_create();
+    dictionary->key_array   = chime_runtime_array_create(NULL);
+    dictionary->value_array = chime_runtime_array_create(value_finalizer);
     
     assert(dictionary);
     

@@ -6,6 +6,7 @@
 #include "runtime/literals/chime_literal.h"
 #include "runtime/support.h"
 #include "runtime/chime_runtime_internal.h"
+#include "runtime/object/chime_object_internal.h"
 
 #include "runtime/collections/chime_dictionary.h"
 
@@ -20,9 +21,12 @@ chime_object_t* string_class_new(chime_class_t* klass)
     
     // first thing to do is invoke new on super
     instance       = chime_object_create(klass);
-    internal_array = chime_runtime_array_create();
+    internal_array = chime_runtime_array_create(NULL);
     
-    chime_object_set_attribute(instance, "_internal_array", (chime_object_t*)internal_array);
+    // because we are storing a non-object type, we have to do this by reaching into the
+    // object internals.  This is definitely less than ideal.
+    chime_dictionary_set(instance->variables, "_internal_array", (chime_object_t*)internal_array);
+    
     string_length_set(instance, 0);
     string_set_buffer(instance, STRING_EMPTY_BUFFER_FLAG);
     
@@ -217,12 +221,12 @@ chime_object_t* string_indexer_get(chime_object_t* instance, chime_object_t* ind
 
 chime_object_t* string_length_get(chime_object_t* instance)
 {
-    return chime_object_get_attribute(instance, "_length");
+    return chime_literal_encode_integer(((chime_string_t*)instance)->length);
 }
 
 chime_object_t* string_length_set(chime_object_t* instance, signed long length)
 {
-    chime_object_set_attribute(instance, "_length", chime_literal_encode_integer(length));
+    ((chime_string_t*)instance)->length = length;
     
     return CHIME_LITERAL_NULL;
 }
@@ -236,12 +240,12 @@ chime_object_t* string_concatenate(chime_object_t* instance, chime_object_t* oth
 
 chime_runtime_array_t* string_get_internal_array(chime_object_t* instance)
 {
-    return (chime_runtime_array_t*)chime_object_get_attribute(instance, "_internal_array");
+    return ((chime_string_t*)instance)->internal_array;
 }
 
 char* string_get_buffer(chime_object_t* instance)
 {
-    return (char*)chime_object_get_attribute(instance, "_c_string");
+    return ((chime_string_t*)instance)->buffer;
 }
 
 void string_set_buffer(chime_object_t* instance, char* value)
@@ -252,5 +256,5 @@ void string_set_buffer(chime_object_t* instance, char* value)
     if (buffer != STRING_EMPTY_BUFFER_FLAG)
         chime_deallocate(buffer);
     
-    chime_object_set_attribute(instance, "_c_string", (chime_object_t*)value);
+    ((chime_string_t*)instance)->buffer = value;
 }

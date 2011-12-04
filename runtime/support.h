@@ -7,6 +7,15 @@
 extern "C" {
 #endif
 
+#ifndef __cplusplus
+#ifndef bool
+typedef unsigned char bool;
+
+#define true (1)
+#define false (0)
+#endif // bool
+#endif // __cplusplus
+
 // memory allocation
 #include "runtime/object/chime_object_internal.h"
 
@@ -20,17 +29,6 @@ extern "C" {
 #include <libkern/OSAtomic.h>
 #define chime_atomic_increment32_barrier(x) OSAtomicIncrement32(x)
 #define chime_atomic_decrement32_barrier(x) OSAtomicDecrement32Barrier(x)
-
-#ifndef __cplusplus
-
-#ifndef bool
-typedef unsigned char bool;
-
-#define true (1)
-#define false (0)
-#endif // bool
-
-#endif // __cplusplus
 
 #ifdef __cplusplus
 }

@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-// #define PRINT_LIFECYCLE 1
+#define PRINT_LIFECYCLE 1
 // #define SKIP_RELEASES
 
 void chime_object_initialize(void)
@@ -63,17 +63,27 @@ chime_object_t* chime_object_create_with_name(const char* class_name)
 
 chime_object_t* chime_object_create(chime_class_t* object_class)
 {
+    return chime_object_raw_create(object_class, sizeof(chime_object_t), true);
+}
+
+chime_object_t* chime_object_raw_create(chime_class_t* object_class, unsigned int struct_size, unsigned char create_variables)
+{
     chime_object_t* object;
     
     assert(object_class);
     
-    object = (chime_object_t*)malloc(sizeof(chime_object_t));
+    object = (chime_object_t*)malloc(struct_size);
     
     object->self_class   = object_class;
     object->flags        = 0;
     object->retain_count = 1;
-    object->methods      = chime_dictionary_create();
-    object->variables    = chime_dictionary_create();
+    object->methods      = chime_dictionary_create(NULL);
+    
+    if (create_variables)
+    {
+        object->variables = chime_dictionary_create((chime_collection_finalizer)chime_object_release);
+        object->flags |= ObjectHasVariables;
+    }
     
     return object;
 }
@@ -102,6 +112,12 @@ void chime_object_destroy(chime_object_t* object)
     if (object->self_class == _float_class)
     {
         chime_float_destroy(object);
+        return;
+    }
+    
+    if (object->self_class == _string_class)
+    {
+        chime_string_destroy(object);
         return;
     }
     
@@ -265,9 +281,10 @@ void chime_object_set_property(chime_object_t* instance, const char* name, chime
 {
     if (!instance->variables)
     {
-        instance->variables = chime_dictionary_create();
+        instance->variables = chime_dictionary_create((chime_collection_finalizer)chime_object_release);
     }
     
+    chime_object_retain(value);
     chime_dictionary_set(instance->variables, name, value);
 }
 

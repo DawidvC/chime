@@ -24,7 +24,7 @@ chime_class_t* chime_trait_create(const char* name)
     metaclass = (chime_class_t*)malloc(sizeof(chime_class_t));
     
     // entity portion
-    metaclass->object.methods    = chime_dictionary_create();
+    metaclass->object.methods    = chime_dictionary_create(NULL);
     metaclass->object.self_class = NULL;
     metaclass->object.variables  = NULL; // metaclasses do not have variables
     
@@ -39,9 +39,9 @@ chime_class_t* chime_trait_create(const char* name)
     trait = (chime_class_t*)malloc(sizeof(chime_class_t));
     
     // entity portion
-    trait->object.methods    = chime_dictionary_create();
+    trait->object.methods    = chime_dictionary_create(NULL);
     trait->object.self_class = metaclass;
-    trait->object.variables  = chime_dictionary_create();
+    trait->object.variables  = chime_dictionary_create((chime_collection_finalizer)chime_object_release);
     
     // class portion
     trait->super_class = _trait_class;

@@ -19,7 +19,7 @@ runner = TestRunner.new()
 
 runner.execute_tests_for_class(ArrayTests)
 runner.execute_tests_for_class(ClassTests)
-// runner.execute_tests_for_class(ClosureTests)
+runner.execute_tests_for_class(ClosureTests)
 runner.execute_tests_for_class(ConditionalTests)
 runner.execute_tests_for_class(HashTests)
 runner.execute_tests_for_class(LiteralTests)

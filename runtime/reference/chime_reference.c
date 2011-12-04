@@ -1,6 +1,7 @@
 // Chime Runtime: chime_reference.c
 
 #include "chime_reference.h"
+#include "runtime/support.h"
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
 #include "runtime/object/chime_object_internal.h"
@@ -21,13 +22,7 @@ chime_object_t* chime_reference_create(chime_object_t* object)
     
     assert(object);
     
-    reference = (chime_object_t*)malloc(sizeof(chime_object_t));
-    
-    reference->self_class   = _reference_class;
-    reference->flags        = 0;
-    reference->retain_count = 1;
-    reference->methods      = chime_dictionary_create();
-    reference->variables    = NULL;                      // hijack this pointer
+    reference = chime_object_raw_create(_reference_class, sizeof(chime_object_t), false);
     
     chime_reference_set(reference, object);
     //fprintf(stderr, "Created a reference %p for %p\n", reference, object);
@@ -58,10 +53,10 @@ void chime_reference_set(chime_object_t* reference, chime_object_t* object)
 {
     assert(reference);
     
+    chime_object_retain(object);
+    
     //fprintf(stderr, "Setting reference %p to %p\n", reference, object);
     chime_object_release((chime_object_t*)reference->variables);
     
     reference->variables = (chime_dictionary_t*)object;
-    
-    chime_object_retain(object);
 }

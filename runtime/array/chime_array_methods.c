@@ -19,7 +19,7 @@ chime_object_t* array_class_new(chime_class_t* klass)
     
     // first thing to do is invoke new on super
     array_instance = chime_object_create(klass);
-    internal_array = chime_runtime_array_create();
+    internal_array = chime_runtime_array_create((chime_collection_finalizer)chime_object_release);
     
     assert(internal_array);
     

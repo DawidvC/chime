@@ -2,6 +2,7 @@
 
 #include "chime_float.h"
 #include "chime_float_methods.h"
+#include "runtime/support.h"
 #include "runtime/object/chime_object_internal.h"
 #include "runtime/collections/chime_dictionary.h"
 #include "runtime/class/chime_class.h"
@@ -31,13 +32,7 @@ chime_object_t* chime_float_create(double value)
 {
     chime_object_t* number;
     
-    number = (chime_object_t*)malloc(sizeof(chime_object_t));
-    
-    number->self_class   = _float_class;
-    number->flags        = 0;
-    number->retain_count = 1;
-    number->methods      = chime_dictionary_create();
-    number->variables    = 0; // hijack this pointer
+    number = chime_object_raw_create(_float_class, sizeof(chime_object_t), false);
     
     chime_float_set_value(number, value);
     

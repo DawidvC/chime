@@ -6,13 +6,15 @@
 #include <stdlib.h>
 #include <assert.h>
 
-chime_runtime_array_t* chime_runtime_array_create(void)
+chime_runtime_array_t* chime_runtime_array_create(chime_collection_finalizer finalizer)
 {
     chime_runtime_array_t* array;
     
     array = (chime_runtime_array_t*)malloc(sizeof(chime_runtime_array_t));
-    array->count = 0;
-    array->head  = 0;
+    
+    array->count     = 0;
+    array->head      = 0;
+    array->finalizer = finalizer;
     
     return array;
 }
@@ -45,9 +47,12 @@ chime_runtime_array_node_t* chime_runtime_array_node_create(void* p)
     return node;
 }
 
-void chime_runtime_array_node_destroy(chime_runtime_array_node_t* node)
+void chime_runtime_array_node_destroy(chime_runtime_array_node_t* node, chime_collection_finalizer finalizer)
 {
     assert(node);
+    
+    if (finalizer)
+        finalizer(node->pointer);
     
     free(node);
 }
@@ -128,7 +133,7 @@ void chime_runtime_array_remove(chime_runtime_array_t* array, unsigned long inde
     {
         array->head = array->head->next;
         
-        chime_runtime_array_node_destroy(node);
+        chime_runtime_array_node_destroy(node, array->finalizer);
         
         return;
     }
@@ -143,5 +148,5 @@ void chime_runtime_array_remove(chime_runtime_array_t* array, unsigned long inde
     
     prev_node->next = node->next;
     
-    chime_runtime_array_node_destroy(node);
+    chime_runtime_array_node_destroy(node, array->finalizer);
 }

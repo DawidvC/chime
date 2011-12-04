@@ -180,7 +180,7 @@ namespace ast
         functionName           = generator.getCurrentScope()->getIdentifier() + "." + name;
         functionNameCStringPtr = generator.getConstantString(name);
         
-        // fprintf(stderr, "name: %s\n", functionName.c_str());
+        fprintf(stderr, "name: %s\n", functionName.c_str());
         
         // we need to scope the method name to include the class, so we don't overlap in the
         // tranlation unit

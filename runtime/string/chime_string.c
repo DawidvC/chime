@@ -29,10 +29,34 @@ void chime_string_initialize(void)
     chime_class_set_instance_method(_string_class, "length",    string_length_get);
 }
 
-void chime_string_destroy(void)
+chime_object_t* chime_string_create(void)
 {
-    chime_class_destroy(_string_class);
-    _string_class = NULL;
+    chime_string_t* string;
+    
+    string = (chime_string_t*)chime_object_raw_create(_string_class, sizeof(chime_string_t), false);
+    string->internal_array = chime_runtime_array_create(NULL);
+    string->buffer         = STRING_EMPTY_BUFFER_FLAG;
+    string->length         = 0;
+    
+    return (chime_object_t*)string;
+}
+
+void chime_string_destroy(chime_object_t* instance)
+{
+    chime_string_t* string;
+    
+    assert(instance);
+    
+    string = (chime_string_t*)instance;
+    
+    chime_dictionary_destroy(string->object.methods);
+    
+    chime_runtime_array_destroy(string->internal_array);
+    
+    if (string->buffer != STRING_EMPTY_BUFFER_FLAG)
+        chime_deallocate(string->buffer);
+    
+    free(string);
 }
 
 chime_object_t* chime_string_create_with_c_string(const char* string, unsigned int length)
@@ -45,8 +69,7 @@ chime_object_t* chime_string_create_with_c_string(const char* string, unsigned i
     
     assert(string);
     
-    instance = chime_runtime_instantiate(_string_class);
-    assert(instance);
+    instance = chime_string_create();
     
     array = string_get_internal_array(instance);
     count = BYTES_PER_STRING_STORAGE_UNIT; // make sure an allocation happens right away

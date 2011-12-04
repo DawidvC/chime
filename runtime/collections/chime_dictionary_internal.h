@@ -14,7 +14,8 @@
 // 
 // typedef struct _chime_binary_tree_node chime_binary_tree_node_t;
 
-struct _chime_dictionary {    
+struct _chime_dictionary
+{
     chime_runtime_array_t* key_array;
     chime_runtime_array_t* value_array;
 };

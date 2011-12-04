@@ -239,14 +239,14 @@ namespace ast
             if (std::find(_scopedValuesToSkip.begin(), _scopedValuesToSkip.end(), it->first) != _scopedValuesToSkip.end())
                 return;
             
-            // fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
+            fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
             context.getRuntime()->callChimeObjectRelease(it->second);
         }
         
         std::vector<llvm::Value*>::const_iterator vit;
         for (vit = _looseValues.begin(); vit != _looseValues.end(); ++vit)
         {
-            // fprintf(stderr, "<%p> loose release: %p\n", this, (*vit));
+            fprintf(stderr, "<%s> loose release: %p\n", this->getIdentifier().c_str(), (*vit));
             context.getRuntime()->callChimeObjectRelease((*vit));
         }
     }

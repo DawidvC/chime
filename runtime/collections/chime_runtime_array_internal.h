@@ -15,9 +15,10 @@ struct _chime_runtime_array {
     unsigned long count;
     
     chime_runtime_array_node_t* head;
+    chime_collection_finalizer  finalizer;
 };
 
 chime_runtime_array_node_t* chime_runtime_array_node_create(void* p);
-void                        chime_runtime_array_node_destroy(chime_runtime_array_node_t* node);
+void                        chime_runtime_array_node_destroy(chime_runtime_array_node_t* node, chime_collection_finalizer finalizer);
 
 #endif

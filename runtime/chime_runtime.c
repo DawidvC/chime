@@ -49,9 +49,9 @@ void chime_runtime_initialize(void)
     old_level = chime_log_level;
     chime_log_level = 3;
     
-    _chime_modules = chime_dictionary_create();
-    _chime_classes = chime_dictionary_create();
-    _chime_traits  = chime_dictionary_create();
+    _chime_modules = chime_dictionary_create(NULL);
+    _chime_classes = chime_dictionary_create(NULL);
+    _chime_traits  = chime_dictionary_create(NULL);
     
     chime_object_initialize(); // set up the root classes and their base methods
     

@@ -150,13 +150,18 @@ namespace ast
             variableNameCStringPtr = generator.getConstantString(it->first);
             referenceValue         = it->second->codegenReference(generator);
             
-            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue);
+            fprintf(stderr, "<%s> closed variable: %s\n", this->getIdentifier().c_str(), it->first.c_str());
+            
+            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue, false);
             
             generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
         }
         
         // finally, do self
         generator.getRuntime()->callChimeObjectSetAttribute(closureValue, generator.getConstantString("self"), generator.getCurrentScope()->selfValue(generator));
+        
+        // now, the closure needs to be tracked for release, just like any other value
+        generator.getCurrentScope()->addLooseValue(closureValue);
         
         return closureValue;
     }

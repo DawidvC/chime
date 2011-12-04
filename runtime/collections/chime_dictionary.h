@@ -11,7 +11,7 @@ extern "C" {
 
 typedef struct _chime_dictionary chime_dictionary_t;
 
-chime_dictionary_t* chime_dictionary_create(void);
+chime_dictionary_t* chime_dictionary_create(chime_collection_finalizer value_finalizer);
 void                chime_dictionary_destroy(chime_dictionary_t* dictionary);
 
 unsigned long chime_dictionary_count(chime_dictionary_t* dictionary);

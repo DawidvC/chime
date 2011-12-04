@@ -33,7 +33,7 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     metaclass = (chime_class_t*)malloc(sizeof(chime_class_t));
     
     // entity portion
-    metaclass->object.methods      = chime_dictionary_create();
+    metaclass->object.methods      = chime_dictionary_create(NULL);
     metaclass->object.self_class   = NULL;
     metaclass->object.flags        = ObjectIsClass;
     metaclass->object.retain_count = 0;
@@ -61,11 +61,11 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     klass = (chime_class_t*)malloc(sizeof(chime_class_t));
     
     // entity portion
-    klass->object.methods      = chime_dictionary_create();
+    klass->object.methods      = chime_dictionary_create(NULL);
     klass->object.self_class   = metaclass;
     klass->object.flags        = ObjectIsClass;
     klass->object.retain_count = 0;
-    klass->object.variables    = chime_dictionary_create();
+    klass->object.variables    = chime_dictionary_create((chime_collection_finalizer)chime_object_release);
     
     // class portion
     klass->super_class = superclass;
@@ -142,7 +142,7 @@ void chime_class_include_trait(chime_class_t* klass, chime_class_t* trait)
     assert(trait);
     
     if (!klass->traits)
-        klass->traits = chime_runtime_array_create();
+        klass->traits = chime_runtime_array_create(NULL);
     
     chime_runtime_array_add(klass->traits, trait);
 }

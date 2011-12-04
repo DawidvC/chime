@@ -28,6 +28,11 @@ implementation StringTests : Test.Case
         Assert.equal("abc",    to:"" + "abc")
     }
     
+    method test_string_concatenation_with_nonstring_objects()
+    {
+        Assert.equal("abc123", to:"abc" + 123)
+    }
+    
     method test_string_comparison()
     {
         Assert.is_true("abc" == "abc")
