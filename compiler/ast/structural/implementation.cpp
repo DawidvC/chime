@@ -151,6 +151,7 @@ namespace ast
         // now, create the new class
         objectClassPtr = generator.getRuntime()->callChimeRuntimeCreateClass(classNamePtr, superclassPtr);
         this->setClassObjectPtr(objectClassPtr);
+        this->setSelfObjectPtr(objectClassPtr); // it's not 100% clear if this is the correct thing to do
         
         generator.pushScope(this);
         
