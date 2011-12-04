@@ -11,7 +11,7 @@ FRONTEND_OBJECTS      = objects_from_sources(FRONTEND_SOURCES, pch:COMPILER_PCH)
 
 namespace(:compiler) do
   desc("Build the chime compiler commandline tool")
-  task(:frontend => ["#{BUILD_PATH}/chime"])
+  task(:frontend => ["#{BUILD_PATH}/chime", "#{BUILD_PATH}/libchime.a", "#{BUILD_PATH}/libchimeruntime.a"])
 end
 
 # Rules

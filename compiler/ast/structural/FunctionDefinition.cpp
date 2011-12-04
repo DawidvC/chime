@@ -47,27 +47,6 @@ namespace ast
         return true;
     }
     
-    void FunctionDefinition::defineParametersAsLocalVariables(chime::parser& parser)
-    {
-        // std::vector<chime::ParameterRef>::iterator it;
-        // // we now need to create variables (which should be strictly local) for
-        // // all the parameters
-        // for (it = _parameters.begin(); it != _parameters.end(); ++it)
-        // {
-        //     chime::Variable*       variable;
-        //     
-        //     parameter = this->getParameters()->parameterAtIndex(i);
-        //     
-        //     variable = this->variableForIdentifier(parameter->identifier());
-        //     if (variable->nodeName() != "Local Variable")
-        //     {
-        //         parser.addError("Method argument shadows a variable in scope");
-        //     }
-        //     
-        //     variable->setDefined(true); // parameters are all, by definition, defined
-        // }
-    }
-    
     llvm::Function* FunctionDefinition::createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity)
     {
         llvm::Function*                function;
@@ -127,6 +106,7 @@ namespace ast
             // parameters are all +0 objects.  If we tracked them differently from local variables,
             // we could be a lot more efficient here.  For now, just retain them.
             
+            fprintf(stderr, "<%s> Retaining parameter %s\n", this->getIdentifier().c_str(), param->getIdentifier().c_str());
             generator.getRuntime()->callChimeObjectRetain(alloca);
         }
     }
@@ -179,8 +159,6 @@ namespace ast
         
         functionName           = generator.getCurrentScope()->getIdentifier() + "." + name;
         functionNameCStringPtr = generator.getConstantString(name);
-        
-        fprintf(stderr, "name: %s\n", functionName.c_str());
         
         // we need to scope the method name to include the class, so we don't overlap in the
         // tranlation unit

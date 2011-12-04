@@ -26,8 +26,6 @@ namespace ast
         bool                isFunction() const;
         
     protected:
-        void            defineParametersAsLocalVariables(chime::parser& parser);
-        
         llvm::Function* createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity);
         void            codegenArguments(chime::code_generator& generator, llvm::Function* function);
         llvm::Function* codegenFunction(chime::code_generator& generator, const std::string& name, NodeRef body, unsigned int arity);

@@ -40,8 +40,6 @@ namespace ast
         
         definition->setIdentifier(identifier);
         
-        definition->defineParametersAsLocalVariables(parser);
-        
         definition->_bodyBlock = chime::CodeBlock::parse(parser);
         
         parser.popScope();
