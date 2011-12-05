@@ -138,7 +138,7 @@ TEST_F(RuntimeTests, InheritanceStructure)
     chime_object_destroy(object);
 }
 
-TEST_F(RuntimeTests, OverwriteOneProperty)
+TEST_F(RuntimeTests, OverwriteOneAttribute)
 {
     chime_object_t* object;
     chime_object_t* test_prop;
@@ -146,19 +146,19 @@ TEST_F(RuntimeTests, OverwriteOneProperty)
     object    = chime_object_create_with_name("Object");
     test_prop = chime_object_create_with_name("Object");
     
-    chime_object_set_property(object, "test_prop", test_prop);
+    chime_object_set_attribute(object, "test_prop", test_prop);
     
-    ASSERT_EQ(test_prop, chime_object_get_property(object, "test_prop"));
+    ASSERT_EQ(test_prop, chime_object_get_attribute(object, "test_prop"));
     
     // now overwrite it with something
-    chime_object_set_property(object, "test_prop", CHIME_LITERAL_TRUE);
+    chime_object_set_attribute(object, "test_prop", CHIME_LITERAL_TRUE);
     
-    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_property(object, "test_prop"));
+    ASSERT_EQ(CHIME_LITERAL_TRUE, chime_object_get_attribute(object, "test_prop"));
     
     // try a third time
-    chime_object_set_property(object, "test_prop", test_prop);
+    chime_object_set_attribute(object, "test_prop", test_prop);
     
-    ASSERT_EQ(test_prop, chime_object_get_property(object, "test_prop"));
+    ASSERT_EQ(test_prop, chime_object_get_attribute(object, "test_prop"));
     
     chime_object_destroy(object);
     chime_object_destroy(test_prop);
