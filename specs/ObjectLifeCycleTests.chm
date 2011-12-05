@@ -41,6 +41,10 @@ implementation ObjectLifeCycleTests : Test.Case
         return a
     }
     
+    method argument_unused(a)
+    {
+    }
+    
     method object_passthrough_with_assignment(a)
     {
         b = a
@@ -97,6 +101,17 @@ implementation ObjectLifeCycleTests : Test.Case
         Assert.equal(2, to:ManagedObject.count)
         
         b = a
+        
+        Assert.equal(1, to:ManagedObject.count)
+    }
+    
+    method test_unused_argument()
+    {
+        a = ManagedObject.new()
+        
+        Assert.equal(1, to:ManagedObject.count)
+        
+        self.argument_unused(a)
         
         Assert.equal(1, to:ManagedObject.count)
     }

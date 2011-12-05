@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define PRINT_LIFECYCLE 1
+// #define PRINT_LIFECYCLE
 // #define SKIP_RELEASES
 
 void chime_object_initialize(void)

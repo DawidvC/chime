@@ -226,10 +226,10 @@ namespace ast
     {
         std::map<std::string, llvm::Value*>::const_iterator it;
         
-        fprintf(stderr, "scope exit: %p\n", this);
+        // fprintf(stderr, "scope exit: %p\n", this);
         if (context.builder()->GetInsertBlock()->getTerminator())
         {
-            fprintf(stderr, "<%s> terminated, no releases possible\n", this->getIdentifier().c_str());
+            // fprintf(stderr, "<%s> terminated, no releases possible\n", this->getIdentifier().c_str());
             return;
         }
         
@@ -238,25 +238,25 @@ namespace ast
             // if this is in our list to skip, do not release
             if (std::find(identifiersToSkip.begin(), identifiersToSkip.end(), it->first) != identifiersToSkip.end())
             {
-                fprintf(stderr, "<%s> instructed to skip %s\n", this->getIdentifier().c_str(), it->first.c_str());
+                // fprintf(stderr, "<%s> instructed to skip %s\n", this->getIdentifier().c_str(), it->first.c_str());
                 continue;
             }
             
             // if the value is in our skip list, we do not need to release
             if (std::find(_scopedValuesToSkip.begin(), _scopedValuesToSkip.end(), it->first) != _scopedValuesToSkip.end())
             {
-                fprintf(stderr, "<%s> listed as a scoped value to skip %s\n", this->getIdentifier().c_str(), it->first.c_str());
+                // fprintf(stderr, "<%s> listed as a scoped value to skip %s\n", this->getIdentifier().c_str(), it->first.c_str());
                 continue;
             }
             
-            fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
+            // fprintf(stderr, "<%s> release: %s => %p (%p)\n", this->getIdentifier().c_str(), it->first.c_str(), it->second, this->selfObjectPtr());
             context.getRuntime()->callChimeObjectRelease(it->second);
         }
         
         std::vector<llvm::Value*>::const_iterator vit;
         for (vit = _looseValues.begin(); vit != _looseValues.end(); ++vit)
         {
-            fprintf(stderr, "<%s> loose release: %p\n", this->getIdentifier().c_str(), (*vit));
+            // fprintf(stderr, "<%s> loose release: %p\n", this->getIdentifier().c_str(), (*vit));
             context.getRuntime()->callChimeObjectRelease((*vit));
         }
     }

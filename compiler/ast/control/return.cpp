@@ -78,9 +78,7 @@ namespace chime
         // after getting a reference to our return value, above, we need
         // to clear out all of our scope references, all the way up to
         // the enclosing function
-        fprintf(stderr, "Return::codegen => pre codegenFunctionExit (%d)\n", generator.builder()->GetInsertBlock()->getTerminator() == NULL);
         generator.getCurrentScope()->codegenFunctionExit(generator);
-        fprintf(stderr, "Return::codegen => post codegenFunctionExit (%d)\n", generator.builder()->GetInsertBlock()->getTerminator() == NULL);
                 
         generator.builder()->CreateRet(value);
         

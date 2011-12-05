@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+// #define PRINT_CLOSURES
+
 void chime_closure_initialize(void)
 {
     _closure_class = chime_class_create_object_subclass("Function");
@@ -41,7 +43,9 @@ void chime_closure_destroy(chime_closure_t* closure)
 {
     assert(closure);
     
+#ifdef PRINT_CLOSURES
     fprintf(stderr, "Destroying a closure %p\n", closure);
+#endif
     
     chime_dictionary_destroy(closure->object.methods);
     chime_dictionary_destroy(closure->object.variables);

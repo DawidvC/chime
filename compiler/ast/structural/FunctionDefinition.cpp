@@ -106,7 +106,7 @@ namespace ast
             // parameters are all +0 objects.  If we tracked them differently from local variables,
             // we could be a lot more efficient here.  For now, just retain them.
             
-            fprintf(stderr, "<%s> Retaining parameter %s\n", this->getIdentifier().c_str(), param->getIdentifier().c_str());
+            // fprintf(stderr, "<%s> Retaining parameter %s\n", this->getIdentifier().c_str(), param->getIdentifier().c_str());
             generator.getRuntime()->callChimeObjectRetain(alloca);
         }
     }

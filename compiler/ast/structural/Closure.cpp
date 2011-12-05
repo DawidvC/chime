@@ -148,7 +148,7 @@ namespace ast
             variableNameCStringPtr = generator.getConstantString(it->first);
             referenceValue         = it->second->codegenReference(generator);
             
-            fprintf(stderr, "<%s> closed variable: %s\n", this->getIdentifier().c_str(), it->first.c_str());
+            // fprintf(stderr, "<%s> closed variable: %s\n", this->getIdentifier().c_str(), it->first.c_str());
             
             generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue, false);
             
