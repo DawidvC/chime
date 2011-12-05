@@ -50,63 +50,63 @@ implementation ClosureTests : Test.Case
         Assert.equal(10, to:value)
     }
     
-//    method test_nested_closure_creation_with_closed_variables()
-//    {
-//        value = 10
-//        functions = Array.new()
-//        
-//        10.times() do
-//        {
-//            h = do
-//            {
-//                value = value + 1
-//                return value
-//            }
-//            
-//            functions.append(h)
-//        }
-//        
-//        Assert.equal(10, to:value)
-//        
-//        Assert.equal(11, to:functions[0].call())
-//        Assert.equal(12, to:functions[1].call())
-//        Assert.equal(13, to:functions[2].call())
-//        Assert.equal(14, to:functions[3].call())
-//        Assert.equal(15, to:functions[4].call())
-//        Assert.equal(16, to:functions[5].call())
-//        Assert.equal(17, to:functions[6].call())
-//        Assert.equal(18, to:functions[7].call())
-//        Assert.equal(19, to:functions[8].call())
-//        Assert.equal(20, to:functions[9].call())
-//        
-//        Assert.equal(20, to:value)
-//    }
-//    
-//    method argument_used_in_closure(value)
-//    {
-//        2.times() do (i)
-//        {
-//            value += 1
-//        }
-//        
-//        return value
-//    }
-//    
-//    method test_method_argument_in_closure()
-//    {
-//        Assert.equal(6, to:self.argument_used_in_closure(4))
-//    }
-//    
-//    method test_self_in_closure()
-//    {
-//        function = do
-//        {
-//            Assert.equal("ClosureTests", to:self.class.name)
-//        }
-//        
-//        function.call()
-//    }
-//    
+    method test_nested_closure_creation_with_closed_variables()
+    {
+        value = 10
+        functions = Array.new()
+        
+        10.times() do
+        {
+            h = do
+            {
+                value = value + 1
+                return value
+            }
+            
+            functions.append(h)
+        }
+        
+        Assert.equal(10, to:value)
+        
+        Assert.equal(11, to:functions[0].call())
+        Assert.equal(12, to:functions[1].call())
+        Assert.equal(13, to:functions[2].call())
+        Assert.equal(14, to:functions[3].call())
+        Assert.equal(15, to:functions[4].call())
+        Assert.equal(16, to:functions[5].call())
+        Assert.equal(17, to:functions[6].call())
+        Assert.equal(18, to:functions[7].call())
+        Assert.equal(19, to:functions[8].call())
+        Assert.equal(20, to:functions[9].call())
+        
+        Assert.equal(20, to:value)
+    }
+    
+    method argument_used_in_closure(value)
+    {
+        2.times() do (i)
+        {
+            value += 1
+        }
+        
+        return value
+    }
+    
+    method test_method_argument_in_closure()
+    {
+        Assert.equal(6, to:self.argument_used_in_closure(4))
+    }
+    
+    method test_self_in_closure()
+    {
+        function = do
+        {
+            Assert.equal("ClosureTests", to:self.class.name)
+        }
+        
+        function.call()
+    }
+    
 //    method test_self_in_nested_closure()
 //    {
 //        value = 0
