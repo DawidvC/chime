@@ -154,7 +154,7 @@ namespace ast
             
             generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
             
-            // this is a hit to efficiency.  We should be able to tell the attribute system if it needs to retain
+            // this is a hit to efficiency.  We should be able to tell the attribute setter if it needs to retain
             generator.getRuntime()->callChimeObjectRelease(referenceValue);
         }
         

@@ -107,38 +107,38 @@ implementation ClosureTests : Test.Case
         function.call()
     }
     
-//    method test_self_in_nested_closure()
-//    {
-//        value = 0
-//        
-//        function = do
-//        {
-//            sub_function = do
-//            {
-//                Assert.equal("ClosureTests", to:self.class.name)
-//                value = 10
-//            }
-//            
-//            sub_function.call()
-//        }
-//        
-//        function.call()
-//        
-//        Assert.equal(10, to:value)
-//    }
-//    
-//    method test_closure_argument_in_nested_closure()
-//    {
-//        value = 0
-//        
-//        2.times() do (i)
-//        {
-//            2.times() do (j)
-//            {
-//                value += i + j
-//            }
-//        }
-//        
-//        Assert.equal(4, to:value)
-//    }
+    method test_self_in_nested_closure()
+    {
+        value = 0
+        
+        function = do
+        {
+            sub_function = do
+            {
+                Assert.equal("ClosureTests", to:self.class.name)
+                value = 10
+            }
+            
+            sub_function.call()
+        }
+        
+        function.call()
+        
+        Assert.equal(10, to:value)
+    }
+    
+    method test_closure_argument_in_nested_closure()
+    {
+        value = 0
+        
+        2.times() do (i)
+        {
+            2.times() do (j)
+            {
+                value += i + j
+            }
+        }
+        
+        Assert.equal(4, to:value)
+    }
 }
