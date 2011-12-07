@@ -128,6 +128,9 @@ namespace chime
         variableValue  = this->codegen(generator);
         referenceValue = generator.getRuntime()->callChimeReferenceCreate(variableValue);
         
+        // this is actually an ownership transfer, so we need to release the variable
+        generator.getRuntime()->callChimeObjectRelease(variableValue);
+        
         return referenceValue;
     }
 }

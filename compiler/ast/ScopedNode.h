@@ -38,10 +38,10 @@ namespace ast
         virtual bool         isFunction() const;
         
         // codegen support
-        void                 addLooseValue(llvm::Value* value);
-        void                 removeLooseValue(llvm::Value* value);
-        llvm::Value*         getValueForIdentifier(const std::string& identifier);
-        void                 setValueForIdentifier(const std::string& identifier, llvm::Value* value, bool shouldRelease=true);
+        virtual void         addLooseValue(llvm::Value* value);
+        virtual void         removeLooseValue(llvm::Value* value);
+        virtual llvm::Value* getValueForIdentifier(const std::string& identifier);
+        virtual void         setValueForIdentifier(const std::string& identifier, llvm::Value* value, bool shouldRelease=true);
         virtual llvm::Value* selfValue(chime::CodeGenContext& context);
         virtual llvm::Value* selfObjectPtr() const;
         virtual void         setSelfObjectPtr(llvm::Value* value);

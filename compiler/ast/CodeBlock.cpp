@@ -73,6 +73,11 @@ namespace chime
         return block;
     }
     
+    CodeBlock::CodeBlock()
+    {
+        _deferToParent = false;
+    }
+    
     std::string CodeBlock::nodeName() const
     {
         return std::string("code block");
@@ -121,6 +126,15 @@ namespace chime
         return this->nodeName();
     }
     
+    bool CodeBlock::deferToParent() const
+    {
+        return _deferToParent;
+    }
+    void CodeBlock::setDeferToParent(bool value)
+    {
+        _deferToParent = value;
+    }
+    
     void CodeBlock::addChild(const ast::node& node)
     {
         this->add_child((ast::node*)&node);
@@ -129,6 +143,38 @@ namespace chime
     ast::node* CodeBlock::childAtIndex(unsigned int i) const
     {
         return this->child_at_index(i);
+    }
+    
+    void CodeBlock::addLooseValue(llvm::Value* value)
+    {
+        if (_deferToParent)
+            this->parent()->addLooseValue(value);
+        else
+            ast::ScopedNode::addLooseValue(value);
+    }
+    
+    void CodeBlock::removeLooseValue(llvm::Value* value)
+    {
+        if (_deferToParent)
+            this->parent()->removeLooseValue(value);
+        else
+            ast::ScopedNode::removeLooseValue(value);
+    }
+    
+    llvm::Value* CodeBlock::getValueForIdentifier(const std::string& identifier)
+    {
+        if (_deferToParent)
+            return this->parent()->getValueForIdentifier(identifier);
+        
+        return ast::ScopedNode::getValueForIdentifier(identifier);
+    }
+    
+    void CodeBlock::setValueForIdentifier(const std::string& identifier, llvm::Value* value, bool shouldRelease)
+    {
+        if (_deferToParent)
+            this->parent()->setValueForIdentifier(identifier, value, shouldRelease);
+        else
+            ast::ScopedNode::setValueForIdentifier(identifier, value, shouldRelease);
     }
     
     llvm::Value* CodeBlock::selfValue(chime::CodeGenContext& context)

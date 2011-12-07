@@ -42,6 +42,10 @@ namespace ast
         
         definition->_bodyBlock = chime::CodeBlock::parse(parser);
         
+        // This is a little bit weird, but certain blocks need to not act like scopes.  Method scopes
+        // are one of those cases.
+        dynamic_pointer_cast<chime::CodeBlock>(definition->_bodyBlock)->setDeferToParent(true);
+        
         parser.popScope();
         
         return definition;

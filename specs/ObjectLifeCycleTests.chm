@@ -122,4 +122,18 @@ implementation ObjectLifeCycleTests : Test.Case
         
         self.closure_capture(a)
     }
+    
+    method test_in_function_closure_capture()
+    {
+        a = ManagedObject.new()
+        
+        b = do { a.to_string().print() }
+    }
+    
+    method test_in_function_passthrough_closure_capture()
+    {
+        a = ManagedObject.new()
+        
+        b = do { return a }
+    }
 }

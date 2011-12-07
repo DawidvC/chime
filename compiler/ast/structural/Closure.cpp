@@ -150,12 +150,11 @@ namespace ast
             
             // fprintf(stderr, "<%s> closed variable: %s\n", this->getIdentifier().c_str(), it->first.c_str());
             
-            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue, false);
+            generator.getCurrentScope()->setValueForIdentifier(it->first, referenceValue);
             
             generator.getRuntime()->callChimeObjectSetAttribute(closureValue, variableNameCStringPtr, referenceValue);
             
-            // this is a hit to efficiency.  We should be able to tell the attribute setter if it needs to retain
-            generator.getRuntime()->callChimeObjectRelease(referenceValue);
+            // no release is needed here - taken care of in codegenReference
         }
         
         // finally, do self

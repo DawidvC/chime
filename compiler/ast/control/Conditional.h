@@ -3,7 +3,7 @@
 #ifndef CONDITIONAL_H
 #define CONDITIONAL_H
 
-#include "compiler/ast/ScopedNode.h"
+#include "compiler/ast/Node.h"
 
 namespace chime
 {
