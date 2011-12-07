@@ -6,6 +6,12 @@
 \f0\fs26 \cf0 Copyright (c) 2011, Matthew Massicotte\
 All rights reserved.\
 \
+Human Version:\
+\
+Do as you'd like with Chime, but if you'd like to distribute a modified version, please ask first.\
+\
+Lawyer Version:\
+\
 Redistribution and use in source and binary forms without modification are permitted provided that the following conditions are met:\
 \
 - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\
@@ -19,7 +25,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 \f0\fs26 \cf0 Chime is a statically-compiled programming language with many dynamic features.  It features a class- and trait-based inheritance system, a very loose type system, closures and a built-in build automation mechanism.\
 \
-Please remember that this is a Technical Preview.  Chime 0.5 does not have a stable syntax, compiler, runtime, or core library.  Buyer beware.\
+Please remember that this is a Technical Preview.  Chime does not have a stable syntax, compiler, runtime, or core library.  Buyer beware.\
 \
 Included in this package:\
 - The Chime compiler\
