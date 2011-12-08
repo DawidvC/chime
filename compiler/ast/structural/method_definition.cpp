@@ -22,6 +22,12 @@ namespace ast
         parser.next_token_value("method");
         
         identifier = parser.nextTokenValue();
+        if (parser.advanceTokenIfEqual("="))
+        {
+            // this handles the "method setter=(value)" case
+            identifier += "=";
+        }
+        
         definition->setParameters(chime::Parameter::parseList(parser));
         
         // create the identifier

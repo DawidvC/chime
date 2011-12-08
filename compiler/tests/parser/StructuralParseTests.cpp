@@ -116,6 +116,16 @@ TEST_F(StructuralParseTests, PropertyWithGetMissingParentheses)
     ASSERT_FALSE(property->getSetBody());
 }
 
+TEST_F(StructuralParseTests, PropertyWithEqualsSyntax)
+{
+    chime::MethodDefinition* method;
+    
+    method = parseFirst<chime::MethodDefinition*>("method foo=(bar) { }");
+    
+    ASSERT_METHOD_DEFINITION("foo=:", method);
+    ASSERT_METHOD_PARAMETER(NULL, NULL, "bar", method->getParameters()[0]);
+}
+
 TEST_F(StructuralParseTests, AttributeAccessedInGetProperty)
 {
     ast::Implementation*     implemenation;
