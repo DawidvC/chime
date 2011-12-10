@@ -79,7 +79,7 @@ namespace chime
         // to clear out all of our scope references, all the way up to
         // the enclosing function
         generator.getCurrentScope()->codegenFunctionExit(generator);
-                
+        
         generator.builder()->CreateRet(value);
         
         return NULL;

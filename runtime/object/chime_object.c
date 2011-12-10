@@ -30,7 +30,7 @@ void chime_object_initialize(void)
     
     _method_class = chime_class_create_object_subclass("Method");
     
-    chime_class_set_class_method(_object_class, "new",       class_new); 
+    chime_class_set_class_method(_object_class, "new",       class_new);
     chime_class_set_class_method(_object_class, "name",      class_name);
     chime_class_set_class_method(_object_class, "==",        class_equals);
     chime_class_set_class_method(_object_class, "methods",   class_methods);
@@ -131,7 +131,9 @@ void chime_object_destroy(chime_object_t* object)
     assert(object);
     
     chime_dictionary_destroy(object->methods);
-    chime_dictionary_destroy(object->variables);
+    
+    if (object->flags & ObjectHasVariables)
+        chime_dictionary_destroy(object->variables);
     
     free(object);
 }
@@ -280,7 +282,16 @@ chime_object_t* chime_object_get_property(chime_object_t* instance, const char* 
 
 chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char* name)
 {
-    return chime_object_get_property(instance, name);
+    chime_object_t* object;
+    
+    object = chime_object_get_property(instance, name);
+    chime_object_retain(object);
+    
+    // The retain here does seem a little funny.  The problem is we need to be sure
+    // that we satisfy the +1 rule.  Getting an atttribute acts like a function
+    // call.
+    
+    return object;
 }
 
 

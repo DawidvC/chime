@@ -14,6 +14,7 @@ namespace ast
     public:
         FunctionDefinition();
         
+        std::string     baseIdentifier() const;
         std::string     getIdentifier() const;
         void            setIdentifier(const std::string& s);
         std::vector<chime::ParameterRef> getParameters() const;

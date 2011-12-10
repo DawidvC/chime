@@ -5,6 +5,7 @@ import "ClassTests"
 import "ClosureTests"
 import "ConditionalTests"
 import "HashTests"
+import "InheritanceTests"
 import "LiteralTests"
 import "LoopTests"
 import "MethodTests"
@@ -22,6 +23,7 @@ runner.execute_tests_for_class(ClassTests)
 runner.execute_tests_for_class(ClosureTests)
 runner.execute_tests_for_class(ConditionalTests)
 runner.execute_tests_for_class(HashTests)
+runner.execute_tests_for_class(InheritanceTests)
 runner.execute_tests_for_class(LiteralTests)
 runner.execute_tests_for_class(LoopTests)
 runner.execute_tests_for_class(MethodTests)

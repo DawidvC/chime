@@ -6,12 +6,13 @@ class StructuralParseTests : public ParserTestsBase
 
 TEST_F(StructuralParseTests, Method)
 {
-    chime::MethodDefinition* node;
+    chime::MethodDefinition* method;
     
-    node = parseFirst<chime::MethodDefinition*>("method foo() {}");
+    method = parseFirst<chime::MethodDefinition*>("method foo() {}");
     
-    ASSERT_METHOD_DEFINITION("foo", node);
-    ASSERT_TRUE(node->isInstance());
+    ASSERT_METHOD_DEFINITION("foo", method);
+    ASSERT_EQ("foo", method->baseIdentifier());
+    ASSERT_TRUE(method->isInstance());
 }
 
 TEST_F(StructuralParseTests, MethodDefinitionWithOneParameter)
@@ -21,6 +22,7 @@ TEST_F(StructuralParseTests, MethodDefinitionWithOneParameter)
     method = parseFirst<chime::MethodDefinition*>("method new(arg1) { }");
     
     ASSERT_METHOD_DEFINITION("new:", method);
+    ASSERT_EQ("new", method->baseIdentifier());
     ASSERT_METHOD_PARAMETER(NULL, NULL, "arg1", method->getParameters()[0]);
 }
 
@@ -52,6 +54,7 @@ TEST_F(StructuralParseTests, MethodDefinitionWithFunction)
     method = parseFirst<chime::MethodDefinition*>("method foo(a, label:Function(data) block) {}");
     
     ASSERT_METHOD_DEFINITION("foo:label:", method);
+    ASSERT_EQ("foo", method->baseIdentifier());
     ASSERT_METHOD_PARAMETER(NULL,       NULL, "a",     method->getParameters()[0]);
     ASSERT_METHOD_PARAMETER("Function", NULL, "block", method->getParameters()[1]);
 }

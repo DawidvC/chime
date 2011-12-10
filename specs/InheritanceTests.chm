@@ -1,0 +1,24 @@
+implementation ObjectA
+{
+    attribute value
+    
+    method initialize(something)
+    {
+        value = "one argument: {something}"
+    }
+    
+    method value
+    {
+        return value
+    }
+}
+
+implementation InheritanceTests : Test.Case
+{
+    method test_new_with_arguments()
+    {
+        a = ObjectA.new("Hello")
+        
+        Assert.equal("one argument: Hello", to:a.value)
+    }
+}

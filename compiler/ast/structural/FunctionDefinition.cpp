@@ -10,6 +10,11 @@ namespace ast
         _isInstance = true;
     }
     
+    std::string FunctionDefinition::baseIdentifier() const
+    {
+        return _identifier.substr(0, _identifier.find_first_of(":"));
+    }
+    
     std::string FunctionDefinition::getIdentifier(void) const
     {
         return _identifier;
@@ -175,6 +180,6 @@ namespace ast
         else
             generator.getRuntime()->callChimeRuntimeSetClassMethod(classObjectPtr, functionNameCStringPtr, methodFunction);
             
-        return NULL;
+        return methodFunction;
     }
 }

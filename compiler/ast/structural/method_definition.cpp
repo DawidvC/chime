@@ -97,8 +97,91 @@ namespace ast
         return new LocalVariable(identifier);
     }
     
+    void method_definition::codegenNewMethod(chime::code_generator& generator, llvm::Value* initializeFunction)
+    {
+        llvm::Function*   function;
+        std::string       functionName;
+        llvm::Value*      functionNameCStringPtr;
+        llvm::Value*      classObjectPtr;
+        llvm::BasicBlock* basicBlock;
+        llvm::BasicBlock* currentBlock;
+        llvm::Value*      objectValue;
+        
+        assert(this->baseIdentifier() == "initialize");
+        
+        // replace the first ten characters "initialize" with "new"
+        functionName           = this->getIdentifier().replace(0, 10, "new");
+        functionNameCStringPtr = generator.getConstantString(functionName);
+        functionName           = generator.getCurrentScope()->getIdentifier() + "." + functionName;
+        
+        classObjectPtr         = generator.getCurrentScope()->classObjectPtr();
+        
+        // now create the actual function
+        function = this->createFunction(generator, functionName, this->getParameters().size());
+        
+        // capture the current insertion point
+        currentBlock = generator.builder()->GetInsertBlock();
+        
+        basicBlock = llvm::BasicBlock::Create(generator.getContext(), "entry", function, 0);
+        generator.builder()->SetInsertPoint(basicBlock);
+        
+        // create the object
+        // call initialize on it with the right arguments
+        // return it
+        
+        llvm::Function::arg_iterator args;
+        std::vector<llvm::Value*>    arguments;
+        llvm::AllocaInst*            alloca;
+        // llvm::LoadInst*              objectLoad;
+        
+        args = function->arg_begin();
+        
+        alloca = generator.insertChimeObjectAlloca();
+        generator.builder()->CreateStore(args, alloca, false);
+        
+        objectValue = generator.getRuntime()->callChimeObjectCreate(alloca);
+        
+        ++args; // advance past self argument
+        
+        for (; args != function->arg_end(); ++args)
+        {
+            // llvm::AllocaInst* alloca;
+            // 
+            // alloca = generator.insertChimeObjectAlloca();
+            // 
+            // generator.builder()->CreateStore(args, alloca, false);
+            // 
+            // objectLoad = generator.builder()->CreateLoad(argumentValue, "loaded argument");
+            
+            arguments.push_back(args);
+        }
+        
+        generator.getRuntime()->callChimeObjectInvoke(objectValue, generator.getConstantString(this->getIdentifier()), arguments);
+        
+        objectValue = generator.builder()->CreateLoad(objectValue, "return value");
+        
+        generator.builder()->CreateRet(objectValue); // return the newly created object
+        
+        llvm::verifyFunction(*function);
+        
+        // restore the builder's position
+        generator.builder()->SetInsertPoint(currentBlock);
+        
+        // finally, install the method in the class
+        generator.getRuntime()->callChimeRuntimeSetClassMethod(classObjectPtr, functionNameCStringPtr, function);
+    }
+    
     llvm::Value* method_definition::codegen(chime::code_generator& generator)
     {
-        return this->createMethod(generator, this->getIdentifier(), this->getBody(), this->getParameters().size());
+        llvm::Value* function;
+        
+        function = this->createMethod(generator, this->getIdentifier(), this->getBody(), this->getParameters().size());
+        
+        if (this->isInstance() && (this->baseIdentifier() == "initialize"))
+        {
+            this->codegenNewMethod(generator, function);
+        }
+        
+        return function;
     }
 }
