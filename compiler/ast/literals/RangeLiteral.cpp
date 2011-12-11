@@ -57,8 +57,8 @@ namespace chime
         startValue = llvm::ConstantInt::get(context.getContext(), llvm::APInt(64, this->getStartValue(), 10));
         endValue   = llvm::ConstantInt::get(context.getContext(), llvm::APInt(64, this->getEndValue(), 10));
         
-        startValue = context.getRuntime()->callChimeLiteralEncodeInteger(startValue);
-        endValue   = context.getRuntime()->callChimeLiteralEncodeInteger(endValue);
+        startValue = context.getRuntime()->callChimeIntegerEncode(startValue);
+        endValue   = context.getRuntime()->callChimeIntegerEncode(endValue);
         
         return context.getRuntime()->callChimeRangeCreate(startValue, endValue);
     }

@@ -1,7 +1,9 @@
 // Chime Runtime: chime_comparable_methods.c
 
 #include "chime_comparable_methods.h"
-#include "runtime/literals/chime_literal.h"
+#include "runtime/classes/integer/chime_integer.h"
+#include "runtime/core/object/chime_object.h"
+#include "runtime/tagging.h"
 
 long spaceship_compare(chime_object_t* instance, chime_object_t* other)
 {
@@ -12,7 +14,7 @@ long spaceship_compare(chime_object_t* instance, chime_object_t* other)
     if (!chime_object_is_integer(result))
         return -2;
     
-    return chime_literal_decode_integer(result);
+    return chime_integer_decode(result);
 }
 
 chime_object_t* comparable_equals(chime_object_t* instance, chime_object_t* other)

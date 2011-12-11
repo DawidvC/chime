@@ -2,19 +2,23 @@
 
 #include "runtime/chime_runtime.h"
 #include "runtime/chime_runtime_internal.h"
-#include "runtime/class/chime_class.h"
-#include "runtime/class/chime_class_internal.h"
-#include "runtime/trait/chime_trait.h"
+#include "runtime/core/class/chime_class.h"
+#include "runtime/core/class/chime_class_internal.h"
+#include "runtime/core/trait/chime_trait.h"
 #include "runtime/traits/comparable/chime_comparable.h"
-#include "runtime/collections/chime_runtime_array.h"
-#include "runtime/object/chime_object_internal.h"
-#include "runtime/string/chime_string.h"
-#include "runtime/array/chime_array.h"
-#include "runtime/closure/chime_closure.h"
-#include "runtime/float/chime_float.h"
-#include "runtime/hash/chime_hash.h"
-#include "runtime/reference/chime_reference.h"
-#include "runtime/range/chime_range.h"
+#include "runtime/support.h"
+#include "runtime/core/object/chime_object.h"
+#include "runtime/core/object/chime_object_internal.h"
+#include "runtime/classes/string/chime_string.h"
+#include "runtime/classes/array/chime_array.h"
+#include "runtime/core/closure/chime_closure.h"
+#include "runtime/classes/float/chime_float.h"
+#include "runtime/classes/hash/chime_hash.h"
+#include "runtime/core/reference/chime_reference.h"
+#include "runtime/classes/range/chime_range.h"
+#include "runtime/classes/null/chime_null.h"
+#include "runtime/classes/integer/chime_integer.h"
+#include "runtime/classes/boolean/chime_boolean.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -60,7 +64,9 @@ void chime_runtime_initialize(void)
     chime_trait_initialize();
     chime_comparable_initialize();
     
-    chime_literal_initialize();
+    chime_null_initialize();
+    chime_integer_initialize();
+    chime_boolean_initialize();
     
     chime_string_initialize();
     

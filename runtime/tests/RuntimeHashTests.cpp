@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include "runtime/chime_runtime.h"
-#include "runtime/string/chime_string.h"
-#include "runtime/hash/chime_hash.h"
+#include "runtime/classes/string/chime_string.h"
+#include "runtime/classes/hash/chime_hash.h"
+#include "runtime/core/object/chime_object.h"
 
 class RuntimeHashTests : public testing::Test
 {

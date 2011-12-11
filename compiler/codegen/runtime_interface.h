@@ -65,8 +65,8 @@ namespace chime
         void         callChimeObjectRelease(llvm::Value* objectValue);
         
         // literal functions
-        llvm::Value* callChimeLiteralEncodeInteger(llvm::Value* integerValue);
-        llvm::Value* callChimeLiteralEncodeBoolean(llvm::Value* booleanValue);
+        llvm::Value* callChimeIntegerEncode(llvm::Value* integerValue);
+        llvm::Value* callChimeBooleanEncode(llvm::Value* booleanValue);
         
         llvm::Value* callChimeStringCreateWithCString(llvm::Value* cStringPtr, llvm::Value* length);
         
@@ -123,8 +123,8 @@ namespace chime
         llvm::Function*     _functionChimeObjectInvoke1;
         llvm::Function*     _functionChimeObjectInvoke2;
         llvm::Function*     _functionChimeObjectInvoke3;
-        llvm::Function*     _functionChimeLiteralEncodeInteger;
-        llvm::Function*     _functionChimeLiteralEncodeBoolean;
+        llvm::Function*     _functionChimeIntegerEncode;
+        llvm::Function*     _functionChimeBooleanEncode;
         llvm::Function*     _functionChimeStringCreateWithCString;
         llvm::Function*     _functionChimeRangeCreate;
         llvm::Function*     _functionChimeClosureCreate;

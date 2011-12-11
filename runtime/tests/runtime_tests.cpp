@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "runtime/chime_runtime.h"
+#include "runtime/core/class/chime_class.h"
+#include "runtime/core/object/chime_object.h"
 
 class RuntimeTests : public testing::Test
 {

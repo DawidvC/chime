@@ -1,8 +1,7 @@
 // Chime Runtime: test_case.c
 
 #include "library/testing/test_case.h"
-#include "runtime/class/chime_class.h"
-#include "runtime/literals/chime_literal.h"
+
 #include <stdio.h>
 #include <assert.h>
 #include <stdarg.h>

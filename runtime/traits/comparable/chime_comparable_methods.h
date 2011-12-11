@@ -3,7 +3,7 @@
 #ifndef CHIME_COMPARABLE_METHODS_H
 #define CHIME_COMPARABLE_METHODS_H
 
-#include "runtime/object/chime_object.h"
+#include "runtime/types.h"
 
 #ifdef __cplusplus
 extern "C" {

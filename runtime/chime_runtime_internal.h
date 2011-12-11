@@ -3,8 +3,8 @@
 #ifndef CHIME_RUNTIME_INTERNAL
 #define CHIME_RUNTIME_INTERNAL
 
-#include "runtime/collections/chime_dictionary.h"
-#include "runtime/class/chime_class.h"
+#include "runtime/types.h"
+#include "runtime/support.h"
 
 extern chime_dictionary_t* _chime_modules;
 extern chime_dictionary_t* _chime_classes;

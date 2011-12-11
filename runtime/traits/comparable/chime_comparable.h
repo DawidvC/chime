@@ -3,7 +3,7 @@
 #ifndef CHIME_COMPARABLE_H
 #define CHIME_COMPARABLE_H
 
-#include "runtime/object/chime_object.h"
+#include "runtime/types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,4 +15,4 @@ void chime_comparable_initialize(void);
 }
 #endif
 
-#endif // CHIME_RANGE_H
+#endif // CHIME_COMPARABLE_H

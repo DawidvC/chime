@@ -29,8 +29,8 @@ namespace chime
         _functionChimeObjectInvoke1            = NULL;
         _functionChimeObjectInvoke2            = NULL;
         _functionChimeObjectInvoke3            = NULL;
-        _functionChimeLiteralEncodeInteger     = NULL;
-        _functionChimeLiteralEncodeBoolean     = NULL;
+        _functionChimeIntegerEncode     = NULL;
+        _functionChimeBooleanEncode     = NULL;
         _functionChimeStringCreateWithCString  = NULL;
         _functionChimeRangeCreate              = NULL;
         _functionChimeClosureCreate            = NULL;
@@ -703,12 +703,12 @@ namespace chime
     }
     
 // Literal Functions
-    llvm::Value* RuntimeInterface::callChimeLiteralEncodeInteger(llvm::Value* integerValue)
+    llvm::Value* RuntimeInterface::callChimeIntegerEncode(llvm::Value* integerValue)
     {
         llvm::CallInst*   call;
         llvm::AllocaInst* alloca;
         
-        if (_functionChimeLiteralEncodeInteger == NULL)
+        if (_functionChimeIntegerEncode == NULL)
         {
             std::vector<const llvm::Type*> functionArgs;
             llvm::FunctionType*            functionType;
@@ -717,14 +717,14 @@ namespace chime
             
             functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
             
-            _functionChimeLiteralEncodeInteger = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_literal_encode_integer", this->getModule());
-            _functionChimeLiteralEncodeInteger->setCallingConv(llvm::CallingConv::C);
+            _functionChimeIntegerEncode = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_integer_encode", this->getModule());
+            _functionChimeIntegerEncode->setCallingConv(llvm::CallingConv::C);
         }
         
         alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "encode integer return");
         alloca->setAlignment(8);
         
-        call = this->getBuilder()->CreateCall(_functionChimeLiteralEncodeInteger, integerValue, "encode integer");
+        call = this->getBuilder()->CreateCall(_functionChimeIntegerEncode, integerValue, "encode integer");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);
@@ -732,12 +732,12 @@ namespace chime
         return alloca;
     }
     
-    llvm::Value* RuntimeInterface::callChimeLiteralEncodeBoolean(llvm::Value* booleanValue)
+    llvm::Value* RuntimeInterface::callChimeBooleanEncode(llvm::Value* booleanValue)
     {
         llvm::CallInst*   call;
         llvm::AllocaInst* alloca;
         
-        if (_functionChimeLiteralEncodeBoolean == NULL)
+        if (_functionChimeBooleanEncode == NULL)
         {
             std::vector<const llvm::Type*> functionArgs;
             llvm::FunctionType*            functionType;
@@ -746,14 +746,14 @@ namespace chime
             
             functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
             
-            _functionChimeLiteralEncodeBoolean = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_literal_encode_boolean", this->getModule());
-            _functionChimeLiteralEncodeBoolean->setCallingConv(llvm::CallingConv::C);
+            _functionChimeBooleanEncode = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_boolean_encode", this->getModule());
+            _functionChimeBooleanEncode->setCallingConv(llvm::CallingConv::C);
         }
         
         alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "encode boolean return");
         alloca->setAlignment(8);
         
-        call = this->getBuilder()->CreateCall(_functionChimeLiteralEncodeBoolean, booleanValue, "encode boolean");
+        call = this->getBuilder()->CreateCall(_functionChimeBooleanEncode, booleanValue, "encode boolean");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);

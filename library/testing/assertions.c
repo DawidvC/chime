@@ -1,8 +1,8 @@
 // Chime Runtime: assertions.c
 
 #include "assertions.h"
-#include "runtime/chime_runtime_internal.h"
-#include "runtime/literals/chime_literal.h"
+#include "runtime/classes/integer/chime_integer.h"
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -60,7 +60,7 @@ chime_object_t* assert_class_is_null(chime_object_t* instance, chime_object_t* o
 
 chime_object_t* assert_class_equal_to(chime_object_t* instance, chime_object_t* a, chime_object_t* b)
 {
-    if (chime_object_invoke_1(a, "<=>", b) != chime_literal_encode_integer(0))
+    if (chime_object_invoke_1(a, "<=>", b) != chime_integer_encode(0))
     {
         fprintf(stderr, "[Assert] equal:to: \e[31mfailed\e[0m\n");
         chime_object_invoke_0(instance, "increment_failure_count");
@@ -83,7 +83,7 @@ chime_object_t* assert_class_increment_failure_count(chime_object_t* instance)
     
     failure_count = chime_object_get_property(instance, "failure_count");
     
-    failure_count = chime_object_invoke_1(failure_count, "+", chime_literal_encode_integer(1));
+    failure_count = chime_object_invoke_1(failure_count, "+", chime_integer_encode(1));
     
     chime_object_set_attribute(instance, "failure_count", failure_count);
     
@@ -105,5 +105,5 @@ void chime_assertion_initialize(void)
     chime_class_set_class_method(assertion_class, "failure_count",           assert_class_failure_count);
     chime_class_set_class_method(assertion_class, "increment_failure_count", assert_class_increment_failure_count);
     
-    chime_object_set_attribute((chime_object_t*)assertion_class, "failure_count", chime_literal_encode_integer(0));
+    chime_object_set_attribute((chime_object_t*)assertion_class, "failure_count", chime_integer_encode(0));
 }

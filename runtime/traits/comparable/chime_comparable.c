@@ -2,9 +2,9 @@
 
 #include "chime_comparable.h"
 #include "chime_comparable_methods.h"
-#include "runtime/class/chime_class.h"
+#include "runtime/core/class/chime_class.h"
 #include "runtime/chime_runtime_internal.h"
-#include "runtime/trait/chime_trait.h"
+#include "runtime/core/trait/chime_trait.h"
 
 void chime_comparable_initialize(void)
 {

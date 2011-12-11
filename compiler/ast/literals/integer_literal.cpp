@@ -40,6 +40,6 @@ namespace chime
         
         integerValue = llvm::ConstantInt::get(generator.getContext(), llvm::APInt(64, this->getValue(), 10));
         
-        return generator.getRuntime()->callChimeLiteralEncodeInteger(integerValue);
+        return generator.getRuntime()->callChimeIntegerEncode(integerValue);
     }
 }

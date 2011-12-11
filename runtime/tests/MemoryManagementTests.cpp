@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "runtime/chime_runtime.h"
-#include "runtime/object/chime_object.h"
+#include "runtime/core/object/chime_object.h"
+#include "runtime/classes/integer/chime_integer.h"
 
 class MemoryManagementTests : public testing::Test
 {
@@ -45,7 +46,7 @@ TEST_F(MemoryManagementTests, RetainAndReleaseSafeOnIntegers)
 {
     chime_object_t* obj;
     
-    obj = chime_literal_encode_integer(1); // +1
+    obj = chime_integer_encode(1); // +1
     
     chime_object_retain(obj); // +2 (for regular objects)
     
