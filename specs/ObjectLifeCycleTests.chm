@@ -121,6 +121,8 @@ implementation ObjectLifeCycleTests : Test.Case
         a = ManagedObject.new()
         
         self.closure_capture(a)
+        
+        Assert.equal(1, to:ManagedObject.count)
     }
     
     method test_in_function_closure_capture()

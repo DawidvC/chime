@@ -24,6 +24,13 @@ namespace ast
         // really fixed, but that affects a lot of classes.
         closure->_bodyBlock = dynamic_pointer_cast<chime::CodeBlock>(chime::CodeBlock::parse(parser));
         
+        // I originally missed this setDeferToParent case, and had a really hard time finding it.  But, after
+        // a bunch of attempts, I was unable to produce a good, reduced test case.  I'm going to just leave it
+        // as fixed, though I still feel like it really should be properly captured in a test.
+        
+        // just like regular functions, these blocks need to defer to their parents
+        dynamic_pointer_cast<chime::CodeBlock>(closure->_bodyBlock)->setDeferToParent(true);
+        
         // before we pop the scope, we need to inform the enclosing scope of any
         // local variables that now need to be shared
         std::map<std::string, chime::Variable*>::const_iterator it;
