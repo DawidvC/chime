@@ -74,14 +74,14 @@ chime_object_t* assert_class_equal_to(chime_object_t* instance, chime_object_t* 
 
 chime_object_t* assert_class_failure_count(chime_object_t* instance)
 {
-    return chime_object_get_property(instance, "failure_count");
+    return chime_object_get_attribute(instance, "failure_count");
 }
 
 chime_object_t* assert_class_increment_failure_count(chime_object_t* instance)
 {
     chime_object_t* failure_count;
     
-    failure_count = chime_object_get_property(instance, "failure_count");
+    failure_count = chime_object_get_attribute(instance, "failure_count");
     
     failure_count = chime_object_invoke_1(failure_count, "+", chime_integer_encode(1));
     

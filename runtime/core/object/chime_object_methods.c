@@ -118,11 +118,5 @@ chime_object_t* object_case_compare(chime_object_t* instance, chime_object_t* ot
 
 chime_object_t* method_name(chime_object_t* instance)
 {
-    chime_object_t* object;
-    
-    object = chime_object_get_property(instance, "_name");
-    
-    chime_object_retain(object);
-    
-    return object;
+    return chime_object_get_attribute(instance, "_name");
 }

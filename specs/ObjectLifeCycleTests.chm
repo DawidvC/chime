@@ -7,6 +7,10 @@ implementation ManagedObject
         object_count += 1
     }
     
+    method foo()
+    {
+    }
+    
     method finalize()
     {
         object_count -= 1
@@ -147,6 +151,18 @@ implementation ObjectLifeCycleTests : Test.Case
         a = ManagedObject.new()
         
         b = do { return a }
+    }
+    
+    method test_reference_object_multiple_times_in_closure()
+    {
+        a = ManagedObject.new()
+        
+        b = do
+        { 
+            a.foo()
+            a.foo()
+            a.foo()
+        }
     }
     
     method test_attributes()

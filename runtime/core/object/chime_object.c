@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-// #define PRINT_LIFECYCLE
+#define PRINT_LIFECYCLE
 // #define SKIP_RELEASES
 
 void chime_object_initialize(void)
@@ -270,22 +270,11 @@ void chime_object_print(struct _chime_object* instance)
     }
 }
 
-chime_object_t* chime_object_get_property(chime_object_t* instance, const char* name)
-{
-    if (!instance)
-        return CHIME_LITERAL_NULL;
-    
-    if (!instance->variables)
-        return CHIME_LITERAL_NULL;
-    
-    return (chime_object_t*)chime_dictionary_get(instance->variables, name);
-}
-
 chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char* name)
 {
     chime_object_t* object;
     
-    object = chime_object_get_property(instance, name);
+    object = chime_object_get_attribute_unretained(instance, name);
     chime_object_retain(object);
     
     // The retain here does seem a little funny.  The problem is we need to be sure
@@ -295,6 +284,16 @@ chime_object_t* chime_object_get_attribute(chime_object_t* instance, const char*
     return object;
 }
 
+chime_object_t* chime_object_get_attribute_unretained(chime_object_t* instance, const char* name)
+{
+    if (!instance)
+        return CHIME_LITERAL_NULL;
+    
+    if (!instance->variables)
+        return CHIME_LITERAL_NULL;
+    
+    return (chime_object_t*)chime_dictionary_get(instance->variables, name);
+}
 
 void chime_object_set_property(chime_object_t* instance, const char* name, chime_object_t* value)
 {
