@@ -18,6 +18,16 @@ implementation ManagedObject
     }
 }
 
+implementation ObjectWithAttribute
+{
+    attribute value
+    
+    method initialize()
+    {
+        value = ManagedObject.new()
+    }
+}
+
 implementation ObjectLifeCycleTests : Test.Case
 {
     method setup()
@@ -137,5 +147,12 @@ implementation ObjectLifeCycleTests : Test.Case
         a = ManagedObject.new()
         
         b = do { return a }
+    }
+    
+    method test_attributes()
+    {
+        obj = ObjectWithAttribute.new()
+        
+        Assert.equal(1, to:ManagedObject.count)
     }
 }
