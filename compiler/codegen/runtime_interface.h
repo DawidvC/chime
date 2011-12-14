@@ -57,6 +57,7 @@ namespace chime
         // object functions
         llvm::Value* callChimeObjectCreate(llvm::Value* classPtr);
         llvm::Value* callChimeObjectGetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr);
+        llvm::Value* callChimeObjectGetAttributeUnretained(llvm::Value* objectValue, llvm::Value* attributeNamePtr);
         void         callChimeObjectSetAttribute(llvm::Value* objectValue, llvm::Value* attributeNamePtr, llvm::Value* attributeValue);
         
         llvm::Value* callChimeObjectInvoke(llvm::Value* objectValue, llvm::Value* namePtr, std::vector<llvm::Value*> args);
@@ -118,6 +119,7 @@ namespace chime
         llvm::Function*     _functionChimeClassIncludeTrait;
         llvm::Function*     _functionChimeTraitCreate;
         llvm::Function*     _functionChimeObjectGetAttribute;
+        llvm::Function*     _functionChimeObjectGetAttributeUnretained;
         llvm::Function*     _functionChimeObjectSetAttribute;
         llvm::Function*     _functionChimeObjectInvoke0;
         llvm::Function*     _functionChimeObjectInvoke1;

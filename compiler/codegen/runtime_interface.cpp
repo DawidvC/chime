@@ -12,25 +12,26 @@ namespace chime
         _chimeFunctionType = NULL;
         _closurePtrType    = NULL;
         
-        _functionChimeRuntimeInitialize        = NULL;
-        _functionChimeLibraryInitialize        = NULL;
-        _functionChimeRuntimeCreateClass       = NULL;
-        _functionChimeRuntimeGetClass          = NULL;
-        _functionChimeRuntimeGetTrait          = NULL;
-        _functionChimeRuntimeLoad              = NULL;
-        _functionChimeObjectCreate             = NULL;
-        _functionChimeRuntimeSetInstanceMethod = NULL;
-        _functionChimeRuntimeSetClassMethod    = NULL;
-        _functionChimeClassIncludeTrait        = NULL;
-        _functionChimeTraitCreate              = NULL;
-        _functionChimeObjectGetAttribute       = NULL;
-        _functionChimeObjectSetAttribute       = NULL;
-        _functionChimeObjectInvoke0            = NULL;
-        _functionChimeObjectInvoke1            = NULL;
-        _functionChimeObjectInvoke2            = NULL;
-        _functionChimeObjectInvoke3            = NULL;
-        _functionChimeIntegerEncode     = NULL;
-        _functionChimeBooleanEncode     = NULL;
+        _functionChimeRuntimeInitialize            = NULL;
+        _functionChimeLibraryInitialize            = NULL;
+        _functionChimeRuntimeCreateClass           = NULL;
+        _functionChimeRuntimeGetClass              = NULL;
+        _functionChimeRuntimeGetTrait              = NULL;
+        _functionChimeRuntimeLoad                  = NULL;
+        _functionChimeObjectCreate                 = NULL;
+        _functionChimeRuntimeSetInstanceMethod     = NULL;
+        _functionChimeRuntimeSetClassMethod        = NULL;
+        _functionChimeClassIncludeTrait            = NULL;
+        _functionChimeTraitCreate                  = NULL;
+        _functionChimeObjectGetAttribute           = NULL;
+        _functionChimeObjectGetAttributeUnretained = NULL;
+        _functionChimeObjectSetAttribute           = NULL;
+        _functionChimeObjectInvoke0                = NULL;
+        _functionChimeObjectInvoke1                = NULL;
+        _functionChimeObjectInvoke2                = NULL;
+        _functionChimeObjectInvoke3                = NULL;
+        _functionChimeIntegerEncode                = NULL;
+        _functionChimeBooleanEncode                = NULL;
         _functionChimeStringCreateWithCString  = NULL;
         _functionChimeRangeCreate              = NULL;
         _functionChimeClosureCreate            = NULL;
@@ -529,6 +530,44 @@ namespace chime
         alloca->setAlignment(8);
         
         call = this->getBuilder()->CreateCall(_functionChimeObjectGetAttribute, args.begin(), args.end(), "");
+        call->setTailCall(false);
+        
+        this->getBuilder()->CreateStore(call, alloca, false);
+        
+        return alloca;
+    }
+    
+    llvm::Value* RuntimeInterface::callChimeObjectGetAttributeUnretained(llvm::Value* objectValue, llvm::Value* attributeNamePtr)
+    {
+        llvm::CallInst*   call;
+        llvm::AllocaInst* alloca;
+        
+        if (_functionChimeObjectGetAttributeUnretained == NULL)
+        {
+            std::vector<const llvm::Type*> functionArgs;
+            llvm::FunctionType*            functionType;
+            
+            functionArgs.push_back(this->getChimeObjectPtrType());
+            functionArgs.push_back(this->getCStringPtrType());
+            
+            functionType = llvm::FunctionType::get(this->getChimeObjectPtrType(), functionArgs, false);
+            
+            _functionChimeObjectGetAttributeUnretained = llvm::Function::Create(functionType, llvm::GlobalValue::ExternalLinkage, "chime_object_get_attribute_unretained", this->getModule());
+            _functionChimeObjectGetAttributeUnretained->setCallingConv(llvm::CallingConv::C);
+        }
+        
+        llvm::LoadInst*           loadedObjectPtr;
+        std::vector<llvm::Value*> args;
+        
+        loadedObjectPtr = this->getBuilder()->CreateLoad(objectValue, "chime_object_get_attribute_unretained arg1:object");
+        
+        args.push_back(loadedObjectPtr);
+        args.push_back(attributeNamePtr);
+        
+        alloca = this->getBuilder()->CreateAlloca(this->getChimeObjectPtrType(), 0, "chime_object_get_attribute_unretained return");
+        alloca->setAlignment(8);
+        
+        call = this->getBuilder()->CreateCall(_functionChimeObjectGetAttributeUnretained, args.begin(), args.end(), "");
         call->setTailCall(false);
         
         this->getBuilder()->CreateStore(call, alloca, false);

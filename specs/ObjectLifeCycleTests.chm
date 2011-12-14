@@ -165,6 +165,22 @@ implementation ObjectLifeCycleTests : Test.Case
         }
     }
     
+    method test_reference_object_multiple_times_in_nested_closure()
+    {
+        a = ManagedObject.new()
+        
+        function_1 = do
+        {
+            a.foo()
+            
+            return do {
+                a.foo()
+                a.foo()
+                a.foo()
+            }
+        }
+    }
+    
     method test_attributes()
     {
         obj = ObjectWithAttribute.new()

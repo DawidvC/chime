@@ -31,9 +31,8 @@ namespace ast
         assert(closure);
         assert(variableNamePtr);
         
-        reference = generator.getRuntime()->callChimeObjectGetAttribute(closure, variableNamePtr);
-        
-        generator.getRuntime()->callChimeObjectRetain(reference);
+        // This is subtle.  We only need a +0 reference here.
+        reference = generator.getRuntime()->callChimeObjectGetAttributeUnretained(closure, variableNamePtr);
         
         return reference;
     }
