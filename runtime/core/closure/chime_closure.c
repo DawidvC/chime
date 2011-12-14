@@ -31,6 +31,10 @@ chime_closure_t* chime_closure_create(void* function)
     
     closure = (chime_closure_t*)malloc(sizeof(chime_closure_t));
     
+#ifdef PRINT_CLOSURES
+    fprintf(stderr, "Created a closure %p\n", closure);
+#endif
+    
     closure->object.self_class   = _closure_class;
     closure->object.flags        = 0;
     closure->object.retain_count = 1;

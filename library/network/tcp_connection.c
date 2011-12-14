@@ -26,3 +26,8 @@ chime_object_t* tcp_connection_get_socket(chime_object_t* instance)
 {
     return chime_object_get_attribute(instance, "socket");
 }
+
+chime_object_t* tcp_connection_close(chime_object_t* instance)
+{
+    return chime_object_invoke_0(chime_object_get_attribute_unretained(instance, "socket"), "close");
+}

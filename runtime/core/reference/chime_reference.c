@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-//#define PRINT_REFERENCE
+// #define PRINT_REFERENCE
 
 void chime_reference_initialize(void)
 {

@@ -27,4 +27,5 @@ void chime_network_initialize(void)
     // instance methods
     chime_class_set_instance_method(klass, "initialize:", tcp_connection_initialize);
     chime_class_set_instance_method(klass, "socket",      tcp_connection_get_socket);
+    chime_class_set_instance_method(klass, "close",       tcp_connection_close);
 }

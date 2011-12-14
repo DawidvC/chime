@@ -82,7 +82,7 @@ chime_object_t* tcp_socket_finalize(chime_object_t* instance)
 #ifdef PLATFORM_UNIX
     int* descriptors;
     
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_file_descriptors"));
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
     
     chime_deallocate(descriptors);
 #endif
@@ -90,7 +90,7 @@ chime_object_t* tcp_socket_finalize(chime_object_t* instance)
 #ifdef PLATFORM_MAC_OS_X
     dispatch_source_t* sources;
     
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_dispatch_sources"));
+    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
     
     chime_deallocate(sources);
 #endif
@@ -110,7 +110,7 @@ chime_object_t* tcp_socket_close(chime_object_t* instance)
     int  i;
     int* descriptors;
     
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_file_descriptors"));
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
     
     for (i = 0; i < 4; ++i)
     {
@@ -119,13 +119,14 @@ chime_object_t* tcp_socket_close(chime_object_t* instance)
         
         result = close(descriptors[i]);
         assert(result == 0);
+        descriptors[i] = 0;
     }
 #endif
     
 #ifdef PLATFORM_MAC_OS_X
     dispatch_source_t* sources;
     
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_dispatch_sources"));
+    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
     
     for (i = 0; i < 4; ++i)
     {
@@ -135,6 +136,7 @@ chime_object_t* tcp_socket_close(chime_object_t* instance)
         fprintf(stderr, "<%p> cancelling: %d\n", instance, i);
         dispatch_source_cancel(sources[i]);
         dispatch_release(sources[i]);
+        sources[i] = 0;
     }
 #endif
     
@@ -143,14 +145,16 @@ chime_object_t* tcp_socket_close(chime_object_t* instance)
 
 chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_t* function)
 {
+    chime_object_set_attribute(instance, "on_connection_handler", function);
+    
 #ifdef PLATFORM_UNIX
     int  port;
     int* descriptors;
     int  result;
     int  yes;
     
-    port        = chime_integer_decode(chime_object_get_attribute(instance, "port"));
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_file_descriptors"));
+    port        = chime_integer_decode(chime_object_get_attribute_unretained(instance, "port"));
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
     yes         = 1;
     
     // IPv4 address
@@ -169,21 +173,27 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
 #ifdef PLATFORM_MAC_OS_X
     dispatch_source_t* sources;
     
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_dispatch_sources"));
+    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
+    
+    if (sources[0])
+    {
+        dispatch_source_cancel(sources[0]);
+        dispatch_release(sources[0]);
+    }
     
     //sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[0], 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
     sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[0], 0, dispatch_get_main_queue());
     
-    chime_object_retain(function);
     dispatch_source_set_event_handler(sources[0], ^{
-        int listen_socket = dispatch_source_get_handle(sources[0]);
+        int listen_socket;
+        
+        listen_socket = dispatch_source_get_handle(sources[0]);
         
         unix_accept_connection(listen_socket, function);
     });
     
     dispatch_source_set_cancel_handler(sources[0], ^{
         fprintf(stderr, "*** listen socket cancelled\n");
-        chime_object_release(function);
     });
     
     dispatch_resume(sources[0]);
@@ -195,20 +205,21 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
 
 chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* function)
 {
+    chime_object_set_attribute(instance, "on_read_handler", function);
+    
 #ifdef PLATFORM_MAC_OS_X
     int*               descriptors;
     dispatch_source_t* sources;
     
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_file_descriptors"));
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
     
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute(instance, "_dispatch_sources"));
+    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
     
     //sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[2], 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
     sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[2], 0, dispatch_get_main_queue());
     
     fprintf(stderr, "socket on_read %p with closure %p\n", instance, function);
     
-    chime_object_retain(function);
     dispatch_source_set_event_handler(sources[2], ^{
         int    descriptor = dispatch_source_get_handle(sources[2]);
         size_t estimated  = dispatch_source_get_data(sources[2]) + 1;
@@ -239,7 +250,6 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* fun
     
     dispatch_source_set_cancel_handler(sources[2], ^{
         fprintf(stderr, "*** read source cancelled\n");
-        chime_object_release(function);
     });
     
     dispatch_resume(sources[2]);
@@ -265,7 +275,7 @@ static void unix_accept_connection(int listen_socket, chime_object_t* function)
     
     socket_object = tcp_socket_new(NULL, chime_integer_encode(-1));
     
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute(socket_object, "_file_descriptors"));
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(socket_object, "_file_descriptors"));
     
     descriptors[2] = accept(listen_socket, &addr, &addrlen);
     
