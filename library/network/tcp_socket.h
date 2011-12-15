@@ -17,9 +17,9 @@ chime_object_t* tcp_socket_get_port(chime_object_t* instance);
 
 chime_object_t* tcp_socket_close(chime_object_t* instance);
 
-chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_t* function);
-chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* function);
-chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* function);
+chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_t* context, chime_object_t* function);
+chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* context, chime_object_t* function);
+chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* context, chime_object_t* function);
 
 #ifdef __cplusplus
 }

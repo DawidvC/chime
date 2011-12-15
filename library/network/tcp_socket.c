@@ -4,6 +4,7 @@
 #include "runtime/classes/integer/chime_integer.h"
 #include "runtime/core/closure/chime_closure.h"
 #include "tcp_connection.h"
+#include "library/execution/execution.h"
 
 #ifdef PLATFORM_UNIX
 #   include <sys/types.h>
@@ -143,7 +144,7 @@ chime_object_t* tcp_socket_close(chime_object_t* instance)
     return CHIME_NULL;
 }
 
-chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_t* function)
+chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_t* context, chime_object_t* function)
 {
     chime_object_set_attribute(instance, "on_connection_handler", function);
     
@@ -171,6 +172,7 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
 #endif
     
 #ifdef PLATFORM_MAC_OS_X
+    dispatch_queue_t   queue;
     dispatch_source_t* sources;
     
     sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
@@ -181,8 +183,8 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
         dispatch_release(sources[0]);
     }
     
-    //sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[0], 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
-    sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[0], 0, dispatch_get_main_queue());
+    queue      = execution_context_get_dispatch_queue(context);
+    sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[0], 0, queue);
     
     dispatch_source_set_event_handler(sources[0], ^{
         int listen_socket;
@@ -203,20 +205,21 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
     return CHIME_NULL;
 }
 
-chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* function)
+chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* context, chime_object_t* function)
 {
     chime_object_set_attribute(instance, "on_read_handler", function);
     
 #ifdef PLATFORM_MAC_OS_X
     int*               descriptors;
+    dispatch_queue_t   queue;
     dispatch_source_t* sources;
     
+    queue       = execution_context_get_dispatch_queue(context);
     descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
     
     sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
     
-    //sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[2], 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
-    sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[2], 0, dispatch_get_main_queue());
+    sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[2], 0, queue);
     
     fprintf(stderr, "socket on_read %p with closure %p\n", instance, function);
     
@@ -259,7 +262,7 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* fun
     return CHIME_NULL;
 }
 
-chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* function)
+chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* context, chime_object_t* function)
 {
     return CHIME_NULL;
 }
@@ -284,9 +287,7 @@ static void unix_accept_connection(int listen_socket, chime_object_t* function)
     
     chime_closure_invoke((chime_closure_t*)function, connection);
     
-    fprintf(stderr, "closure invoked, releasing connection\n");
     chime_object_release(connection);
-    fprintf(stderr, "closure invoked, released connection\n");
 }
 
 #endif
