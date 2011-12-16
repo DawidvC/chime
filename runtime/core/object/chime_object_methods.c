@@ -92,6 +92,14 @@ chime_object_t* object_to_string(chime_object_t* instance)
     return string;
 }
 
+chime_object_t* object_nil(chime_object_t* instance)
+{
+    if (instance == CHIME_NULL)
+        return CHIME_TRUE;
+    
+    return CHIME_FALSE;
+}
+
 chime_object_t* object_equals(chime_object_t* instance, chime_object_t* other)
 {
     // basic pointer comparison

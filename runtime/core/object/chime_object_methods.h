@@ -17,6 +17,7 @@ chime_object_t* object_methods(chime_object_t* instance);
 chime_object_t* object_invoke(chime_object_t* instance, chime_object_t* method_name);
 chime_object_t* object_hash(chime_object_t* instance);
 chime_object_t* object_to_string(chime_object_t* instance);
+chime_object_t* object_nil(chime_object_t* instance);
 chime_object_t* object_methods(chime_object_t* instance);
 chime_object_t* object_retain_count(chime_object_t* instance);
 chime_object_t* object_equals(chime_object_t* instance, chime_object_t* other);

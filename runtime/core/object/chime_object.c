@@ -46,6 +46,7 @@ void chime_object_initialize(void)
     chime_class_set_instance_method(_object_class, "invoke:",      object_invoke);
     chime_class_set_instance_method(_object_class, "hash",         object_hash);
     chime_class_set_instance_method(_object_class, "to_string",    object_to_string);
+    chime_class_set_instance_method(_object_class, "nil?",         object_nil);
     chime_class_set_instance_method(_object_class, "===",          object_case_compare);
     
     chime_class_set_instance_method(_method_class, "name", method_name);
