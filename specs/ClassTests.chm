@@ -17,15 +17,13 @@ implementation TestClass
         self.ivar = 10
     }
     
-    property ivar(value)
+    method ivar
     {
-        get
-        {
-            return ivar
-        }
-        set
-        {
-            ivar = value
-        }
+        return ivar
+    }
+    
+    method ivar=(value)
+    {
+        ivar = value
     }
 }

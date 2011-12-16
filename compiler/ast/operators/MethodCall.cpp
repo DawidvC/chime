@@ -19,7 +19,7 @@ namespace ast
             parser.nextTokenValue("=");
             
             // we have a property setter
-            call->identifier(call->identifier() + "=");
+            call->identifier(call->identifier() + "=:");
             
             call->addChild(parser.parse_expression());
         }

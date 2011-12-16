@@ -233,35 +233,6 @@ TEST_F(BasicParserTest, NamespacedTypeMethodCall)
     ASSERT_METHOD_CALL("call", op->right_operand());
 }
 
-TEST_F(BasicParserTest, GetProperty)
-{
-    ast::node*            node;
-    ast::binary_operator* op;
-    
-    node = parse("b = a.prop");
-    op   = (ast::binary_operator*)node->childAtIndex(0);
-    
-    ASSERT_GLOBAL_ASSIGNMENT(op);
-    ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
-    
-    op   = (ast::binary_operator*)op->getRightOperand();
-    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
-    ASSERT_METHOD_CALL("prop", op->getRightOperand());
-}
-
-TEST_F(BasicParserTest, SetProperty)
-{
-    ast::node*            node;
-    ast::binary_operator* op;
-    
-    node = parse("a.prop = b");
-    op   = (ast::binary_operator*)node->childAtIndex(0);
-    
-    ASSERT_OPERATOR(".", op);
-    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
-    ASSERT_METHOD_CALL("prop=", op->getRightOperand());
-}
-
 TEST_F(BasicParserTest, MethodCallArguments)
 {
     ast::MethodCall* call;

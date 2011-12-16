@@ -8,37 +8,26 @@ implementation MethodTests : Test.Case
     }
     
     // Support methods used as test fixtures
-    property meaning_of_life(value)
+    method meaning_of_life
     {
-        get
-        {
-            return meaning
-        }
-        set
-        {
-            meaning = value
-        }
+        return meaning
     }
     
-    property alternate_meaning
+    method meaning_of_life=(value)
     {
-        get
-        {
-            return meaning
-        }
+        meaning = value
     }
     
     method test_get_property()
     {
-        Assert.equal(self.meaning_of_life, to:42)
-        Assert.equal(self.alternate_meaning, to:42)
+        Assert.equal(42, to:self.meaning_of_life)
     }
     
     method test_set_property()
     {
         self.meaning_of_life = 43
         
-        Assert.equal(self.meaning_of_life, to:43)
+        Assert.equal(43, to:self.meaning_of_life)
     }
     
     method return_nil_implicitly()

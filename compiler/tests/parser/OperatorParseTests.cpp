@@ -72,6 +72,31 @@ TEST_F(OperatorParseTests, IndexerOnSelfAssignment)
     ASSERT_LITERAL_INTEGER(4, indexer->getRightOperand().get());
 }
 
+TEST_F(OperatorParseTests, GetProperty)
+{
+    ast::BinaryOperator* op;
+    
+    op = parseFirst<ast::BinaryOperator*>("b = a.prop");
+    
+    ASSERT_GLOBAL_ASSIGNMENT(op);
+    ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
+    
+    op   = dynamic_cast<ast::BinaryOperator*>(op->getRightOperand());
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_METHOD_CALL("prop", op->getRightOperand());
+}
+
+TEST_F(OperatorParseTests, SetProperty)
+{
+    ast::BinaryOperator* op;
+    
+    op = parseFirst<ast::BinaryOperator*>("a.prop = b");
+    
+    ASSERT_OPERATOR(".", op);
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    ASSERT_METHOD_CALL("prop=:", op->getRightOperand());
+}
+
 TEST_F(OperatorParseTests, AndOperator)
 {
     chime::AndOperator* op;

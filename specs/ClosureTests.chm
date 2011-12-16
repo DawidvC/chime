@@ -1,3 +1,23 @@
+implementation ClosureTestClass
+{
+    attribute value
+    
+    method value=(new_value)
+    {
+        value = new_value
+    }
+    
+    method value
+    {
+        return value
+    }
+    
+    method capture_attribute
+    {
+        return do { return value }
+    }
+}
+
 implementation ClosureTests : Test.Case
 {
     method test_integer_iterator()
@@ -140,5 +160,15 @@ implementation ClosureTests : Test.Case
         }
         
         Assert.equal(4, to:value)
+    }
+    
+    method test_closure_captures_attribute()
+    {
+        obj = ClosureTestClass.new()
+        obj.value = "hello"
+        
+        function = obj.capture_attribute()
+        
+        Assert.equal("hello", to:function.call())
     }
 }
