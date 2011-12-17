@@ -16,8 +16,8 @@ namespace ast
         
         AssignmentOperator* createAssignment();
         
-        llvm::Value* codegenReference(chime::code_generator& generator);
-        llvm::Value* codegen(chime::code_generator& generator);
+        virtual llvm::Value* codegenReference(chime::code_generator& generator);
+        virtual llvm::Value* codegen(chime::code_generator& generator);
     };
     
     typedef std::tr1::shared_ptr<ClosedLocalVariable> ClosedLocalVariableRef;

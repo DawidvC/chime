@@ -171,4 +171,25 @@ implementation ClosureTests : Test.Case
         
         Assert.equal("hello", to:function.call())
     }
+    
+    method test_variable_valid_after_capture()
+    {
+        obj = ClosureTestClass.new()
+        obj.value = 5
+        
+        a = do { obj.nil? }
+        
+        Assert.equal(5, to:obj.value)
+    }
+    
+    method test_variable_captured_second_time()
+    {
+        obj = ClosureTestClass.new()
+        obj.value = 5
+        
+        a = do { obj.nil? }
+        b = do { obj.nil? }
+        
+        Assert.equal(5, to:obj.value)
+    }
 }

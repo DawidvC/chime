@@ -5,21 +5,25 @@
 
 #include "Variable.h"
 
-namespace ast
+namespace chime
 {
-    class SharedLocalVariable : public chime::Variable
+    class SharedLocalVariable : public Variable
     {
     public:
         SharedLocalVariable(const std::string& identifier);
         
-        std::string nodeName(void) const;
+        std::string nodeName() const;
         
-        AssignmentOperator* createAssignment();
+        bool requiresCapture() const;
         
-        llvm::Value* codegen(chime::code_generator& generator);
+        ast::AssignmentOperator* createAssignment();
+        Variable*                createClosedVersion();
+        
+        llvm::Value* codegenReference(code_generator& generator);
+        llvm::Value* codegen(code_generator& generator);
     };
     
-    typedef std::tr1::shared_ptr<SharedLocalVariable> SharedLocalVariableRef;
+    typedef shared_ptr<SharedLocalVariable> SharedLocalVariableRef;
 }
 
 #endif // SHARED_LOCAL_VARIABLE_H

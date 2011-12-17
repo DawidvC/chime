@@ -20,14 +20,17 @@ namespace chime
         std::string stringRepresentation(int depth=0) const;
         
         std::string getIdentifier() const;
+        std::string identifier() const;
         
         bool        isDefined() const;
         void        setDefined(bool value);
         
-        bool        isVariable() const;
-        bool        requiresRelease() const;
+        bool         isVariable() const;
+        bool         requiresRelease() const;
+        virtual bool requiresCapture() const;
         
         virtual ast::AssignmentOperator* createAssignment() = 0;
+        virtual Variable*                createClosedVersion();
         
         virtual llvm::Value* codegenReference(CodeGenContext& generator);
     

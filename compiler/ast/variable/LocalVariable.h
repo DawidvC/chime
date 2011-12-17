@@ -14,12 +14,15 @@ namespace ast
         
         virtual std::string nodeName() const;
         
+        bool requiresCapture() const;
+        
         AssignmentOperator* createAssignment();
+        chime::Variable*    createClosedVersion();
         
         llvm::Value* codegen(chime::code_generator& generator);
     };
     
-    typedef std::tr1::shared_ptr<LocalVariable> LocalVariableRef;
+    typedef shared_ptr<LocalVariable> LocalVariableRef;
 }
 
 #endif // LOCAL_VARIABLE_H

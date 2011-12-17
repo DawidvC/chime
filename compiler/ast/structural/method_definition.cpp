@@ -85,18 +85,6 @@ namespace ast
         return _bodyBlock;
     }
     
-    chime::Variable* method_definition::createVariable(const std::string& identifier)
-    {
-        // if this variable has been captured, at this point in the state of
-        // parsing, then we need to do something special
-        if (this->capturedIdentifier(identifier))
-        {
-            return new SharedLocalVariable(identifier);
-        }
-        
-        return new LocalVariable(identifier);
-    }
-    
     void method_definition::codegenNewMethod(chime::code_generator& generator, llvm::Value* initializeFunction)
     {
         llvm::Function*   function;

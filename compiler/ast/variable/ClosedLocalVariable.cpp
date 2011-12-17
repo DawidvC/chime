@@ -41,6 +41,7 @@ namespace ast
     {
         llvm::Value* reference;
         
+        // do not use virtual dispatch here
         reference = this->codegenReference(generator);
         
         return generator.getRuntime()->callChimeReferenceGet(reference);

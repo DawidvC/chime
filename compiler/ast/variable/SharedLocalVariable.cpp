@@ -1,25 +1,51 @@
 #include "SharedLocalVariable.h"
+#include "ClosedLocalVariable.h"
 
-namespace ast
+namespace chime
 {
     SharedLocalVariable::SharedLocalVariable(const std::string& identifier) :
         Variable(identifier)
     {
     }
     
-    std::string SharedLocalVariable::nodeName(void) const
+    std::string SharedLocalVariable::nodeName() const
     {
-        return std::string("Shared Local Variable");
+        return "Shared Local Variable";
     }
     
-    AssignmentOperator* SharedLocalVariable::createAssignment()
+    bool SharedLocalVariable::requiresCapture() const
+    {
+        return true;
+    }
+    
+    ast::AssignmentOperator* SharedLocalVariable::createAssignment()
     {
         assert(0 && "Assignment to a SharedLocalVariable isn't implemented yet");
         
         return NULL;
     }
     
-    llvm::Value* SharedLocalVariable::codegen(chime::code_generator& generator)
+    Variable* SharedLocalVariable::createClosedVersion()
+    {
+        return new ast::ClosedLocalVariable(this->identifier());
+    }
+    
+    llvm::Value* SharedLocalVariable::codegenReference(code_generator& generator)
+    {
+        llvm::Value* reference;
+        llvm::Value* variableValue;
+        
+        // get the value from the current reference
+        reference       = generator.getCurrentScope()->getValueForIdentifier(this->getIdentifier());
+        variableValue   = generator.getRuntime()->callChimeReferenceGet(reference);
+        
+        // now, make a new reference with that value
+        reference = generator.getRuntime()->callChimeReferenceCreate(variableValue);
+        
+        return reference;
+    }
+    
+    llvm::Value* SharedLocalVariable::codegen(code_generator& generator)
     {
         llvm::Value* reference;
         

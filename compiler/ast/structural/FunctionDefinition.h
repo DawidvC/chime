@@ -3,13 +3,13 @@
 #ifndef FUNCTION_DEFINITON_H
 #define FUNCTION_DEFINITON_H
 
-#include "compiler/ast/ScopedNode.h"
+#include "compiler/ast/LocalScopedNode.h"
 #include "compiler/ast/literals/SelfLiteral.h"
 #include "compiler/ast/variable/Parameter.h"
 
 namespace ast
 {
-    class FunctionDefinition : public ScopedNode
+    class FunctionDefinition : public chime::LocalScopedNode
     {
     public:
         FunctionDefinition();

@@ -106,9 +106,6 @@ namespace ast
     
     chime::Variable* Closure::createVariable(const std::string& identifier)
     {
-        //if (_closedVariables.find(identifier) != _closedVariables.end())
-        //    return new ClosedLocalVariable(identifier);
-        
         return new LocalVariable(identifier);
     }
     
@@ -116,13 +113,13 @@ namespace ast
     {
         _closedVariables[variable->getIdentifier()] = variable;
         
-        if (variable->nodeName() == "Local Variable")
+        if (variable->requiresCapture())
         {
             bool defined;
             
             defined = variable->isDefined();
             
-            variable = new ClosedLocalVariable(variable->getIdentifier());
+            variable = variable->createClosedVersion();
             variable->setDefined(defined);
         }
         

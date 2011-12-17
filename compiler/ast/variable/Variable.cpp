@@ -96,6 +96,11 @@ namespace chime
     
     std::string Variable::getIdentifier() const
     {
+        return this->identifier();
+    }
+    
+    std::string Variable::identifier() const
+    {
         return _identifier;
     }
     
@@ -110,6 +115,11 @@ namespace chime
         return true;
     }
     
+    bool Variable::requiresCapture() const
+    {
+        return false;
+    }
+    
     bool Variable::isDefined() const
     {
         return _defined;
@@ -120,7 +130,12 @@ namespace chime
         _defined = value;
     }
     
-    llvm::Value* Variable::codegenReference(CodeGenContext& generator)
+    Variable* Variable::createClosedVersion()
+    {
+        return this;
+    }
+    
+    llvm::Value* Variable::codegenReference(chime::code_generator& generator)
     {
         llvm::Value* variableValue;
         llvm::Value* referenceValue;

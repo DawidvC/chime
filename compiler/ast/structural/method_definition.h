@@ -20,8 +20,6 @@ namespace ast
         
         NodeRef             getBody() const;
         
-        chime::Variable*    createVariable(const std::string& identifier);
-        
         void         codegenNewMethod(chime::code_generator& generator, llvm::Value* initializeFunction);
         llvm::Value* codegen(chime::code_generator& generator);
         

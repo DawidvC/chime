@@ -1,5 +1,7 @@
 #include "LocalVariable.h"
+#include "ClosedLocalVariable.h"
 #include "compiler/ast/operators/LocalVariableAssignmentOperator.h"
+
 
 namespace ast
 {
@@ -8,14 +10,24 @@ namespace ast
     {
     }
     
-    std::string LocalVariable::nodeName(void) const
+    std::string LocalVariable::nodeName() const
     {
-        return std::string("Local Variable");
+        return "Local Variable";
+    }
+    
+    bool LocalVariable::requiresCapture() const
+    {
+        return true;
     }
     
     AssignmentOperator* LocalVariable::createAssignment()
     {
         return new LocalVariableAssignmentOperator();
+    }
+    
+    chime::Variable* LocalVariable::createClosedVersion()
+    {
+        return new ClosedLocalVariable(this->getIdentifier());
     }
     
     llvm::Value* LocalVariable::codegen(chime::code_generator& generator)

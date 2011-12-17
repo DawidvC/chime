@@ -6,7 +6,7 @@ namespace chime
 {
     std::string LocalScopedNode::getIdentifier() const
     {
-        return std::string("LocalScopedNode");
+        return "LocalScopedNode";
     }
     
     Variable* LocalScopedNode::createVariable(const std::string& identifier)
@@ -15,7 +15,7 @@ namespace chime
         // parsing, then we need to do something special
         if (this->capturedIdentifier(identifier))
         {
-           return new ast::SharedLocalVariable(identifier);
+           return new SharedLocalVariable(identifier);
         }
         
         return new ast::LocalVariable(identifier);
