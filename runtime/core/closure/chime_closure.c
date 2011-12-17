@@ -19,8 +19,9 @@ void chime_closure_initialize(void)
     _closure_class = chime_class_create_object_subclass("Function");
     
     chime_class_set_instance_method(_closure_class, "to_string", closure_to_string);
-    chime_class_set_instance_method(_closure_class, "call",      closure_call);
-    chime_class_set_instance_method(_closure_class, "call:",     closure_call);
+    chime_class_set_instance_method(_closure_class, "call",      chime_closure_invoke_0);
+    chime_class_set_instance_method(_closure_class, "call:",     chime_closure_invoke_1);
+    chime_class_set_instance_method(_closure_class, "call::",    chime_closure_invoke_2);
 }
 
 chime_closure_t* chime_closure_create(void* function)
@@ -59,9 +60,21 @@ void chime_closure_destroy(chime_closure_t* closure)
     free(closure);
 }
 
-chime_object_t* chime_closure_invoke(chime_closure_t* closure, chime_object_t* arg1)
+chime_object_t*  chime_closure_invoke_0(chime_closure_t* closure)
+{
+    return ((chime_function_arg0_t)closure->function)((chime_object_t*)closure);
+}
+
+chime_object_t* chime_closure_invoke_1(chime_closure_t* closure, chime_object_t* arg1)
 {
     assert(closure);
     
     return ((chime_function_arg1_t)closure->function)((chime_object_t*)closure, arg1);
+}
+
+chime_object_t*  chime_closure_invoke_2(chime_closure_t* closure, chime_object_t* arg1, chime_object_t* arg2)
+{
+    assert(closure);
+    
+    return ((chime_function_arg2_t)closure->function)((chime_object_t*)closure, arg1, arg2);
 }

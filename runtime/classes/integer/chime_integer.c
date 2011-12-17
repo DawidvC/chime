@@ -115,7 +115,7 @@ chime_object_t* integer_times(chime_object_t* instance, chime_object_t* function
     // ok, so, what we need to is simply iterate on the block
     for (i = 0; i < value; ++i)
     {
-        chime_closure_invoke((chime_closure_t*)function, chime_integer_encode(i));
+        chime_closure_invoke_1((chime_closure_t*)function, chime_integer_encode(i));
     }
     
     return CHIME_LITERAL_NULL;

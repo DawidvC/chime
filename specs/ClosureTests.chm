@@ -55,6 +55,26 @@ implementation ClosureTests : Test.Case
         Assert.equal(5, to:f.call())
     }
     
+    method test_closure_definition_with_one_argument()
+    {
+        f = do (x)
+        {
+            return x
+        }
+        
+        Assert.equal(5, to:f.call(5))
+    }
+    
+    method test_closure_definition_with_two_arguments()
+    {
+        f = do (x, y)
+        {
+            return x + y
+        }
+        
+        Assert.equal(11, to:f.call(5, 6))
+    }
+    
     method test_closure_definition_with_closed_variables()
     {
         value = 0
