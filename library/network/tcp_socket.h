@@ -4,6 +4,7 @@
 #define TCP_SOCKET_H
 
 #include "runtime/chime_runtime.h"
+#include "runtime/platform.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,7 +20,17 @@ chime_object_t* tcp_socket_close(chime_object_t* instance);
 
 chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_t* context, chime_object_t* function);
 chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* context, chime_object_t* function);
-chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* context, chime_object_t* function);
+chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* data, chime_object_t* context, chime_object_t* function);
+
+#ifdef PLATFORM_UNIX
+#   define LISTEN_DESCRIPTOR    0
+#   define READWRITE_DESCRIPTOR 1
+
+int  tcp_socket_get_file_descriptor(chime_object_t* instance, int type);
+void tcp_socket_set_file_descriptor(chime_object_t* instance, int type, int descriptor);
+
+void tcp_socket_accept_connection(int listen_descriptor, chime_object_t* function);
+#endif
 
 #ifdef __cplusplus
 }

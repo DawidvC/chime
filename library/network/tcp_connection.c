@@ -17,8 +17,6 @@ chime_object_t* tcp_connection_initialize(chime_object_t* instance, chime_object
 {
     chime_object_set_attribute(instance, "socket", tcp_socket);
     
-    fprintf(stderr, "Initialized connection <%p> with socket <%p>\n", instance, tcp_socket);
-    
     return instance;
 }
 

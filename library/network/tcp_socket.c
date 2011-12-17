@@ -1,5 +1,4 @@
 #include "tcp_socket.h"
-#include "runtime/platform.h"
 #include "runtime/tagging.h"
 #include "runtime/classes/integer/chime_integer.h"
 #include "runtime/core/closure/chime_closure.h"
@@ -19,10 +18,6 @@
 
 #ifdef PLATFORM_MAC_OS_X
 #   include <dispatch/dispatch.h>
-#endif
-
-#ifdef PLATFORM_UNIX
-static void unix_accept_connection(int listen_socket, chime_object_t* function);
 #endif
 
 chime_object_t* tcp_socket_new(chime_class_t* klass, chime_object_t* port_number)
@@ -107,20 +102,21 @@ chime_object_t* tcp_socket_get_port(chime_object_t* instance)
 chime_object_t* tcp_socket_close(chime_object_t* instance)
 {
 #ifdef PLATFORM_UNIX
-    int  result;
     int  i;
-    int* descriptors;
     
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
-    
-    for (i = 0; i < 4; ++i)
+    for (i = 0; i < 2; ++i)
     {
-        if (descriptors[i] == 0)
+        int result;
+        int descriptor;
+        
+        descriptor = tcp_socket_get_file_descriptor(instance, i);
+        if (descriptor == 0)
             continue;
         
-        result = close(descriptors[i]);
+        result = close(descriptor);
         assert(result == 0);
-        descriptors[i] = 0;
+        
+        tcp_socket_set_file_descriptor(instance, i, 0);
     }
 #endif
     
@@ -149,25 +145,25 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
     chime_object_set_attribute(instance, "on_connection_handler", function);
     
 #ifdef PLATFORM_UNIX
-    int  port;
-    int* descriptors;
-    int  result;
-    int  yes;
+    int port;
+    int descriptor;
+    int result;
+    int yes;
     
-    port        = chime_integer_decode(chime_object_get_attribute_unretained(instance, "port"));
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
-    yes         = 1;
+    port       = chime_integer_decode(chime_object_get_attribute_unretained(instance, "port"));
+    descriptor = tcp_socket_get_file_descriptor(instance, LISTEN_DESCRIPTOR);
+    yes        = 1;
     
     // IPv4 address
     struct sockaddr_in addr4 = { sizeof(addr4), AF_INET,  htons(port), { INADDR_ANY }, { 0 } };
     
-    result = setsockopt(descriptors[0], SOL_SOCKET, SO_REUSEADDR, (void*)&yes, sizeof(yes));
+    result = setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR, (void*)&yes, sizeof(yes));
     assert(result == 0);
     
-    result = bind(descriptors[0], (void*)&addr4, sizeof(addr4));
+    result = bind(descriptor, (void*)&addr4, sizeof(addr4));
     assert(result == 0);
     
-    result = listen(descriptors[0], 16);
+    result = listen(descriptor, 16);
     assert(result == 0);
 #endif
     
@@ -184,14 +180,14 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
     }
     
     queue      = execution_context_get_dispatch_queue(context);
-    sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[0], 0, queue);
+    sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
     
     dispatch_source_set_event_handler(sources[0], ^{
         int listen_socket;
         
         listen_socket = dispatch_source_get_handle(sources[0]);
         
-        unix_accept_connection(listen_socket, function);
+        tcp_socket_accept_connection(listen_socket, function);
     });
     
     dispatch_source_set_cancel_handler(sources[0], ^{
@@ -210,21 +206,19 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
     chime_object_set_attribute(instance, "on_read_handler", function);
     
 #ifdef PLATFORM_MAC_OS_X
-    int*               descriptors;
+    int                descriptor;
     dispatch_queue_t   queue;
     dispatch_source_t* sources;
     
-    queue       = execution_context_get_dispatch_queue(context);
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
+    queue      = execution_context_get_dispatch_queue(context);
+    descriptor = tcp_socket_get_file_descriptor(instance, READWRITE_DESCRIPTOR);
     
     sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
     
-    sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptors[2], 0, queue);
-    
-    fprintf(stderr, "socket on_read %p with closure %p\n", instance, function);
+    sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
     
     dispatch_source_set_event_handler(sources[2], ^{
-        int    descriptor = dispatch_source_get_handle(sources[2]);
+        int    fd = dispatch_source_get_handle(sources[2]);
         size_t estimated  = dispatch_source_get_data(sources[2]) + 1;
         
         if (estimated <= 1)
@@ -240,14 +234,14 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
         
         if (buffer)
         {
-            ssize_t actual = read(descriptor, buffer, (estimated));
+            ssize_t actual = read(fd, buffer, (estimated));
             
             buffer[actual-1] = 0; // null_terminate
             
             fprintf(stderr, "** read:\n%s\n", buffer);
             free(buffer);
             
-            chime_closure_invoke((chime_closure_t*)function, CHIME_NULL);
+            chime_closure_invoke_1((chime_closure_t*)function, CHIME_NULL);
         }
     });
     
@@ -262,30 +256,68 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
     return CHIME_NULL;
 }
 
-chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* context, chime_object_t* function)
+chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* data, chime_object_t* context, chime_object_t* function)
 {
+#ifdef PLATFORM_MAC_OS_X
+    int              descriptor;
+    dispatch_queue_t queue;
+    
+    queue      = execution_context_get_dispatch_queue(context);
+    descriptor = tcp_socket_get_file_descriptor(instance, READWRITE_DESCRIPTOR);
+    
+    chime_object_retain(function);
+    dispatch_async(queue, ^{
+        fprintf(stderr, "** actual write should occur here\n");
+        
+        // write(descriptor)
+        
+        chime_closure_invoke_0((chime_closure_t*)function);
+        
+        chime_object_release(function);
+    });
+    
+#endif
+    
     return CHIME_NULL;
 }
 
 #ifdef PLATFORM_UNIX
-static void unix_accept_connection(int listen_socket, chime_object_t* function)
+int  tcp_socket_get_file_descriptor(chime_object_t* instance, int type)
+{
+    int* descriptors;
+    
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
+    
+    return descriptors[type];
+}
+
+void tcp_socket_set_file_descriptor(chime_object_t* instance, int type, int descriptor)
+{
+    int* descriptors;
+    
+    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_file_descriptors"));
+    
+    descriptors[type] = descriptor;
+}
+
+void tcp_socket_accept_connection(int listen_descriptor, chime_object_t* function)
 {
     chime_object_t* socket_object;
     chime_object_t* connection;
     struct sockaddr addr;
     socklen_t       addrlen = sizeof(addr);
-    int*            descriptors;
+    int             accepted_descriptor;
+    
+    accepted_descriptor = accept(listen_descriptor, &addr, &addrlen);
     
     socket_object = tcp_socket_new(NULL, chime_integer_encode(-1));
     
-    descriptors = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(socket_object, "_file_descriptors"));
-    
-    descriptors[2] = accept(listen_socket, &addr, &addrlen);
+    tcp_socket_set_file_descriptor(socket_object, READWRITE_DESCRIPTOR, accepted_descriptor);
     
     connection = tcp_connection_new(NULL, socket_object);
     chime_object_release(socket_object);
     
-    chime_closure_invoke((chime_closure_t*)function, connection);
+    chime_closure_invoke_1((chime_closure_t*)function, connection);
     
     chime_object_release(connection);
 }

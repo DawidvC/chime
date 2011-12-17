@@ -12,12 +12,13 @@ void chime_network_initialize(void)
     chime_class_set_class_method(klass, "new:", tcp_socket_new);
     
     // instance methods
-    chime_class_set_instance_method(klass, "initialize:",     tcp_socket_initialize);
-    chime_class_set_instance_method(klass, "finalize",        tcp_socket_finalize);
-    chime_class_set_instance_method(klass, "port",            tcp_socket_get_port);
-    chime_class_set_instance_method(klass, "close",           tcp_socket_close);
-    chime_class_set_instance_method(klass, "on_connection::", tcp_socket_on_connection);
-    chime_class_set_instance_method(klass, "on_read::",       tcp_socket_on_read);
+    chime_class_set_instance_method(klass, "initialize:",        tcp_socket_initialize);
+    chime_class_set_instance_method(klass, "finalize",           tcp_socket_finalize);
+    chime_class_set_instance_method(klass, "port",               tcp_socket_get_port);
+    chime_class_set_instance_method(klass, "close",              tcp_socket_close);
+    chime_class_set_instance_method(klass, "on_connection::",    tcp_socket_on_connection);
+    chime_class_set_instance_method(klass, "on_read::",          tcp_socket_on_read);
+    chime_class_set_instance_method(klass, "on_write:context::", tcp_socket_on_write);
     
     klass = chime_class_create_object_subclass("Network.TCPConnection");
     

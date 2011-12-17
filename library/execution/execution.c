@@ -84,7 +84,7 @@ chime_object_t* execution_context_sync(chime_object_t* instance, chime_object_t*
 #ifdef PLATFORM_MAC_OS_X
     chime_object_retain(function);
     dispatch_sync(execution_context_get_dispatch_queue(instance), ^{
-        chime_closure_invoke((chime_closure_t*)function, NULL);
+        chime_closure_invoke_0((chime_closure_t*)function);
         chime_object_release(function);
     });
 #endif
@@ -97,7 +97,7 @@ chime_object_t* execution_context_async(chime_object_t* instance, chime_object_t
 #ifdef PLATFORM_MAC_OS_X
     chime_object_retain(function);
     dispatch_async(execution_context_get_dispatch_queue(instance), ^{
-        chime_closure_invoke((chime_closure_t*)function, NULL);
+        chime_closure_invoke_0((chime_closure_t*)function);
         chime_object_release(function);
     });
 #endif
