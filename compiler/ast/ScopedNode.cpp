@@ -31,6 +31,32 @@ namespace ast
         _parent = parent;
     }
     
+    ScopedNode* ScopedNode::ancestorThatDefinesSelf() const
+    {
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            if (node->selfObjectPtr())
+            {
+                return node;
+            }
+        }
+        
+        return NULL;
+    }
+    
+    ScopedNode* ScopedNode::ancestorThatDefinesClassObject() const
+    {
+        for (ScopedNode* node = this->parent(); node != NULL; node = node->parent())
+        {
+            if (node->classObjectPtr())
+            {
+                return node;
+            }
+        }
+        
+        return NULL;
+    }
+    
     ScopedNode* ScopedNode::enclosingImplementation() const
     {
         return _implementation;
@@ -291,17 +317,15 @@ namespace ast
         }
     }
     
-    std::string ScopedNode::getAnonymousFunctionName()
+    int ScopedNode::incrementAnonymousFunctionCount()
     {
-        std::stringstream s;
+        int count;
         
-        s << this->getIdentifier();
-        s << "_anonymous_";
-        s << _anonymousFunctionCount;
+        count = _anonymousFunctionCount;
         
         _anonymousFunctionCount += 1;
         
-        return s.str();
+        return count;
     }
     
     // these should be virtual too, so I can play the same tricks with the CodeBlock

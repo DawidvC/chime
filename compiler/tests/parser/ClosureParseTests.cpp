@@ -41,10 +41,10 @@ TEST_F(ClosureParseTests, MethodCallWithClosureAndBody)
     
     ASSERT_METHOD_CALL("call:", call);
     
-    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    closure = dynamic_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
     
-    op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
+    op = dynamic_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
     ASSERT_LOCAL_ASSIGNMENT(op);
     ASSERT_LOCAL_VARIABLE("a", op->getLeftOperand());
 }
@@ -71,10 +71,10 @@ TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
     ASSERT_METHOD_CALL("on_queue:async:", call);
     ASSERT_GLOBAL_VARIABLE("queue", call->childAtIndex(0));
     
-    closure = static_cast<ast::Closure*>(call->childAtIndex(1));
+    closure = dynamic_cast<ast::Closure*>(call->childAtIndex(1));
     ASSERT_CLOSURE(closure);
     
-    op = static_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
+    op = dynamic_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
     ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("queue", op->getLeftOperand());
 }
@@ -105,6 +105,7 @@ TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
     
     closure = dynamic_cast<ast::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
+    ASSERT_EQ("Root.foo_closure_1", closure->getIdentifier());
     
     closedVariables = closure->getClosedVariables();
     ASSERT_EQ(1, closedVariables.size());
@@ -175,4 +176,22 @@ TEST_F(ClosureParseTests, SelfInClosure)
     
     op = dynamic_cast<ast::BinaryOperator*>(closure->getBody()->childAtIndex(0));
     ASSERT_CLOSED_LITERAL_SELF(op->getLeftOperand());
+}
+
+TEST_F(ClosureParseTests, ClosureIdentifierInImplementation)
+{
+    ast::Implementation*     implementation;
+    chime::MethodDefinition* method;
+    ast::Closure*            closure;
+    
+    implementation = parseFirst<ast::Implementation*>("implementation Foo { method bar(a, b) { do { return a }\n do { return b } } }");
+    method         = dynamic_cast<chime::MethodDefinition*>(implementation->getBody()->childAtIndex(0));
+    
+    closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(0));
+    ASSERT_CLOSURE(closure);
+    ASSERT_EQ("Foo.bar::_closure_1", closure->getIdentifier());
+    
+    closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(1));
+    ASSERT_CLOSURE(closure);
+    ASSERT_EQ("Foo.bar::_closure_2", closure->getIdentifier());
 }

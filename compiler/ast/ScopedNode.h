@@ -19,6 +19,8 @@ namespace ast
         virtual std::string getIdentifier() const = 0;
         ScopedNode* parent() const;
         void        setParent(ScopedNode* parent);
+        ScopedNode* ancestorThatDefinesSelf() const;
+        ScopedNode* ancestorThatDefinesClassObject() const;
         ScopedNode* enclosingImplementation() const;
         void        setEnclosingImplementation(ScopedNode* implemenation);
         
@@ -53,7 +55,7 @@ namespace ast
         
         std::map<std::string, llvm::Value*> scopedValues() const;
         
-        std::string       getAnonymousFunctionName();
+        int               incrementAnonymousFunctionCount();
         
         llvm::BasicBlock* getStartBlock() const;
         void              setStartBlock(llvm::BasicBlock* block);

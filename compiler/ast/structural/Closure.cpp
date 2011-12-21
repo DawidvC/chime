@@ -5,18 +5,32 @@
 #include "compiler/ast/variable/ClosedLocalVariable.h"
 #include "compiler/codegen/code_generator.h"
 
+#include <sstream>
+
 namespace ast
 {
     ast::Closure* Closure::parse(chime::parser& parser)
     {
-        Closure* closure;
+        Closure*          closure;
+        std::stringstream stream;
         
         parser.next_token_value("do");
         
         closure = new ast::Closure();
         
+        if (parser.getCurrentScope()->parent())
+        {
+            stream << parser.getCurrentScope()->parent()->getIdentifier();
+            stream << ".";
+        }
+        
+        stream << parser.getCurrentScope()->getIdentifier();
+        stream << "_closure_";
+        stream << parser.getCurrentScope()->incrementAnonymousFunctionCount();
+        
         parser.pushScope(closure);
         
+        closure->setIdentifier(stream.str());
         closure->setParameters(chime::Parameter::parseList(parser));
         
         // This cast is currently necessary, even though now CodeBlock::parse will
@@ -130,15 +144,10 @@ namespace ast
     {
         llvm::Function* function;
         llvm::Value*    closureValue;
-        std::string     name;
         llvm::Value*    referenceValue;
         
-        // create the function name, based on the current function
-        name = generator.getCurrentScope()->getAnonymousFunctionName();
-        this->setIdentifier(name);
-        
         // create the actual function
-        function = this->codegenFunction(generator, name, this->getBody(), this->getParameters().size());
+        function = this->codegenFunction(generator, this->getIdentifier(), this->getBody(), this->getParameters().size());
         
         closureValue = generator.getRuntime()->callChimeClosureCreate(function);
         
