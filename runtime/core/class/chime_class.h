@@ -14,6 +14,7 @@ chime_class_t*  chime_class_create(const char* name, chime_class_t* superclass);
 void            chime_class_destroy(chime_class_t* klass);
 
 chime_object_t* chime_class_instantiate(chime_class_t* klass);
+chime_object_t* chime_class_instantiate_named(const char* name);
 
 chime_class_t*  chime_class_get_class(chime_class_t* klass);
 chime_class_t*  chime_class_get_superclass(chime_class_t* klass);

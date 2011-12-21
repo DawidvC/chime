@@ -71,7 +71,7 @@ chime_object_t* tcp_socket_initialize(chime_object_t* instance, chime_object_t* 
 
 chime_object_t* tcp_socket_finalize(chime_object_t* instance)
 {
-    fprintf(stderr, "finalizing %p\n", instance);
+    // fprintf(stderr, "finalizing %p\n", instance);
     
     tcp_socket_close(instance);
     

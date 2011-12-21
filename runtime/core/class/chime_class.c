@@ -109,6 +109,11 @@ chime_object_t* chime_class_instantiate(chime_class_t* klass)
     return chime_object_invoke_0((chime_object_t*)klass, "new");
 }
 
+chime_object_t* chime_class_instantiate_named(const char* name)
+{
+    return chime_class_instantiate(chime_runtime_get_class(name));
+}
+
 chime_class_t* chime_class_get_class(chime_class_t* klass)
 {
     assert(klass);

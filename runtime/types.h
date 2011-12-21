@@ -16,11 +16,12 @@ typedef unsigned char bool;
 #endif // bool
 #endif // __cplusplus
 
-#define CHIME_NULL  ((chime_object_t*)0x00000000)
+#define CHIME_NIL   ((chime_object_t*)0x00000000)
 #define CHIME_TRUE  ((chime_object_t*)0x00000006)
 #define CHIME_FALSE ((chime_object_t*)0x0000000A)
 
-#define CHIME_LITERAL_NULL  CHIME_NULL
+#define CHIME_NULL          CHIME_NIL
+#define CHIME_LITERAL_NULL  CHIME_NIL
 #define CHIME_LITERAL_TRUE  CHIME_TRUE
 #define CHIME_LITERAL_FALSE CHIME_FALSE
 

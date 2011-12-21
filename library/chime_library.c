@@ -3,6 +3,7 @@
 #include "library/chime_library.h"
 #include "runtime/chime_runtime.h"
 #include "library/execution/execution.h"
+#include "library/data/chime_data.h"
 #include "library/network/network.h"
 #include "library/process/process.h"
 #include "library/testing/assertions.h"
@@ -24,6 +25,8 @@ void chime_library_initialize(void)
     chime_network_initialize();
     
     chime_process_initialize();
+    
+    chime_data_initialize();
     
     chime_log_level = old_level; // restore logging
 }

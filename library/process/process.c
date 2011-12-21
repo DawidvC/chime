@@ -9,10 +9,10 @@ void chime_process_initialize(void)
 {
     chime_class_t* klass;
     
-    klass = chime_class_create_object_subclass("Process.Process");
+    klass = chime_class_create_object_subclass("Process");
     
-    // instance methods
-    chime_class_set_instance_method(klass, "run",    process_run);
+    // class methods
+    chime_class_set_class_method(klass, "run",    process_run);
 }
 
 chime_object_t* process_run(chime_object_t* instance)
