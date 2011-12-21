@@ -53,4 +53,14 @@ implementation ConditionalTests : Test.Case
         
         Assert.failure() if nil
     }
+    
+    method test_if_with_nil_check()
+    {
+        x = nil
+        
+        if x.nil?
+            return
+        
+        Assert.failure()
+    }
 }

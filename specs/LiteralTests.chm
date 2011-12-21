@@ -51,6 +51,8 @@ implementation LiteralTests : Test.Case
         x = nil
         
         Assert.is_false(x)
+        
+        Assert.is_true(x.nil?)
     }
     
     method test_floating_point_comparison()
