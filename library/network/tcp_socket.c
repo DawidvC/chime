@@ -171,7 +171,7 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
     });
     
     dispatch_source_set_cancel_handler(source, ^{
-        fprintf(stderr, "*** listen socket cancelled\n");
+        // fprintf(stderr, "*** listen socket cancelled\n");
     });
     
     dispatch_resume(source);
@@ -196,35 +196,39 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
     
     chime_object_retain(function);
     dispatch_source_set_event_handler(source, ^{
-        int    fd = dispatch_source_get_handle(source);
-        size_t estimated  = dispatch_source_get_data(source) + 1;
+        int    fd;
+        size_t estimated;
+        
+        fd        = dispatch_source_get_handle(source);
+        estimated = dispatch_source_get_data(source) + 1;
         
         if (estimated <= 1)
         {
-            fprintf(stderr, "** read zero, cancelling read source\n");
+            // fprintf(stderr, "** read zero, cancelling read source\n");
             dispatch_source_cancel(source);
             return;
         }
         
-        fprintf(stderr, "** estimated: %ld\n", estimated);
+        // fprintf(stderr, "** estimated: %ld\n", estimated);
         
-        char* buffer = (char*)malloc(estimated);
+        char* buffer = (char*)chime_malloc(estimated);
         
         if (buffer)
         {
+            chime_object_t* tagged_data;
+            
             ssize_t actual = read(fd, buffer, (estimated));
             
-            buffer[actual-1] = 0; // null_terminate
+            buffer[actual] = 0; // null_terminate
             
-            fprintf(stderr, "** read:\n%s\n", buffer);
-            free(buffer);
+            tagged_data = chime_tag_encode_raw_block(buffer);
             
-            chime_closure_invoke_1((chime_closure_t*)function, CHIME_NULL);
+            chime_closure_invoke_2((chime_closure_t*)function, tagged_data, chime_integer_encode(actual+1));
         }
     });
     
     dispatch_source_set_cancel_handler(source, ^{
-        fprintf(stderr, "*** read source cancelled\n");
+        // fprintf(stderr, "*** read source cancelled\n");
         
         chime_object_release(function);
     });
@@ -268,13 +272,13 @@ chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* da
         block_size   = chime_integer_decode(chime_data_get_block_size(data, index_object));
         
         bytes_written = write(fd, block, block_size);
-        fprintf(stderr, "*** wrote %ld of %lu bytes\n", bytes_written, block_size);
+        // fprintf(stderr, "*** wrote %ld of %lu bytes\n", bytes_written, block_size);
         
         dispatch_source_cancel(source);
     });
     
     dispatch_source_set_cancel_handler(source, ^{
-        fprintf(stderr, "*** write source cancelled\n");
+        // fprintf(stderr, "*** write source cancelled\n");
         
         chime_closure_invoke_0((chime_closure_t*)function);
         chime_object_release(function);

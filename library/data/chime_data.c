@@ -18,8 +18,10 @@ void chime_data_initialize(void)
     klass = chime_class_create_object_subclass("Data");
     
     // instance methods
-    chime_class_set_instance_method(klass, "initialize", data_initialize);
-    chime_class_set_instance_method(klass, "finalize",   data_finalize);
+    chime_class_set_instance_method(klass, "initialize",   data_initialize);
+    chime_class_set_instance_method(klass, "finalize",     data_finalize);
+    
+    chime_class_set_instance_method(klass, "append:size:", data_append_block);
     
     // extend string
     chime_class_set_instance_method(_string_class, "to_data",   string_to_data);
@@ -78,23 +80,28 @@ chime_object_t* data_get_length(chime_object_t* instance)
     return chime_object_get_attribute(instance, "_length");
 }
 
-chime_object_t* data_append_raw_block(chime_object_t* instance, void* ptr, unsigned long size)
+chime_object_t* data_append_block(chime_object_t* instance, chime_object_t* block, chime_object_t* size)
 {
     signed long     length;
     chime_object_t* array;
     
     array = chime_object_get_attribute_unretained(instance, "_data_array");
-    array_append(array, chime_tag_encode_raw_block(ptr));
+    array_append(array, block);
     
     array = chime_object_get_attribute_unretained(instance, "_size_array");
-    array_append(array, chime_integer_encode(size));
+    array_append(array, size);
     
     length  = chime_integer_decode(chime_object_get_attribute_unretained(instance, "_length"));
-    length += size;
+    length += chime_integer_decode(size);
     
     chime_object_set_attribute(instance, "_length", chime_integer_encode(length));
     
     return CHIME_NIL;
+}
+
+chime_object_t* data_append_raw_block(chime_object_t* instance, void* ptr, unsigned long size)
+{
+    return data_append_block(instance, chime_tag_encode_raw_block(ptr), chime_integer_encode(size));
 }
 
 chime_object_t* data_each(chime_object_t* instance, chime_object_t* function)
