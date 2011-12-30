@@ -21,18 +21,13 @@ chime_object_t* string_to_data(chime_object_t* instance)
     string_length = chime_integer_decode(chime_object_invoke_0(instance, "length"));
     
     // allocate enough space for the string
-    buffer = chime_malloc(string_length+2);
+    buffer = chime_malloc(string_length);
     
     // this is horribly inefficient
     c_string = chime_string_to_c_string(instance);
     chime_memcpy(buffer, c_string, string_length);
     
-    buffer[string_length] = '\n'; // hack to terminate with a return
-    buffer[string_length+1] = 0;
-    
-    fprintf(stderr, "string is length: %ld, string is '%s'\n", string_length, buffer);
-    
-    data_append_raw_block(data_object, buffer, string_length+1);
+    data_append_raw_block(data_object, buffer, string_length);
     
     return data_object;
 }
