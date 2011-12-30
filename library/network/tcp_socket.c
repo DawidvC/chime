@@ -4,6 +4,7 @@
 #include "runtime/core/closure/chime_closure.h"
 #include "tcp_connection.h"
 #include "library/execution/execution.h"
+#include "library/data/chime_data.h"
 
 #ifdef PLATFORM_UNIX
 #   include <sys/types.h>
@@ -14,10 +15,6 @@
 #   include <stdlib.h>
 #   include <stdio.h>
 #   include <unistd.h>
-#endif
-
-#ifdef PLATFORM_MAC_OS_X
-#   include <dispatch/dispatch.h>
 #endif
 
 chime_object_t* tcp_socket_new(chime_class_t* klass, chime_object_t* port_number)
@@ -121,19 +118,9 @@ chime_object_t* tcp_socket_close(chime_object_t* instance)
 #endif
     
 #ifdef PLATFORM_MAC_OS_X
-    dispatch_source_t* sources;
-    
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
-    
     for (i = 0; i < 4; ++i)
     {
-        if (sources[i] == 0)
-            continue;
-        
-        fprintf(stderr, "<%p> cancelling: %d\n", instance, i);
-        dispatch_source_cancel(sources[i]);
-        dispatch_release(sources[i]);
-        sources[i] = 0;
+        tcp_socket_set_dispatch_source(instance, i, NULL);
     }
 #endif
     
@@ -168,33 +155,26 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
 #endif
     
 #ifdef PLATFORM_MAC_OS_X
-    dispatch_queue_t   queue;
-    dispatch_source_t* sources;
+    dispatch_queue_t  queue;
+    dispatch_source_t source;
     
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
+    queue  = execution_context_get_dispatch_queue(context);
+    source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
+    tcp_socket_set_dispatch_source(instance, LISTEN_SOURCE, source);
     
-    if (sources[0])
-    {
-        dispatch_source_cancel(sources[0]);
-        dispatch_release(sources[0]);
-    }
-    
-    queue      = execution_context_get_dispatch_queue(context);
-    sources[0] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
-    
-    dispatch_source_set_event_handler(sources[0], ^{
+    dispatch_source_set_event_handler(source, ^{
         int listen_socket;
         
-        listen_socket = dispatch_source_get_handle(sources[0]);
+        listen_socket = dispatch_source_get_handle(source);
         
         tcp_socket_accept_connection(listen_socket, function);
     });
     
-    dispatch_source_set_cancel_handler(sources[0], ^{
+    dispatch_source_set_cancel_handler(source, ^{
         fprintf(stderr, "*** listen socket cancelled\n");
     });
     
-    dispatch_resume(sources[0]);
+    dispatch_resume(source);
     
 #endif
     
@@ -203,28 +183,26 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
 
 chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* context, chime_object_t* function)
 {
-    chime_object_set_attribute(instance, "on_read_handler", function);
-    
 #ifdef PLATFORM_MAC_OS_X
-    int                descriptor;
-    dispatch_queue_t   queue;
-    dispatch_source_t* sources;
+    int               descriptor;
+    dispatch_queue_t  queue;
+    dispatch_source_t source;
     
     queue      = execution_context_get_dispatch_queue(context);
     descriptor = tcp_socket_get_file_descriptor(instance, READWRITE_DESCRIPTOR);
     
-    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
+    source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
+    tcp_socket_set_dispatch_source(instance, READ_SOURCE, source);
     
-    sources[2] = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
-    
-    dispatch_source_set_event_handler(sources[2], ^{
-        int    fd = dispatch_source_get_handle(sources[2]);
-        size_t estimated  = dispatch_source_get_data(sources[2]) + 1;
+    chime_object_retain(function);
+    dispatch_source_set_event_handler(source, ^{
+        int    fd = dispatch_source_get_handle(source);
+        size_t estimated  = dispatch_source_get_data(source) + 1;
         
         if (estimated <= 1)
         {
             fprintf(stderr, "** read zero, cancelling read source\n");
-            dispatch_source_cancel(sources[2]);
+            dispatch_source_cancel(source);
             return;
         }
         
@@ -245,11 +223,13 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
         }
     });
     
-    dispatch_source_set_cancel_handler(sources[2], ^{
+    dispatch_source_set_cancel_handler(source, ^{
         fprintf(stderr, "*** read source cancelled\n");
+        
+        chime_object_release(function);
     });
     
-    dispatch_resume(sources[2]);
+    dispatch_resume(source);
     
 #endif
     
@@ -259,22 +239,49 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
 chime_object_t* tcp_socket_on_write(chime_object_t* instance, chime_object_t* data, chime_object_t* context, chime_object_t* function)
 {
 #ifdef PLATFORM_MAC_OS_X
-    int              descriptor;
-    dispatch_queue_t queue;
+    signed long       block_index;
+    signed long       offset;
+    int               descriptor;
+    dispatch_queue_t  queue;
+    dispatch_source_t source;
     
-    queue      = execution_context_get_dispatch_queue(context);
-    descriptor = tcp_socket_get_file_descriptor(instance, READWRITE_DESCRIPTOR);
+    queue       = execution_context_get_dispatch_queue(context);
+    descriptor  = tcp_socket_get_file_descriptor(instance, READWRITE_DESCRIPTOR);
+    source      = dispatch_source_create(DISPATCH_SOURCE_TYPE_WRITE, descriptor, 0, queue);
+    block_index = 0;
+    offset      = 0;
+    
+    tcp_socket_set_dispatch_source(instance, WRITE_SOURCE, source);
     
     chime_object_retain(function);
-    dispatch_async(queue, ^{
-        fprintf(stderr, "** actual write should occur here\n");
+    chime_object_retain(data);
+    dispatch_source_set_event_handler(source, ^{
+        int             fd;
+        char*           block;
+        size_t          block_size;
+        ssize_t         bytes_written;
+        chime_object_t* index_object;
         
-        // write(descriptor)
+        fd           = dispatch_source_get_handle(source);
+        index_object = chime_integer_encode(block_index);
+        block        = (char*)chime_tag_decode_raw_block(chime_data_get_block(data, index_object));
+        block_size   = chime_integer_decode(chime_data_get_block_size(data, index_object));
+        
+        bytes_written = write(fd, block, block_size);
+        fprintf(stderr, "*** wrote %ld of %lu bytes\n", bytes_written, block_size);
+        
+        dispatch_source_cancel(source);
+    });
+    
+    dispatch_source_set_cancel_handler(source, ^{
+        fprintf(stderr, "*** write source cancelled\n");
         
         chime_closure_invoke_0((chime_closure_t*)function);
-        
         chime_object_release(function);
+        chime_object_release(data);
     });
+    
+    dispatch_resume(source);
     
 #endif
     
@@ -323,3 +330,33 @@ void tcp_socket_accept_connection(int listen_descriptor, chime_object_t* functio
 }
 
 #endif
+
+#ifdef PLATFORM_MAC_OS_X
+dispatch_source_t tcp_socket_get_dispatch_source(chime_object_t* instance, int type)
+{
+    dispatch_source_t* sources;
+    
+    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
+    
+    return sources[type];
+}
+
+void tcp_socket_set_dispatch_source(chime_object_t* instance, int type, dispatch_source_t source)
+{
+    dispatch_source_t* sources;
+    
+    sources = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_sources"));
+    
+    if (sources[type])
+    {
+        fprintf(stderr, "<%p> cancelling: %d\n", instance, type);
+        
+        dispatch_source_cancel(sources[type]);
+        dispatch_release(sources[type]);
+    }
+    
+    sources[type] = source;
+}
+
+#endif
+

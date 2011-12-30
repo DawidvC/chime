@@ -21,9 +21,12 @@ extern "C" {
 #include <stdlib.h>
 #define chime_allocate(x)       malloc(x*CHIME_ALLOCATION_UNIT)
 #define chime_deallocate(x)     free(x)
+#define chime_malloc(x)         malloc(x)
+#define chime_free(x)           free(x)
 
 #include <strings.h>
-#define chime_zero_memory(x, n) bzero(x, n*CHIME_ALLOCATION_UNIT)
+#define chime_zero_memory(x, n)   bzero(x, n*CHIME_ALLOCATION_UNIT)
+#define chime_memcpy(dst, src, n) memcpy(dst, src, n)
 
 // atomic operations
 #ifdef PLATFORM_MAC_OS_X

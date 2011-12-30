@@ -32,6 +32,17 @@ void tcp_socket_set_file_descriptor(chime_object_t* instance, int type, int desc
 void tcp_socket_accept_connection(int listen_descriptor, chime_object_t* function);
 #endif
 
+#ifdef PLATFORM_MAC_OS_X
+#   include <dispatch/dispatch.h>
+
+#   define LISTEN_SOURCE 0
+#   define READ_SOURCE   1
+#   define WRITE_SOURCE  2
+
+dispatch_source_t tcp_socket_get_dispatch_source(chime_object_t* instance, int type);
+void              tcp_socket_set_dispatch_source(chime_object_t* instance, int type, dispatch_source_t source);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

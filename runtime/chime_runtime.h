@@ -4,6 +4,7 @@
 #define CHIME_RUNTIME
 
 #include "runtime/types.h"
+#include "runtime/platform.h"
 #include "runtime/core/object/chime_object.h"
 #include "runtime/core/class/chime_class.h"
 
