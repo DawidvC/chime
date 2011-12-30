@@ -50,4 +50,9 @@ implementation StringTests : Test.Case
     {
        Assert.equal("1 2 3", to:"1 {2.to_string()} 3")
     }
+    
+    method test_carriage_return_in_string()
+    {
+        Assert.equal(6, to:"hello\n".length)
+    }
 }

@@ -38,7 +38,7 @@ protected:
     }
 };
 
-#pragma mark token functions
+// *** token functions
 TEST_F(FileLexerTest, BasicImplementation)
 {
     lex("basic_implementation.chm");
@@ -55,6 +55,17 @@ TEST_F(FileLexerTest, BasicImplementation)
     ASSERT_EQ("{",              next_token_value());
     ASSERT_EQ("}",              next_token_value());
     ASSERT_EQ("}",              next_token_value());
+    
+    ASSERT_TRUE(next_token()->empty());
+}
+
+TEST_F(FileLexerTest, StringWithCarriageReturn)
+{
+    lex("string_with_carriage_return.chm");
+    
+    ASSERT_EQ("a",           next_token_value());
+    ASSERT_EQ("=",           next_token_value());
+    ASSERT_EQ("\"hello\n\"",   next_token_value());
     
     ASSERT_TRUE(next_token()->empty());
 }

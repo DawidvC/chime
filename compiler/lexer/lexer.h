@@ -38,6 +38,8 @@ namespace chime
         virtual char next_char(void)   = 0;
         virtual char peek(void)        = 0;
         
+        char escapeCodeToChar(char c);
+        
     private:
         char _peeked_char;
         bool _inString;

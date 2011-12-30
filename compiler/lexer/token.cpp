@@ -13,10 +13,15 @@ namespace chime
     {
     }
     
-    void token::set_value(const char c)
+    void token::setValue(const char c)
     {
         this->clear_value();
         this->append(c);
+    }
+    
+    void token::set_value(const char c)
+    {
+        this->setValue(c);
     }
     void token::setValue(const char* s)
     {

@@ -54,6 +54,12 @@ TEST_F(TokenTest, IsString)
     ASSERT_TRUE(token->isString());
 }
 
+TEST_F(TokenTest, StringValue)
+{
+    token->setValue("\"hello\n\"");
+    ASSERT_EQ("hello\n", token->stringValue());
+}
+
 TEST_F(TokenTest, IsInteger)
 {
     token->set_value("1");

@@ -288,7 +288,15 @@ TEST_F(LexerTest, MoreComplexString)
     lex("(\"This is a && ^ () much more [\n] complex string\")");
     
     const char *tokens[] = {"(","\"This is a && ^ () much more [\n] complex string\"", ")", NULL};
-    ExpectTokens(tokens);
+    ASSERT_TOKENS(tokens);
+}
+
+TEST_F(LexerTest, StringWithCarriageReturn)
+{
+    lex("a = \"hello world\n\"");
+    
+    const char *tokens[] = {"a", "=", "\"hello world\n\"", NULL};
+    ASSERT_TOKENS(tokens);
 }
 
 TEST_F(LexerTest, InterpolatedString)

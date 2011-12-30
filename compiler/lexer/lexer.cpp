@@ -121,6 +121,10 @@ namespace chime
                         t->append(this->next_char());
                         _interpolatingString = true;
                         return t;
+                    case '\\':
+                        this->next_char(); //  the '/'
+                        t->append(this->escapeCodeToChar(this->next_char()));
+                        break;
                     default:
                         t->append(this->next_char());
                         break;
@@ -315,5 +319,19 @@ namespace chime
         }
         
         return t;
+    }
+    
+    char lexer::escapeCodeToChar(char c)
+    {
+        switch (c)
+        {
+            case 'n':  return '\n'; break;
+            case 't':  return '\t'; break;
+            case '\\': return '\\'; break;
+        }
+        
+        assert(0 && "Unhandled string escape code");
+        
+        return 0;
     }
 }
