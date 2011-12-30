@@ -25,7 +25,7 @@ void chime_string_initialize(void)
     chime_class_set_instance_method(_string_class, "print",     string_print);
     chime_class_set_instance_method(_string_class, "<=>",       string_compare);
     chime_class_set_instance_method(_string_class, "+",         string_add);
-    chime_class_set_instance_method(_string_class, "[]",        string_indexer_get);
+    chime_class_set_instance_method(_string_class, "[]:",       string_indexer_get);
     chime_class_set_instance_method(_string_class, "length",    string_length_get);
 }
 

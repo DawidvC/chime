@@ -66,7 +66,7 @@ TEST_F(OperatorParseTests, IndexerOnSelfAssignment)
     
     indexer = parseFirst<chime::IndexAssignmentOperator*>("self[123] = 4");
     
-    ASSERT_INDEXER_ASSIGNMENT("[]=", indexer);
+    ASSERT_INDEXER_ASSIGNMENT("[]:=:", indexer);
     ASSERT_LITERAL_SELF(indexer->getOperand().get());
     ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
     ASSERT_LITERAL_INTEGER(4, indexer->getRightOperand().get());

@@ -31,9 +31,9 @@ TEST_F(RuntimeHashTests, CreateAndSet)
     chime_hash_set(hash, key, value);
     
     // this works because the key is the same object
-    ASSERT_TRUE(chime_object_invoke_1(hash, "[]", key) == value);
+    ASSERT_TRUE(chime_object_invoke_1(hash, "[]:", key) == value);
     
     key = chime_string_create_with_c_string("test", 4);
     
-    ASSERT_TRUE(chime_object_invoke_1(hash, "[]", key) == value);
+    ASSERT_TRUE(chime_object_invoke_1(hash, "[]:", key) == value);
 }

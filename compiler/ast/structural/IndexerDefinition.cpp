@@ -15,11 +15,11 @@ namespace chime
         parser.nextTokenValue("indexer");
         if (parser.advanceTokenIfEqual("self"))
         {
-            indexer->setIdentifier("[]");
+            indexer->setIdentifier("[]:");
         }
         else
         {
-            indexer->setIdentifier(parser.nextTokenValue() + "[]");
+            indexer->setIdentifier(parser.nextTokenValue() + "[]:");
         }
         
         parser.nextTokenValue("[");
@@ -118,7 +118,7 @@ namespace chime
         body = this->getSetBody();
         if (body)
         {
-            this->createMethod(context, this->getIdentifier() + "=", body, 2);
+            this->createMethod(context, this->getIdentifier() + "=:", body, 2);
         }
         
         return NULL;

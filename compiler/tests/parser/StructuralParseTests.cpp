@@ -172,7 +172,7 @@ TEST_F(StructuralParseTests, SelfIndexerWithGetAndSet)
     
     indexer = parseFirst<chime::IndexerDefinition*>("indexer self[i](value) { get { return i } set { value.print() } }");
     
-    ASSERT_INDEXER_DEFINITION("[]", indexer);
+    ASSERT_INDEXER_DEFINITION("[]:", indexer);
     
     ret = static_cast<chime::Return*>(indexer->getGetBody()->childAtIndex(0)); 
     ASSERT_SINGLE_VARIABLE_RETURN(ret);
@@ -186,7 +186,7 @@ TEST_F(StructuralParseTests, LabelledIndexerWithGet)
     
     indexer = parseFirst<chime::IndexerDefinition*>("indexer foo[i] { get { return a } }");
     
-    ASSERT_INDEXER_DEFINITION("foo[]", indexer);
+    ASSERT_INDEXER_DEFINITION("foo[]:", indexer);
     
     ret = static_cast<chime::Return*>(indexer->getGetBody()->childAtIndex(0)); 
     ASSERT_SINGLE_VARIABLE_RETURN(ret);

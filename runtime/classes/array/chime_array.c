@@ -25,7 +25,7 @@ void chime_array_initialize(void)
     chime_class_set_instance_method(_array_class, "append:",    array_append);
     chime_class_set_instance_method(_array_class, "each:",      array_each);
     chime_class_set_instance_method(_array_class, "map:",       array_map);
-    chime_class_set_instance_method(_array_class, "[]",         array_indexer_get);
+    chime_class_set_instance_method(_array_class, "[]:",        array_indexer_get);
 }
 
 chime_object_t* chime_array_create(void)

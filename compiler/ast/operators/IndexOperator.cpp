@@ -23,7 +23,7 @@ namespace ast
                 parser.nextTokenValue("=");
                 
                 assignment = new chime::IndexAssignmentOperator();
-                assignment->setIdentifier("[]=");
+                assignment->setIdentifier("[]:=:");
                 assignment->setOperand(ast::NodeRef(operand));
                 assignment->setArgument(argument);
                 assignment->setRightOperand(parser.parseExpression());
@@ -100,7 +100,7 @@ namespace ast
         
         arguments.push_back(objectLoad);
         
-        methodNamePtr = generator.make_constant_string("[]");
+        methodNamePtr = generator.make_constant_string("[]:");
         
         return generator.getRuntime()->callChimeObjectInvoke(targetValue, methodNamePtr, arguments);
     }
