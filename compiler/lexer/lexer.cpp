@@ -326,6 +326,7 @@ namespace chime
         switch (c)
         {
             case 'n':  return '\n'; break;
+            case 'r':  return '\r'; break;
             case 't':  return '\t'; break;
             case '\\': return '\\'; break;
         }
