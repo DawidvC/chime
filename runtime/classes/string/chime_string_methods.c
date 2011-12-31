@@ -176,24 +176,34 @@ chime_object_t* string_indexer_get(chime_object_t* instance, chime_object_t* ind
         char*       c_string;
         signed long length;
         
-        start  = chime_integer_decode(chime_object_invoke_0(index, "start"));
-        end    = chime_integer_decode(chime_object_invoke_0(index, "end"));
+        start  = chime_integer_decode(chime_object_invoke_0(index,    "start"));
+        end    = chime_integer_decode(chime_object_invoke_0(index,    "end"));
         length = chime_integer_decode(chime_object_invoke_0(instance, "length"));
-        
-        if (end < 0)
-        {
-            // because end is negative, we add it and because the length-1
-            // equals the last character we don't need to make any other adjustments
-            end += length;
-        }
-        
-        assert(start < length && "Range.start must be < string length");
         
         c_string = chime_string_to_c_string(instance);
         
-        c_string += start; // a little bit of pointer arithmatic here
+        // fprintf(stderr, "a start %ld, end %ld, length %ld\n", start, end, length);
         
-        return chime_string_create_with_c_string(c_string, end - start + 1);
+        if (end < 0)
+            end += length;
+        
+        // fprintf(stderr, "b start %ld, end %ld, length %ld\n", start, end, length);
+        assert((end <= length) && "Range.end must be <= string length");
+        
+        if (start < 0)
+            start += length;
+        
+        // fprintf(stderr, "c start %ld, end %ld, length %ld\n", start, end, length);
+        assert((start < length) && "Range.start must be < string length");
+        
+        length = end - start;
+        c_string += start;
+        
+        assert(length >= 0 && "New length must be >= 0");
+        
+        // fprintf(stderr, "d start %ld, end %ld, length %ld\n", start, end, length);
+        
+        return chime_string_create_with_c_string(c_string, length + 1);
     }
     else
     {

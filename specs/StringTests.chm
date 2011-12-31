@@ -14,6 +14,7 @@ implementation StringTests : Test.Case
         
         Assert.equal("Def", to:"AbcDef"[r])
         Assert.equal("Def", to:"AbcDef"[3:-1])
+        Assert.equal("Def", to:"AbcDef"[-3:-1])
     }
     
     method test_string_length()
@@ -54,5 +55,6 @@ implementation StringTests : Test.Case
     method test_carriage_return_in_string()
     {
         Assert.equal(6, to:"hello\n".length)
+        Assert.equal(2, to:"\n\n".length)
     }
 }

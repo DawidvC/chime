@@ -9,8 +9,12 @@ implementation TestRunner
         test.methods.each() do (test_method)
         {
             original_count = Assert.failure_count()
+            name           = test_method.name
             
-            if test_method.name[0:3] == "test"
+            if name.length < 4
+                return
+            
+            if name[0:3] == "test"
             {
                 test_methods = test_methods + 1
                 
