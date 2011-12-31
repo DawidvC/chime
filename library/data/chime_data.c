@@ -3,6 +3,8 @@
 #include "runtime/classes/array/chime_array_methods.h"
 #include "runtime/classes/boolean/chime_boolean.h"
 #include "runtime/classes/integer/chime_integer.h"
+#include "runtime/classes/string/chime_string.h"
+#include "runtime/classes/string/chime_string_methods.h"
 #include "runtime/core/closure/chime_closure.h"
 #include "runtime/chime_runtime_internal.h"
 #include "library/extensions/chime_string_extensions.h"
@@ -21,7 +23,9 @@ void chime_data_initialize(void)
     chime_class_set_instance_method(klass, "initialize",   data_initialize);
     chime_class_set_instance_method(klass, "finalize",     data_finalize);
     
+    chime_class_set_instance_method(klass, "length",       data_get_length);
     chime_class_set_instance_method(klass, "append:size:", data_append_block);
+    chime_class_set_instance_method(klass, "to_string",    data_to_string);
     
     // extend string
     chime_class_set_instance_method(_string_class, "to_data",   string_to_data);
@@ -127,6 +131,38 @@ chime_object_t* data_each(chime_object_t* instance, chime_object_t* function)
     }
     
     return CHIME_NIL;
+}
+
+chime_object_t* data_to_string(chime_object_t* instance)
+{
+    chime_object_t* string;
+    chime_object_t* data_array;
+    chime_object_t* size_array;
+    unsigned long   length;
+    signed long     i;
+    
+    string     = chime_string_create();
+    data_array = chime_object_get_attribute_unretained(instance, "_data_array");
+    size_array = chime_object_get_attribute_unretained(instance, "_size_array");
+    
+    length = chime_integer_decode(chime_object_invoke_0(data_array, "length"));
+    for (i = 0; i < length; ++i)
+    {
+        chime_object_t* block_string;
+        chime_object_t* data;
+        chime_object_t* size;
+        
+        data = chime_object_invoke_1(data_array, "[]:", chime_integer_encode(i));
+        size = chime_object_invoke_1(size_array, "[]:", chime_integer_encode(i));
+        
+        block_string = chime_string_create_with_c_string(chime_tag_decode_raw_block(data), chime_integer_decode(size));
+        
+        string_add(string, block_string);
+        
+        chime_object_release(block_string);
+    }
+    
+    return string;
 }
 
 chime_object_t* chime_data_get_block(chime_object_t* instance, chime_object_t* index)

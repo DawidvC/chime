@@ -217,13 +217,11 @@ chime_object_t* tcp_socket_on_read(chime_object_t* instance, chime_object_t* con
         {
             chime_object_t* tagged_data;
             
-            ssize_t actual = read(fd, buffer, (estimated));
-            
-            buffer[actual] = 0; // null_terminate
+            ssize_t actual = read(fd, buffer, estimated);
             
             tagged_data = chime_tag_encode_raw_block(buffer);
             
-            chime_closure_invoke_2((chime_closure_t*)function, tagged_data, chime_integer_encode(actual+1));
+            chime_closure_invoke_2((chime_closure_t*)function, tagged_data, chime_integer_encode(actual));
         }
     });
     

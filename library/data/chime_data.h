@@ -18,6 +18,7 @@ chime_object_t* data_get_length(chime_object_t* instance);
 chime_object_t* data_append_block(chime_object_t* instance, chime_object_t* block, chime_object_t* size);
 chime_object_t* data_append_raw_block(chime_object_t* instance, void* ptr, unsigned long size);
 chime_object_t* data_each(chime_object_t* instance, chime_object_t* function);
+chime_object_t* data_to_string(chime_object_t* instance);
 
 chime_object_t* chime_data_get_block(chime_object_t* instance, chime_object_t* index);
 chime_object_t* chime_data_get_block_size(chime_object_t* instance, chime_object_t* index);
