@@ -58,24 +58,46 @@ chime_object_t* execution_context_sleep(chime_object_t* instance, chime_object_t
 #ifdef PLATFORM_MAC_OS_X
 dispatch_queue_t execution_context_get_dispatch_queue(chime_object_t* instance)
 {
-    dispatch_queue_t* data;
+    char** data;
     
-    data = chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_queue"));
+    data = (char**)chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_objects"));
     
     assert(data[0]);
     
-    return data[0];
+    return (dispatch_queue_t)data[0];
 }
 
 void execution_context_set_dispatch_queue(chime_object_t* instance, dispatch_queue_t queue)
 {
-    dispatch_queue_t* data;
+    char** data;
     
     assert(queue);
     
-    data = (dispatch_queue_t*)chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_queue"));
+    data = (char**)chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_objects"));
     
-    data[0] = queue;
+    data[0] = (char*)queue;
+}
+
+dispatch_group_t execution_context_get_dispatch_group(chime_object_t* instance)
+{
+    char** data;
+    
+    data = (char**)chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_objects"));
+    
+    assert(data[1]);
+    
+    return (dispatch_group_t)data[1];
+}
+
+void execution_context_set_dispatch_group(chime_object_t* instance, dispatch_group_t group)
+{
+    char** data;
+    
+    assert(group);
+    
+    data = (char**)chime_tag_decode_raw_block(chime_object_get_attribute_unretained(instance, "_dispatch_objects"));
+    
+    data[1] = (char*)group;
 }
 #endif
 
@@ -95,8 +117,14 @@ chime_object_t* execution_context_sync(chime_object_t* instance, chime_object_t*
 chime_object_t* execution_context_async(chime_object_t* instance, chime_object_t* function)
 {
 #ifdef PLATFORM_MAC_OS_X
+    dispatch_queue_t queue;
+    dispatch_group_t group;
+    
+    queue = execution_context_get_dispatch_queue(instance);
+    group = execution_context_get_dispatch_group(instance);
+    
     chime_object_retain(function);
-    dispatch_async(execution_context_get_dispatch_queue(instance), ^{
+    dispatch_group_async(group, queue, ^{
         chime_closure_invoke_0((chime_closure_t*)function);
         chime_object_release(function);
     });
@@ -108,7 +136,10 @@ chime_object_t* execution_context_async(chime_object_t* instance, chime_object_t
 chime_object_t* execution_context_wait(chime_object_t* instance)
 {
 #ifdef PLATFORM_MAC_OS_X
-    dispatch_sync(execution_context_get_dispatch_queue(instance), ^{});
+    dispatch_group_t group;
+    
+    group = execution_context_get_dispatch_group(instance);
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 #endif
     
     return NULL;
