@@ -1,0 +1,24 @@
+implementation TestObject
+{
+    method do_something(a)
+    {
+        a.call()
+    }
+    
+    method success()
+    {
+        "success".print()
+    }
+}
+
+obj = TestObject.new()
+
+5.times() do (i)
+{
+    obj.do_something() do
+    {
+        i.to_string().print()
+    }
+}
+
+obj.success()

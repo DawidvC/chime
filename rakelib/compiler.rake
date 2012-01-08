@@ -4,7 +4,7 @@ COMPILER_RAKE_SOURCES  = FileList['rakelib/compiler.rake', 'Rakefile', 'rakelib/
 COMPILER_RAKE_CACHE    = "#{BUILD_PATH}/compiler/rake.cache"
 
 # Compiler Source Definitions
-COMPILER_SOURCES       = FileList['compiler/**/*.cpp'].exclude('compiler/tests/**/*.cpp')
+COMPILER_SOURCES       = FileList['compiler/**/*.cpp'].exclude('compiler/tests/**/*.cpp', 'compiler/frontend/**/*.cpp')
 COMPILER_PREFIX_HEADER = 'compiler/prefix.hpp'
 
 COMPILER_PCH           = pch_from_header(COMPILER_PREFIX_HEADER, rake_cache:COMPILER_RAKE_CACHE)
