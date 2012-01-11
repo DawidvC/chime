@@ -75,8 +75,8 @@ TEST_F(ClosureParseTests, MethodCallWithLabelledClosure)
     ASSERT_CLOSURE(closure);
     
     op = dynamic_cast<ast::binary_operator*>(closure->getBody()->childAtIndex(0));
-    ASSERT_GLOBAL_ASSIGNMENT(op);
-    ASSERT_GLOBAL_VARIABLE("queue", op->getLeftOperand());
+    ASSERT_CLOSED_ASSIGNMENT(op);
+    ASSERT_CLOSED_GLOBAL_VARIABLE("queue", op->getLeftOperand());
 }
 
 TEST_F(ClosureParseTests, ClosedLocalVariableInMethod)
@@ -194,4 +194,22 @@ TEST_F(ClosureParseTests, ClosureIdentifierInImplementation)
     closure = dynamic_cast<ast::Closure*>(method->getBody()->childAtIndex(1));
     ASSERT_CLOSURE(closure);
     ASSERT_EQ("Foo.bar::_closure_2", closure->getIdentifier());
+}
+
+TEST_F(ClosureParseTests, ClosedGlobalVariable)
+{
+    chime::Node*           node;
+    chime::BinaryOperator* op;
+    ast::Closure*          closure;
+    
+    node = parse("a = 1\ndo { a = 2 }\n a.print()");
+    
+    op = dynamic_cast<chime::BinaryOperator*>(node->childAtIndex(0));
+    ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
+    
+    closure = dynamic_cast<ast::Closure*>(node->childAtIndex(1));
+    ASSERT_CLOSURE(closure);
+    
+    op = dynamic_cast<chime::BinaryOperator*>(closure->getBody()->childAtIndex(0));
+    ASSERT_CLOSED_GLOBAL_VARIABLE("a", op->getLeftOperand());
 }

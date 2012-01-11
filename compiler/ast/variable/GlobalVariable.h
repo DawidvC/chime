@@ -12,9 +12,12 @@ namespace ast
     public:
         GlobalVariable(const std::string& identifier);
         
-        std::string nodeName(void) const;
+        std::string nodeName() const;
+        
+        bool requiresCapture() const;
         
         AssignmentOperator* createAssignment();
+        chime::Variable*    createClosedVersion();
         
         llvm::Value* codegen(chime::code_generator& generator);
     };

@@ -1,4 +1,5 @@
 #include "GlobalVariable.h"
+#include "ClosedGlobalVariable.h"
 #include "compiler/ast/operators/GlobalVariableAssignmentOperator.h"
 
 namespace ast
@@ -8,9 +9,14 @@ namespace ast
     {
     }
     
-    std::string GlobalVariable::nodeName(void) const
+    std::string GlobalVariable::nodeName() const
     {
-        return std::string("Global Variable");
+        return "Global Variable";
+    }
+    
+    bool GlobalVariable::requiresCapture() const
+    {
+        return true;
     }
     
     AssignmentOperator* GlobalVariable::createAssignment()
@@ -18,11 +24,16 @@ namespace ast
         return new GlobalVariableAssignmentOperator();
     }
     
+    chime::Variable* GlobalVariable::createClosedVersion()
+    {
+        return new chime::ClosedGlobalVariable(this->identifier());
+    }
+    
     llvm::Value* GlobalVariable::codegen(chime::code_generator& generator)
     {
         llvm::Value* value;
         
-        value = generator.getCurrentScope()->getValueForIdentifier(this->getIdentifier());
+        value = generator.getCurrentScope()->getValueForIdentifier(this->identifier());
         if (!value)
         {
             value = new llvm::GlobalVariable(*generator.module(), 
@@ -34,7 +45,7 @@ namespace ast
             static_cast<llvm::GlobalVariable*>(value)->setAlignment(4);
             static_cast<llvm::GlobalVariable*>(value)->setInitializer(generator.getRuntime()->getChimeLiteralNull());
             
-            generator.getCurrentScope()->setValueForIdentifier(this->getIdentifier(), value);
+            generator.getCurrentScope()->setValueForIdentifier(this->identifier(), value);
         }
         
         assert(value);

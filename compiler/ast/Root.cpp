@@ -1,5 +1,6 @@
 #include "Root.h"
 #include "compiler/ast/variable/GlobalVariable.h"
+#include "compiler/ast/variable/SharedLocalVariable.h"
 
 namespace ast
 {
@@ -43,6 +44,14 @@ namespace ast
     
     chime::Variable* Root::createVariable(const std::string& identifier)
     {
+        // this is kind of a hack, and duplication with LocalScopedNode.  But, without
+        // thinking too hard about it, I think there is no difference between a post-captured
+        // local variable and a post-captured global.
+        if (this->capturedIdentifier(identifier))
+        {
+           return new chime::SharedLocalVariable(identifier);
+        }
+        
         return new GlobalVariable(identifier);
     }
     
