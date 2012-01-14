@@ -76,14 +76,14 @@ namespace ast
         //
         // For now, we'll just handle the static case.
         
-        ast::node*  node;
+        chime::Node* node;
         
         node = this->getImportand();
         
         if (node->nodeName().compare(std::string("type reference")) == 0)
         {
             chime::Type* typeRef;
-            llvm::Value*         cStringPtr;
+            llvm::Value* cStringPtr;
             
             typeRef    = dynamic_cast<chime::Type*>(node);
             cStringPtr = generator.getConstantString(typeRef->identifier());
@@ -95,8 +95,16 @@ namespace ast
         else if (node->nodeName().compare(std::string("string literal")) == 0)
         {
             std::string typeIdentifier;
+            size_t      lastSlashPos;
             
             typeIdentifier = dynamic_cast<string_literal*>(node)->value();
+            
+            // this could have slashes in the name, to specify a path.  We need
+            // to clear those out
+            lastSlashPos = typeIdentifier.find_last_of("/");
+            
+            if (lastSlashPos != std::string::npos)
+                typeIdentifier = typeIdentifier.substr(lastSlashPos+1, typeIdentifier.length());
             
             generator.getRuntime()->callModuleInitFunction(typeIdentifier);
         }
