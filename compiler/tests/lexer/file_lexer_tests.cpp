@@ -41,7 +41,7 @@ protected:
 // *** token functions
 TEST_F(FileLexerTest, BasicImplementation)
 {
-    lex("basic_implementation.chm");
+    lex("basic_implementation.cm");
     
     ASSERT_EQ("implementation", next_token_value());
     ASSERT_EQ("Foo",            next_token_value());
@@ -61,7 +61,7 @@ TEST_F(FileLexerTest, BasicImplementation)
 
 TEST_F(FileLexerTest, StringWithCarriageReturn)
 {
-    lex("string_with_carriage_return.chm");
+    lex("string_with_carriage_return.cm");
     
     ASSERT_EQ("a",           next_token_value());
     ASSERT_EQ("=",           next_token_value());

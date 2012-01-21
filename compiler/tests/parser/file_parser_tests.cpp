@@ -21,7 +21,7 @@ TEST_F(FileParserTests, BasicImplemenation)
 {
     ast::node* node;
     
-    node = this->parse("basic_implementation.chm");
+    node = this->parse("basic_implementation.cm");
     
     ASSERT_IMPLEMENTATION("Foo", "Bar", node->child_at_index(0));
     ASSERT_EQ(1, (int)node->child_count());
@@ -31,7 +31,7 @@ TEST_F(FileParserTests, BasicMethodDefinition)
 {
     ast::method_definition* method;
     
-    method = this->parse_method_def("basic_method_definition.chm");
+    method = this->parse_method_def("basic_method_definition.cm");
     
     ASSERT_METHOD_DEFINITION("new", method);
 }
@@ -41,7 +41,7 @@ TEST_F(FileParserTests, StoreToAVariableAndUseIt)
     ast::node*            node;
     ast::binary_operator* op;
     
-    node = this->parse("store_then_use.chm");
+    node = this->parse("store_then_use.cm");
     
     op = static_cast<ast::binary_operator*>(node->childAtIndex(0));
     ASSERT_GLOBAL_ASSIGNMENT(op);
@@ -63,7 +63,7 @@ TEST_F(FileParserTests, TwoClassMethodsInARow)
     ast::node*            node;
     ast::binary_operator* op;
     
-    node = parse("two_class_methods_in_a_row.chm");
+    node = parse("two_class_methods_in_a_row.cm");
     
     op = (ast::binary_operator*)node->child_at_index(0);
     ASSERT_OPERATOR(".", op);

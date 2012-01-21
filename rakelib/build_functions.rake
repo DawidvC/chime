@@ -26,7 +26,7 @@ def compiler_for(source_file)
     CXX
   when ".c", ".h"
     CC
-  when ".chm", ".chime"
+  when ".cm", ".chime"
     CHIME_COMPILER
   else
     raise("Don't know how to compile #{source_file}")

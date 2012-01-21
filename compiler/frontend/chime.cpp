@@ -12,6 +12,8 @@
 #include <llvm/Assembly/PrintModulePass.h>
 #include <llvm/Support/FormattedStream.h>
 
+#define CHIME_FILE_EXTENSION "cm"
+
 bool                              print_ast;
 bool                              emit_llvm_ir;
 bool                              _executeBinary;
@@ -120,9 +122,9 @@ std::string resolvedPathForDependency(std::string name)
     
     // a leading slash means it is not relative
     if (*name.begin() == '/')
-        return name + ".chm";
+        return name + "." + CHIME_FILE_EXTENSION;
     
-    return _inputFileName.substr(0, _inputFileName.find_last_of("/") + 1) + name + ".chm";
+    return _inputFileName.substr(0, _inputFileName.find_last_of("/") + 1) + name + "." + CHIME_FILE_EXTENSION;
 }
 
 bool compile(chime::SourceFileRef sourceFile, bool asMain)

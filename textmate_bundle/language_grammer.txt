@@ -1,6 +1,6 @@
 {	scopeName = 'source.chime';
 	comment = 'This is textmate syntax grammer for chime';
-	fileTypes = ( 'ci', 'chm', 'chime' );
+	fileTypes = ( 'cm', 'chime' );
 	foldingStartMarker = '\b(namespace|interface|implementation|method|property)\b';
 	foldingStopMarker = '(})';
 	patterns = (

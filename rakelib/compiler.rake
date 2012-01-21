@@ -13,7 +13,7 @@ COMPILER_OBJECTS       = objects_from_sources(COMPILER_SOURCES, pch:COMPILER_PCH
 # Compiler Test Source Definitions
 COMPILER_TEST_SOURCES            = FileList['compiler/tests/**/*.cpp']
 COMPILER_TEST_PREFIX_HEADER      = 'compiler/tests/prefix.hpp'
-COMPILER_TEST_FIXTURES           = FileList['compiler/tests/fixtures/**/*.chm']
+COMPILER_TEST_FIXTURES           = FileList['compiler/tests/fixtures/**/*.cm']
 
 COMPILER_TEST_PCH                = pch_from_header(COMPILER_TEST_PREFIX_HEADER, rake_cache:COMPILER_RAKE_CACHE)
 COMPILER_TEST_OBJECTS            = objects_from_sources(COMPILER_TEST_SOURCES, pch:COMPILER_TEST_PCH, rake_cache:COMPILER_RAKE_CACHE)

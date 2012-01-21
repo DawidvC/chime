@@ -1,11 +1,11 @@
 
-LANGUAGE_TEST_SOURCES = FileList['specs/Unit/*.chm']
-SCRIPT_TEST_SOURCES   = FileList['specs/Script/*.chm']
+LANGUAGE_TEST_SOURCES = FileList['specs/Unit/*.cm']
+SCRIPT_TEST_SOURCES   = FileList['specs/Script/*.cm']
 
 TEST_SCRIPTS_PATH     = "#{BUILD_PATH}/specs/Script"
 
 SCRIPT_TEST_EXECUTABLES = SCRIPT_TEST_SOURCES.collect do |source_file|
-  script_name       = File.basename(source_file, ".chm")
+  script_name       = File.basename(source_file, ".cm")
   script_executable = "#{TEST_SCRIPTS_PATH}/#{script_name}"
   
   directory(TEST_SCRIPTS_PATH)
@@ -42,6 +42,7 @@ end
 # Rules
 CLEAN.include("#{BUILD_PATH}/language_test")
 CLEAN.include('specs/Unit/*.chc')
+CLEAN.include('specs/Script/*.chc')
 
 # language tests
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchime.a")
@@ -49,5 +50,5 @@ file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/libchimeruntime.a")
 file("#{BUILD_PATH}/language_test" => "#{BUILD_PATH}/chime")
 file("#{BUILD_PATH}/language_test" => LANGUAGE_TEST_SOURCES) do
   log("Build", "#{BUILD_PATH}/language_test")
-  sh("#{CHIME_COMPILER} -c -o #{BUILD_PATH}/language_test specs/Unit/Tests.chm")
+  sh("#{CHIME_COMPILER} -c -o #{BUILD_PATH}/language_test specs/Unit/Tests.cm")
 end
