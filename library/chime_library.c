@@ -10,6 +10,8 @@
 #include "library/testing/test_case.h"
 #include <stdio.h>
 
+extern void init_chime_based_library(void);
+
 void chime_library_initialize(void)
 {
     unsigned char old_level;
@@ -27,6 +29,9 @@ void chime_library_initialize(void)
     chime_process_initialize();
     
     chime_data_initialize();
+    
+    // we now need to call the external library initialize
+    init_chime_based_library();
     
     chime_log_level = old_level; // restore logging
 }

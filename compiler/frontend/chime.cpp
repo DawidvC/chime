@@ -17,6 +17,7 @@
 bool                              print_ast;
 bool                              emit_llvm_ir;
 bool                              _executeBinary;
+bool                              _doLink;
 bool                              _traceSteps;
 bool                              _buildOptimized;
 std::string                       _inputFileName;
@@ -33,6 +34,7 @@ void get_options(int argc, char* argv[])
         { "debug",     no_argument,       NULL, 'd' },
         { "emit-llvm", no_argument,       NULL, 'e' },
         { "help",      no_argument,       NULL, 'h' },
+        { "--no-link", no_argument,       NULL, 'l' },
         { "output",    required_argument, NULL, 'o' },
         { "print",     no_argument,       NULL, 'p' },
         { "trace",     no_argument,       NULL, 't' },
@@ -43,10 +45,11 @@ void get_options(int argc, char* argv[])
     print_ast       = false;
     emit_llvm_ir    = false;
     _executeBinary  = true;
+    _doLink         = true;
     _traceSteps     = false;
     _buildOptimized = true;
     
-    while ((c = getopt_long(argc, argv, "cdeho:ptv", longopts, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "cdehlo:ptv", longopts, NULL)) != -1)
     {
         switch (c)
         {
@@ -58,6 +61,9 @@ void get_options(int argc, char* argv[])
                 break;
             case 'e':
                 emit_llvm_ir = true;
+                break;
+            case 'l':
+                _doLink = false;
                 break;
             case 'o':
                 _outputFileName = std::string(optarg);
@@ -80,6 +86,7 @@ void get_options(int argc, char* argv[])
                 printf("usage: chime [options] [--] [file] [arguments]\n");
                 printf("\n");
                 printf("  -c                run only compile and assemble steps\n");
+                printf("  -l (--no-link)    skip link step\n");
                 printf("  -d (--debug)      disable optimizations\n");
                 printf("  -e (--emit-llvm)  create llvm IR\n");
                 printf("  -h (--help)       print this help message and exit\n");
@@ -269,7 +276,8 @@ int main(int argc, char* argv[])
     }
     
     // now actually begin the full compilation process
-    if (!compile(sourceFile, true))
+    // only compile as main if we are going to link
+    if (!compile(sourceFile, _doLink))
         return 1;
     
     // set a default path if needed
@@ -277,6 +285,9 @@ int main(int argc, char* argv[])
     {
         _outputFileName = sourceFile->getBinaryFilePath();
     }
+    
+    if (!_doLink)
+        return 0;
     
     if (!link())
         return 1;

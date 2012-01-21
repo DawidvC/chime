@@ -1,4 +1,4 @@
-implementation TestRunner
+implementation Test.Runner
 {
     method execute_tests_for_class(klass)
     {
