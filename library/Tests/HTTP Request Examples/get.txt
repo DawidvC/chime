@@ -1,0 +1,5 @@
+GET / HTTP/1.1
+User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8r zlib/1.2.5
+Host: localhost:8888
+Accept: */*
+

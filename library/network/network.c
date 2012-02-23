@@ -6,7 +6,7 @@ void chime_network_initialize(void)
 {
     chime_class_t* klass;
     
-    klass = chime_class_create_object_subclass("Network.TCPSocket");
+    klass = chime_class_create("Network.TCPSocket", chime_runtime_get_class("Source.Socket"));
     
     // class methods
     chime_class_set_class_method(klass, "new:", tcp_socket_new);

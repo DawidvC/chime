@@ -1,0 +1,26 @@
+implementation Network.HTTP.Request
+{
+    attribute request_data
+    
+    method initialize()
+    {
+        request_data = Data.new()
+    }
+    
+    method append_data(data, size:size)
+    {
+        request_data.append(data, size:size)
+        
+        "[request] appended data of length {size}".print()
+        "[request] now contains '{request_data}'".print()
+    }
+    
+    method complete?
+    {
+        // if we have less than four bytes, we cannot be done
+        if request_data.length < 4
+            return false
+        
+        return request_data.to_string()[-4:-1] == "\r\n\r\n"
+    }
+}

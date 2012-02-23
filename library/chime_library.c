@@ -6,6 +6,7 @@
 #include "library/data/chime_data.h"
 #include "library/network/network.h"
 #include "library/process/process.h"
+#include "library/source/source.h"
 #include "library/testing/assertions.h"
 #include "library/testing/test_case.h"
 #include <stdio.h>
@@ -24,7 +25,9 @@ void chime_library_initialize(void)
     
     chime_execution_initialize();
     
-    chime_network_initialize();
+    chime_source_initialize();
+    
+    // chime_network_initialize();
     
     chime_process_initialize();
     

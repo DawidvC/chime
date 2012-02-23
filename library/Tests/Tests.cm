@@ -1,0 +1,7 @@
+import "HTTPRequestTests"
+
+runner = Test.Runner.new()
+
+runner.execute_tests_for_class(HTTPRequestTests)
+
+runner.finish()

@@ -1,0 +1,16 @@
+implementation HTTPRequestTests : Test.Case
+{
+    attribute queue
+    
+    method initialize()
+    {
+        queue = Execution.Queue.new("chime.HTTPRequestTests")
+    }
+    
+    method test_simple_get()
+    {
+        queue.async() do { "hello".print() }
+        
+        queue.wait()
+    }
+}
