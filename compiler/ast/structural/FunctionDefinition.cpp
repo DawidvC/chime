@@ -54,10 +54,10 @@ namespace ast
     
     llvm::Function* FunctionDefinition::createFunction(chime::code_generator& generator, const std::string& name, unsigned int arity)
     {
-        llvm::Function*                function;
-        llvm::FunctionType*            functionType;
-        std::vector<const llvm::Type*> functionArgs;
-        unsigned int                   i;
+        llvm::Function*          function;
+        llvm::FunctionType*      functionType;
+        std::vector<llvm::Type*> functionArgs;
+        unsigned int             i;
         
         // setup the function type
         functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // first argument is always self
@@ -68,7 +68,7 @@ namespace ast
             functionArgs.push_back(generator.getRuntime()->getChimeObjectPtrType()); // this is arg1
         }
         
-        functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), functionArgs, false);
+        functionType = llvm::FunctionType::get(generator.getRuntime()->getChimeObjectPtrType(), llvm::ArrayRef<llvm::Type*>(functionArgs), false);
         
         function = generator.createFunction(functionType, name);
         

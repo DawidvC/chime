@@ -107,38 +107,6 @@ namespace chime
         llvm::Type*         _cStringPtrType;
         llvm::FunctionType* _chimeFunctionType;
         
-        llvm::Function*     _functionChimeRuntimeInitialize;
-        llvm::Function*     _functionChimeLibraryInitialize;
-        llvm::Function*     _functionChimeRuntimeCreateClass;
-        llvm::Function*     _functionChimeRuntimeGetClass;
-        llvm::Function*     _functionChimeRuntimeGetTrait;
-        llvm::Function*     _functionChimeRuntimeLoad;
-        llvm::Function*     _functionChimeObjectCreate;
-        llvm::Function*     _functionChimeRuntimeSetInstanceMethod;
-        llvm::Function*     _functionChimeRuntimeSetClassMethod;
-        llvm::Function*     _functionChimeClassIncludeTrait;
-        llvm::Function*     _functionChimeTraitCreate;
-        llvm::Function*     _functionChimeObjectGetAttribute;
-        llvm::Function*     _functionChimeObjectGetAttributeUnretained;
-        llvm::Function*     _functionChimeObjectSetAttribute;
-        llvm::Function*     _functionChimeObjectInvoke0;
-        llvm::Function*     _functionChimeObjectInvoke1;
-        llvm::Function*     _functionChimeObjectInvoke2;
-        llvm::Function*     _functionChimeObjectInvoke3;
-        llvm::Function*     _functionChimeIntegerEncode;
-        llvm::Function*     _functionChimeBooleanEncode;
-        llvm::Function*     _functionChimeStringCreateWithCString;
-        llvm::Function*     _functionChimeRangeCreate;
-        llvm::Function*     _functionChimeClosureCreate;
-        llvm::Function*     _functionChimeReferenceCreate;
-        llvm::Function*     _functionChimeReferenceGet;
-        llvm::Function*     _functionChimeReferenceSet;
-        llvm::Function*     _functionChimeArrayCreateWithLength;
-        llvm::Function*     _functionChimeArrayAppend;
-        llvm::Function*     _functionChimeFloatCreate;
-        llvm::Function*     _functionChimeHashCreate;
-        llvm::Function*     _functionChimeHashSet;
-        
         std::map<std::string, llvm::Function*> _runtimeFunctions;
         
         llvm::Constant*     _literalNull;

@@ -49,7 +49,7 @@ namespace chime
         llvm::AllocaInst*  insert_chime_object_alloca(void);
         
         llvm::Value*       createCondition(llvm::Value* cond);
-        llvm::Function*    createFunction(const llvm::FunctionType* type, const std::string name);
+        llvm::Function*    createFunction(llvm::FunctionType* type, const std::string name);
         
         void generate(ast::Root* node, const std::string& moduleName, bool asMain);
         

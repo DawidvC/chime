@@ -9,12 +9,13 @@
 #include <llvm/Pass.h>
 #include <llvm/PassManager.h>
 #include <llvm/Support/FormattedStream.h>
-#include "llvm/Support/Host.h"
-#include "llvm/ADT/Triple.h"
-#include "llvm/Target/TargetData.h"
-#include "llvm/Target/TargetMachine.h"
-#include "llvm/Target/TargetRegistry.h"
-#include "llvm/Target/TargetSelect.h"
+#include <llvm/Support/Host.h>
+#include <llvm/ADT/Triple.h>
+#include <llvm/Target/TargetData.h>
+#include <llvm/Target/TargetMachine.h>
+#include "llvm/Support/TargetRegistry.h"
+#include <llvm/Support/TargetRegistry.h>
+#include <llvm/Support/TargetSelect.h>
 
 namespace chime
 {
@@ -107,6 +108,8 @@ namespace chime
         
         module = this->getModule(asMain);
         
+        assert(module);
+        
         stream = new llvm::raw_fd_ostream(this->getOutputFilePath().c_str(), errorString, llvm::raw_fd_ostream::F_Binary);
         
         llvm::formatted_raw_ostream formatted_ostream(*stream);
@@ -118,14 +121,18 @@ namespace chime
         triple.setTriple(llvm::sys::getHostTriple());
         
         target = llvm::TargetRegistry::lookupTarget(triple.getTriple(), errorString);
-        
         if (!target)
         {
-            fprintf(stderr, "crap %s\n", errorString.c_str());
+            fprintf(stderr, "Unable to create target from triple (%s)\n", errorString.c_str());
             return false;
         }
         
-        targetMachine = target->createTargetMachine(triple.getTriple(), featuresString);
+        targetMachine = target->createTargetMachine(triple.getTriple(), "", featuresString);
+        if (!targetMachine)
+        {
+            fprintf(stderr, "Unable to create target machine for code generation\n");
+            return false;
+        }
         
         passManager.add(new llvm::TargetData((const llvm::TargetData)*targetMachine->getTargetData()));
         

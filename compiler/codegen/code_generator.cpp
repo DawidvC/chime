@@ -120,7 +120,7 @@ namespace chime
         const_ptr_indices.push_back(const_int32);
         const_ptr_indices.push_back(const_int32);
         
-        const_ptr = llvm::ConstantExpr::getGetElementPtr(global_string, &const_ptr_indices[0], const_ptr_indices.size());
+        const_ptr = llvm::ConstantExpr::getGetElementPtr(global_string, llvm::ArrayRef<llvm::Constant*>(const_ptr_indices));
         
         const_c_string_array = llvm::ConstantArray::get(this->getContext(), str.c_str(), true);
         
@@ -183,7 +183,7 @@ namespace chime
         return this->builder()->CreateICmpNE(condition, llvm::ConstantInt::get(this->get_context(), llvm::APInt(1, 1)));
     }
     
-    llvm::Function* code_generator::createFunction(const llvm::FunctionType* type, const std::string name)
+    llvm::Function* code_generator::createFunction(llvm::FunctionType* type, const std::string name)
     {
         llvm::Function* function;
         
@@ -196,9 +196,9 @@ namespace chime
     void code_generator::generateMainFunction()
     {
         llvm::LLVMContext&             context = this->module()->getContext();
-        const llvm::IntegerType*       int32_type;
+        llvm::IntegerType*             int32_type;
         llvm::Type*                    int8_ptr_type;
-        std::vector<const llvm::Type*> functionArgs;
+        std::vector<llvm::Type*> functionArgs;
         llvm::FunctionType*            functionType; 
         llvm::Function*                function;
         llvm::BasicBlock*              block;
@@ -210,7 +210,7 @@ namespace chime
         functionArgs.push_back(int32_type);
         functionArgs.push_back(llvm::PointerType::get(int8_ptr_type, 0));
         
-        functionType = llvm::FunctionType::get(int32_type, functionArgs, false);
+        functionType = llvm::FunctionType::get(int32_type, llvm::ArrayRef<llvm::Type*>(functionArgs), false);
         
         function = this->createFunction(functionType, std::string("main"));
         
