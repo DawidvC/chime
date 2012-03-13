@@ -3,7 +3,7 @@
 #include "IndexOperator.h"
 #include "MethodCall.h"
 #include "OrOperator.h"
-#include "compiler/ast/literals/literal.h"
+#include "compiler/ast/literals/Literal.h"
 
 namespace ast
 {

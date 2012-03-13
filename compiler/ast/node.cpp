@@ -1,6 +1,8 @@
 #include "node.h"
 #include "compiler/lexer/token.h"
 
+#include <stdio.h>
+
 namespace ast
 {
     node::node()

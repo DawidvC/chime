@@ -1,6 +1,10 @@
 # Rakefile
 require 'rake/clean'
 
+# This is dependency of the other rake files.  The ordering of .rake loads is
+# system-dependent
+import  'rakelib/build_functions.rake'
+
 BUILD_PATH = "/tmp/chime"
 LLVM_PATH  = "/usr/local"
 GTEST_PATH = "/usr/local/gtest-1.6.0"
@@ -29,8 +33,6 @@ task(:print_config) do
   puts("CXX:                '#{CXX}'")
   puts("LINKER:             '#{LINKER}'")
   puts("ARCHIVER:           '#{ARCHIVER}'")
-  puts("")
-  puts("BUILD_PATH:         '#{BUILD_PATH}'")
   puts("")
   puts("CHIME_COMPILER:     '#{CHIME_COMPILER}'")
   puts("CHIME_LIBRARIES:    '#{CHIME_LIBRARIES}'")

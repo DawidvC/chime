@@ -1,6 +1,7 @@
 #include "ParseError.h"
 
 #include <stdarg.h>
+#include <stdio.h>
 
 namespace chime
 {

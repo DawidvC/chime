@@ -99,11 +99,11 @@ chime_object_t* file_on_read(chime_object_t* instance, chime_object_t* context, 
     int               descriptor;
     dispatch_queue_t  queue;
     dispatch_source_t source;
-    chime_object_t*   data_object;
+    //chime_object_t*   data_object;
     
     queue       = execution_context_get_dispatch_queue(context);
     descriptor  = file_get_file_descriptor(instance, READWRITE_DESCRIPTOR);
-    data_object = 
+    //data_object = 
     
     source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, descriptor, 0, queue);
     file_set_dispatch_source(instance, FILE_READ_DISPATCH_SOURCE, source);

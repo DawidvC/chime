@@ -1,12 +1,13 @@
 #include "parser.h"
 #include "compiler/ast/ast.h"
 #include "compiler/ast/control/Control.h"
-#include "compiler/ast/literals/literal.h"
+#include "compiler/ast/literals/Literal.h"
 #include "compiler/ast/structural/Structural.h"
 
-#include <string>
-#include <vector>
 #include <assert.h>
+#include <string>
+#include <stdio.h>
+#include <vector>
 
 namespace chime
 {

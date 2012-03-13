@@ -3,7 +3,7 @@
 #ifndef CONDITIONAL_H
 #define CONDITIONAL_H
 
-#include "compiler/ast/Node.h"
+#include "compiler/ast/node.h"
 
 namespace chime
 {
