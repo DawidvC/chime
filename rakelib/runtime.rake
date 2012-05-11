@@ -48,5 +48,6 @@ file("#{BUILD_PATH}/runtime_test" => :gtest)
 file("#{BUILD_PATH}/runtime_test" => "#{BUILD_PATH}/libchimeruntime.a")
 file("#{BUILD_PATH}/runtime_test" => RUNTIME_TEST_OBJECTS) do
   log("Link", "#{BUILD_PATH}/runtime_test")
-  sh("#{LINKER} -lgtest -lgtest_main -L#{BUILD_PATH} -lchimeruntime -o #{BUILD_PATH}/runtime_test #{RUNTIME_TEST_OBJECTS}")
+  # Again, ubuntu linker is very sensitive here, and requires -lpthread
+  sh("#{LINKER} -o #{BUILD_PATH}/runtime_test #{RUNTIME_TEST_OBJECTS} -L#{BUILD_PATH} -lchimeruntime -lgtest -lgtest_main -lpthread")
 end

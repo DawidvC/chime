@@ -144,8 +144,12 @@ void chime_object_retain(chime_object_t* instance)
 {
     if (chime_object_is_tagged(instance))
         return;
-        
+    
+#if defined(PLATFORM_MAC_OS_X)
     chime_atomic_increment32_barrier(&instance->retain_count);
+#else
+    instance->retain_count++;
+#endif
 
 #ifdef PRINT_LIFECYCLE
     fprintf(stderr, "[runtime] %p retain, count: %u\n", instance, instance->retain_count);
@@ -166,7 +170,13 @@ void chime_object_release(chime_object_t* instance)
     if (instance->flags & ObjectIsClass)
         return;
     
+#if defined(PLATFORM_MAC_OS_X)
     new_count = chime_atomic_decrement32_barrier(&instance->retain_count);
+#else
+    instance->retain_count--;
+    new_count = instance->retain_count;
+#endif
+    
     if (new_count == 0)
     {
 #ifdef PRINT_LIFECYCLE

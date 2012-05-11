@@ -142,7 +142,11 @@ chime_object_t* tcp_socket_on_connection(chime_object_t* instance, chime_object_
     yes        = 1;
     
     // IPv4 address
-    struct sockaddr_in addr4 = { sizeof(addr4), AF_INET,  htons(port), { INADDR_ANY }, { 0 } };
+    struct sockaddr_in addr4;
+    
+    addr4.sin_family      = AF_INET;
+    addr4.sin_port        = htons(port);
+    addr4.sin_addr.s_addr = htonl(INADDR_ANY);
     
     result = setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR, (void*)&yes, sizeof(yes));
     assert(result == 0);

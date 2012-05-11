@@ -50,6 +50,11 @@ file("#{BUILD_PATH}/libchime.a") do
 end
 
 # Library Tests
+file("/usr/local/lib/libchime.a")
+file("/usr/local/lib/libchimeruntime.a")
+
+file(LIBRARY_TEST_BINARY => "/usr/local/lib/libchime.a")
+file(LIBRARY_TEST_BINARY => "/usr/local/lib/libchimeruntime.a")
 file(LIBRARY_TEST_BINARY => "#{BUILD_PATH}/libchime.a")
 file(LIBRARY_TEST_BINARY => "#{BUILD_PATH}/libchimeruntime.a")
 file(LIBRARY_TEST_BINARY => "#{BUILD_PATH}/chime")

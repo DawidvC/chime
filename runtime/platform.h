@@ -4,9 +4,12 @@
 #define PLATFORM_H
 
 // platform identification
-#ifdef __APPLE__
-#define PLATFORM_MAC_OS_X
-#define PLATFORM_UNIX
+#if defined(__APPLE__)
+#   define PLATFORM_MAC_OS_X 1
+#   define PLATFORM_UNIX     1
+#elif defined(__linux__)
+#   define PLATFORM_LINUX    1
+#   define PLATFORM_UNIX     1
 #endif
 
 #ifdef __cplusplus
@@ -24,12 +27,12 @@ extern "C" {
 #define chime_malloc(x)         malloc(x)
 #define chime_free(x)           free(x)
 
-#include <strings.h>
+#include <string.h>
 #define chime_zero_memory(x, n)   bzero(x, n*CHIME_ALLOCATION_UNIT)
 #define chime_memcpy(dst, src, n) memcpy(dst, src, n)
 
 // atomic operations
-#ifdef PLATFORM_MAC_OS_X
+#if defined(PLATFORM_MAC_OS_X)
 #   include <libkern/OSAtomic.h>
 
 #   define chime_atomic_increment32_barrier(x) OSAtomicIncrement32(x)

@@ -192,7 +192,11 @@ bool link(void)
     std::string linkCommand;
     struct stat results;
     
+#if defined(__APPLE__)
     linkCommand = std::string("/usr/bin/ld");
+#elif defined(__linux__)
+    linkCommand = std::string("/usr/bin/gcc");
+#endif
     
     if (lstat(linkCommand.c_str(), &results) != 0)
     {
@@ -200,8 +204,15 @@ bool link(void)
         return false;
     }
     
+    if (!_outputFileName.empty())
+    {
+        linkCommand.append(" -o ");
+        linkCommand.append(_outputFileName);
+    }
+    
+#if defined(__APPLE__)
     linkCommand.append(" -dynamic -arch x86_64 -macosx_version_min 10.6.0 -lcrt1.10.6.o -lSystem");
-    linkCommand.append(" -lchimeruntime -lchime");
+#endif
     
     if (_compiledSources.size() == 0)
     {
@@ -216,11 +227,7 @@ bool link(void)
         linkCommand.append((*i)->getOutputFilePath());
     }
     
-    if (!_outputFileName.empty())
-    {
-        linkCommand.append(" -o ");
-        linkCommand.append(_outputFileName);
-    }
+    linkCommand.append(" -lchimeruntime -lchime");
     
     if (_traceSteps)
         fprintf(stdout, "[Link] %s\n", _outputFileName.c_str());
@@ -294,7 +301,8 @@ int main(int argc, char* argv[])
     
     if (_executeBinary)
     {
-        return execl(_outputFileName.c_str(), NULL);
+        // cast to null needed for linux compatibility (not needed on mac os x)
+        return execl(_outputFileName.c_str(), (char*)NULL);
     }
     
     return 0;

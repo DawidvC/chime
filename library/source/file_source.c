@@ -10,6 +10,7 @@
 #   include <errno.h>
 #   include <fcntl.h>
 #   include <stdio.h>
+#   include <unistd.h>
 #endif
 
 chime_object_t* file_new(chime_class_t* klass, chime_object_t* url)

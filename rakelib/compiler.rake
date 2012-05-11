@@ -65,7 +65,9 @@ file("#{BUILD_PATH}/chime_test" => "#{BUILD_PATH}/libchimecompiler.a")
 file("#{BUILD_PATH}/chime_test" => COMPILER_TEST_OBJECTS)
 file("#{BUILD_PATH}/chime_test") do
   log("Link", "#{BUILD_PATH}/chime_test")
-  sh("#{LINKER} -lgtest -lgtest_main -L#{BUILD_PATH} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES} -lchimecompiler -o #{BUILD_PATH}/chime_test #{COMPILER_TEST_OBJECTS}")
+  # For some reason, the ubuntu linker is highly sensitive to the ordering of -L and -l flags in
+  # this invocation.  I do not understand why.
+  sh("#{LINKER} -o #{BUILD_PATH}/chime_test #{COMPILER_TEST_OBJECTS} -L#{BUILD_PATH} -lchimecompiler #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES} -lgtest -lgtest_main")
 end
 
 # frontend
@@ -73,5 +75,6 @@ file("#{BUILD_PATH}/chime" => COMPILER_RAKE_CACHE)
 file("#{BUILD_PATH}/chime" => "#{BUILD_PATH}/libchimecompiler.a")
 file("#{BUILD_PATH}/chime" => FRONTEND_OBJECTS) do
   log("Link", "#{BUILD_PATH}/chime")
-  sh("#{LINKER} -L#{BUILD_PATH} #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES} -lchimecompiler -o #{BUILD_PATH}/chime #{FRONTEND_OBJECTS}")
+  # ... sensitive linkers
+  sh("#{LINKER} -o #{BUILD_PATH}/chime #{FRONTEND_OBJECTS} -L#{BUILD_PATH} -lchimecompiler #{LLVM_LD_FLAGS} #{LLVM_LIBRARIES}")
 end
