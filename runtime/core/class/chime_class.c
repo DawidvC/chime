@@ -22,7 +22,7 @@ chime_class_t* chime_class_create(const char* name, chime_class_t* superclass)
     chime_class_t*  metaclass;
     char*           metaclass_name;
     
-    metaclass_name = malloc(strlen(name) + 4);
+    metaclass_name = chime_malloc(strlen(name) + 5);
     metaclass_name[0] = 'M';
     metaclass_name[1] = 'e';
     metaclass_name[2] = 't';

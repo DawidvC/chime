@@ -77,15 +77,15 @@ chime_object_t* object_to_string(chime_object_t* instance)
     klass      = chime_object_get_class(instance);
     class_name = chime_class_get_name(klass);
     
-    // we have to add the size of the "<:0x12345678>" to the string
-    string_length = strlen(class_name) + sizeof(void*) + 6;
+    // we have to add the size of the "<:0x0000000012345678>" to the string
+    string_length = strlen(class_name) + 21;
     
     buffer = malloc(string_length + 1);
     bzero(buffer, string_length + 1);
     
-    snprintf(buffer, string_length + 1, "<%s:%p>", class_name, instance);
+    snprintf(buffer, string_length + 1, "<%s:%016lx>", class_name, (unsigned long)instance);
     
-    string = chime_string_create_with_c_string(buffer, string_length + 1);
+    string = chime_string_create_with_c_string(buffer, strlen(buffer));
     
     free(buffer);
     

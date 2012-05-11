@@ -64,6 +64,7 @@ chime_object_t* integer_to_string(chime_object_t* instance)
     c_string = chime_allocate(INTEGER_STRING_SIZE);
     length   = 0;
     p        = c_string + BYTES_PER_INTEGER_STRING;
+    has_sign = false;
     
     if (value < 0)
     {
