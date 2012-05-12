@@ -10,7 +10,7 @@ namespace chime
     class Variable;
 }
 
-namespace ast
+namespace chime
 {
     class AssignmentOperator : public binary_operator
     {

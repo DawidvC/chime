@@ -2,7 +2,7 @@
 
 #include "catch.h"
 
-namespace ast
+namespace chime
 {
     Catch::Catch(chime::parser& parser)
     {

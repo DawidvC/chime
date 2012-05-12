@@ -5,7 +5,7 @@
 
 #include "ScopedNode.h"
 
-namespace ast
+namespace chime
 {
     class Root : public ScopedNode
     {

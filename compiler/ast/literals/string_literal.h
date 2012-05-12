@@ -3,12 +3,12 @@
 
 #include "Literal.h"
 
-namespace ast
+namespace chime
 {
     class string_literal : public Literal
     {
     public:
-        static ast::Node* parse(chime::parser& parser);
+        static Node* parse(chime::parser& parser);
     
     public:
         virtual std::string nodeName(void) const;

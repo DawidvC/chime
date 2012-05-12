@@ -5,7 +5,7 @@
 
 #include "Structural.h"
 
-namespace ast
+namespace chime
 {
     class Attribute : public Structural
     {

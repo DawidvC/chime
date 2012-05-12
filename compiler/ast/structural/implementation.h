@@ -9,7 +9,7 @@
 
 #include <llvm/Function.h>
 
-namespace ast
+namespace chime
 {
     class Implementation : public ScopedNode
     {

@@ -7,7 +7,7 @@
 #include "catch.h"
 #include "finally.h"
 
-namespace ast
+namespace chime
 {
     class Try : public ExceptionFlow
     {
@@ -15,17 +15,17 @@ namespace ast
         Try(chime::parser& parser);
         virtual ~Try();
         
-        virtual std::string nodeName(void) const;
-        virtual std::string stringRepresentation(int depth=0) const;
+        virtual std::string  nodeName(void) const;
+        virtual std::string  stringRepresentation(int depth=0) const;
         
-        std::vector<ast::Catch*>* getCatchBlocks(void) const;
-        void                      addCatchBlock(ast::Catch* node);
-        ast::Finally*             getFinallyBlock(void) const;
-        void                      setFinallyBlock(ast::Finally* node);
+        std::vector<Catch*>* getCatchBlocks(void) const;
+        void                 addCatchBlock(Catch* node);
+        Finally*             getFinallyBlock(void) const;
+        void                 setFinallyBlock(Finally* node);
         
     private:
-        ast::Finally*             _finallyBlock;
-        std::vector<ast::Catch*>* _catchBlocks;
+        Finally*             _finallyBlock;
+        std::vector<Catch*>* _catchBlocks;
         
         void parseCatchesAndFinally(chime::parser& parser);
     };

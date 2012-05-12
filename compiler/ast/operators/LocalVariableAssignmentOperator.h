@@ -5,7 +5,7 @@
 
 #include "AssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     class LocalVariableAssignmentOperator : public AssignmentOperator
     {

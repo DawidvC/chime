@@ -5,7 +5,7 @@
 
 #include "Variable.h"
 
-namespace ast
+namespace chime
 {
     class GlobalVariable : public chime::Variable
     {

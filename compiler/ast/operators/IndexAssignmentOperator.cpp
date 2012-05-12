@@ -12,12 +12,12 @@ namespace chime
         return "unimplemented";
     }
     
-    ast::NodeRef IndexAssignmentOperator::getRightOperand() const
+    NodeRef IndexAssignmentOperator::getRightOperand() const
     {
         return _rightOperand;
     }
     
-    void IndexAssignmentOperator::setRightOperand(ast::NodeRef node)
+    void IndexAssignmentOperator::setRightOperand(NodeRef node)
     {
         _rightOperand = node;
     }

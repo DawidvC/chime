@@ -7,7 +7,7 @@
 #include "compiler/ast/literals/SelfLiteral.h"
 #include "compiler/ast/variable/Parameter.h"
 
-namespace ast
+namespace chime
 {
     class FunctionDefinition : public chime::LocalScopedNode
     {

@@ -7,7 +7,7 @@
 #include "compiler/ast/structural/Type.h"
 #include "compiler/ast/variable/Variable.h"
 
-namespace ast
+namespace chime
 {
     class Catch : public ExceptionFlow
     {

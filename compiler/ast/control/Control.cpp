@@ -11,10 +11,10 @@
 
 namespace chime
 {
-    ast::Node* Control::parse(chime::parser& parser)
+    Node* Control::parse(chime::parser& parser)
     {
-        Token*     t;
-        ast::node* node;
+        Token* t;
+        Node*  node;
         
         node = NULL;
         
@@ -33,11 +33,11 @@ namespace chime
         }
         else if (t->equal_to("try"))
         {
-            node = new ast::Try(parser);
+            node = new Try(parser);
         }
         else if (t->equal_to("throw"))
         {
-            node = new ast::Throw(parser);
+            node = new Throw(parser);
             
             node = Conditional::parseTailing(parser, node);
         }
@@ -47,7 +47,7 @@ namespace chime
         }
         else if (t->equal_to("switch"))
         {
-            node = ast::Switch::parse(parser);
+            node = Switch::parse(parser);
         }
         else if (t->equal_to("return"))
         {

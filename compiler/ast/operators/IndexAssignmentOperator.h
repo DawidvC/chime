@@ -7,19 +7,19 @@
 
 namespace chime
 {
-    class IndexAssignmentOperator : public ast::IndexOperator
+    class IndexAssignmentOperator : public IndexOperator
     {
     public:
         std::string nodeName() const;
         std::string stringRepresentation(int depth=0) const;
         
-        ast::NodeRef getRightOperand() const;
-        void         setRightOperand(ast::NodeRef node);
+        NodeRef      getRightOperand() const;
+        void         setRightOperand(NodeRef node);
         
         llvm::Value* codegen(CodeGenContext& context);
         
     private:
-        ast::NodeRef _rightOperand;
+        NodeRef _rightOperand;
     };
 }
 

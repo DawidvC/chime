@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class LocalScopedNode : public ast::ScopedNode
+    class LocalScopedNode : public ScopedNode
     {
     public:
         virtual std::string getIdentifier() const;

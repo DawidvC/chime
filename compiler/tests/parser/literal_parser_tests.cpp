@@ -6,7 +6,7 @@ class LiteralParserTest : public ParserTestsBase
 
 TEST_F(LiteralParserTest, String)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("\"a string\"");
     
@@ -15,7 +15,7 @@ TEST_F(LiteralParserTest, String)
 
 TEST_F(LiteralParserTest, Integer)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("128");
     
@@ -24,7 +24,7 @@ TEST_F(LiteralParserTest, Integer)
 
 TEST_F(LiteralParserTest, FloatingPoint)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("1.0");
     
@@ -33,7 +33,7 @@ TEST_F(LiteralParserTest, FloatingPoint)
 
 TEST_F(LiteralParserTest, NegativeInteger)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("-128");
     
@@ -42,7 +42,7 @@ TEST_F(LiteralParserTest, NegativeInteger)
 
 TEST_F(LiteralParserTest, HexadecimalInteger)
 {
-    ast::Node* node;
+    chime::Node* node;
     
     node = parse("0x0000000A");
     
@@ -51,7 +51,7 @@ TEST_F(LiteralParserTest, HexadecimalInteger)
 
 TEST_F(LiteralParserTest, ImaginaryInteger)
 {
-    ast::Node* node;
+    chime::Node* node;
     
     node = parse("7j");
     
@@ -60,7 +60,7 @@ TEST_F(LiteralParserTest, ImaginaryInteger)
 
 TEST_F(LiteralParserTest, True)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("true")->childAtIndex(0);
     
@@ -69,7 +69,7 @@ TEST_F(LiteralParserTest, True)
 
 TEST_F(LiteralParserTest, False)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("false")->childAtIndex(0);
     
@@ -78,7 +78,7 @@ TEST_F(LiteralParserTest, False)
 
 TEST_F(LiteralParserTest, Self)
 {
-    ast::node* node;
+    chime::Node* node;
     
     node = parse("self")->childAtIndex(0);
     
@@ -87,9 +87,9 @@ TEST_F(LiteralParserTest, Self)
 
 TEST_F(LiteralParserTest, StringWithIndexer)
 {
-    ast::IndexOperator* op;
+    chime::IndexOperator* op;
     
-    op = static_cast<ast::IndexOperator*>(parse("\"a string\"[123]")->childAtIndex(0));
+    op = static_cast<chime::IndexOperator*>(parse("\"a string\"[123]")->childAtIndex(0));
     
     ASSERT_INDEXER(op);
     ASSERT_LITERAL_STRING("a string", op->getOperand().get());
@@ -98,7 +98,7 @@ TEST_F(LiteralParserTest, StringWithIndexer)
 
 TEST_F(LiteralParserTest, SimpleInterpolatedString)
 {
-    ast::BinaryOperator* op;
+    chime::BinaryOperator* op;
     
     // translates to: "a string" + (1 + 1) + ""
     op = parseOperator("\"1 + 2 = {1 + 2}\"");
@@ -106,11 +106,11 @@ TEST_F(LiteralParserTest, SimpleInterpolatedString)
     ASSERT_OPERATOR("+", op);
     ASSERT_LITERAL_STRING("", op->getRightOperand());
     
-    op = static_cast<ast::BinaryOperator*>(op->getLeftOperand());
+    op = static_cast<chime::BinaryOperator*>(op->getLeftOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_LITERAL_STRING("1 + 2 = ", op->getLeftOperand());
     
-    op = static_cast<ast::BinaryOperator*>(op->getRightOperand());
+    op = static_cast<chime::BinaryOperator*>(op->getRightOperand());
     ASSERT_OPERATOR("+", op);
     ASSERT_LITERAL_INTEGER(1, op->getLeftOperand());
     ASSERT_LITERAL_INTEGER(2, op->getRightOperand());
@@ -118,7 +118,7 @@ TEST_F(LiteralParserTest, SimpleInterpolatedString)
 
 TEST_F(LiteralParserTest, LeadingInterpolationInString)
 {
-    ast::BinaryOperator* op;
+    chime::BinaryOperator* op;
     
     op = parseOperator("\"{1} + 1 = 2\"");
     
@@ -128,15 +128,15 @@ TEST_F(LiteralParserTest, LeadingInterpolationInString)
 
 TEST_F(LiteralParserTest, MultipleInterpolationString)
 {
-    ast::BinaryOperator* leftOp;
-    ast::BinaryOperator* rightOp;
+    chime::BinaryOperator* leftOp;
+    chime::BinaryOperator* rightOp;
     
     leftOp = parseOperator("\" {1} {2} {3}\"");
     
     ASSERT_OPERATOR("+", leftOp);
     
-    rightOp = static_cast<ast::BinaryOperator*>(leftOp->getRightOperand());
-    leftOp = static_cast<ast::BinaryOperator*>(leftOp->getLeftOperand());
+    rightOp = static_cast<chime::BinaryOperator*>(leftOp->getRightOperand());
+    leftOp = static_cast<chime::BinaryOperator*>(leftOp->getLeftOperand());
     
     ASSERT_OPERATOR("+", leftOp);
     ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
@@ -144,8 +144,8 @@ TEST_F(LiteralParserTest, MultipleInterpolationString)
     
     ASSERT_OPERATOR("+", rightOp);
     
-    leftOp  = static_cast<ast::BinaryOperator*>(rightOp->getLeftOperand());
-    rightOp = static_cast<ast::BinaryOperator*>(rightOp->getRightOperand());
+    leftOp  = static_cast<chime::BinaryOperator*>(rightOp->getLeftOperand());
+    rightOp = static_cast<chime::BinaryOperator*>(rightOp->getRightOperand());
     
     ASSERT_OPERATOR("+", leftOp);
     ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
@@ -154,7 +154,7 @@ TEST_F(LiteralParserTest, MultipleInterpolationString)
     ASSERT_OPERATOR("+", rightOp);
     ASSERT_LITERAL_STRING("", rightOp->getRightOperand());
     
-    leftOp = static_cast<ast::BinaryOperator*>(rightOp->getLeftOperand());
+    leftOp = static_cast<chime::BinaryOperator*>(rightOp->getLeftOperand());
     ASSERT_OPERATOR("+", leftOp);
     ASSERT_LITERAL_STRING(" ", leftOp->getLeftOperand());
     ASSERT_LITERAL_INTEGER(3, leftOp->getRightOperand());

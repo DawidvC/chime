@@ -1,7 +1,7 @@
 #include "InstanceVariable.h"
 #include "compiler/ast/operators/InstanceVariableAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     InstanceVariable::InstanceVariable(const std::string& identifier) :
         Variable(identifier)

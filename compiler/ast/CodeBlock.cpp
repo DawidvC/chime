@@ -33,7 +33,7 @@ namespace chime
             
             if (allowStructural)
             {
-                node = ast::Structural::parse(parser);
+                node = chime::Structural::parse(parser);
             }
             else
             {
@@ -85,8 +85,8 @@ namespace chime
     
     std::string CodeBlock::stringRepresentation(int depth) const
     {
-        std::string                       str;
-        std::vector<ast::node*>::iterator i;
+        std::string                  str;
+        std::vector<Node*>::iterator i;
         
         str.append(depth*2, ' ');
         str.append(this->nodeName());
@@ -135,12 +135,12 @@ namespace chime
         _deferToParent = value;
     }
     
-    void CodeBlock::addChild(const ast::node& node)
+    void CodeBlock::addChild(const chime::node& node)
     {
-        this->add_child((ast::node*)&node);
+        this->add_child((chime::node*)&node);
     }
     
-    ast::node* CodeBlock::childAtIndex(unsigned int i) const
+    chime::node* CodeBlock::childAtIndex(unsigned int i) const
     {
         return this->child_at_index(i);
     }
@@ -150,7 +150,7 @@ namespace chime
         if (_deferToParent)
             this->parent()->addLooseValue(value);
         else
-            ast::ScopedNode::addLooseValue(value);
+            chime::ScopedNode::addLooseValue(value);
     }
     
     void CodeBlock::removeLooseValue(llvm::Value* value)
@@ -158,7 +158,7 @@ namespace chime
         if (_deferToParent)
             this->parent()->removeLooseValue(value);
         else
-            ast::ScopedNode::removeLooseValue(value);
+            chime::ScopedNode::removeLooseValue(value);
     }
     
     llvm::Value* CodeBlock::getValueForIdentifier(const std::string& identifier)
@@ -166,7 +166,7 @@ namespace chime
         if (_deferToParent)
             return this->parent()->getValueForIdentifier(identifier);
         
-        return ast::ScopedNode::getValueForIdentifier(identifier);
+        return chime::ScopedNode::getValueForIdentifier(identifier);
     }
     
     void CodeBlock::setValueForIdentifier(const std::string& identifier, llvm::Value* value, bool shouldRelease)
@@ -174,7 +174,7 @@ namespace chime
         if (_deferToParent)
             this->parent()->setValueForIdentifier(identifier, value, shouldRelease);
         else
-            ast::ScopedNode::setValueForIdentifier(identifier, value, shouldRelease);
+            chime::ScopedNode::setValueForIdentifier(identifier, value, shouldRelease);
     }
     
     llvm::Value* CodeBlock::selfValue(chime::CodeGenContext& context)
@@ -204,7 +204,7 @@ namespace chime
     
     llvm::Value* CodeBlock::codegen(chime::code_generator& generator)
     {
-        std::vector<ast::node*>::iterator it;
+        std::vector<chime::Node*>::iterator it;
         
         generator.pushScope(this);
         

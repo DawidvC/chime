@@ -34,9 +34,9 @@ TEST_F(OperatorParseTests, CompoundAdditionAndAssignment)
 
 TEST_F(OperatorParseTests, IndexerCall)
 {
-    ast::IndexOperator* op;
+    chime::IndexOperator* op;
     
-    op = parseFirst<ast::IndexOperator*>("foo[123]");
+    op = parseFirst<chime::IndexOperator*>("foo[123]");
     
     ASSERT_INDEXER(op);
     ASSERT_LITERAL_INTEGER(123, op->getArgument().get());
@@ -45,15 +45,15 @@ TEST_F(OperatorParseTests, IndexerCall)
 
 TEST_F(OperatorParseTests, IndexerOnMethod)
 {
-    ast::BinaryOperator* op;
-    ast::IndexOperator*  indexer;
+    chime::BinaryOperator* op;
+    chime::IndexOperator*  indexer;
     
-    indexer = parseFirst<ast::IndexOperator*>("foo.bar[123]");
+    indexer = parseFirst<chime::IndexOperator*>("foo.bar[123]");
     
     ASSERT_INDEXER(indexer);
     ASSERT_LITERAL_INTEGER(123, indexer->getArgument().get());
     
-    op = static_cast<ast::BinaryOperator*>(indexer->getOperand().get());
+    op = static_cast<chime::BinaryOperator*>(indexer->getOperand().get());
     
     ASSERT_OPERATOR(".", op);
     ASSERT_GLOBAL_VARIABLE("foo", op->getLeftOperand());
@@ -74,23 +74,23 @@ TEST_F(OperatorParseTests, IndexerOnSelfAssignment)
 
 TEST_F(OperatorParseTests, GetProperty)
 {
-    ast::BinaryOperator* op;
+    chime::BinaryOperator* op;
     
-    op = parseFirst<ast::BinaryOperator*>("b = a.prop");
+    op = parseFirst<chime::BinaryOperator*>("b = a.prop");
     
     ASSERT_GLOBAL_ASSIGNMENT(op);
     ASSERT_GLOBAL_VARIABLE("b", op->getLeftOperand());
     
-    op   = dynamic_cast<ast::BinaryOperator*>(op->getRightOperand());
+    op   = dynamic_cast<chime::BinaryOperator*>(op->getRightOperand());
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());
     ASSERT_METHOD_CALL("prop", op->getRightOperand());
 }
 
 TEST_F(OperatorParseTests, SetProperty)
 {
-    ast::BinaryOperator* op;
+    chime::BinaryOperator* op;
     
-    op = parseFirst<ast::BinaryOperator*>("a.prop = b");
+    op = parseFirst<chime::BinaryOperator*>("a.prop = b");
     
     ASSERT_OPERATOR(".", op);
     ASSERT_GLOBAL_VARIABLE("a", op->getLeftOperand());

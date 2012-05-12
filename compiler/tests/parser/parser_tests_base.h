@@ -15,8 +15,8 @@ protected:
     
     virtual void TearDown();
     
-    virtual chime::lexer*   lex(const char* input);
-    ast::node*              parse(const char* input);
+    virtual chime::lexer* lex(const char* input);
+    chime::Node*          parse(const char* input);
     
     template <typename T>
     T parseFirst(const char* input)
@@ -24,15 +24,15 @@ protected:
         return static_cast<T>(this->parse(input)->childAtIndex(0));
     }
     
-    ast::Implementation*    parse_implementation(const char* input);
-    ast::method_definition* parse_method_def(const char* input);
-    ast::MethodCall*        parseMethodCall(const char* input);
-    ast::binary_operator*   parseOperator(const char* input);
+    chime::Implementation*    parse_implementation(const char* input);
+    chime::method_definition* parse_method_def(const char* input);
+    chime::MethodCall*        parseMethodCall(const char* input);
+    chime::binary_operator*   parseOperator(const char* input);
     
     std::vector<chime::ParseErrorRef> getErrors() const;
     
 protected:
-    ast::node*                        _last_node;
+    chime::Node*                      _last_node;
     std::vector<chime::ParseErrorRef> _errors;
 };
 

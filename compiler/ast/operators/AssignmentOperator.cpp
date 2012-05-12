@@ -1,6 +1,6 @@
 #include "AssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     chime::Variable* AssignmentOperator::getVariable() const
     {

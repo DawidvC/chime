@@ -1,6 +1,6 @@
 #include "InstanceVariableAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     std::string InstanceVariableAssignmentOperator::nodeName(void) const
     {

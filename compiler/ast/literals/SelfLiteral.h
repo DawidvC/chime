@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class SelfLiteral : public ast::Literal
+    class SelfLiteral : public Literal
     {
     public:
         SelfLiteral();

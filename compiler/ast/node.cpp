@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 
-namespace ast
+namespace chime
 {
     node::node()
     {
-        _children = new std::vector<ast::node*>();
+        _children = new std::vector<Node*>();
     }
     
     node::~node()
@@ -15,36 +15,36 @@ namespace ast
         delete _children;
     }
     
-    void node::addChild(ast::node* n)
+    void node::addChild(Node* n)
     {
         assert(n != NULL);
         
         _children->push_back(n);
     }
     
-    void node::add_child(ast::node* new_child)
+    void node::add_child(Node* new_child)
     {
         this->addChild(new_child);
     }
     
-    std::vector<ast::node*>* node::children(void) const
+    std::vector<Node*>* node::children(void) const
     {
         return _children;
     }
     
-    ast::node* node::childAtIndex(unsigned int i) const
+    Node* node::childAtIndex(unsigned int i) const
     {
         assert(i < this->childCount());
         
         return (*_children)[i];
     }
     
-    ast::node* node::child_at_index(unsigned int i) const
+    Node* node::child_at_index(unsigned int i) const
     {
         return this->childAtIndex(i);
     }
     
-    void node::replace_child_at_index(unsigned int i, ast::node* new_child)
+    void node::replace_child_at_index(unsigned int i, Node* new_child)
     {
         (*_children)[i] = new_child;
     }
@@ -75,8 +75,8 @@ namespace ast
     }
     std::string node::stringRepresentation(int depth) const
     {
-        std::string str;
-        std::vector<ast::node*>::iterator i;
+        std::string                  str;
+        std::vector<Node*>::iterator i;
         
         str.append(depth*2, ' ');
         str.append(this->to_string());

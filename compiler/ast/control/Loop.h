@@ -24,8 +24,8 @@ namespace chime
         virtual llvm::Value* codegen(code_generator& generator);
         
     private:
-        ast::NodeRef _condition;
-        ast::NodeRef _body;
+        NodeRef _condition;
+        NodeRef _body;
     };
     
     typedef shared_ptr<Loop> LoopRef;

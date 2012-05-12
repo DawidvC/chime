@@ -7,10 +7,10 @@
 
 namespace chime
 {
-    class ArrayLiteral : public ast::Literal
+    class ArrayLiteral : public Literal
     {
     public:
-        static ast::Node* parse(parser& parser);
+        static Node* parse(parser& parser);
         
     public:
         virtual std::string nodeName() const;

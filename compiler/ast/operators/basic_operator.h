@@ -3,7 +3,7 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class basic_operator : public node
     {
@@ -17,11 +17,6 @@ namespace ast
     protected:
         std::string _identifier;
     };
-}
-
-namespace chime
-{
-    typedef ast::basic_operator Operator;
 }
 
 #endif

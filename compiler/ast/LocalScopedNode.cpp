@@ -18,6 +18,6 @@ namespace chime
            return new SharedLocalVariable(identifier);
         }
         
-        return new ast::LocalVariable(identifier);
+        return new LocalVariable(identifier);
     }
 }

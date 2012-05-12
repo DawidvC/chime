@@ -1,6 +1,6 @@
 #include "basic_operator.h"
 
-namespace ast
+namespace chime
 {
     std::string basic_operator::identifier() const
     {

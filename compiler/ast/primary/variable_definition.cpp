@@ -1,6 +1,6 @@
 #include "variable_definition.h"
 
-namespace ast
+namespace chime
 {
     variable_definition::variable_definition(chime::parser* parser, chime::Type* type)
     {

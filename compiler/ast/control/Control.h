@@ -7,10 +7,10 @@
 
 namespace chime
 {
-    class Control : public ast::Node
+    class Control : public Node
     {
     public:
-        static ast::Node* parse(chime::parser& parser);
+        static Node* parse(chime::parser& parser);
     };
 }
 

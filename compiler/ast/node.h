@@ -18,7 +18,7 @@ namespace chime
     typedef code_generator CodeGenContext;;
 }
 
-namespace ast
+namespace chime
 {
     class node
     {
@@ -26,39 +26,33 @@ namespace ast
         node();
         virtual ~node();
         
-        void                     addChild(ast::node* n);
-        void                     add_child(ast::node* new_child);
-        std::vector<ast::node*>* children(void) const;
-        ast::node*               childAtIndex(unsigned int i) const;
-        ast::node*               child_at_index(unsigned int i) const;
-        void                     replace_child_at_index(unsigned int i, ast::node* new_child);
-        unsigned int             childCount() const;
-        unsigned int             child_count() const;
+        void                       addChild(chime::node* n);
+        void                       add_child(chime::node* new_child);
+        std::vector<chime::node*>* children(void) const;
+        chime::node*               childAtIndex(unsigned int i) const;
+        chime::node*               child_at_index(unsigned int i) const;
+        void                       replace_child_at_index(unsigned int i, chime::node* new_child);
+        unsigned int               childCount() const;
+        unsigned int               child_count() const;
         
-        virtual std::string      node_name(void) const;
-        virtual std::string      nodeName(void) const;
-        virtual std::string      to_string(void) const;
-        virtual std::string      stringRepresentation(int depth=0) const;
-        void                     print(void);
+        virtual std::string  node_name(void) const;
+        virtual std::string  nodeName(void) const;
+        virtual std::string  to_string(void) const;
+        virtual std::string  stringRepresentation(int depth=0) const;
+        void                 print(void);
         
-        virtual bool             isVariable() const;
-        virtual bool             isSelf() const;
-        virtual bool             requiresRelease() const;
+        virtual bool         isVariable() const;
+        virtual bool         isSelf() const;
+        virtual bool         requiresRelease() const;
         
-        virtual llvm::Value*     codegen(chime::code_generator& generator);
+        virtual llvm::Value* codegen(chime::code_generator& generator);
         
     protected:
-        std::vector<ast::node*>* _children;
+        std::vector<chime::node*>* _children;
     };
     
-    typedef shared_ptr<ast::node> NodeRef;
-    typedef ast::node Node;
-}
-
-namespace chime
-{
-    typedef ast::Node             Node;
-    typedef shared_ptr<ast::node> NodeRef;
+    typedef shared_ptr<chime::node> NodeRef;
+    typedef chime::node Node;
 }
 
 #endif

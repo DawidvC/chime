@@ -6,14 +6,14 @@ class FlowControlParserTest : public ParserTestsBase
 
 TEST_F(FlowControlParserTest, ClosureWithNext)
 {
-    ast::MethodCall* call;
-    ast::Closure*     closure;
+    chime::MethodCall* call;
+    chime::Closure*     closure;
     
     call = parseMethodCall("call() do (a) { next }");
     
     ASSERT_METHOD_CALL("call:", call);
     
-    closure = static_cast<ast::Closure*>(call->childAtIndex(0));
+    closure = static_cast<chime::Closure*>(call->childAtIndex(0));
     ASSERT_CLOSURE(closure);
     ASSERT_NEXT(closure->getBody()->childAtIndex(0));
 }
@@ -137,7 +137,7 @@ TEST_F(FlowControlParserTest, TailingIf)
 
 TEST_F(FlowControlParserTest, IfAfterStatement)
 {
-    ast::Node* node;
+    chime::Node* node;
     
     node = parse("a = b\n if c\n foo()");
     
@@ -147,23 +147,23 @@ TEST_F(FlowControlParserTest, IfAfterStatement)
 
 TEST_F(FlowControlParserTest, BasicTryCatch)
 {
-    ast::node* node;
+    chime::node* node;
     
     node = parse("try { foo() } catch (e) { bar() }")->child_at_index(0);
     
     ASSERT_TRY(node);
     ASSERT_METHOD_CALL("foo", node->child_at_index(0));
     
-    node = ((ast::Try*)node)->getCatchBlocks()->at(0);
+    node = ((chime::Try*)node)->getCatchBlocks()->at(0);
     ASSERT_CATCH(node);
     ASSERT_METHOD_CALL("bar", node->child_at_index(0)); 
 }
 
 TEST_F(FlowControlParserTest, BasicTryCatchFinally)
 {
-    ast::Try* node;
+    chime::Try* node;
     
-    node = (ast::Try*)parse("try { foo() } catch (e) { bar() } finally { baz() }")->child_at_index(0);
+    node = (chime::Try*)parse("try { foo() } catch (e) { bar() } finally { baz() }")->child_at_index(0);
     
     ASSERT_TRY(node);
     ASSERT_CATCH(node->getCatchBlocks()->at(0));
@@ -173,9 +173,9 @@ TEST_F(FlowControlParserTest, BasicTryCatchFinally)
 
 TEST_F(FlowControlParserTest, BasicTryFinally)
 {
-    ast::Try* node;
+    chime::Try* node;
     
-    node = (ast::Try*)parse("try { foo() } finally { bar() }")->child_at_index(0);
+    node = (chime::Try*)parse("try { foo() } finally { bar() }")->child_at_index(0);
     
     ASSERT_TRY(node);
     ASSERT_FINALLY(node->getFinallyBlock());
@@ -184,9 +184,9 @@ TEST_F(FlowControlParserTest, BasicTryFinally)
 
 TEST_F(FlowControlParserTest, ThrowStatement)
 {
-    ast::Throw* node;
+    chime::Throw* node;
     
-    node = (ast::Throw*)parse("throw \"boom\"")->child_at_index(0);
+    node = (chime::Throw*)parse("throw \"boom\"")->child_at_index(0);
     
     ASSERT_THROW_STATEMENT(node);
     ASSERT_LITERAL_STRING("boom", node->child_at_index(0));
@@ -227,7 +227,7 @@ TEST_F(FlowControlParserTest, MethodCallWithTailingIfStatement)
 
 TEST_F(FlowControlParserTest, ReturnVoidStatment)
 {
-    ast::method_definition* method;
+    chime::method_definition* method;
     
     method = parse_method_def("method foo() { return }");
     
@@ -265,17 +265,17 @@ TEST_F(FlowControlParserTest, ReturnExpression)
 
 TEST_F(FlowControlParserTest, SwitchStatement)
 {
-    ast::Switch*   switchNode;
+    chime::Switch* switchNode;
     chime::CaseRef caseNode;
     
-    switchNode = static_cast<ast::Switch*>(parse("switch (a) {\n case 1\n foo()\nelse\n bar()\n}")->childAtIndex(0));
+    switchNode = static_cast<chime::Switch*>(parse("switch (a) {\n case 1\n foo()\nelse\n bar()\n}")->childAtIndex(0));
     
     ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
     ASSERT_EQ(1, switchNode->getCases().size());
     
     caseNode = switchNode->getCases()[0];
     ASSERT_OPERATOR("===", caseNode->getCondition().get());
-    ASSERT_LITERAL_INTEGER(1, dynamic_cast<ast::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
+    ASSERT_LITERAL_INTEGER(1, dynamic_cast<chime::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
     ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     
     ASSERT_METHOD_CALL("bar", switchNode->getElse()->childAtIndex(0));
@@ -283,17 +283,17 @@ TEST_F(FlowControlParserTest, SwitchStatement)
 
 TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
 {
-    ast::Switch*   switchNode;
+    chime::Switch* switchNode;
     chime::CaseRef caseNode;
     
-    switchNode = static_cast<ast::Switch*>(parse("switch a\n {\n case 1\n foo()\n bar()\nelse\n bar() }")->childAtIndex(0));
+    switchNode = static_cast<chime::Switch*>(parse("switch a\n {\n case 1\n foo()\n bar()\nelse\n bar() }")->childAtIndex(0));
     
     ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
     ASSERT_EQ(1, switchNode->getCases().size());
     
     caseNode = switchNode->getCases()[0];
     ASSERT_OPERATOR("===", caseNode->getCondition().get());
-    ASSERT_LITERAL_INTEGER(1, dynamic_cast<ast::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
+    ASSERT_LITERAL_INTEGER(1, dynamic_cast<chime::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
     ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     ASSERT_METHOD_CALL("bar", caseNode->getBody()->childAtIndex(1));
     
@@ -302,17 +302,17 @@ TEST_F(FlowControlParserTest, SwitchStatementWithMultilineCase)
 
 TEST_F(FlowControlParserTest, SwitchStatementWithNoElse)
 {
-    ast::Switch*   switchNode;
+    chime::Switch* switchNode;
     chime::CaseRef caseNode;
     
-    switchNode = static_cast<ast::Switch*>(parse("switch (a) {\n case 1\n foo()\n}")->childAtIndex(0));
+    switchNode = static_cast<chime::Switch*>(parse("switch (a) {\n case 1\n foo()\n}")->childAtIndex(0));
     
     ASSERT_GLOBAL_VARIABLE("a", switchNode->getExpression().get());
     ASSERT_EQ(1, switchNode->getCases().size());
     
     caseNode = switchNode->getCases()[0];
     ASSERT_OPERATOR("===", caseNode->getCondition().get());
-    ASSERT_LITERAL_INTEGER(1, dynamic_cast<ast::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
+    ASSERT_LITERAL_INTEGER(1, dynamic_cast<chime::BinaryOperator*>(caseNode->getCondition().get())->getRightOperand());
     ASSERT_METHOD_CALL("foo", caseNode->getBody()->childAtIndex(0));
     
     ASSERT_FALSE(switchNode->getElse());

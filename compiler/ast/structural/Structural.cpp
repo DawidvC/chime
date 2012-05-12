@@ -10,11 +10,11 @@
 #include "Trait.h"
 #include "compiler/parser/parser.h"
 
-namespace ast
+namespace chime
 {
-    ast::node* Structural::parse(chime::parser& parser)
+    Node* Structural::parse(chime::parser& parser)
     {
-        ast::node*    node;
+        Node*         node;
         chime::token* t;
         
         node = NULL;
@@ -25,11 +25,11 @@ namespace ast
         
         if (t->equal_to("import"))
         {
-            node = new ast::Import(parser);
+            node = new Import(parser);
         }
         else if (t->equal_to("implementation"))
         {
-            node = ast::Implementation::parse(parser);
+            node = Implementation::parse(parser);
         }
         else if (t->equal_to("trait"))
         {
@@ -37,19 +37,19 @@ namespace ast
         }
         else if (parser.advanceTokenIfEqual("class"))
         {
-            node = ast::method_definition::parse(parser);
+            node = MethodDefinition::parse(parser);
             
             static_cast<chime::MethodDefinition*>(node)->setInstance(false);
         }
         else if (t->equal_to("method"))
         {
-            node = ast::method_definition::parse(parser);
+            node = MethodDefinition::parse(parser);
             
             static_cast<chime::MethodDefinition*>(node)->setInstance(true);
         }
         else if (t->equal_to("property"))
         {
-            node = ast::PropertyDefinition::parse(parser);
+            node = PropertyDefinition::parse(parser);
         }
         else if (t->equal_to("indexer"))
         {
@@ -61,7 +61,7 @@ namespace ast
         }
         else if (t->equal_to("attribute"))
         {
-            node = new ast::Attribute(parser);
+            node = new Attribute(parser);
         }
         else if (t->equal_to("include"))
         {

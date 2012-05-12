@@ -24,7 +24,7 @@ namespace chime
         std::string   getOutputFilePath(void) const;
         std::string   getBinaryFilePath() const;
         
-        ast::RootRef  getASTRoot();
+        RootRef       getASTRoot();
         llvm::Module* getModule(bool asMain);
         
         bool          writeObjectFile(bool asMain, bool optimized);
@@ -33,8 +33,8 @@ namespace chime
         std::vector<std::string> getBinaryDependencies();
         
     private:
-        std::string  _path;
-        ast::RootRef _astRoot;
+        std::string _path;
+        RootRef     _astRoot;
     };
     
     typedef std::tr1::shared_ptr<SourceFile> SourceFileRef;

@@ -60,7 +60,7 @@ namespace chime
         return SourceFile::pathWithNewExtension(_path, "");
     }
     
-    ast::RootRef SourceFile::getASTRoot()
+    RootRef SourceFile::getASTRoot()
     {
         if (!_astRoot)
         {
@@ -70,7 +70,7 @@ namespace chime
             lexer  = chime::FileLexerRef(new chime::filelexer(_path.c_str()));
             parser = chime::ParserRef(new chime::parser(lexer.get()));
             
-            _astRoot = ast::RootRef(parser->parse());
+            _astRoot = RootRef(parser->parse());
             
             parser->printErrors();
         }

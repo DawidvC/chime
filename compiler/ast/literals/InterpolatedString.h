@@ -5,12 +5,12 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class InterpolatedString : public Node
     {
     public:
-        static ast::Node* parse(chime::parser& parser);
+        static Node* parse(chime::parser& parser);
         
     public:
         std::string nodeName(void) const;

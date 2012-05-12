@@ -3,7 +3,7 @@
 #include "compiler/parser/parser.h"
 #include "compiler/codegen/code_generator.h"
 
-namespace ast
+namespace chime
 {
     PropertyDefinition* PropertyDefinition::parse(chime::parser& parser)
     {

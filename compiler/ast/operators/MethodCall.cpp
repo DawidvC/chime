@@ -2,14 +2,14 @@
 #include "compiler/ast/structural/Closure.h"
 #include "compiler/ast/operators/IndexOperator.h"
 
-namespace ast
+namespace chime
 {
-    ast::Node* MethodCall::parse(chime::parser& parser)
+    Node* MethodCall::parse(chime::parser& parser)
     {
         chime::token* t;
         MethodCall*   call;
         
-        call = new ast::MethodCall();
+        call = new MethodCall();
         
         call->identifier(parser.nextTokenValue());
         
@@ -32,10 +32,10 @@ namespace ast
         return call;
     }
     
-    void MethodCall::parseArguments(chime::parser& parser, ast::MethodCall* call)
+    void MethodCall::parseArguments(chime::parser& parser, MethodCall* call)
     {
         chime::token* t;
-        ast::node*    node;
+        Node*         node;
         
         parser.nextTokenValue("(");
         
@@ -81,7 +81,7 @@ namespace ast
         
         if (parser.look_ahead()->equal_to("do"))
         {
-            call->addChild(ast::Closure::parse(parser));
+            call->addChild(Closure::parse(parser));
         }
     }
     
@@ -92,8 +92,8 @@ namespace ast
     
     std::string MethodCall::stringRepresentation(int depth) const
     {
-        std::string                       str;
-        std::vector<ast::node*>::iterator it;
+        std::string                  str;
+        std::vector<Node*>::iterator it;
         
         str.append(depth*2, ' ');
         str.append("Method Call: ");
@@ -110,9 +110,9 @@ namespace ast
     
     llvm::Value* MethodCall::codegenWithTarget(chime::code_generator& generator, llvm::Value* target)
     {
-        llvm::Value*                      methodNamePtr;
-        std::vector<llvm::Value*>         arguments;
-        std::vector<ast::node*>::iterator it;
+        llvm::Value*                 methodNamePtr;
+        std::vector<llvm::Value*>    arguments;
+        std::vector<Node*>::iterator it;
         
         assert(target);
         

@@ -7,14 +7,14 @@
 #include "compiler/ast/variable/LocalVariable.h"
 #include "compiler/ast/variable/SharedLocalVariable.h"
 
-namespace ast
+namespace chime
 {
     method_definition* method_definition::parse(chime::parser& parser)
     {
         method_definition* definition;
         std::string        identifier;
         
-        definition = new ast::method_definition();
+        definition = new method_definition();
         
         parser.pushScope(definition);
         

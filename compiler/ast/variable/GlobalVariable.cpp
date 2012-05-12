@@ -2,7 +2,7 @@
 #include "ClosedGlobalVariable.h"
 #include "compiler/ast/operators/GlobalVariableAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     GlobalVariable::GlobalVariable(const std::string& identifier) :
         Variable(identifier)

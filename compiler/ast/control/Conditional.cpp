@@ -56,7 +56,7 @@ namespace chime
         return node;
     }
     
-    Node* Conditional::parseTailing(chime::parser& parser, ast::Node* node)
+    Node* Conditional::parseTailing(chime::parser& parser, Node* node)
     {
         if (!parser.look_ahead()->isConditional())
         {

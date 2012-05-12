@@ -6,32 +6,32 @@
 
 #define ASSERT_GLOBAL_VARIABLE(x, y) do { \
    ASSERT_EQ("Global Variable", y->nodeName()); \
-   ASSERT_EQ(x, ((ast::GlobalVariable*)y)->getIdentifier()); \
+   ASSERT_EQ(x, ((chime::GlobalVariable*)y)->getIdentifier()); \
    } while (0)
 
 #define ASSERT_CLOSED_GLOBAL_VARIABLE(x, y) do { \
    ASSERT_EQ("Closed Global Variable", y->nodeName()); \
-   ASSERT_EQ(x, ((ast::GlobalVariable*)y)->getIdentifier()); \
+   ASSERT_EQ(x, ((chime::GlobalVariable*)y)->getIdentifier()); \
    } while (0)
    
 #define ASSERT_LOCAL_VARIABLE(x, y) do { \
    ASSERT_EQ("Local Variable", y->nodeName()); \
-   ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
+   ASSERT_EQ(x, ((chime::LocalVariable*)y)->getIdentifier()); \
    } while (0)
 
 #define ASSERT_CLOSED_LOCAL_VARIABLE(x, y) do { \
    ASSERT_EQ("Closed Local Variable", y->nodeName()); \
-   ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
+   ASSERT_EQ(x, ((chime::LocalVariable*)y)->getIdentifier()); \
    } while (0)
 
 #define ASSERT_SHARED_LOCAL_VARIABLE(x, y) do { \
    ASSERT_EQ("Shared Local Variable", y->nodeName()); \
-   ASSERT_EQ(x, ((ast::LocalVariable*)y)->getIdentifier()); \
+   ASSERT_EQ(x, ((chime::LocalVariable*)y)->getIdentifier()); \
    } while (0)
 
 #define ASSERT_INSTANCE_VARIABLE(x, y) do { \
    ASSERT_EQ("Instance Variable", y->nodeName()); \
-   ASSERT_EQ(x, ((ast::InstanceVariable*)y)->getIdentifier()); \
+   ASSERT_EQ(x, ((chime::InstanceVariable*)y)->getIdentifier()); \
    } while (0)
 
 #define ASSERT_TYPE(x, y) do { \
@@ -41,7 +41,7 @@
 
 #define ASSERT_IMPLEMENTATION(x, y, z) do { \
     ASSERT_EQ("implementation", z->node_name()); \
-    ASSERT_TYPE(x, ((ast::Implementation*)z)->getTypeRef().get()); \
+    ASSERT_TYPE(x, ((chime::Implementation*)z)->getTypeRef().get()); \
     } while (0)
 
 #define ASSERT_TRAIT(x, y) do { \
@@ -58,12 +58,12 @@
 
 #define ASSERT_METHOD_DEFINITION(x, y) do { \
     ASSERT_EQ("method definition", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::method_definition*)y)->getIdentifier()); \
+    ASSERT_EQ(x, ((chime::method_definition*)y)->getIdentifier()); \
     } while (0)
 
 #define ASSERT_PROPERTY_DEFINITION(x, y) do { \
     ASSERT_EQ("property definition", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::PropertyDefinition*)y)->getIdentifier()); \
+    ASSERT_EQ(x, ((chime::PropertyDefinition*)y)->getIdentifier()); \
     } while (0)
 
 #define ASSERT_INDEXER_DEFINITION(x, y) do { \
@@ -78,7 +78,7 @@
 
 #define ASSERT_ATTRIBUTE(x, y) do { \
     ASSERT_EQ("attribute", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::Attribute*)y)->getIdentifier()); \
+    ASSERT_EQ(x, ((chime::Attribute*)y)->getIdentifier()); \
     } while (0)
 
 #define ASSERT_METHOD_PARAMETER(w, x, y, z) do { \
@@ -90,7 +90,7 @@
 
 #define ASSERT_OPERATOR(x, y) do { \
     ASSERT_EQ("Binary Operator", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::binary_operator*)y)->identifier()); \
+    ASSERT_EQ(x, ((chime::binary_operator*)y)->identifier()); \
     } while (0)
 
 #define ASSERT_AND_OPERATOR(x) ASSERT_EQ("And Operator", x->nodeName())
@@ -110,19 +110,19 @@
 
 #define ASSERT_METHOD_CALL(x, y) do { \
     ASSERT_EQ("Method Call", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::MethodCall*)y)->identifier()); \
+    ASSERT_EQ(x, ((chime::MethodCall*)y)->identifier()); \
     } while (0)
 
 #define ASSERT_CLOSURE(x) ASSERT_EQ("Closure", x->nodeName())
 
 #define ASSERT_LITERAL_TRUE(x) do { \
     ASSERT_EQ("boolean literal", x->node_name()); \
-    ASSERT_EQ(1, ((ast::boolean_literal*)x)->value()); \
+    ASSERT_EQ(1, ((chime::boolean_literal*)x)->value()); \
     } while (0)
 
 #define ASSERT_LITERAL_FALSE(x) do { \
     ASSERT_EQ("boolean literal", x->node_name()); \
-    ASSERT_EQ(0, ((ast::boolean_literal*)x)->value()); \
+    ASSERT_EQ(0, ((chime::boolean_literal*)x)->value()); \
     } while (0)
 
 #define ASSERT_LITERAL_SELF(x) ASSERT_EQ("self literal", x->node_name())
@@ -131,7 +131,7 @@
 
 #define ASSERT_LITERAL_STRING(x, y) do { \
     ASSERT_EQ("string literal", y->nodeName()); \
-    ASSERT_EQ(x, ((ast::string_literal*)y)->value()); \
+    ASSERT_EQ(x, ((chime::string_literal*)y)->value()); \
     } while (0)
     
 #define ASSERT_LITERAL_INTEGER(x, y) do { \

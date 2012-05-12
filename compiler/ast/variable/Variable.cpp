@@ -24,15 +24,15 @@ namespace chime
         }
         
         // check for index operators
-        node = ast::IndexOperator::parse(parser, node, allowAssignment);
+        node = IndexOperator::parse(parser, node, allowAssignment);
         
         return node;
     }
     
     Node* Variable::parseAssignment(parser& parser, Variable* variable)
     {
-        ast::AssignmentOperator* op;
-        BinaryOperator*          binOp;
+        AssignmentOperator* op;
+        BinaryOperator*     binOp;
         
         op = variable->createAssignment();
         op->setLeftOperand(variable);
@@ -44,7 +44,7 @@ namespace chime
             return op;
         }
         
-        binOp = new ast::BinaryOperator();
+        binOp = new BinaryOperator();
         
         if (parser.advanceTokenIfEqual("+="))
         {

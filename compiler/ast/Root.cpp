@@ -2,7 +2,7 @@
 #include "compiler/ast/variable/GlobalVariable.h"
 #include "compiler/ast/variable/SharedLocalVariable.h"
 
-namespace ast
+namespace chime
 {
     Root::Root()
     {
@@ -67,11 +67,11 @@ namespace ast
     
     llvm::Value* Root::codegen(chime::CodeGenContext& context)
     {
-        llvm::Value*                      cStringPtr;
-        llvm::Value*                      moduleClassPtr;
-        llvm::Value*                      classPtr;
-        llvm::Value*                      moduleObjectPtr;
-        std::vector<ast::node*>::iterator it;
+        llvm::Value*                 cStringPtr;
+        llvm::Value*                 moduleClassPtr;
+        llvm::Value*                 classPtr;
+        llvm::Value*                 moduleObjectPtr;
+        std::vector<Node*>::iterator it;
         
         cStringPtr      = context.getConstantString("Module");
         moduleClassPtr  = context.getRuntime()->callChimeRuntimeGetClass(cStringPtr);

@@ -3,7 +3,7 @@
 
 #include "Literal.h"
 
-namespace ast
+namespace chime
 {
     class boolean_literal : public Literal
     {

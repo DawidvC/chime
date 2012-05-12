@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class IntegerLiteral : public ast::Literal
+    class IntegerLiteral : public Literal
     {
     public:
         IntegerLiteral();

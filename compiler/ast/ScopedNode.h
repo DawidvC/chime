@@ -9,7 +9,7 @@
 
 #include <map>
 
-namespace ast
+namespace chime
 {
     class ScopedNode : public node
     {

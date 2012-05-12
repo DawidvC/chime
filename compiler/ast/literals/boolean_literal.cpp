@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-namespace ast
+namespace chime
 {
     boolean_literal::boolean_literal(chime::parser* parser)
     {

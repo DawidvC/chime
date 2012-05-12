@@ -4,7 +4,7 @@
 #include "compiler/ast/variable/InstanceVariable.h"
 #include "compiler/parser/parser.h"
 
-namespace ast
+namespace chime
 {
     Implementation* Implementation::parse(chime::parser& parser)
     {

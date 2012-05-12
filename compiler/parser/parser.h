@@ -35,25 +35,25 @@ namespace chime
         void                              addError(const char* message);
         void                              printErrors() const;
         
-        ast::ScopedNode* getCurrentScope() const;
-        void             setCurrentScope(ast::ScopedNode* node);
-        void             pushScope(ast::ScopedNode* node);
-        void             popScope();
+        ScopedNode* getCurrentScope() const;
+        void        setCurrentScope(ScopedNode* node);
+        void        pushScope(ScopedNode* node);
+        void        popScope();
         
-        ast::Root*  parse(void);
-        ast::node*  parse_without_structural(void);
-        ast::NodeRef parseExpression();
-        ast::node*  parse_expression(void);
-        ast::node*  parse_type(void);
+        Root*  parse(void);
+        Node*  parse_without_structural(void);
+        NodeRef parseExpression();
+        Node*  parse_expression(void);
+        Node*  parse_type(void);
         
         void        addSourceDependency(const std::string& dependency);
         void        addBinaryDependency(const std::string& dependency);
         
     protected:
-        ast::Root*                        _currentRoot;
-        ast::ScopedNode*                  _currentScope;
-        chime::lexer*                     _lexer;
-        std::vector<chime::ParseErrorRef> _errors;
+        Root*                      _currentRoot;
+        ScopedNode*                _currentScope;
+        lexer*                     _lexer;
+        std::vector<ParseErrorRef> _errors;
     };
     
     typedef std::tr1::shared_ptr<parser> ParserRef;

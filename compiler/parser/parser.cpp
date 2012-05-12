@@ -188,17 +188,17 @@ namespace chime
 
 #pragma mark -
 #pragma mark Context Handling
-    ast::ScopedNode* parser::getCurrentScope() const
+    ScopedNode* parser::getCurrentScope() const
     {
         return _currentScope;
     }
     
-    void parser::setCurrentScope(ast::ScopedNode* scope)
+    void parser::setCurrentScope(ScopedNode* scope)
     {
         _currentScope = scope;
     }
     
-    void parser::pushScope(ast::ScopedNode* scope)
+    void parser::pushScope(ScopedNode* scope)
     {
         if (!_currentScope)
         {
@@ -221,9 +221,9 @@ namespace chime
     
 #pragma mark -
 #pragma mark Parsing Methods
-    ast::Root* parser::parse(void)
+    Root* parser::parse(void)
     {
-        _currentRoot = new ast::Root();
+        _currentRoot = new Root();
         
         // this is the "global" scope, though it's really only global
         // to the current file
@@ -231,11 +231,11 @@ namespace chime
         
         while (true)
         {
-            ast::node* node;
+            Node* node;
             
             this->advance_past_ending_tokens();
             
-            node = ast::Structural::parse(*this);
+            node = Structural::parse(*this);
             if (node == NULL)
                 break;
             
@@ -245,10 +245,10 @@ namespace chime
         return _currentRoot;
     }
     
-    ast::node* parser::parse_without_structural(void)
+    Node* parser::parse_without_structural(void)
     {
         chime::token* t;
-        ast::node*    node;
+        Node*         node;
         
         node = NULL;
         
@@ -273,11 +273,11 @@ namespace chime
             }
             else if (t->isIdentifier())
             {
-                return new ast::variable_definition(this, static_cast<chime::Type*>(node));
+                return new variable_definition(this, static_cast<chime::Type*>(node));
             }
             else if (t->precedence() > 0)
             {
-                return ast::binary_operator::parse(*this, 0, node);
+                return binary_operator::parse(*this, 0, node);
             }
             else
             {
@@ -297,15 +297,15 @@ namespace chime
         return node;
     }
     
-    ast::NodeRef parser::parseExpression()
+    NodeRef parser::parseExpression()
     {
-        return ast::NodeRef(this->parse_expression());
+        return NodeRef(this->parse_expression());
     }
     
-    ast::node* parser::parse_expression()
+    Node* parser::parse_expression()
     {
         chime::token* t;
-        ast::node*    node;
+        Node*         node;
         
         node = NULL;
         
@@ -327,11 +327,11 @@ namespace chime
         }
         else if (t->isLiteral() || t->equal_to("[") || t->equal_to("{"))
         {
-            node = ast::Literal::parse(*this);
+            node = Literal::parse(*this);
         }
         else if (t->value() =="do")
         {
-            return ast::Closure::parse(*this);
+            return Closure::parse(*this);
         }
         else if (t->isType())
         {
@@ -341,7 +341,7 @@ namespace chime
         {
             if (this->look_ahead(2)->equal_to("("))
             {
-                return ast::MethodCall::parse(*this);
+                return MethodCall::parse(*this);
             }
             
             node = Variable::parse(*this);
@@ -369,13 +369,13 @@ namespace chime
         // as some semantics depend on knowing there's nothing following
         // the expression on the same line (like a tailing if)
         
-        return ast::binary_operator::parse(*this, 0, node);
+        return binary_operator::parse(*this, 0, node);
     }
     
-    ast::node* parser::parse_type(void)
+    Node* parser::parse_type(void)
     {
         chime::token* t;
-        ast::node*    node;
+        Node*         node;
         
         node = new chime::Type(this);
         
@@ -383,7 +383,7 @@ namespace chime
         // we might have an operator on a type
         if (t->precedence() > 0)
         {
-            node = ast::binary_operator::parse(*this, 0, node);
+            node = binary_operator::parse(*this, 0, node);
             
             node = Conditional::parseTailing(*this, node);
         }

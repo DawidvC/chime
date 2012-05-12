@@ -1,12 +1,12 @@
 #include "IndexOperator.h"
 #include "IndexAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
-    ast::node* IndexOperator::parse(chime::parser& parser, ast::node* operand, bool allowAssignment)
+    Node* IndexOperator::parse(chime::parser& parser, Node* operand, bool allowAssignment)
     {
-        ast::IndexOperator* indexOp;
-        ast::NodeRef        argument;
+        IndexOperator* indexOp;
+        NodeRef        argument;
         
         // check for index operators
         while (parser.advanceTokenIfEqual("["))
@@ -24,7 +24,7 @@ namespace ast
                 
                 assignment = new chime::IndexAssignmentOperator();
                 assignment->setIdentifier("[]:=:");
-                assignment->setOperand(ast::NodeRef(operand));
+                assignment->setOperand(NodeRef(operand));
                 assignment->setArgument(argument);
                 assignment->setRightOperand(parser.parseExpression());
                 
@@ -32,7 +32,7 @@ namespace ast
             }
             
             indexOp = new IndexOperator();
-            indexOp->setOperand(ast::NodeRef(operand));
+            indexOp->setOperand(NodeRef(operand));
             indexOp->setArgument(argument);
             
             operand = indexOp;
@@ -63,22 +63,22 @@ namespace ast
         return str;
     }
     
-    ast::NodeRef IndexOperator::getOperand(void) const
+    NodeRef IndexOperator::getOperand(void) const
     {
         return _operand;
     }
     
-    void IndexOperator::setOperand(ast::NodeRef node)
+    void IndexOperator::setOperand(NodeRef node)
     {
         _operand = node;
     }
     
-    ast::NodeRef IndexOperator::getArgument(void) const
+    NodeRef IndexOperator::getArgument(void) const
     {
         return _argument;
     }
     
-    void IndexOperator::setArgument(ast::NodeRef node)
+    void IndexOperator::setArgument(NodeRef node)
     {
         _argument = node;
     }

@@ -3,12 +3,12 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class Literal : public node
     {
     public:
-        static ast::node* parse(chime::parser& parser);
+        static Node* parse(chime::parser& parser);
     };
 }
 

@@ -9,12 +9,12 @@
 
 #include <map>
 
-namespace ast
+namespace chime
 {
     class Closure : public FunctionDefinition
     {
     public:
-        static ast::Closure* parse(chime::parser& parser);
+        static Closure* parse(chime::parser& parser);
     
     public:
         Closure();

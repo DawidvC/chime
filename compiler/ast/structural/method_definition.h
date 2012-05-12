@@ -5,7 +5,7 @@
 
 #include "FunctionDefinition.h"
 
-namespace ast
+namespace chime
 {
     class method_definition : public FunctionDefinition
     {
@@ -26,11 +26,8 @@ namespace ast
     protected:
         NodeRef _bodyBlock;
     };
-}
-
-namespace chime
-{
-    typedef ast::method_definition MethodDefinition;
+    
+    typedef chime::method_definition MethodDefinition;
 }
 
 #endif // METHOD_DEFINITON_H

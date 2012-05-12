@@ -49,7 +49,7 @@ namespace chime
         return str;
     }
     
-    ast::NodeRef Return::getReturnValue() const
+    NodeRef Return::getReturnValue() const
     {
         return _returnValue;
     }

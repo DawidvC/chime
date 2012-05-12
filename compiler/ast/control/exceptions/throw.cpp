@@ -2,7 +2,7 @@
 
 #include "throw.h"
 
-namespace ast
+namespace chime
 {
     Throw::Throw(chime::parser& parser)
     {

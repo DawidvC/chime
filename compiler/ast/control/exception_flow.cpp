@@ -2,11 +2,11 @@
 
 #include "exception_flow.h"
 
-namespace ast
+namespace chime
 {
     void ExceptionFlow::parseBody(chime::parser& parser)
     {
-        ast::node* node;
+        Node* node;
         
         parser.advance_past_ending_tokens();
         parser.next_token_value("{");

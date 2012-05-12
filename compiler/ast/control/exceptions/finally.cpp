@@ -2,7 +2,7 @@
 
 #include "finally.h"
 
-namespace ast
+namespace chime
 {
     Finally::Finally(chime::parser& parser)
     {

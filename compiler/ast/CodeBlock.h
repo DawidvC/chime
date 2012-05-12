@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class CodeBlock : public ast::ScopedNode
+    class CodeBlock : public chime::ScopedNode
     {
     public:
         static NodeRef parse(chime::parser& parser, bool allowStructural=false);
@@ -24,8 +24,8 @@ namespace chime
         bool        deferToParent() const;
         void        setDeferToParent(bool value);
         
-        void         addChild(const ast::node& node);
-        ast::node*   childAtIndex(unsigned int i) const;
+        void         addChild(const chime::node& node);
+        chime::node* childAtIndex(unsigned int i) const;
         
         void         addLooseValue(llvm::Value* value);
         void         removeLooseValue(llvm::Value* value);

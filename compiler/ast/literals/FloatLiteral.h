@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class FloatLiteral : public ast::Literal
+    class FloatLiteral : public Literal
     {
     public:
         FloatLiteral();

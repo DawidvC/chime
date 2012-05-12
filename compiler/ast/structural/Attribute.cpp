@@ -1,6 +1,6 @@
 #include "Attribute.h"
 
-namespace ast
+namespace chime
 {
     Attribute::Attribute(chime::parser& parser)
     {

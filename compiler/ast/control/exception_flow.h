@@ -5,7 +5,7 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class ExceptionFlow : public node
     {

@@ -5,7 +5,7 @@
 
 #include "compiler/ast/node.h"
 
-namespace ast
+namespace chime
 {
     class Import : public node
     {
@@ -15,8 +15,8 @@ namespace ast
         
         virtual std::string nodeName(void) const;
         
-        ast::node*   getImportand() const;
-        void         setImportand(ast::node* n);
+        Node* getImportand() const;
+        void  setImportand(Node* n);
         
         llvm::Value* codegen(chime::code_generator& generator);
     };

@@ -6,7 +6,7 @@
 #include "FunctionDefinition.h"
 #include "compiler/ast/CodeBlock.h"
 
-namespace ast
+namespace chime
 {
     class PropertyDefinition : public FunctionDefinition
     {

@@ -4,7 +4,7 @@
 
 // #define PRINT_TRACKING
 
-namespace ast
+namespace chime
 {
     ScopedNode::ScopedNode()
     {

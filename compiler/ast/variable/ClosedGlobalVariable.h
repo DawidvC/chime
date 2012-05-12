@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class ClosedGlobalVariable : public ast::ClosedLocalVariable
+    class ClosedGlobalVariable : public ClosedLocalVariable
     {
     public:
         ClosedGlobalVariable(const std::string& identifier);

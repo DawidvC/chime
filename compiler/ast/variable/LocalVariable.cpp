@@ -3,7 +3,7 @@
 #include "compiler/ast/operators/LocalVariableAssignmentOperator.h"
 
 
-namespace ast
+namespace chime
 {
     LocalVariable::LocalVariable(const std::string& identifier) :
         Variable(identifier)

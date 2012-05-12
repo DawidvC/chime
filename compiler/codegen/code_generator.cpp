@@ -61,17 +61,17 @@ namespace chime
         return _importedNamespaces;
     }
     
-    ast::ScopedNode* code_generator::getCurrentScope() const
+    ScopedNode* code_generator::getCurrentScope() const
     {
         return _currentScope;
     }
     
-    void code_generator::setCurrentScope(ast::ScopedNode* node)
+    void code_generator::setCurrentScope(ScopedNode* node)
     {
         _currentScope = node;
     }
     
-    void code_generator::pushScope(ast::ScopedNode* scope)
+    void code_generator::pushScope(ScopedNode* scope)
     {
         if (!_currentScope)
         {
@@ -233,7 +233,7 @@ namespace chime
         this->builder()->SetInsertPoint(block);
     }
     
-    void code_generator::generate(ast::Root* node, const std::string& moduleName, bool asMain)
+    void code_generator::generate(Root* node, const std::string& moduleName, bool asMain)
     {
         assert(node);
         

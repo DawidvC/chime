@@ -5,13 +5,13 @@
 
 #include "basic_operator.h"
 
-namespace ast
+namespace chime
 {
     class MethodCall : public basic_operator
     {
     public:
-        static ast::Node* parse(chime::parser& parser);
-        static void parseArguments(chime::parser& parser, ast::MethodCall* call);
+        static Node* parse(chime::parser& parser);
+        static void  parseArguments(chime::parser& parser, MethodCall* call);
     
     public:
         std::string nodeName(void) const;

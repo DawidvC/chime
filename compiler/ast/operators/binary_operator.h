@@ -3,26 +3,26 @@
 
 #include "basic_operator.h"
 
-namespace ast
+namespace chime
 {
     class binary_operator : public basic_operator
     {
     public:
-        static ast::node* parse(chime::parser& parser, int precedence, ast::node* leftOperand);
-        static ast::node* parseRightOperand(chime::parser& parser);
+        static Node* parse(chime::parser& parser, int precedence, Node* leftOperand);
+        static Node* parseRightOperand(chime::parser& parser);
         
     public:
         virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0) const;
         
-        ast::node* getRightOperand() const;
-        void       setRightOperand(ast::node* op);
-        ast::node* right_operand(void) const;
-        void       right_operand(ast::node* op);
-        ast::node* getLeftOperand() const;
-        void       setLeftOperand(ast::node* op);
-        ast::node* left_operand(void) const;
-        void       left_operand(ast::node* op);
+        Node* getRightOperand() const;
+        void  setRightOperand(Node* op);
+        Node* right_operand(void) const;
+        void  right_operand(Node* op);
+        Node* getLeftOperand() const;
+        void  setLeftOperand(Node* op);
+        Node* left_operand(void) const;
+        void  left_operand(Node* op);
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
         
@@ -30,12 +30,7 @@ namespace ast
         int _precendence;
     };
     
-    typedef ast::binary_operator BinaryOperator;
-}
-
-namespace chime
-{
-    typedef ast::BinaryOperator BinaryOperator;
+    typedef chime::binary_operator BinaryOperator;
 }
 
 #endif

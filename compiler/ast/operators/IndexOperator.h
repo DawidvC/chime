@@ -3,27 +3,27 @@
 
 #include "basic_operator.h"
 
-namespace ast
+namespace chime
 {
     class IndexOperator : public basic_operator
     {
     public:
-        static ast::node* parse(chime::parser& parser, ast::node* operand, bool allowAssignment=false);
+        static Node* parse(chime::parser& parser, Node* operand, bool allowAssignment=false);
         
     public:
         virtual std::string nodeName(void) const;
         virtual std::string stringRepresentation(int depth=0) const;
         
-        ast::NodeRef getOperand(void) const;
-        void         setOperand(ast::NodeRef node);
-        ast::NodeRef getArgument(void) const;
-        void         setArgument(ast::NodeRef node);
+        NodeRef getOperand(void) const;
+        void    setOperand(NodeRef node);
+        NodeRef getArgument(void) const;
+        void    setArgument(NodeRef node);
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
         
     private:
-        ast::NodeRef _operand;
-        ast::NodeRef _argument;
+        NodeRef _operand;
+        NodeRef _argument;
     };
 }
 

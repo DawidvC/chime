@@ -5,14 +5,14 @@
 #include "OrOperator.h"
 #include "compiler/ast/literals/Literal.h"
 
-namespace ast
+namespace chime
 {
-    ast::node* binary_operator::parse(chime::parser& parser, int precedence, ast::node* leftOperand)
+    Node* binary_operator::parse(chime::parser& parser, int precedence, Node* leftOperand)
     {
-        ast::binary_operator* node;
-        ast::node*            rightOperand;
-        chime::token*         t;
-        int                   currentPrecedence;
+        binary_operator* node;
+        Node*            rightOperand;
+        chime::token*    t;
+        int              currentPrecedence;
         
         if (leftOperand == NULL)
         {
@@ -48,20 +48,20 @@ namespace ast
             }
             else
             {
-                node = new ast::BinaryOperator();
+                node = new BinaryOperator();
                 node->identifier(parser.nextTokenValue());
             }
             
             if (node->identifier().compare(".") == 0)
-                rightOperand = ast::MethodCall::parse(parser);
+                rightOperand = MethodCall::parse(parser);
             else
             {
-                rightOperand = ast::binary_operator::parseRightOperand(parser);
+                rightOperand = binary_operator::parseRightOperand(parser);
             }
             
             if (currentPrecedence < parser.look_ahead()->precedence())
             {
-                rightOperand = ast::binary_operator::parse(parser, currentPrecedence+1, rightOperand);
+                rightOperand = binary_operator::parse(parser, currentPrecedence+1, rightOperand);
             }
             
             if (rightOperand == NULL)
@@ -74,16 +74,16 @@ namespace ast
             node->setRightOperand(rightOperand);
             leftOperand = node;
             
-            leftOperand = ast::IndexOperator::parse(parser, leftOperand);
+            leftOperand = IndexOperator::parse(parser, leftOperand);
         }
         
         return leftOperand;
     }
     
-    ast::node* binary_operator::parseRightOperand(chime::parser& parser)
+    Node* binary_operator::parseRightOperand(chime::parser& parser)
     {
         chime::token* t;
-        ast::node*    node;
+        Node*    node;
         
         node = NULL;
         
@@ -104,7 +104,7 @@ namespace ast
         }
         else if (t->isLiteral())
         {
-            node = ast::Literal::parse(parser);
+            node = Literal::parse(parser);
         }
         else if (t->isType())
         {
@@ -146,41 +146,41 @@ namespace ast
         return s;
     }
     
-    ast::node* binary_operator::getRightOperand() const
+    Node* binary_operator::getRightOperand() const
     {
         return this->childAtIndex(1);
     }
-    void binary_operator::setRightOperand(ast::node* op)
+    void binary_operator::setRightOperand(Node* op)
     {
         assert(op);
         assert(this->childCount() == 1);
         
         this->addChild(op);
     }
-    ast::node* binary_operator::right_operand(void) const
+    Node* binary_operator::right_operand(void) const
     {
         return this->getRightOperand();
     }
-    void binary_operator::right_operand(ast::node* op)
+    void binary_operator::right_operand(Node* op)
     {
         this->setRightOperand(op);
     }
-    ast::node* binary_operator::getLeftOperand() const
+    Node* binary_operator::getLeftOperand() const
     {
         return this->childAtIndex(0);
     }
-    void binary_operator::setLeftOperand(ast::node* op)
+    void binary_operator::setLeftOperand(Node* op)
     {
         assert(op);
         assert(this->childCount() == 0);
         
         this->addChild(op);
     }
-    ast::node* binary_operator::left_operand(void) const
+    Node* binary_operator::left_operand(void) const
     {
         return this->getLeftOperand();
     }
-    void binary_operator::left_operand(ast::node* op)
+    void binary_operator::left_operand(Node* op)
     {
         this->setLeftOperand(op);
     }
@@ -198,9 +198,9 @@ namespace ast
         // depend on both the kinds of operator and operands
         if (this->identifier().compare(".") == 0)
         {
-            ast::MethodCall* call;
+            MethodCall* call;
             
-            call = dynamic_cast<ast::MethodCall*>(this->getRightOperand());
+            call = dynamic_cast<MethodCall*>(this->getRightOperand());
             assert(call);
             
             l_value = this->getLeftOperand()->codegen(generator);

@@ -10,7 +10,7 @@
 
 namespace chime
 {
-    class Trait : public ast::ScopedNode
+    class Trait : public ScopedNode
     {
     public:
         static Trait* parse(parser& parser);

@@ -61,7 +61,7 @@ namespace chime
     
     Variable* Trait::createVariable(const std::string& identifier)
     {
-        return new ast::InstanceVariable(identifier);
+        return new InstanceVariable(identifier);
     }
     
     bool Trait::allowsStructuralElements() const

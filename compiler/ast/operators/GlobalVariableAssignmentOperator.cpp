@@ -1,6 +1,6 @@
 #include "GlobalVariableAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     std::string GlobalVariableAssignmentOperator::nodeName(void) const
     {

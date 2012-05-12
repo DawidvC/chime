@@ -2,7 +2,7 @@
 
 namespace chime
 {
-    ast::Node* HashLiteral::parse(parser& parser)
+    Node* HashLiteral::parse(parser& parser)
     {
         HashLiteral* hash;
         
@@ -42,8 +42,8 @@ namespace chime
     
     llvm::Value* HashLiteral::codegen(CodeGenContext& context)
     {
-        llvm::Value*                      hashValue;
-        std::vector<ast::Node*>::iterator it;
+        llvm::Value*                 hashValue;
+        std::vector<Node*>::iterator it;
         
         // there must be an even number of children
         assert(this->childCount() % 2 == 0);

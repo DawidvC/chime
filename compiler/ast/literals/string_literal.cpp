@@ -1,12 +1,12 @@
 #include "string_literal.h"
 
-namespace ast
+namespace chime
 {
-    ast::Node* string_literal::parse(chime::parser& parser)
+    Node* string_literal::parse(chime::parser& parser)
     {
-        ast::string_literal* string;
+        string_literal* string;
         
-        string = new ast::string_literal();
+        string = new string_literal();
         string->value(parser.next_token()->stringValue());
         
         return string;

@@ -8,7 +8,7 @@
 
 namespace chime
 {
-    class Parameter : public ast::LocalVariable
+    class Parameter : public LocalVariable
     {
     public:
         static shared_ptr<Parameter>                parse(parser& parser);

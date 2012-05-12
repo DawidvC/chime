@@ -1,7 +1,7 @@
 #include "ClosedLocalVariable.h"
 #include "compiler/ast/operators/ClosedLocalVariableAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     ClosedLocalVariable::ClosedLocalVariable(const std::string& identifier) :
         Variable(identifier)

@@ -4,7 +4,7 @@
 #include "compiler/ast/structural/Type.h"
 #include "compiler/ast/literals/string_literal.h"
 
-namespace ast
+namespace chime
 {
     Import::Import(chime::parser& parser)
     {
@@ -18,13 +18,13 @@ namespace ast
         {
             Node* node;
             
-            node = ast::string_literal::parse(parser);
+            node = string_literal::parse(parser);
             
             this->setImportand(node);
             
             // this needs to be smart and figure out if it's currently
             // a structural element or not
-            parser.addSourceDependency(static_cast<ast::string_literal*>(node)->value());
+            parser.addSourceDependency(static_cast<string_literal*>(node)->value());
         }
         else if (t->isType())
         {
@@ -54,11 +54,11 @@ namespace ast
         return std::string("import");
     }
     
-    ast::node* Import::getImportand() const
+    Node* Import::getImportand() const
     {
         return this->childAtIndex(0);
     }
-    void Import::setImportand(ast::node* n)
+    void Import::setImportand(Node* n)
     {
         this->addChild(n);
     }

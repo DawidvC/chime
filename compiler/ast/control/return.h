@@ -16,12 +16,12 @@ namespace chime
         virtual std::string nodeName() const;
         virtual std::string stringRepresentation(int depth=0) const;
         
-        ast::NodeRef getReturnValue() const;
+        NodeRef getReturnValue() const;
         
         virtual llvm::Value* codegen(CodeGenContext& generator);
     
     private:
-        ast::NodeRef _returnValue;
+        NodeRef _returnValue;
     };
 }
 

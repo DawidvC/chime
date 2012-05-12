@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class NilLiteral : public ast::Literal
+    class NilLiteral : public Literal
     {
     public:
         virtual std::string nodeName() const;

@@ -18,7 +18,7 @@ namespace chime
         return true;
     }
     
-    ast::AssignmentOperator* SharedLocalVariable::createAssignment()
+    AssignmentOperator* SharedLocalVariable::createAssignment()
     {
         assert(0 && "Assignment to a SharedLocalVariable isn't implemented yet");
         
@@ -27,7 +27,7 @@ namespace chime
     
     Variable* SharedLocalVariable::createClosedVersion()
     {
-        return new ast::ClosedLocalVariable(this->identifier());
+        return new ClosedLocalVariable(this->identifier());
     }
     
     llvm::Value* SharedLocalVariable::codegenReference(code_generator& generator)

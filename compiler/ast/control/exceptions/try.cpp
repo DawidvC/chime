@@ -2,11 +2,11 @@
 
 #include "try.h"
 
-namespace ast
+namespace chime
 {
     Try::Try(chime::parser& parser)
     {
-        _catchBlocks  = new std::vector<ast::Catch*>();
+        _catchBlocks  = new std::vector<Catch*>();
         _finallyBlock = NULL;
         
         parser.next_token("try");
@@ -35,8 +35,8 @@ namespace ast
     
     std::string Try::stringRepresentation(int depth) const
     {
-        std::vector<ast::node*>::iterator i;
-        std::string                       str;
+        std::vector<Node*>::iterator i;
+        std::string                  str;
         
         str.append(depth*2, ' ');
         str.append(this->nodeName());
@@ -56,7 +56,7 @@ namespace ast
             }
         }
         
-        std::vector<ast::Catch*>::iterator j;
+        std::vector<Catch*>::iterator j;
         
         for (j = _catchBlocks->begin(); j < _catchBlocks->end(); ++j)
         {
@@ -73,22 +73,22 @@ namespace ast
         return str;
     }
     
-    std::vector<ast::Catch*>* Try::getCatchBlocks(void) const
+    std::vector<Catch*>* Try::getCatchBlocks(void) const
     {
         return _catchBlocks;
     }
     
-    void Try::addCatchBlock(ast::Catch* node)
+    void Try::addCatchBlock(Catch* node)
     {
         _catchBlocks->push_back(node);
     }
     
-    ast::Finally* Try::getFinallyBlock(void) const
+    Finally* Try::getFinallyBlock(void) const
     {
         return _finallyBlock;
     }
     
-    void Try::setFinallyBlock(ast::Finally* node)
+    void Try::setFinallyBlock(Finally* node)
     {
         _finallyBlock = node;
     }
@@ -107,11 +107,11 @@ namespace ast
             
             if (t->equal_to("catch"))
             {
-                this->addCatchBlock(new ast::Catch(parser));
+                this->addCatchBlock(new Catch(parser));
             }
             else if (t->equal_to("finally"))
             {
-                this->setFinallyBlock(new ast::Finally(parser));
+                this->setFinallyBlock(new Finally(parser));
                 break;
             }
             else

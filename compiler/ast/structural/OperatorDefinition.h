@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class OperatorDefinition : public ast::method_definition
+    class OperatorDefinition : public MethodDefinition
     {
     public:
         static OperatorDefinition* parse(parser& parser);

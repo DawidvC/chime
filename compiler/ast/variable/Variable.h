@@ -29,8 +29,8 @@ namespace chime
         bool         requiresRelease() const;
         virtual bool requiresCapture() const;
         
-        virtual ast::AssignmentOperator* createAssignment() = 0;
-        virtual Variable*                createClosedVersion();
+        virtual AssignmentOperator* createAssignment() = 0;
+        virtual Variable*           createClosedVersion();
         
         virtual llvm::Value* codegenReference(CodeGenContext& generator);
     

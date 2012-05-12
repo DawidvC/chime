@@ -1,6 +1,6 @@
 #include "ClosedLocalVariableAssignmentOperator.h"
 
-namespace ast
+namespace chime
 {
     std::string ClosedLocalVariableAssignmentOperator::nodeName(void) const
     {

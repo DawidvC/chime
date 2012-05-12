@@ -5,14 +5,14 @@ namespace chime
 {
     CaseRef Case::parse(parser& parser, Node* switchExpression)
     {
-        Case*                node;
-        ast::BinaryOperator* op;
+        Case*           node;
+        BinaryOperator* op;
         
         parser.next_token("case");
         
         node = new Case();
         
-        op = new ast::BinaryOperator();
+        op = new BinaryOperator();
         op->setIdentifier("===");
         op->setLeftOperand(switchExpression);
         op->setRightOperand(parser.parse_expression());

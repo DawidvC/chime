@@ -2,7 +2,7 @@
 
 namespace chime
 {
-    ast::Node* ArrayLiteral::parse(parser& parser)
+    Node* ArrayLiteral::parse(parser& parser)
     {
         ArrayLiteral* array;
         
@@ -36,9 +36,9 @@ namespace chime
     
     llvm::Value* ArrayLiteral::codegen(CodeGenContext& context)
     {
-        llvm::Value*                      arrayValue;
-        llvm::Value*                      sizeValue;
-        std::vector<ast::Node*>::iterator it;
+        llvm::Value*                 arrayValue;
+        llvm::Value*                 sizeValue;
+        std::vector<Node*>::iterator it;
         
         sizeValue = llvm::ConstantInt::get(context.getContext(), llvm::APInt(64, this->childCount(), 10));
         

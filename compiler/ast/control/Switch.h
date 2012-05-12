@@ -6,26 +6,26 @@
 #include "compiler/ast/node.h"
 #include "Case.h"
 
-namespace ast
+namespace chime
 {
     class Switch : public Node
     {
     public:
-        static ast::Node* parse(chime::parser& parser);
+        static Node* parse(chime::parser& parser);
         
     public:
         std::string nodeName() const;
         
-        ast::NodeRef                getExpression() const;
-        void                        setExpression(ast::NodeRef expression);
-        std::vector<chime::CaseRef> getCases() const;
-        ast::NodeRef                getElse() const;
+        NodeRef              getExpression() const;
+        void                 setExpression(NodeRef expression);
+        std::vector<CaseRef> getCases() const;
+        NodeRef              getElse() const;
         
         virtual llvm::Value* codegen(chime::code_generator& generator);
         
     private:
-        ast::NodeRef                _expression;
-        std::vector<chime::CaseRef> _cases;
+        NodeRef              _expression;
+        std::vector<CaseRef> _cases;
     };
 }
 

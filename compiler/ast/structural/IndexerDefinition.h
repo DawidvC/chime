@@ -8,7 +8,7 @@
 
 namespace chime
 {
-    class IndexerDefinition : public ast::PropertyDefinition
+    class IndexerDefinition : public PropertyDefinition
     {
     public:
         static IndexerDefinition* parse(parser& parser);

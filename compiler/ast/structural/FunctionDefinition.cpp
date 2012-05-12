@@ -3,7 +3,7 @@
 #include "FunctionDefinition.h"
 #include "compiler/codegen/code_generator.h"
 
-namespace ast
+namespace chime
 {
     FunctionDefinition::FunctionDefinition()
     {

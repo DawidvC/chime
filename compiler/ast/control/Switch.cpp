@@ -2,18 +2,18 @@
 #include "Case.h"
 #include "compiler/ast/CodeBlock.h"
 
-namespace ast
+namespace chime
 {
-    ast::Node* Switch::parse(chime::parser& parser)
+    Node* Switch::parse(chime::parser& parser)
     {
-        ast::Switch*  node;
+        Switch*  node;
         chime::token* t;
         
         parser.next_token("switch");
         
-        node = new ast::Switch();
+        node = new Switch();
         
-        node->setExpression(ast::NodeRef(parser.parse_expression()));
+        node->setExpression(NodeRef(parser.parse_expression()));
         
         parser.advanceToNextStatement();
         parser.next_token("{");
@@ -78,12 +78,12 @@ namespace ast
         return std::string("Switch");
     }
     
-    ast::NodeRef Switch::getExpression() const
+    NodeRef Switch::getExpression() const
     {
         return _expression;
     }
     
-    void Switch::setExpression(ast::NodeRef expression)
+    void Switch::setExpression(NodeRef expression)
     {
         _expression = expression;
     }
@@ -93,7 +93,7 @@ namespace ast
         return _cases;
     }
     
-    ast::NodeRef Switch::getElse() const
+    NodeRef Switch::getElse() const
     {
         return _cases.back()->getElse();
     }

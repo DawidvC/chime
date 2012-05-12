@@ -92,10 +92,10 @@ TEST_F(StructuralParseTests, MethodWithTypedReturnAndOneTypedArgument)
 
 TEST_F(StructuralParseTests, PropertyWithGetAndSet)
 {
-    ast::PropertyDefinition* property;
-    chime::Return*           ret;
+    chime::PropertyDefinition* property;
+    chime::Return*             ret;
     
-    property = parseFirst<ast::PropertyDefinition*>("property foo(value) { get { return a } set { a = value } }");
+    property = parseFirst<chime::PropertyDefinition*>("property foo(value) { get { return a } set { a = value } }");
     
     ASSERT_PROPERTY_DEFINITION("foo", property);
     ASSERT_METHOD_PARAMETER(NULL, NULL, "value", property->getParameters()[0]);
@@ -106,10 +106,10 @@ TEST_F(StructuralParseTests, PropertyWithGetAndSet)
 
 TEST_F(StructuralParseTests, PropertyWithGetMissingParentheses)
 {
-    ast::PropertyDefinition* property;
-    chime::Return*           ret;
+    chime::PropertyDefinition* property;
+    chime::Return*             ret;
     
-    property = parseFirst<ast::PropertyDefinition*>("property foo { get { return a } }");
+    property = parseFirst<chime::PropertyDefinition*>("property foo { get { return a } }");
     
     ASSERT_PROPERTY_DEFINITION("foo", property);
     
@@ -131,15 +131,15 @@ TEST_F(StructuralParseTests, PropertyWithEqualsSyntax)
 
 TEST_F(StructuralParseTests, AttributeAccessedInGetProperty)
 {
-    ast::Implementation*     implemenation;
-    ast::PropertyDefinition* property;
-    chime::Return*           ret;
+    chime::Implementation*     implemenation;
+    chime::PropertyDefinition* property;
+    chime::Return*             ret;
     
     implemenation = parse_implementation("implementation Foo\n { attribute a\n property foo(value) { get { return a } } }");
     
     ASSERT_IMPLEMENTATION("Foo", NULL, implemenation);
     
-    property = static_cast<ast::PropertyDefinition*>(implemenation->getBody()->childAtIndex(1));
+    property = static_cast<chime::PropertyDefinition*>(implemenation->getBody()->childAtIndex(1));
     
     ASSERT_PROPERTY_DEFINITION("foo", property);
     
@@ -149,17 +149,17 @@ TEST_F(StructuralParseTests, AttributeAccessedInGetProperty)
 
 TEST_F(StructuralParseTests, AttributeAccessedInSetProperty)
 {
-    ast::Implementation*     implemenation;
-    ast::PropertyDefinition* property;
-    ast::BinaryOperator*     op;
+    chime::Implementation*     implemenation;
+    chime::PropertyDefinition* property;
+    chime::BinaryOperator*     op;
     
     implemenation = parse_implementation("implementation Foo\n { attribute a\n property foo(value) { set { a = value } } }");
     ASSERT_IMPLEMENTATION("Foo", NULL, implemenation);
     
-    property = static_cast<ast::PropertyDefinition*>(implemenation->getBody()->childAtIndex(1));
+    property = static_cast<chime::PropertyDefinition*>(implemenation->getBody()->childAtIndex(1));
     ASSERT_PROPERTY_DEFINITION("foo", property);
     
-    op = static_cast<ast::binary_operator*>(property->getSetBody()->childAtIndex(0));
+    op = static_cast<chime::binary_operator*>(property->getSetBody()->childAtIndex(0));
     ASSERT_INSTANCE_ASSIGNMENT(op);
     ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
     ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());
@@ -213,9 +213,9 @@ TEST_F(StructuralParseTests, TraitDefinition)
 
 TEST_F(StructuralParseTests, IncludeInImplementation)
 {
-    ast::Implementation* implementation;
+    chime::Implementation* implementation;
     
-    implementation = parseFirst<ast::Implementation*>("implementation Foo { include Bar }");
+    implementation = parseFirst<chime::Implementation*>("implementation Foo { include Bar }");
     
     ASSERT_IMPLEMENTATION("Foo", NULL, implementation);
     ASSERT_INCLUDE("Bar", implementation->getBody()->childAtIndex(0));
@@ -223,17 +223,17 @@ TEST_F(StructuralParseTests, IncludeInImplementation)
 
 TEST_F(StructuralParseTests, ImplementationMethodWithParameterUsedInBody)
 {
-    ast::Implementation*    implementation;
-    ast::method_definition* method;
-    ast::binary_operator*   op;
+    chime::Implementation*    implementation;
+    chime::method_definition* method;
+    chime::binary_operator*   op;
     
-    implementation = parseFirst<ast::Implementation*>("implementation Foo\n { attribute a\n method foo(value) { a = value } }");
+    implementation = parseFirst<chime::Implementation*>("implementation Foo\n { attribute a\n method foo(value) { a = value } }");
     ASSERT_IMPLEMENTATION("Foo", NULL, implementation);
     
-    method = static_cast<ast::method_definition*>(implementation->getBody()->childAtIndex(1));
+    method = static_cast<chime::method_definition*>(implementation->getBody()->childAtIndex(1));
     ASSERT_METHOD_DEFINITION("foo:", method);
     
-    op = static_cast<ast::binary_operator*>(method->getBody()->childAtIndex(0));
+    op = static_cast<chime::binary_operator*>(method->getBody()->childAtIndex(0));
     ASSERT_INSTANCE_ASSIGNMENT(op);
     ASSERT_INSTANCE_VARIABLE("a", op->getLeftOperand());
     ASSERT_LOCAL_VARIABLE("value", op->getRightOperand());

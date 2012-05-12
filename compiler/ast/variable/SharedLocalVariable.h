@@ -16,8 +16,8 @@ namespace chime
         
         bool requiresCapture() const;
         
-        ast::AssignmentOperator* createAssignment();
-        Variable*                createClosedVersion();
+        AssignmentOperator* createAssignment();
+        Variable*           createClosedVersion();
         
         llvm::Value* codegenReference(code_generator& generator);
         llvm::Value* codegen(code_generator& generator);

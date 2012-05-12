@@ -17,7 +17,7 @@ chime::lexer* ParserTestsBase::lex(const char* input)
     return new chime::stringlexer(input);
 }
 
-ast::node* ParserTestsBase::parse(const char* input)
+chime::Node* ParserTestsBase::parse(const char* input)
 {
     chime::lexer*  lexer;
     chime::parser* parser;
@@ -37,24 +37,24 @@ ast::node* ParserTestsBase::parse(const char* input)
     return _last_node;
 }
 
-ast::Implementation* ParserTestsBase::parse_implementation(const char *input)
+chime::Implementation* ParserTestsBase::parse_implementation(const char *input)
 {
-    return (ast::Implementation*)this->parse(input)->childAtIndex(0);
+    return dynamic_cast<chime::Implementation*>(this->parse(input)->childAtIndex(0));
 }
 
-ast::method_definition* ParserTestsBase::parse_method_def(const char *input)
+chime::method_definition* ParserTestsBase::parse_method_def(const char *input)
 {
-    return (ast::method_definition*)this->parse(input)->childAtIndex(0);
+    return dynamic_cast<chime::method_definition*>(this->parse(input)->childAtIndex(0));
 }
 
-ast::MethodCall* ParserTestsBase::parseMethodCall(const char* input)
+chime::MethodCall* ParserTestsBase::parseMethodCall(const char* input)
 {
-    return static_cast<ast::MethodCall*>(this->parse(input)->childAtIndex(0));
+    return dynamic_cast<chime::MethodCall*>(this->parse(input)->childAtIndex(0));
 }
 
-ast::binary_operator* ParserTestsBase::parseOperator(const char* input)
+chime::binary_operator* ParserTestsBase::parseOperator(const char* input)
 {
-    return static_cast<ast::binary_operator*>(this->parse(input)->childAtIndex(0));
+    return dynamic_cast<chime::binary_operator*>(this->parse(input)->childAtIndex(0));
 }
 
 std::vector<chime::ParseErrorRef> ParserTestsBase::getErrors() const

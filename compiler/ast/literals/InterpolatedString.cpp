@@ -3,15 +3,15 @@
 #include "compiler/ast/operators/binary_operator.h"
 #include "compiler/ast/operators/MethodCall.h"
 
-namespace ast
+namespace chime
 {
     // " " + () + " " + () + " "
-    ast::Node* InterpolatedString::parse(chime::parser& parser)
+    Node* InterpolatedString::parse(chime::parser& parser)
     {
-        chime::token*        t;
-        ast::BinaryOperator* leftOp;
-        ast::BinaryOperator* rightOp;
-        ast::Node*           node;
+        chime::token*   t;
+        BinaryOperator* leftOp;
+        BinaryOperator* rightOp;
+        Node*           node;
         
         t = parser.look_ahead();
         if (t->empty())
@@ -19,17 +19,17 @@ namespace ast
         
         if (t->isInterpolatedStringEnd())
         {
-            return ast::string_literal::parse(parser);
+            return string_literal::parse(parser);
         }
         
-        node = ast::string_literal::parse(parser);
+        node = string_literal::parse(parser);
         
-        leftOp = new ast::BinaryOperator();
+        leftOp = new BinaryOperator();
         leftOp->identifier("+");
         leftOp->setLeftOperand(node);
         leftOp->setRightOperand(parser.parse_expression());
         
-        rightOp = new ast::BinaryOperator();
+        rightOp = new BinaryOperator();
         rightOp->identifier("+");
         rightOp->setLeftOperand(leftOp);
         rightOp->setRightOperand(InterpolatedString::parse(parser));

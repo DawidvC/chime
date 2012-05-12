@@ -5,12 +5,12 @@
 
 #include "compiler/ast/ScopedNode.h"
 
-namespace ast
+namespace chime
 {
     class Structural : public ScopedNode
     {
     public:
-        static ast::node* parse(chime::parser& parser);
+        static Node* parse(chime::parser& parser);
     };
 }
 

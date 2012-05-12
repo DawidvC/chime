@@ -12,12 +12,12 @@
 #include "SelfLiteral.h"
 #include "compiler/ast/operators/IndexOperator.h"
 
-namespace ast
+namespace chime
 {
-    ast::node* Literal::parse(chime::parser& parser)
+    Node* Literal::parse(chime::parser& parser)
     {
         chime::token* t;
-        ast::node*    node;
+        Node*         node;
         
         node = NULL;
         t    = parser.lookAhead();
@@ -54,15 +54,15 @@ namespace ast
         }
         else if (t->isPlainString())
         {
-            node = ast::string_literal::parse(parser);
+            node = string_literal::parse(parser);
         }
         else if (t->isInterpolatedStringStart())
         {
-            node = ast::InterpolatedString::parse(parser);
+            node = InterpolatedString::parse(parser);
         }
         else if (t->isBoolean())
         {
-            node = new ast::boolean_literal(&parser);
+            node = new boolean_literal(&parser);
         }
         else if (t->isInheritanceRelated())
         {
@@ -94,7 +94,7 @@ namespace ast
             assert(0 && "Unhandled literal!");
         }
         
-        node = ast::IndexOperator::parse(parser, node, true);
+        node = IndexOperator::parse(parser, node, true);
         
         return node;
     }

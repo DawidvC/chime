@@ -5,7 +5,7 @@
 
 #include "compiler/ast/control/exception_flow.h"
 
-namespace ast
+namespace chime
 {
     class Finally : public ExceptionFlow
     {

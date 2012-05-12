@@ -7,7 +7,7 @@
 
 namespace chime
 {
-    class RangeLiteral : public ast::Literal
+    class RangeLiteral : public Literal
     {
     public:
         RangeLiteral();

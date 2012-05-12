@@ -7,16 +7,16 @@
 
 #include <sstream>
 
-namespace ast
+namespace chime
 {
-    ast::Closure* Closure::parse(chime::parser& parser)
+    Closure* Closure::parse(chime::parser& parser)
     {
         Closure*          closure;
         std::stringstream stream;
         
         parser.next_token_value("do");
         
-        closure = new ast::Closure();
+        closure = new Closure();
         
         if (parser.getCurrentScope()->parent())
         {

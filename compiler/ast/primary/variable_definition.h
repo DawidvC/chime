@@ -4,7 +4,7 @@
 #include "compiler/ast/node.h"
 #include "compiler/ast/structural/Type.h"
 
-namespace ast
+namespace chime
 {
     class variable_definition : public node
     {
